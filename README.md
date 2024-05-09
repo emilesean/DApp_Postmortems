@@ -18,7 +18,7 @@ The repository includes **404 incidents**.
 
 2. Clone the repository and install dependencies:
     ```bash
-    git clone https://github.com/emilesean/DAppHackPOCs.git
+    git clone https://github.com/emilesean/DAppHackPOC.git
     git submodule update --init --recursive
     ```
 
@@ -28,6 +28,6 @@ The repository includes **404 incidents**.
     # Example: forge test --contracts ./test/2022-07/Audius.t.sol -vvv
     ```
 
-4. Check out the [Contributing Guidelines](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/CONTRIBUTING.md).
+4. Check out the [Contributing Guidelines](https://github.com/emilesean/DAppHackPOC/blob/main/CONTRIBUTING.md)
 
 **Disclaimer:** This content serves solely as a proof of concept, showcasing past security incidents related to decentralized applications. It is strictly intended for educational purposes and should not be interpreted as encouragement or endorsement of any illegal activities or actual hacking attempts. Any actions taken based on this content are the sole responsibility of the individual, and usage should adhere to applicable laws, regulations, and ethical standards.

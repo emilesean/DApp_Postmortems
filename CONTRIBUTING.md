@@ -4,11 +4,11 @@ We're thrilled to have you contribute to the DAppHackPOCs project. Your contribu
 
 ## How to Add a New Incident Entry
 
-1. **Fork the Repository**: Start by forking the [DAppHackPOCs repository](https://github.com/emilesean/DAppHackPOCs.git) on GitHub.
+1. **Fork the Repository**: Start by forking the [DAppHackPOCs repository](https://github.com/emilesean/DAppHackPOC.git) on GitHub.
 
 2. **Clone Your Fork**: Clone the fork to your local machine and initialize submodules:
    ```bash
-   git clone https://github.com/your-username-here/DAppHackPOCs.git
+   git clone https://github.com/your-username-here/DAppHackPOC.git
    git submodule update --init --recursive
    ```
 
