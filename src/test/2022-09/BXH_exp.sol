@@ -14,6 +14,7 @@ CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12
 IERC20 constant BXH = IERC20(0x6D1B7b59e3fab85B7d3a3d86e505Dd8e349EA7F3);
 
 contract Attacker is Test {
+
     IERC20 constant vUSDT = IERC20(0x19195aC5F36F8C75Da129Afca8f92009E292B84a);
     IERC20 constant usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
@@ -116,9 +117,11 @@ contract Attacker is Test {
     }
 
     receive() external payable {}
+
 }
 
 interface TokenStakingPoolDelegate {
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event DepositDelegate(address indexed user, address toUser, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -275,4 +278,5 @@ interface TokenStakingPoolDelegate {
     function withdrawEmergency(address tokenaddress, address to) external;
 
     function withdrawEmergencyNative(address to, uint256 amount) external;
+
 }

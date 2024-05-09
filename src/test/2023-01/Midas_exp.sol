@@ -11,15 +11,20 @@ import "./../interface.sol";
 // https://polygonscan.com/tx/0x0053490215baf541362fc78be0de98e3147f40223238d5b12512b3e26c0a2c2f
 
 interface PriceProvider {
+
     function getUnderlyingPrice(address cTokens) external view returns (uint256);
+
 }
 
 interface ICurvePools is ICurvePool {
+
     function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts, bool donate_dust) external;
     function remove_liquidity_one_coin(uint256 token_amount, uint256 i, uint256 min_amount, bool use_eth) external;
+
 }
 
 contract LiquidateContract {
+
     ICErc20Delegate WMATIC_STMATIC = ICErc20Delegate(0x23F43c1002EEB2b146F286105a9a2FC75Bf770A4);
     ICErc20Delegate FJCHF = ICErc20Delegate(0x62Bdc203403e7d44b75f357df0897f2e71F607F3);
     ICErc20Delegate FJEUR = ICErc20Delegate(0xe150e792e0a18C9984a0630f051a607dEe3c265d);
@@ -40,9 +45,11 @@ contract LiquidateContract {
         WMATIC_STMATIC.redeem(WMATIC_STMATIC.balanceOf(address(this)));
         STMATCI_F.transfer(receiver, STMATCI_F.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IAaveFlashloan aaveV3 = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
     IAaveFlashloan aaveV2 = IAaveFlashloan(0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf);
@@ -129,7 +136,7 @@ contract ContractTest is Test {
         assets[0] = address(WMATIC);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = aaveV3FlashloanAmount;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
     }
@@ -140,7 +147,7 @@ contract ContractTest is Test {
         assets[0] = address(WMATIC);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = aaveV2FlashloanAmount;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         aaveV2.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
     }
@@ -292,4 +299,5 @@ contract ContractTest is Test {
         });
         UniRouter.exactInputSingle(_Params);
     }
+
 }

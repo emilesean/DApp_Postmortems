@@ -14,10 +14,13 @@ import "./../interface.sol";
 // @Analysis - https://twitter.com/hexagate_/status/1663501550600302601
 
 interface IFAPEN is IERC20 {
+
     function unstake(uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IFAPEN FAPEN = IFAPEN(0xf3F1aBae8BfeCA054B330C379794A7bf84988228);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -47,4 +50,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

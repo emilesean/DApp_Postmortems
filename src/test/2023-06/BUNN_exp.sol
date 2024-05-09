@@ -12,10 +12,13 @@ import "./../interface.sol";
 // Reelection token,call deliver function to decrease pairs token balance,and swap to get the profit.
 
 interface Bunn is IERC20 {
+
     function deliver(uint256 tAmount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Bunn constant BUNN = Bunn(0xc54AAecF5fA1b6c007d019a9d14dFb4a77CC3039);
     IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
@@ -39,4 +42,5 @@ contract ContractTest is Test {
         BUNN.deliver(990_000_000_000);
         console.log("After deliver,pair bunn balance:", BUNN.balanceOf(address(Bunn_Wbnb_Poll)));
     }
+
 }

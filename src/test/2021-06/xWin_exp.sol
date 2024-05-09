@@ -22,16 +22,21 @@ struct TradeParams {
 }
 
 interface IBank {
+
     function flashloan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 interface IxWinDefi {
+
     function Subscribe(TradeParams memory _tradeParams) external payable;
     function Redeem(TradeParams memory _tradeParams) external payable;
     function WithdrawReward() external payable;
+
 }
 
 contract SimpleAccount {
+
     IxWinDefi xWinDefi = IxWinDefi(0x1Bf7fe7568211ecfF68B6bC7CCAd31eCd8fe8092);
 
     IERC20 PCLPXWIN = IERC20(0x8f52e0C41164169818C1FB04B263FDC7c1e56088);
@@ -64,9 +69,11 @@ contract SimpleAccount {
         xWinDefi.WithdrawReward();
         XWIN.transfer(address(owner), XWIN.balanceOf(address(this)));
     }
+
 }
 
 contract XWinExpTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     IBank bank = IBank(0x0cEA0832e9cdBb5D476040D58Ea07ecfbeBB7672);
@@ -169,4 +176,5 @@ contract XWinExpTest is Test {
         uint256 denominator = reserveIn * 10_000 + amountInWithFee;
         amountOut = numerator / denominator;
     }
+
 }

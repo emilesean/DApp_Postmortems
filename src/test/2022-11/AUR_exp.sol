@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://phalcon.blocksec.com/tx/bsc/0xb3bc6ca257387eae1cea3b997eb489c1a9c208d09ec4d117198029277468e25d
 // https://phalcon.blocksec.com/tx/bsc/0x7f031e8543e75bd5c85168558be89d2e08b7c02a32d07d76517cdbb10e279782
 interface IAurumNodePool {
+
     struct NodeEntity {
         uint256 nodeId;
         uint256 creationTime;
@@ -23,9 +24,11 @@ interface IAurumNodePool {
 
     function getRewardAmountOf(address account, uint256 creationTime) external view returns (uint256);
     function getNodes(address account) external view returns (NodeEntity[] memory nodes);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 AUR = IERC20(0x73A1163EA930A0a67dFEFB9C3713Ef0923755B78);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
 
@@ -89,4 +92,5 @@ contract ContractTest is Test {
     }
 
     fallback() external payable {}
+
 }

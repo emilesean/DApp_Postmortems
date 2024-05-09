@@ -21,26 +21,35 @@ Debug tx: https://dashboard.tenderly.co/tx/xdai/0x534b84f657883ddc1b66a314e8b392
 ref: https://github.com/compound-finance/compound-protocol/issues/141
 credit: https://github.com/Hephyrius/Immuni-Hundred-POC*/
 interface ICompoundToken {
+
     function borrow(uint256 borrowAmount) external;
     function repayBorrow(uint256 repayAmount) external;
     function redeem(uint256 redeemAmount) external;
     function mint(uint256 amount) external;
     function comptroller() external view returns (address);
+
 }
 
 interface IComptroller {
+
     function allMarkets() external view returns (address[] memory);
+
 }
 
 interface ICurve {
+
     function exchange(int128 i, int128 j, uint256 _dx, uint256 _min_dy) external;
+
 }
 
 interface IWeth {
+
     function deposit() external payable;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 private constant usdc = IERC20(0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83);
     IERC20 private constant wxdai = IERC20(0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d);
 
@@ -130,4 +139,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

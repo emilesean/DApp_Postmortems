@@ -1,5 +1,6 @@
 // https://github.com/polynetwork/eth-contracts/tree/d16252b2b857eecf8e558bd3e1f3bb14cff30e9b
 library Utils {
+
     /* @notice      Convert the bytes array to bytes32 type, the bytes array length must be 32
     *  @param _bs   Source bytes array
     *  @return      bytes32
@@ -299,9 +300,11 @@ library Utils {
         }
         return (codehash != 0x0 && codehash != accountHash);
     }
+
 }
 
 library ZeroCopySink {
+
     /* @notice          Convert boolean value into bytes
     *  @param b         The boolean value
     *  @return          Converted bytes array
@@ -458,9 +461,11 @@ library ZeroCopySink {
             return abi.encodePacked(WriteByte(0xFF), WriteUint64(uint64(v)));
         }
     }
+
 }
 
 library ZeroCopySource {
+
     event log_named_address(string key, address val);
     event log_named_bytes32(string key, bytes32 val);
     event log_named_decimal_int(string key, int256 val, uint256 decimals);
@@ -740,9 +745,11 @@ library ZeroCopySource {
             return (value, offset);
         }
     }
+
 }
 
 library ECCUtils {
+
     event log_named_address(string key, address val);
     event log_named_bytes32(string key, bytes32 val);
     event log_named_decimal_int(string key, int256 val, uint256 decimals);
@@ -991,4 +998,5 @@ library ECCUtils {
     function getHeaderHash(bytes memory rawHeader) internal returns (bytes32) {
         return sha256(abi.encodePacked(sha256(rawHeader)));
     }
+
 }

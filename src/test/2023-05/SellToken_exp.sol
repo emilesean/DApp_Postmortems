@@ -12,13 +12,16 @@ import "./../interface.sol";
 // Just use `getAmountOut` as token price
 
 interface ISellTokenRouter {
+
     function ShortStart(address coin, address addr, uint256 terrace) external payable;
     function withdraw(address token) external;
     function setTokenPrice(address _token) external;
     function getToken2Price(address token, address bnbOrUsdt, uint256 bnb) external returns (uint256);
+
 }
 
 contract SellTokenExp is Test, IDODOCallee {
+
     IDPPOracle oracle1 = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     ISellTokenRouter s_router = ISellTokenRouter(0x57Db19127617B77c8abd9420b5a35502b59870D6);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
@@ -91,4 +94,5 @@ contract SellTokenExp is Test, IDODOCallee {
     }
 
     receive() external payable {}
+
 }

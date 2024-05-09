@@ -11,15 +11,20 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xe7b7c974e51d8bca3617f927f86bf907a25991fe654f457991cbf656b190fe94
 
 interface BvaultsStrategy {
+
     function convertDustToEarned() external;
+
 }
 
 interface BPair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
     function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 BDEX = IERC20(0x7E0F01918D92b2750bbb18fcebeEDD5B94ebB867);
     BvaultsStrategy vaultsStrategy = BvaultsStrategy(0xB2B1DC3204ee8899d6575F419e72B53E370F6B20);
@@ -51,4 +56,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

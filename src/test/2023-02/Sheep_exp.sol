@@ -14,10 +14,13 @@ import "./../interface.sol";
 // https://github.com/SunWeb3Sec/DeFiHackLabs/#20230126---tinu---reflection-token
 
 interface RDeflationERC20 is IERC20 {
+
     function burn(uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     RDeflationERC20 SHEEP = RDeflationERC20(0x0025B42bfc22CbbA6c02d23d4Ec2aBFcf6E014d4);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -66,4 +69,5 @@ contract ContractTest is Test {
             SHEEP.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

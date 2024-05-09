@@ -13,12 +13,15 @@ import "./../interface.sol";
 // https://twitter.com/Phalcon_xyz/status/1672473343734480896
 
 interface IShidoLock {
+
     function lockTokens() external;
 
     function claimTokens() external;
+
 }
 
 contract ShidoTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 SHIDOInu = IERC20(0x733Af324146DCfe743515D8D77DC25140a07F9e0);
     // SHIDO Standard Token
@@ -94,4 +97,5 @@ contract ShidoTest is Test {
     }
 
     receive() external payable {}
+
 }

@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/BeosinAlert/status/1681116206663876610
 
 interface IPool {
+
     function emergencyWithdraw() external;
 
     function stakeNft(uint256[] memory tokenIds) external payable;
@@ -21,9 +22,11 @@ interface IPool {
     function unstakeNft(uint256[] memory tokenIds) external payable;
 
     function pledge(uint256 _stakeAmount) external payable;
+
 }
 
 contract BNOTest is Test {
+
     IERC721 NFT = IERC721(0x8EE0C2709a34E9FDa43f2bD5179FA4c112bEd89A);
     IERC20 BNO = IERC20(0xa4dBc813F7E1bf5827859e278594B1E0Ec1F710F);
     IPancakePair PancakePair = IPancakePair(0x4B9c234779A3332b74DBaFf57559EC5b4cB078BD);
@@ -84,4 +87,5 @@ contract BNOTest is Test {
         // Stake is canceled but NFTs are still claimable
         Pool.unstakeNft{value: 0.008 ether}(tokenIds);
     }
+
 }

@@ -20,18 +20,23 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IPositionNFTs {
+
     function mintPositionForUser(address _user) external returns (uint256);
+
 }
 
 interface IWiseLending {
+
     function getTotalDepositShares(address _poolToken) external view returns (uint256);
     function getPseudoTotalPool(address _poolToken) external view returns (uint256);
     function depositExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
     function borrowExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
     function withdrawExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
     IERC20 wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -150,9 +155,11 @@ contract ContractTest is Test {
             "Attacker USDC balance after exploit", USDC.balanceOf(address(this)), USDC.decimals()
         );
     }
+
 }
 
 contract Recover {
+
     IPositionNFTs PositionNFTs = IPositionNFTs(0x9D6d4e2AfAB382ae9B52807a4B36A8d2Afc78b07);
     IWiseLending WiseLending = IWiseLending(0x84524bAa1951247b3A2617A843e6eCe915Bb9674);
     IERC20 WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
@@ -175,4 +182,5 @@ contract Recover {
     function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
         return this.onERC721Received.selector;
     }
+
 }

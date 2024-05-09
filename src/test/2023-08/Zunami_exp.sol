@@ -20,10 +20,13 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IUZD is IERC20 {
+
     function cacheAssetPrice() external;
+
 }
 
 interface ICurve {
+
     function exchange(
         uint256 i,
         uint256 j,
@@ -32,9 +35,11 @@ interface ICurve {
         bool use_eth,
         address receiver
     ) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IUZD UZD = IUZD(0xb40b6608B2743E691C9B54DdBDEe7bf03cd79f1c);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -198,4 +203,5 @@ contract ContractTest is Test {
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         USDC.transfer(msg.sender, uint256(amount0Delta));
     }
+
 }

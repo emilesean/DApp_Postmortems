@@ -18,10 +18,13 @@ import "./../interface.sol";
 // Twitter alert by Peckshield : https://twitter.com/peckshield/status/1582892058800685058
 
 interface BEGO20 is IERC20 {
+
     function mint(uint256, string memory, address, bytes32[] memory, bytes32[] memory, uint8[] memory) external;
+
 }
 
 contract ContractTest is Test {
+
     BEGO20 constant BEGO_TOKEN = BEGO20(0xc342774492b54ce5F8ac662113ED702Fc1b34972);
     IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     Uni_Router_V2 constant PS_ROUTER = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -66,4 +69,5 @@ contract ContractTest is Test {
             BEGO_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

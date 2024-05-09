@@ -9,6 +9,7 @@ import {IERC165} from "../../utils/introspection/IERC165.sol";
  * @dev Required interface of an ERC-721 compliant contract.
  */
 interface IERC721 is IERC165 {
+
     /**
      * @dev Emitted when `tokenId` token is transferred from `from` to `to`.
      */
@@ -132,4 +133,5 @@ interface IERC721 is IERC165 {
      * See {setApprovalForAll}
      */
     function isApprovedForAll(address owner, address operator) external view returns (bool);
+
 }

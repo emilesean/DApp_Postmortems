@@ -15,10 +15,13 @@ import "./../interface.sol";
 // https://twitter.com/ChainAegis/status/1714837519488205276
 
 interface ISwapContract {
+
     function swap(uint256 amount, address originToken) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 private constant MicDao = IERC20(0xf6876f6AB2637774804b85aECC17b434a2B57168);
     IDPPOracle private constant DPPOracle = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
@@ -87,9 +90,11 @@ contract ContractTest is Test {
             MicDao.balanceOf(address(this)), 0, path, address(this), block.timestamp + 1000
         );
     }
+
 }
 
 contract HelperContract {
+
     ISwapContract private constant SwapContract = ISwapContract(0x19345233ea7486c1D5d780A19F0e303597E480b5);
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 private constant MicDao = IERC20(0xf6876f6AB2637774804b85aECC17b434a2B57168);
@@ -105,4 +110,5 @@ contract HelperContract {
         MicDao.transfer(owner, MicDao.balanceOf(address(this)));
         selfdestruct(payable(owner));
     }
+
 }

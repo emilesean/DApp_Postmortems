@@ -11,24 +11,31 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x42f56d3e86fb47e1edffa59222b33b73e7407d4b5bb05e23b83cb1771790f6c1
 
 interface NimbusBNB is IERC20 {
+
     function deposit() external payable;
     function withdraw(uint256 wad) external;
+
 }
 
 interface StakingRewardFixedAPY is IERC20 {
+
     function stake(uint256 amount) external;
     function getReward() external;
     function withdraw() external;
     function earned(address account) external view returns (uint256);
+
 }
 
 interface LockStakingRewardFixedAPY {
+
     function stake(uint256 amount) external;
     function getReward() external;
     function earned(address account) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 GNIMB = IERC20(0x99C486b908434Ae4adF567e9990A929854d0c955);
     IERC20 NIMB = IERC20(0xCb492C701F7fe71bC9C4B703b84B0Da933fF26bB);
@@ -122,9 +129,11 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract User1 is Test {
+
     address Owner;
     IERC20 GNIMB = IERC20(0x99C486b908434Ae4adF567e9990A929854d0c955);
     NimbusBNB NBU_WBNB = NimbusBNB(0xA2CA18FC541B7B101c64E64bBc2834B05066248b);
@@ -157,9 +166,11 @@ contract User1 is Test {
     //     stakingReward1.withdraw();
     //     GNIMB.transfer(Owner, GNIMB.balanceOf(address(this)));
     // }
+
 }
 
 contract User2 {
+
     address Owner;
     IERC20 GNIMB = IERC20(0x99C486b908434Ae4adF567e9990A929854d0c955);
     NimbusBNB NBU_WBNB = NimbusBNB(0xA2CA18FC541B7B101c64E64bBc2834B05066248b);
@@ -186,9 +197,11 @@ contract User2 {
         stakingReward2.getReward();
         GNIMB.transfer(Owner, GNIMB.balanceOf(address(this)));
     }
+
 }
 
 contract User3 {
+
     address Owner;
     IERC20 GNIMB = IERC20(0x99C486b908434Ae4adF567e9990A929854d0c955);
     NimbusBNB NBU_WBNB = NimbusBNB(0xA2CA18FC541B7B101c64E64bBc2834B05066248b);
@@ -215,4 +228,5 @@ contract User3 {
         stakingReward3.getReward();
         GNIMB.transfer(Owner, GNIMB.balanceOf(address(this)));
     }
+
 }

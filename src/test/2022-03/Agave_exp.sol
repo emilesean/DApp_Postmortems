@@ -5,7 +5,9 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IGnosisBridgedAsset is IERC20 {
+
     function mint(address, uint256) external returns (bool);
+
 }
 
 // @KeyInfo - Total Lost : ~1.5M US$
@@ -41,6 +43,7 @@ Note: These concise steps outline the specific actions taken in each phase of th
 */
 
 contract AgaveExploit is Test {
+
     //Prepare numbers
     uint256 linkLendNum1 = 1_000_000_000_000_000_100;
     uint256 wethlendnum2 = 1;
@@ -199,4 +202,5 @@ contract AgaveExploit is Test {
             borrowTokens();
         }
     }
+
 }

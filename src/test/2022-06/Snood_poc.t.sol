@@ -5,14 +5,17 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IUNIPAIR is IERC20 {
+
     function sync() external;
 
     function getReserves() external returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
 
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 SNOOD = IERC20(0xD45740aB9ec920bEdBD9BAb2E863519E59731941);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
@@ -52,4 +55,5 @@ contract ContractTest is Test {
 
         assertTrue(WETH.balanceOf(attacker) > 0);
     }
+
 }

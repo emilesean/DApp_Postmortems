@@ -17,6 +17,7 @@ import "forge-std/Test.sol";
 // https://bscscan.com/address/0x1c2b102f22c08694eee5b1f45e7973b6eaca3e92  attacker contract
 
 interface UniRouterLike {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
 
     function swapExactTokensForTokens(
@@ -31,9 +32,11 @@ interface UniRouterLike {
         uint256 amountIn,
         address[] calldata path
     ) external view returns (uint256[] memory amounts);
+
 }
 
 interface ERC20Like {
+
     function transfer(address to, uint256 amount) external returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
@@ -43,9 +46,11 @@ interface ERC20Like {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
 
     function allowance(address owner, address spender) external view returns (uint256);
+
 }
 
 contract LaunchZoneExploit is Test {
+
     ERC20Like LZ;
     ERC20Like BUSD;
     ERC20Like BISWAPPair;
@@ -140,4 +145,5 @@ contract LaunchZoneExploit is Test {
         // check current BSUSD balance
         console.log("attacker BUSD Balalnce", BUSD.balanceOf(address(this)) / 1e18);
     }
+
 }

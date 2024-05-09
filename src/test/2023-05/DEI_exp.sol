@@ -10,16 +10,21 @@ import "./../interface.sol";
 // https://arbiscan.io/tx/0xb1141785b7b94eb37c39c37f0272744c6e79ca1517529fec3f4af59d4c3c37ef
 
 interface IStablePair {
+
     function sync() external;
     function skim() external;
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+
 }
 
 interface IDEI is IERC20 {
+
     function burnFrom(address account, uint256 amount) external;
+
 }
 
 contract DEIPocTest is Test {
+
     IStablePair pair = IStablePair(0x7DC406b9B904a52D10E19E848521BbA2dE74888b);
     IDEI DEI = IDEI(0xDE1E704dae0B4051e80DAbB26ab6ad6c12262DA0);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
@@ -44,4 +49,5 @@ contract DEIPocTest is Test {
         pair.swap(0, 5_047_470_472_572, address(this), "");
         console.log("USDC balance after: ", USDC.balanceOf(address(this)));
     }
+
 }

@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
+
     IERC20 ARTH = IERC20(0x8CC0F052fff7eaD7f2EdCCcaC895502E884a8a71);
     IAaveFlashloan MahaLend = IAaveFlashloan(0x76F0C94Ced5B48020bf0D7f3D0CEabC877744cB5);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -62,7 +63,7 @@ contract ContractTest is Test {
         assets[0] = address(USDC);
         uint256[] memory amount = new uint256[](1);
         amount[0] = depositAmount;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         MahaLend.flashLoan(address(this), assets, amount, modes, address(this), "", 0);
 
@@ -116,4 +117,5 @@ contract ContractTest is Test {
 
         MahaLend.withdraw(address(USDC), USDC.balanceOf(address(mUSDC)), address(this)); // withdraw all asset
     }
+
 }

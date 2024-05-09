@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/bulu4477/status/1682983956080377857
 
 interface IUniswapV3Router {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -25,15 +26,19 @@ interface IUniswapV3Router {
     }
 
     function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
+
 }
 
 interface ISUTTokenSale {
+
     function tokenPrice() external view returns (uint256);
 
     function buyTokens(uint256 _numberOfTokens) external payable;
+
 }
 
 contract SUTTest is Test {
+
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 SUT = IERC20(0x70E1bc7E53EAa96B74Fad1696C29459829509bE2);
     IUniswapV3Router Router = IUniswapV3Router(0x13f4EA83D0bd40E75C8222255bc855a974568Dd4);
@@ -96,4 +101,5 @@ contract SUTTest is Test {
         });
         Router.exactInputSingle(params);
     }
+
 }

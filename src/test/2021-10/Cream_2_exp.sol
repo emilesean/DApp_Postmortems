@@ -17,17 +17,22 @@ import "./../interface.sol";
 interface YDAI is IERC20 {}
 
 interface YVaultPeakProxy {
+
     function redeemInYusd(uint256 dusdAmout, uint256 minOut) external;
+
 }
 
 interface IYearnVault {
+
     function deposit(uint256 amount) external;
     function withdraw(uint256 amount) external;
     function pricePerShare() external view returns (uint256);
     function totalAssets() external view returns (uint256);
+
 }
 
 interface ICurveDepositor {
+
     function add_liquidity(uint256[4] memory amounts, uint256 min_mint_amount) external;
     function remove_liquidity_imbalance(uint256[4] memory amounts, uint256 max_burn_amount) external;
     function remove_liquidity_one_coin(
@@ -36,27 +41,35 @@ interface ICurveDepositor {
         uint256 min_uamount,
         bool donate_dust
     ) external;
+
 }
 
 interface ICether {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
     function mint() external payable;
     function underlying() external view returns (address);
+
 }
 
 interface ICrToken {
+
     function borrow(uint256 borrowAmount) external;
     function mint(uint256 mintAmount) external;
     function underlying() external view returns (address);
     function getCash() external view returns (uint256);
+
 }
 
 interface IComptroller {
+
     function enterMarkets(address[] memory cTokens) external;
     // function getAccountLiquidity() external view returns(address[] memory markets);
+
 }
 
 contract SecondContract {
+
     address contractAddress;
     IComptroller comptroller = IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
     IAaveFlashloan AaveFlash = IAaveFlashloan(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
@@ -72,7 +85,7 @@ contract SecondContract {
         assets[0] = address(WETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 524_102 * 1e18;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         console.log("[7. Aave FlashLoan 524_102 WETH]");
         AaveFlash.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -124,9 +137,11 @@ contract SecondContract {
     }
 
     receive() external payable {}
+
 }
 
 contract ContractTest is Test {
+
     IDaiFlashloan DaiFlash = IDaiFlashloan(0x1EB4CF3A948E7D72A198fe073cCb8C7a948cD853);
     ICurvePool curvePool = ICurvePool(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
     IComptroller comptroller = IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
@@ -328,4 +343,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

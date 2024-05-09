@@ -6,6 +6,7 @@ import "./../interface.sol";
 
 // Address https://polygonscan.com/address/0x940ce652a51ebadb5df09d605dbeda95fdcf697b
 interface Target {
+
     struct Call {
         address target;
         bytes callData;
@@ -13,9 +14,11 @@ interface Target {
     }
 
     function multicallWithoutCheck(Call[] memory calls) external;
+
 }
 
 contract ContractTest is Test {
+
     struct Call {
         address target;
         bytes callData;
@@ -40,4 +43,5 @@ contract ContractTest is Test {
 
         emit log_named_decimal_uint("[End] Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 6);
     }
+
 }

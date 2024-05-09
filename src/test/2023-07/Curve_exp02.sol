@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ICurve {
+
     function exchange(
         uint256 i,
         uint256 j,
@@ -36,9 +37,11 @@ interface ICurve {
     function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts, bool use_eth) external;
 
     function remove_liquidity_one_coin(uint256 token_amount, uint256 i, uint256 min_amount, bool use_eth) external;
+
 }
 
 contract ContractTest is Test {
+
     IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 CRV = IERC20(0xD533a949740bb3306d119CC777fa900bA034cd52);
     IERC20 LP = IERC20(0xEd4064f376cB8d68F770FB1Ff088a3d0F3FF5c4d);
@@ -109,4 +112,5 @@ contract ContractTest is Test {
             CurvePool.exchange{value: 500 ether}(0, 1, 500 ether, 0, true);
         }
     }
+
 }

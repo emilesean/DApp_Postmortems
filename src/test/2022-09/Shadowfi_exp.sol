@@ -4,16 +4,21 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface ISDF {
+
     function burn(address, uint256) external;
     function balanceOf(address owner) external view returns (uint256);
     function approve(address spender, uint256 value) external returns (bool);
+
 }
 
 interface IPair {
+
     function sync() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     ISDF SDF = ISDF(0x10bc28d2810dD462E16facfF18f78783e859351b);
@@ -55,4 +60,5 @@ contract ContractTest is Test {
             SDF.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

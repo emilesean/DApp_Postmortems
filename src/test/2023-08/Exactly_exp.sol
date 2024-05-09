@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IexaUSDC is IERC4626 {
+
     function asset() external returns (address);
     function auditor() external view returns (address);
     function borrowAtMaturity(
@@ -39,9 +40,11 @@ interface IexaUSDC is IERC4626 {
         uint256 maxAssets,
         address seizeMarket
     ) external returns (uint256 repaidAssets);
+
 }
 
 interface IAuditor {
+
     struct MarketData {
         uint128 adjustFactor;
         uint8 decimals;
@@ -57,9 +60,11 @@ interface IAuditor {
     ) external view returns (uint256 sumCollateral, uint256 sumDebtPlusEffects);
     function markets(address market) external view returns (MarketData memory);
     function assetPrice(address priceFeed) external view returns (uint256);
+
 }
 
 interface IDebtManager {
+
     struct Permit {
         address account;
         uint256 deadline;
@@ -83,9 +88,11 @@ interface IDebtManager {
         uint256 ratio,
         uint160 sqrtPriceLimitX96
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0x7F5c764cBc14f9669B88837ca1490cCa17c31607);
     IERC20 WETH = IERC20(0x4200000000000000000000000000000000000006);
     IexaUSDC exaUSDC = IexaUSDC(0x81C9A7B55A4df39A9B7B5F781ec0e53539694873);
@@ -246,9 +253,11 @@ contract ContractTest is Test {
             "Attacker USDC balance after exploit", USDC.balanceOf(address(this)), USDC.decimals()
         );
     }
+
 }
 
 contract FakeMarket is Nonces {
+
     using FixedPointMathLib for int256;
     using FixedPointMathLib for uint256;
     using FixedPointMathLib for uint128;
@@ -456,4 +465,5 @@ contract FakeMarket is Nonces {
     function nonces(address owner) public view virtual override(Nonces) returns (uint256) {
         return super.nonces(owner);
     }
+
 }

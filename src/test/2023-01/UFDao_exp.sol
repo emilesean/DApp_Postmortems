@@ -10,19 +10,24 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x933d19d7d822e84e34ca47ac733226367fbee0d9c0c89d88d431c4f99629d77a
 
 interface SHOP {
+
     function buyPublicOffer(address _dao, uint256 _lpAmount) external;
+
 }
 
 interface IUFT is IERC20 {
+
     function burn(
         uint256 _amount,
         address[] memory _tokens,
         address[] memory _adapters,
         address[] memory _pools
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     SHOP shop = SHOP(0xCA49EcF7e7bb9bBc9D1d295384663F6BA5c0e366);
     IUFT UFT = IUFT(0xf887A2DaC0DD432997C970BCE597A94EaD4A8c25);
@@ -65,4 +70,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

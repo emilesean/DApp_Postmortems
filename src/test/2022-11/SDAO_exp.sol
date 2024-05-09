@@ -11,6 +11,7 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xb3ac111d294ea9dedfd99349304a9606df0b572d05da8cedf47ba169d10791ed
 
 interface sDAO is IERC20 {
+
     function stakeLP(uint256 _lpAmount) external;
     function withdrawTeam(address _token) external;
     function getPerTokenReward() external view returns (uint256);
@@ -20,9 +21,11 @@ interface sDAO is IERC20 {
     function lastTotalStakeReward() external view returns (uint256);
     function pendingToken(address account) external view returns (uint256);
     function getReward() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     sDAO SDAO = sDAO(0x6666625Ab26131B490E7015333F97306F05Bf816);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -95,4 +98,5 @@ contract ContractTest is Test {
             SDAO.balanceOf(address(this)), 0, path, address(this), block.timestamp + 60
         );
     }
+
 }

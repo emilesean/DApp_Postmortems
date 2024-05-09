@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IFeeFreeRouter {
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -38,13 +39,17 @@ interface IFeeFreeRouter {
         address to,
         uint256 deadline
     ) external returns (uint256 amountA, uint256 amountB);
+
 }
 
 interface IBabyDogeCoin is IERC20 {
+
     function numTokensSellToAddToLiquidity() external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
@@ -223,4 +228,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

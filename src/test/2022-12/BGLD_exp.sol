@@ -10,10 +10,13 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xea108fe94bfc9a71bb3e4dee4a1b0fd47572e6ad6aba8b2155ac44861be628ae
 
 interface ERCPorxy {
+
     function migrate() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 oldBGLD = IERC20(0xC2319E87280c64e2557a51Cb324713Dd8d1410a3);
@@ -109,4 +112,5 @@ contract ContractTest is Test {
             DEBT.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

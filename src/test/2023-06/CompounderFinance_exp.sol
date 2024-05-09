@@ -14,14 +14,17 @@ import "./../interface.sol";
 // https://twitter.com/numencyber/status/1666346419702362112
 
 interface IcDAI {
+
     function balanceOf(address owner) external view returns (uint256);
 
     function deposit(uint256 _amount, bool _autoStakeInStakingPool) external;
 
     function withdraw(uint256 _shares, bool _autoWithdrawInStakingPool) external;
+
 }
 
 interface IyDAI {
+
     function balanceOf(address owner) external view returns (uint256);
 
     function approve(address spender, uint256 value) external returns (bool);
@@ -29,17 +32,23 @@ interface IyDAI {
     function deposit(uint256 _amount) external;
 
     function withdraw(uint256 _shares) external;
+
 }
 
 interface ICurveSwap {
+
     function exchange(int128 i, int128 j, uint256 dx, uint256 min_dy) external;
+
 }
 
 interface IStrategyCurve {
+
     function deposit() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     // Compounder DAI Stablecoin
     IcDAI cDAI = IcDAI(0x2381742592ab54dC2e89f193AF682D914A8b24C1);
@@ -112,4 +121,5 @@ contract ContractTest is Test {
         // Step 7. Repay flashloan.
         DAI.transfer(address(DAIUSDCPool), 1_239_990 * 1e18 + fee0);
     }
+
 }

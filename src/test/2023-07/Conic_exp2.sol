@@ -14,14 +14,17 @@ import "./../interface.sol";
 // https://twitter.com/BlockSecTeam/status/1682346827939717120
 
 interface IConic {
+
     function deposit(uint256 underlyingAmount, uint256 minLpReceived, bool stake) external returns (uint256);
 
     function handleDepeggedCurvePool(address curvePool_) external;
 
     function withdraw(uint256 conicLpAmount, uint256 minUnderlyingReceived) external returns (uint256);
+
 }
 
 contract ConicFinanceTest is Test {
+
     IWETH WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 rETH = IERC20(0xae78736Cd615f374D3085123A210448E74Fc6393);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
@@ -216,4 +219,5 @@ contract ConicFinanceTest is Test {
         removeLiquidityFromVyperContract(vyperContract1, rETH_ETHf.balanceOf(address(this)));
         exchangeVyper(vyperContract1, 3_425_879_111_748_706_429_367, 0, 1);
     }
+
 }

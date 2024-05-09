@@ -15,14 +15,17 @@ import "./../interface.sol";
 // Vulnerability: Closed source contract. Probable vulnerabilities: Wrong function (_transfer) visibility / Non standard ERC20 implementation
 
 interface INO {
+
     function _transfer(address sender, address recipient, uint256 amount) external;
 
     function transfer(address to, uint256 value) external;
 
     function balanceOf(address account) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     INO NO = INO(0x6fEAc5F3792065b21f85BC118D891b33e0673bD8);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -65,4 +68,5 @@ contract ContractTest is Test {
             WETH.decimals()
         );
     }
+
 }

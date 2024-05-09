@@ -16,6 +16,7 @@ import "./../interface.sol";
 // https://medium.com/@Rodeo_Finance/rodeo-post-mortem-overview-f35635c14101
 
 interface IInvestor {
+
     function earn(
         address usr,
         address pol,
@@ -24,9 +25,11 @@ interface IInvestor {
         uint256 bor,
         bytes memory dat
     ) external returns (uint256);
+
 }
 
 interface ICamelotRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -35,9 +38,11 @@ interface ICamelotRouter {
         address referrer,
         uint256 deadline
     ) external;
+
 }
 
 interface ISwapRouter {
+
     struct ExactInputParams {
         bytes path;
         address recipient;
@@ -47,9 +52,11 @@ interface ISwapRouter {
     }
 
     function exactInput(ExactInputParams memory params) external payable returns (uint256 amountOut);
+
 }
 
 contract RodeoTest is Test {
+
     IERC20 unshETH = IERC20(0x0Ae38f7E10A43B5b2fB064B42a2f4514cbA909ef);
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
@@ -146,4 +153,5 @@ contract RodeoTest is Test {
         amounts[0] = 30e18;
         Vault.flashLoan(address(this), tokens, amounts, bytes(""));
     }
+
 }

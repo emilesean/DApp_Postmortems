@@ -13,10 +13,13 @@ import "./../interface.sol";
 // Vulnerability: lack of permission control on mint
 
 interface IMiner {
+
     function mint(address[] memory to, uint256[] memory value) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC721 landNFT = IERC721(0x1a62fe088F46561bE92BB5F6e83266289b94C154);
     IMiner minerContract = IMiner(0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7);
 
@@ -43,4 +46,5 @@ contract ContractTest is Test {
     function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
         return this.onERC721Received.selector;
     }
+
 }

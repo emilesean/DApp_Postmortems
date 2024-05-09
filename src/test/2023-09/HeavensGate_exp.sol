@@ -17,20 +17,25 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface Staking {
+
     function stake(address _to, uint256 _amount) external;
 
     function unstake(address _to, uint256 _amount, bool _rebase) external;
 
     function rebase() external;
+
 }
 
 interface IsHATE is IERC20 {
+
     function rebase(uint256 amount_, uint256 epoch_) external returns (uint256);
 
     function circulatingSupply() external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 HATE = IERC20(0x7b768470590B8A0d28fC714d0A70754d556D14eD);
     IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
     Uni_Pair_V2 HATE_ETH_Pair = Uni_Pair_V2(0x738dab4AF8D21b7aafb73545D79D3B4831eE79dA);
@@ -95,4 +100,5 @@ contract ContractTest is Test {
         HATE.approve(address(uniRouter), type(uint256).max);
         sHATE.approve(address(HATEStaking), type(uint256).max);
     }
+
 }

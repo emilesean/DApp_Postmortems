@@ -11,15 +11,20 @@ import "./../interface.sol";
 // https://arbiscan.io/tx/0xc523c6307b025ebd9aef155ba792d1ba18d5d83f97c7a846f267d3d9a3004e8c
 
 interface uniswapV3Flash {
+
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface GMXRouter {
+
     function swapETHToTokens(address[] memory _path, uint256 _minOut, address _receiver) external payable;
     function swap(address[] memory _path, uint256 _amountIn, uint256 _minOut, address _receiver) external;
+
 }
 
 interface GMXReward {
+
     function mintAndStakeGlpETH(uint256 _minUsdg, uint256 _minGlp) external payable returns (uint256);
     function mintAndStakeGlp(
         address _token,
@@ -27,18 +32,24 @@ interface GMXReward {
         uint256 _minUsdg,
         uint256 _minGlp
     ) external returns (uint256);
+
 }
 
 interface SwapFlashLoan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 interface GlpDepositor {
+
     function donate(uint256 _amount) external;
     function redeem(uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 DAI = IERC20(0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1);
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
@@ -113,7 +124,7 @@ contract ContractTest is Test {
         amounts[0] = 17_290_000 * 1e6;
         amounts[1] = 9500 * 1e18;
         amounts[2] = 406_316 * 1e18;
-        uint256[] memory modes = new uint[](3);
+        uint256[] memory modes = new uint256[](3);
         modes[0] = 0;
         modes[1] = 0;
         modes[2] = 0;
@@ -154,7 +165,7 @@ contract ContractTest is Test {
             assets[0] = address(USDC);
             uint256[] memory amounts = new uint256[](1);
             amounts[0] = 14_435_000 * 1e6;
-            uint256[] memory modes = new uint[](1);
+            uint256[] memory modes = new uint256[](1);
             modes[0] = 0;
             Radiant.flashLoan(address(this), assets, amounts, modes, address(0), new bytes(1), 0);
             return true;
@@ -255,4 +266,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

@@ -19,10 +19,13 @@ import "./../interface.sol";
 // Hacking God :
 
 interface IClaimer {
+
     function claim(uint256[] calldata tokenIds) external;
+
 }
 
 contract SumerMoney is Test {
+
     uint256 blocknumToForkFrom = 13_076_768;
 
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
@@ -99,9 +102,11 @@ contract SumerMoney is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract Helper {
+
     address owner;
     IWETH WETH = IWETH(payable(address(0x4200000000000000000000000000000000000006)));
     IERC20 USDC = IERC20(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913);
@@ -136,4 +141,5 @@ contract Helper {
             owner.call(abi.encodeWithSignature("attack()"));
         }
     }
+
 }

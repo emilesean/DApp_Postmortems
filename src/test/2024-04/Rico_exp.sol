@@ -19,10 +19,13 @@ import "../interface.sol";
 // Hacking God :
 
 interface IBankDiamond {
+
     function flash(address, bytes calldata) external returns (bytes memory result);
+
 }
 
 contract Rico is Test {
+
     uint256 blocknumToForkFrom = 202_973_712;
 
     address constant BankDiamond = 0x598C6c1cd9459F882530FC9D7dA438CB74C6CB3b;
@@ -109,4 +112,5 @@ contract Rico is Test {
         params.sqrtPriceLimitX96 = 0;
         Uni_Router_V3(UniV3Router).exactInputSingle(params);
     }
+
 }

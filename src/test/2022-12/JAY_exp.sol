@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Article Hypernative : https://www.hypernative.io/blog/jaypeggers-exploit
 
 interface IJay {
+
     function buyJay(
         address[] memory erc721TokenAddress,
         uint256[] memory erc721Ids,
@@ -28,9 +29,11 @@ interface IJay {
     ) external payable;
     function sell(uint256 value) external;
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IJay constant JAY_TOKEN = IJay(0xf2919D1D80Aff2940274014bef534f7791906FF2);
     IBalancerVault constant BALANCER_VAULT = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IWETH constant WETH_TOKEN = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
@@ -112,4 +115,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

@@ -19,14 +19,17 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ICurve {
+
     function exchange(int128 i, int128 j, uint256 dx, uint256 min_dy) external payable returns (uint256);
 
     function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount) external payable returns (uint256);
 
     function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts) external;
+
 }
 
 contract ContractTest is Test {
+
     IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 pETH = IERC20(0x836A808d4828586A69364065A1e064609F5078c7);
     IERC20 LP = IERC20(0x9848482da3Ee3076165ce6497eDA906E66bB85C5);
@@ -92,4 +95,5 @@ contract ContractTest is Test {
             CurvePool.add_liquidity{value: 40_000 ether}(amount, 0);
         }
     }
+
 }

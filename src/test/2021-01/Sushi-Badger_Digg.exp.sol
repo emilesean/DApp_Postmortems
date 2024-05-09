@@ -22,6 +22,7 @@ fee is sent to SushiMaker by SushiSwapPair's burn (from Router::removeLiquidity)
 IUniswapV2Factory(factory).feeTo() == SushiMaker, check here: https://etherscan.io/address/0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac#readContract*/
 
 contract Exploit is Test {
+
     IUniswapV2Router02 private constant sushiRouter = IUniswapV2Router02(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
     IUniswapV2Factory private constant sushiFactory = IUniswapV2Factory(0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac);
     IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -101,25 +102,31 @@ contract Exploit is Test {
     }
 
     receive() external payable {}
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IWETH {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface IUniswapV2Router02 {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -148,9 +155,11 @@ interface IUniswapV2Router02 {
         address to,
         uint256 deadline
     ) external returns (uint256 amountA, uint256 amountB);
+
 }
 
 interface IUniswapV2Pair {
+
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address) external view returns (uint256);
     function skim(address to) external;
@@ -159,12 +168,17 @@ interface IUniswapV2Pair {
 
     function token0() external view returns (address);
     function token1() external view returns (address);
+
 }
 
 interface IUniswapV2Factory {
+
     function createPair(address tokenA, address tokenB) external returns (address pair);
+
 }
 
 interface ISushiMaker {
+
     function convert(address x, address y) external view returns (uint256);
+
 }

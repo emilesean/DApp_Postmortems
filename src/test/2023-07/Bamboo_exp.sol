@@ -20,6 +20,7 @@ import "./../interface.sol";
 // @POC Author : https://twitter.com/eugenioclrc
 
 contract BambooTest is Test {
+
     IERC20 wbnb = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 bamboo = IERC20(0xED56784bC8F2C036f6b0D8E04Cb83C253e4a6A94);
 
@@ -79,4 +80,5 @@ contract BambooTest is Test {
 
         console.log("profit after return flashloan", toEth(wbnb.balanceOf(address(this)) - 4000 ether));
     }
+
 }

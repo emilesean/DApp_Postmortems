@@ -12,6 +12,7 @@ import "./../interface.sol";
 // @Analysis - https://twitter.com/MetaTrustAlert/status/1667041877428932608
 
 contract ContractTest is Test {
+
     IDPPOracle DPPOracle = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
 
     IERC20 BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -64,4 +65,5 @@ contract ContractTest is Test {
 
         BUSD.transfer(address(DPPOracle), 29_100 * 1e18);
     }
+
 }

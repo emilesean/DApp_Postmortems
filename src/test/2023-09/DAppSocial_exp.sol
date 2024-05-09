@@ -15,6 +15,7 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1698064511230464310
 
 interface IDAppSocial {
+
     function depositTokens(address tokenContract, uint256 amount) external;
 
     function lockTokens(address altAccount, uint48 length) external;
@@ -22,9 +23,11 @@ interface IDAppSocial {
     function withdrawTokens(address _tokenAddress, uint256 _tokenAmount) external;
 
     function withdrawTokensWithAlt(address tokenAddress, address from, uint256 amount) external;
+
 }
 
 contract DAppTest is Test {
+
     IUSDT private constant USDT = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IDAppSocial private constant DAppSocial = IDAppSocial(0x319Ec3AD98CF8b12a8BE5719FeC6E0a9bb1ad0D1);
@@ -71,9 +74,11 @@ contract DAppTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract HelperExploitContract {
+
     IUSDT private constant USDT = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IDAppSocial private constant DAppSocial = IDAppSocial(0x319Ec3AD98CF8b12a8BE5719FeC6E0a9bb1ad0D1);
@@ -103,4 +108,5 @@ contract HelperExploitContract {
         require(msg.sender == owner, "Only owner");
         selfdestruct(owner);
     }
+
 }

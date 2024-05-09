@@ -10,6 +10,7 @@ import "./../interface.sol";
 
 // @Analysis - https://x.com/MetaTrustAlert/status/1728616715825848377?s=20
 contract TheNFTV2Test is Test {
+
     IERC721 THENFTV2 = IERC721(0x79a7D3559D73EA032120A69E59223d4375DEb595);
     IERC20 TheDAO = IERC20(0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -31,7 +32,7 @@ contract TheNFTV2Test is Test {
         assets[0] = address(WETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 80_000 * 1e18;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
 
         emit log_named_decimal_uint("[Start] Attacker ETH Balance", WETH.balanceOf(address(this)), WETH.decimals());
@@ -76,4 +77,5 @@ contract TheNFTV2Test is Test {
     }
 
     receive() external payable {}
+
 }

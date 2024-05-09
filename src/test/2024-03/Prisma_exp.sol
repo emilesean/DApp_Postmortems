@@ -16,6 +16,7 @@ import {Test, console2} from "forge-std/Test.sol";
 /////////////////////////////////////// Interfaces ///////////////////////////////////////
 
 interface IERC20 {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -29,18 +30,22 @@ interface IERC20 {
     function approve(address spender, uint256 value) external returns (bool);
     function transfer(address to, uint256 value) external returns (bool);
     function transferFrom(address from, address to, uint256 value) external returns (bool);
+
 }
 
 interface IMKUSDLoan {
+
     function flashLoan(
         IERC3156FlashBorrower receiver,
         address token,
         uint256 amount,
         bytes calldata data
     ) external returns (bool);
+
 }
 
 interface IERC3156FlashBorrower {
+
     function onFlashLoan(
         address initiator,
         address token,
@@ -48,9 +53,11 @@ interface IERC3156FlashBorrower {
         uint256 fee,
         bytes calldata data
     ) external returns (bytes32);
+
 }
 
 interface IBorrowerOperations {
+
     function setDelegateApproval(address _delegate, bool _isApproved) external;
 
     function openTrove(
@@ -64,22 +71,28 @@ interface IBorrowerOperations {
     ) external;
 
     function closeTrove(address troveManager, address account) external;
+
 }
 
 interface IPriceFeed {
+
     function fetchPrice(address _token) external returns (uint256);
+
 }
 
 interface IBalancerVault {
+
     function flashLoan(
         address recipient,
         address[] memory tokens,
         uint256[] memory amounts,
         bytes memory userData
     ) external;
+
 }
 
 contract PrismaExploit is Test {
+
     IBalancerVault public vault;
     IPriceFeed public priceFeed;
 
@@ -208,4 +221,5 @@ contract PrismaExploit is Test {
         // current contract wstETH balance
         console2.log("wstETH balance ~1281.79 ETH after attack: ", IERC20(wstETH).balanceOf(address(this)));
     }
+
 }

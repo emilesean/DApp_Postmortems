@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IPRM {
+
     function liquidate(address position) external;
 
     struct ERC20PermitSignature {
@@ -40,13 +41,17 @@ interface IPRM {
         uint256 maxFeePercentage,
         ERC20PermitSignature calldata permitSignature
     ) external returns (uint256 actualCollateralChange, uint256 actualDebtChange);
+
 }
 
 interface IRaftOracle {
+
     function fetchPrice() external returns (uint256, uint256);
+
 }
 
 interface IERC20Indexable is IERC20 {
+
     function currentIndex() external view returns (uint256);
 
     function totalSupply() external view override returns (uint256);
@@ -54,9 +59,11 @@ interface IERC20Indexable is IERC20 {
     function mint(address to, uint256 amount) external;
 
     function burn(address from, uint256 amount) external;
+
 }
 
 interface ICurve {
+
     function exchange(
         uint256 i,
         uint256 j,
@@ -65,9 +72,11 @@ interface ICurve {
         bool use_eth,
         address receiver
     ) external payable returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 cbETH = IERC20(0xBe9895146f7AF43049ca1c1AE358B0541Ea49704);
     IAaveFlashloan aaveV3 = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IPRM PRM = IPRM(0x9AB6b21cDF116f611110b048987E58894786C244);
@@ -114,7 +123,7 @@ contract ContractTest is Test {
         assets[0] = address(cbETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 6000 ether;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
 
@@ -190,4 +199,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

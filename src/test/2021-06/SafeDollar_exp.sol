@@ -6,14 +6,17 @@ import "./../interface.sol";
 // @Analysis
 
 interface SdoRewardPOOL {
+
     function deposit(uint256 _pid, uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function harvestAllRewards() external;
     function updatePool(uint256 _pid) external;
     function pendingReward(uint256, address) external returns (uint256);
+
 }
 
 interface PolydexRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -21,9 +24,11 @@ interface PolydexRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract depositToken {
+
     IERC20 SDO = IERC20(0x86BC05a6f65efdaDa08528Ec66603Aef175D967f);
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 PLX = IERC20(0x7A5dc8A09c831251026302C93A778748dd48b4DF);
@@ -65,9 +70,11 @@ contract depositToken {
             block.timestamp
         );
     }
+
 }
 
 contract ContractTest is Test {
+
     IERC20 SDO = IERC20(0x86BC05a6f65efdaDa08528Ec66603Aef175D967f);
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 PLX = IERC20(0x7A5dc8A09c831251026302C93A778748dd48b4DF);
@@ -169,4 +176,5 @@ contract ContractTest is Test {
         path[1] = address(PLX);
         Router.swapTokensForExactTokens(amount, WMATIC.balanceOf(address(this)), path, address(this), block.timestamp);
     }
+
 }

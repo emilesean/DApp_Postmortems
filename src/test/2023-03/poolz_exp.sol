@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     IDPPAdvanced constant dppAdvanced = IDPPAdvanced(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
 
@@ -226,13 +227,17 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 interface IDPPAdvanced {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes memory data) external;
+
 }
 
 interface LockedDeal {
+
     event NewPoolCreated(uint256 PoolId, address Token, uint64 FinishTime, uint256 StartAmount, address Owner);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event PoolApproval(uint256 PoolId, address Spender, uint256 Amount);
@@ -334,4 +339,5 @@ interface LockedDeal {
     function transferOwnership(address newOwner) external;
 
     receive() external payable;
+
 }

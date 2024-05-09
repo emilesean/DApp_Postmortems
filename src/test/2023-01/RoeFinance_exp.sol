@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0x927b784148b60d5233e57287671cdf67d38e3e69e5b6d0ecacc7c1aeaa98985b
 
 interface ROE {
+
     function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
     function borrow(
         address asset,
@@ -18,13 +19,17 @@ interface ROE {
         uint16 referralCode,
         address onBehalfOf
     ) external;
+
 }
 
 interface vdWBTC_USDC_LP {
+
     function approveDelegation(address delegatee, uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     ROE roe = ROE(0x5F360c6b7B25DfBfA4F10039ea0F7ecfB9B02E60);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0x004375Dff511095CC5A197A54140a24eFEF3A416);
@@ -96,4 +101,5 @@ contract ContractTest is Test {
             WBTC.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

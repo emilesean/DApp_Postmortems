@@ -10,6 +10,7 @@ import "./../interface.sol";
 // @TX
 // https://etherscan.io/tx/0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b
 interface SwapGuard {
+
     struct Data {
         address target;
         uint256 value;
@@ -24,9 +25,11 @@ interface SwapGuard {
         int256[] calldata balanceChanges,
         uint256 allowedLoss
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     SwapGuard swapGuard = SwapGuard(0xcD07a7695E3372aCD2B2077557DE93e667B92bd8);
     address GPv2Settlement = 0x9008D19f58AAbD9eD0D60971565AA8510560ab41;
@@ -60,4 +63,5 @@ contract ContractTest is Test {
 
         emit log_named_decimal_uint("Attacker DAI balance after exploit", DAI.balanceOf(address(this)), DAI.decimals());
     }
+
 }

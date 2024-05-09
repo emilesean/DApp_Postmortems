@@ -19,6 +19,7 @@ import "src/test/interface.sol";
 // Hacking God : https://medium.com/immunefi/yield-protocol-logic-error-bugfix-review-7b86741e6f50
 
 interface IYieldStrategy is IERC20 {
+
     function mint(address to) external returns (uint256);
 
     function burn(address to) external returns (uint256);
@@ -26,9 +27,11 @@ interface IYieldStrategy is IERC20 {
     function mintDivested(address to) external returns (uint256);
 
     function burnDivested(address to) external returns (uint256);
+
 }
 
 contract Yield is Test {
+
     uint256 blocknumToForkFrom = 206_219_811;
     IYieldStrategy YieldStrategy_1 = IYieldStrategy(0x7012aF43F8a3c1141Ee4e955CC568Ad2af59C3fa); // pool token
     IYieldStrategy YieldStrategy_2 = IYieldStrategy(0x3b4FFD93CE5fCf97e61AA8275Ec241C76cC01a47); // strategy token valut
@@ -82,4 +85,5 @@ contract Yield is Test {
 
         USDC.transfer(address(Balancer), amounts[0]);
     }
+
 }

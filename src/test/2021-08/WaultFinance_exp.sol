@@ -10,12 +10,15 @@ import "./../interface.sol";
 // tx
 // https://bscscan.com/tx/0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e
 interface WUSDMASTER {
+
     function stake(uint256) external;
     function redeem(uint256) external;
     function maxStakeAmount() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WUSD = IERC20(0x3fF997eAeA488A082fb7Efc8e6B9951990D0c3aB);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -95,4 +98,5 @@ contract ContractTest is Test {
             WUSD.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

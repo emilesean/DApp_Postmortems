@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0xb36486f032a450782d5d2fac118ea90a6d3b08cac3409d949c59b43bcd6dbb8f
 
 interface ELPExchange is IERC20 {
+
     struct InternalBalances {
         // x*y=k - we track these internally to compare to actual balances of the ERC20's
         // in order to calculate the "decay" or the amount of balances that are not
@@ -40,9 +41,11 @@ interface ELPExchange is IERC20 {
         uint256 _minBaseTokenQty,
         uint256 _expirationTimestamp
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 TIC = IERC20(0x75739a693459f33B1FBcC02099eea3eBCF150cBe);
     IERC20 USDC_E = IERC20(0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664);
     Uni_Pair_V2 SPair = Uni_Pair_V2(0x4CF9dC05c715812FeAD782DC98de0168029e05C8);
@@ -91,4 +94,5 @@ contract ContractTest is Test {
         ELP.removeLiquidity(ELP.balanceOf(address(this)), 1, 1, address(this), _expirationTimestamp);
         USDC_E.transfer(address(JPair), 774_353 * 1e6);
     }
+
 }

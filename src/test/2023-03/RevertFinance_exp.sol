@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0xdaccbc437cb07427394704fbcc8366589ffccf974ec6524f3483844b043f31d5
 
 interface V3Utils {
+
     struct SwapParams {
         address tokenIn;
         address tokenOut;
@@ -21,9 +22,11 @@ interface V3Utils {
     }
 
     function swap(SwapParams calldata params) external;
+
 }
 
 contract ContractTest is Test {
+
     V3Utils utils = V3Utils(0x531110418d8591C92e9cBBFC722Db8FFb604FAFD);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address[] victims = [0x067D0F9089743271058D4Bf2a1a29f4E9C6fdd1b, 0x4107A0A4a50AC2c4cc8C5a3954Bc01ff134506b2];
@@ -83,4 +86,5 @@ contract ContractTest is Test {
         if (counter == 1) return 1;
         else return 0;
     }
+
 }

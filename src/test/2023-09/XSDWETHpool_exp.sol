@@ -20,15 +20,20 @@ import "./../interface.sol";
 // invoke function burnpoolXSD() after executing TransferHelper.safeTransferETH();
 
 interface IXSD is IERC20 {
+
     function burnpoolXSD(uint256 _xsdamount) external;
+
 }
 
 interface IXSDRouter {
+
     function swapXSDForETH(uint256 amountOut, uint256 amountInMax) external;
     function swapETHForBankX(uint256 amountOut) external payable;
+
 }
 
 interface IXSDWETHpool {
+
     function PERMIT_TYPEHASH() external pure returns (bytes32);
     function nonces(address owner) external view returns (uint256);
     function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
@@ -39,17 +44,23 @@ interface IXSDWETHpool {
     function swap(uint256 amount0Out, uint256 amount1Out, address to) external;
     function skim(address to) external;
     function sync() external;
+
 }
 
 interface IPIDController {
+
     function systemCalculations() external;
+
 }
 
 interface IDPPAdvanced {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+
 }
 
 contract ContractTest is Test {
+
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IDPPOracle DPPOracle = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     IDPPAdvanced DPPAdvance = IDPPAdvanced(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
@@ -113,4 +124,5 @@ contract ContractTest is Test {
         WBNB.approve(address(Router), type(uint256).max);
         XSD.approve(address(Router), type(uint256).max);
     }
+
 }

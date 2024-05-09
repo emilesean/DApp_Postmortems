@@ -10,21 +10,28 @@ import "forge-std/Test.sol";
 // Attack Tx : https://explorer.phalcon.xyz/tx/bsc/0xf6ec3c22b718c3da17746416992bac7b65a4ef42ccf5b43cf0716c82bffc2844
 
 interface IERC20 {
+
     function balanceOf(address) external view returns (uint256);
     function transfer(address, uint256) external returns (bool);
     function approve(address, uint256) external returns (bool);
     function transferFrom(address, address, uint256) external returns (bool);
+
 }
 
 interface IPancakePair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+
 }
 
 interface IPancakePool {
+
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface IPancakeRouter {
+
     function getAmountsOut(
         uint256 amountIn,
         address[] calldata path
@@ -41,14 +48,18 @@ interface IPancakeRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface IHelper {
+
     function autoSwapAndAddToMarketing() external;
     function autoAddLp() external;
+
 }
 
 contract Token8633_9419_exp is Test {
+
     address immutable r = address(this);
 
     receive() external payable {}
@@ -137,4 +148,5 @@ contract Token8633_9419_exp is Test {
     fallback() external payable {
         revert("no such function");
     }
+
 }

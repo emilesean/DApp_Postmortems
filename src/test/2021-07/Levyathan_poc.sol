@@ -21,6 +21,7 @@ All thanks to the creator of this awesome repo
 
 */
 contract ContractTest is Test {
+
     ILEV LEV = ILEV(0x304c62b5B030176F8d328d3A01FEaB632FC929BA);
 
     IMasterChef MasterChef = IMasterChef(0xA3fDF7F376F4BFD38D7C4A5cf8AAb4dE68792fd4);
@@ -109,9 +110,11 @@ contract ContractTest is Test {
         MasterChef.emergencyWithdraw(4);
         vm.stopPrank();
     }
+
 }
 
 interface ITimelock {
+
     function schedule(
         address target,
         uint256 value,
@@ -136,15 +139,20 @@ interface ITimelock {
         bytes32 salt
     ) external;
     function isOperationDone(bytes32 id) external returns (bool done);
+
 }
 
 interface ILEV {
+
     function mint(address receiver, uint256 amount) external;
+
 }
 
 interface IMasterChef {
+
     function recoverLevOwnership() external;
     function leaveStaking(uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function emergencyWithdraw(uint256 _pid) external;
+
 }

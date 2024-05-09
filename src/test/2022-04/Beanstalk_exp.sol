@@ -6,6 +6,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     ILendingPool aavelendingPool = ILendingPool(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
     IERC20 dai = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
@@ -141,4 +142,5 @@ contract ContractTest is Test {
         IERC20 erc20bean3Crv_f = IERC20(0x3a70DfA7d2262988064A2D051dd47521E43c9BdD);
         erc20bean3Crv_f.transfer(msg.sender, erc20bean3Crv_f.balanceOf(address(this))); //Just for verification, so keep other tokens
     }
+
 }

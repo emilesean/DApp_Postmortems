@@ -23,12 +23,15 @@ import "./../interface.sol";
 // ACai Article (in Chinese) : https://www.cnblogs.com/ACaiGarden/p/16872933.html
 
 interface IMintableAutoCompundRelockBonus {
+
     function setToken(address) external;
     function stake(uint256) external;
     function withdraw(uint256) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 constant HPAY_TOKEN = IERC20(0xC75aa1Fa199EaC5adaBC832eA4522Cff6dFd521A);
     IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     Uni_Router_V2 constant PS_ROUTER = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -91,9 +94,11 @@ contract ContractTest is Test {
             HPAY_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }
 
 contract SHITCOIN {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -136,4 +141,5 @@ contract SHITCOIN {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
+
 }

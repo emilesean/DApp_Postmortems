@@ -22,11 +22,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IStakingRewards {
+
     function addLiquidity(address _token, address token1, uint256 amount1) external;
     function sell(address token, address token1, uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 QIQI = IERC20(0x8121D345b16469F38Bd3b82EE2a547f6Be54f9C9);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
@@ -181,9 +184,11 @@ contract ContractTest is Test {
     function totalSupply() external view returns (uint256) {
         return 100;
     }
+
 }
 
 contract SHITCOIN {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -226,4 +231,5 @@ contract SHITCOIN {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
+
 }

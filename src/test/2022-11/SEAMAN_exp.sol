@@ -12,6 +12,7 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x6f1af27d08b10caa7e96ec3d580bf39e29fd5ece00abda7d8955715403bf34a8
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SEAMAN = IERC20(0x6bc9b4976ba6f8C9574326375204eE469993D038);
     IERC20 GVC = IERC20(0xDB95FBc5532eEb43DeEd56c8dc050c930e31017e);
@@ -67,4 +68,5 @@ contract ContractTest is Test {
             GVC.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

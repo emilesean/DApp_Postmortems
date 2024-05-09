@@ -14,12 +14,15 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1707851321909428688
 
 interface IDEXRouter {
+
     function update(address fcb, address bnb, address busd, address router) external;
 
     function functionCallWithValue(address target, bytes memory data, uint256 value) external;
+
 }
 
 contract ContractTest is Test {
+
     // Victim unverified contract. Name "DEXRouter" taken from parameter name in "go" function in attack contract
     IDEXRouter private constant DEXRouter = IDEXRouter(0x1f7cF218B46e613D1BA54CaC11dC1b5368d94fb7);
 
@@ -49,4 +52,5 @@ contract ContractTest is Test {
             return abi.encode(true);
         }
     }
+
 }

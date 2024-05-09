@@ -15,6 +15,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
+
     address private constant usdt = 0x55d398326f99059fF775485246999027B3197955;
     address private constant gss = 0x37e42B961AE37883BAc2fC29207A5F88eFa5db66;
     address private constant gss_usdt_pool = 0x1ad2cB3C2606E6D5e45c339d10f81600bdbf75C0;
@@ -60,4 +61,5 @@ contract ContractTest is Test {
             amountIn, 0, path, address(this), block.timestamp + 1000
         );
     }
+
 }

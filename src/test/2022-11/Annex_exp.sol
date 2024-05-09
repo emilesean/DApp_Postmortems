@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IUniswapV2Factory Factory = IUniswapV2Factory(0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73);
@@ -77,9 +78,11 @@ contract ContractTest is Test {
     function redeem(uint256 redeemTokens) external returns (uint256) {
         return 0;
     }
+
 }
 
 contract MyERC20 {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -122,4 +125,5 @@ contract MyERC20 {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
+
 }

@@ -11,13 +11,16 @@ import "forge-std/console.sol";
 // https://arbiscan.io/tx/0xfaf84cabc3e1b0cf1ff1738dace1b2810f42d98baeea17b146ae032f0bdf82d5
 
 interface USDs {
+
     function balanceOf(address _account) external returns (uint256);
     function mint(address _account, uint256 _amount) external;
     function transfer(address to, uint256 amount) external returns (bool);
     function vaultAddress() external returns (address);
+
 }
 
 contract USDsTest is Test {
+
     USDs usds = USDs(0xD74f5255D557944cf7Dd0E45FF521520002D5748);
     address ATTACKER_CONTRACT = address(0xdeadbeef);
 
@@ -45,4 +48,5 @@ contract USDsTest is Test {
 
         console.log("Attacker Contract balance after: ", usds.balanceOf(ATTACKER_CONTRACT));
     }
+
 }

@@ -22,6 +22,7 @@ JarLike constant PDAI = JarLike(0x6949Bb624E8e8A90F87cD2058139fcd77D2F3F87);
 address constant STRAT = 0xCd892a97951d46615484359355e3Ed88131f829D;
 
 contract AttackContract is Test {
+
     address constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
     function setUp() public {
@@ -64,9 +65,11 @@ contract AttackContract is Test {
     }
 
     receive() external payable {}
+
 }
 
 abstract contract ControllerLike {
+
     function swapExactJarForJar(
         address _fromJar, // From which Jar
         address _toJar, // To which Jar
@@ -75,9 +78,11 @@ abstract contract ControllerLike {
         address[] calldata _targets,
         bytes[] calldata _data
     ) external virtual;
+
 }
 
 abstract contract CurveLogicLike {
+
     function add_liquidity(
         address curve,
         bytes4 curveFunctionSig,
@@ -85,9 +90,11 @@ abstract contract CurveLogicLike {
         uint256 curveUnderlyingIndex,
         address underlying
     ) public virtual;
+
 }
 
 contract FakeJar {
+
     IERC20 _token;
 
     constructor(IERC20 token) public {
@@ -127,9 +134,11 @@ contract FakeJar {
     }
 
     function withdraw(uint256) public {}
+
 }
 
 contract FakeUnderlying {
+
     address private target;
 
     constructor(address _target) public {
@@ -147,8 +156,11 @@ contract FakeUnderlying {
     function allowance(address, address) public returns (uint256) {
         return 0;
     }
+
 }
 
 abstract contract JarLike {
+
     function earn() public virtual;
+
 }

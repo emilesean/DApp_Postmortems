@@ -11,6 +11,7 @@ import "./../interface.sol";
 // https://snowtrace.io/tx/0x1266a937c2ccd970e5d7929021eed3ec593a95c68a99b4920c2efa226679b430
 
 interface PlatypusPool {
+
     function deposit(address token, uint256 amount, address to, uint256 deadline) external;
     function withdraw(address token, uint256 liquidity, uint256 minimumAmount, address to, uint256 deadline) external;
     function swap(
@@ -21,14 +22,18 @@ interface PlatypusPool {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface MasterPlatypusV4 {
+
     function deposit(uint256 _pid, uint256 _amount) external;
     function emergencyWithdraw(uint256 _pid) external;
+
 }
 
 interface PlatypusTreasure {
+
     struct PositionView {
         uint256 collateralAmount;
         uint256 collateralUSD;
@@ -42,9 +47,11 @@ interface PlatypusTreasure {
 
     function positionView(address _user, address _token) external view returns (PositionView memory);
     function borrow(address _token, uint256 _borrowAmount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E);
     IERC20 USP = IERC20(0xdaCDe03d7Ab4D81fEDdc3a20fAA89aBAc9072CE2);
     IERC20 USDC_E = IERC20(0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664);
@@ -132,4 +139,5 @@ contract ContractTest is Test {
         Pool.swap(address(USP), address(BUSD), 700_000 * 1e18, 0, address(this), block.timestamp);
         Pool.swap(address(USP), address(DAI_E), 700_000 * 1e18, 0, address(this), block.timestamp);
     }
+
 }

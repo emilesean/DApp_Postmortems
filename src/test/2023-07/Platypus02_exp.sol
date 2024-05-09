@@ -23,6 +23,7 @@ import "./../interface.sol";
 // the two pools (USDC-LP, USDT.e-LP) in the ratio is close, but in fact is not the same, arbitrage or attack?
 
 interface IPlatypusPool {
+
     function deposit(address token, uint256 amount, address to, uint256 deadline) external returns (uint256);
 
     function withdrawFromOtherAsset(
@@ -42,9 +43,11 @@ interface IPlatypusPool {
         address to,
         uint256 deadline
     ) external returns (uint256, uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E);
     IERC20 USDTe = IERC20(0xc7198437980c041c805A1EDcbA50c1Ce5db95118);
     IERC20 LP_USDC = IERC20(0x06f01502327De1c37076Bea4689a7e44279155e9);
@@ -91,4 +94,5 @@ contract ContractTest is Test {
 
         return true;
     }
+
 }

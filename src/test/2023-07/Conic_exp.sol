@@ -19,18 +19,23 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IConicEthPool {
+
     function handleDepeggedCurvePool(address) external;
 
     function deposit(uint256 underlyingAmount, uint256 minLpReceived, bool stake) external returns (uint256);
 
     function withdraw(uint256 conicLpAmount, uint256 minUnderlyingReceived) external returns (uint256);
+
 }
 
 interface IGenericOracleV2 {
+
     function getUSDPrice(address) external returns (uint256);
+
 }
 
 interface ICurve {
+
     function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy) external payable returns (uint256);
 
     function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount) external payable returns (uint256);
@@ -41,9 +46,11 @@ interface ICurve {
         bool use_eth,
         address receiver
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 rETH = IERC20(0xae78736Cd615f374D3085123A210448E74Fc6393);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
@@ -106,7 +113,7 @@ contract ContractTest is Test {
         assets[0] = address(stETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 20_000 ether;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         aaveV2.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
     }
@@ -267,4 +274,5 @@ contract ContractTest is Test {
         LidoCurvePool.exchange(1, 0, stETH.balanceOf(address(this)), 0);
         WETH.deposit{value: address(this).balance}();
     }
+
 }

@@ -4,10 +4,13 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface MEVBot {
+
     function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 contract ContractTest is Test {
+
     address public _token0;
     address public _token1;
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -64,4 +67,5 @@ contract ContractTest is Test {
     }
 
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) public {}
+
 }

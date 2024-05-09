@@ -26,6 +26,7 @@ import "./../interface.sol";
 // Attacker Address: https://polygonscan.com/address/0xcb3585f3e09f0238a3f61838502590a23f15bb5b
 
 contract NstExploitTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     IERC20 usdt = IERC20(0xc2132D05D31c914a87C6611C10748AEb04B58e8F);
@@ -61,4 +62,5 @@ contract NstExploitTest is Test {
 
         console.log("USDT Theft", usdt.balanceOf(address(this)) - 40_000_000_000);
     }
+
 }

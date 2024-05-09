@@ -18,6 +18,7 @@ import {IERC20} from "./../interface.sol";
 // Twitter alert by Peckshield: https://twitter.com/peckshield/status/1745907642118123774
 
 contract WiseLendingTest is Test {
+
     IWiseLending public wiseLending = IWiseLending(payable(0x37e49bf3749513A02FA535F0CbC383796E8107E4));
 
     NFTManager public nft = NFTManager(0x32E0A7F7C4b1A19594d25bD9b63EBA912b1a5f61);
@@ -119,18 +120,24 @@ contract WiseLendingTest is Test {
             abi.encode(_roundId, answer, block.timestamp, block.timestamp, answeredInRound)
         );
     }
+
 }
 
 interface Pool {
+
     function depositExactAmount(uint256 _underlyingLpAssetAmount) external returns (uint256, uint256);
     function getPositionLendingShares(uint256, address) external returns (uint256);
+
 }
 
 interface NFTManager {
+
     function mintPosition() external returns (uint256);
+
 }
 
 interface Oracle {
+
     function latestRoundData()
         external
         view
@@ -140,9 +147,11 @@ interface Oracle {
         external
         view
         returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+
 }
 
 interface IWiseLending {
+
     function depositExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
 
     function withdrawExactShares(uint256 _nftId, address _poolToken, uint256 _shares) external returns (uint256);
@@ -161,12 +170,15 @@ interface IWiseLending {
         external
         view
         returns (uint256 pseudoTotalPool, uint256 totalDepositShares, uint256 collateralFactor);
+
 }
 
 interface IWiseSecurity {
+
     function maximumBorrowToken(
         uint256 _nftId,
         address _poolToken,
         uint256 _interval
     ) external view returns (uint256 tokenAmount);
+
 }

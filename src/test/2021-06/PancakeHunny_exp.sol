@@ -17,12 +17,15 @@ import "./../interface.sol";
         uint hunnyBNBAmount = tokenToHunnyBNB(flip, IBEP20(flip).balanceOf(address(this)));  // incorrect use balanceOf.*/
 
 interface CakeFlipVault {
+
     function getReward() external;
     function withdraw(uint256 amount) external;
     function rewards(address) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IPancakeRouter pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
@@ -73,4 +76,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

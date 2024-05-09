@@ -16,22 +16,31 @@ import "./../interface.sol";
 // Neptune Mutual: https://medium.com/neptune-mutual/decoding-ulme-token-flash-loan-attack-56470d261787
 
 interface IULME is IERC20 {
+
     function buyMiner(address user, uint256 usdt) external returns (bool);
+
 }
 
 interface IDVM {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+
 }
 
 interface IDPP {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+
 }
 
 interface IDPPAdvanced {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+
 }
 
 contract ULMEAttacker is Test {
+
     CheatCodes constant cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     IERC20 constant usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -270,4 +279,5 @@ contract ULMEAttacker is Test {
             block.timestamp
         );
     }
+
 }

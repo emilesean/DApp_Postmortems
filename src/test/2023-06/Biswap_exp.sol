@@ -12,6 +12,7 @@ import "./../interface.sol";
 // @Analysis - https://twitter.com/MetaTrustAlert/status/1674814217122349056?s=20
 
 interface V3Migrator {
+
     struct MigrateParams {
         address pair; // the Uniswap v2-compatible pair
         uint256 liquidityToMigrate; // expected to be balanceOf(msg.sender)
@@ -28,13 +29,17 @@ interface V3Migrator {
     }
 
     function migrate(MigrateParams calldata params) external returns (uint256 refund0, uint256 refund1);
+
 }
 
 interface IBiswapFactoryV3 {
+
     function newPool(address tokenX, address tokenY, uint16 fee, int24 currentPoint) external returns (address);
+
 }
 
 contract SimpleERC20 {
+
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -132,18 +137,22 @@ contract SimpleERC20 {
             }
         }
     }
+
 }
 
 contract FakeToken is SimpleERC20 {
+
     uint256 token0Amount;
     uint256 token1Amount;
 
     constructor() SimpleERC20("fake", "fake") {
         _mint(msg.sender, 10_000e18 * 1e18);
     }
+
 }
 
 contract FakePair is SimpleERC20 {
+
     uint256 token0Amount;
     uint256 token1Amount;
 
@@ -159,9 +168,11 @@ contract FakePair is SimpleERC20 {
     function burn(address to) external returns (uint256, uint256) {
         return (token0Amount, token1Amount);
     }
+
 }
 
 contract ContractTest is Test {
+
     function setUp() public {
         // fork bsc
         uint256 forkId = vm.createFork("bsc", 29_554_461);
@@ -234,4 +245,5 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("this token0 after", token0.balanceOf(address(this)), 18);
         emit log_named_decimal_uint("this token1 after", token1.balanceOf(address(this)), 18);
     }
+
 }

@@ -20,11 +20,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IVLFI is IERC20 {
+
     function claimRewards(address to) external;
     function stake(address onBehalfOf, uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 LFI = IERC20(0x77D97db5615dFE8a2D16b38EAa3f8f34524a0a74);
     IVLFI VLFI = IVLFI(0xfc604b6fD73a1bc60d31be111F798dd0D4137812);
     Claimer claimer;
@@ -56,9 +59,11 @@ contract ContractTest is Test {
         VLFI.transfer(address(claimer), VLFITransferAmount);
         return address(claimer);
     }
+
 }
 
 contract Claimer is Test {
+
     IERC20 LFI = IERC20(0x77D97db5615dFE8a2D16b38EAa3f8f34524a0a74);
     IVLFI VLFI = IVLFI(0xfc604b6fD73a1bc60d31be111F798dd0D4137812);
     Claimer claimer;
@@ -68,4 +73,5 @@ contract Claimer is Test {
             msg.sender.delegatecall(abi.encodeWithSignature("claimReward(uint256,address)", VLFITransferAmount, owner));
         return abi.decode(returnData, (address));
     }
+
 }

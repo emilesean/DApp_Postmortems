@@ -11,6 +11,7 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0x3d163bfbec5686d428a6d43e45e2626a220cc4fcfac7620c620b82c1f2537c78
 
 interface BentoBoxV1 {
+
     function batchFlashLoan(
         address borrower,
         address[] calldata receivers,
@@ -33,9 +34,11 @@ interface BentoBoxV1 {
     function withdraw(address token_, address from, address to, uint256 amount, uint256 share) external;
 
     function balanceOf(address token, address account) external returns (uint256);
+
 }
 
 interface CauldronMediumRiskV1 {
+
     function addCollateral(address to, bool skim, uint256 share) external;
 
     function borrow(address to, uint256 amount) external;
@@ -48,9 +51,11 @@ interface CauldronMediumRiskV1 {
         address to,
         address swapper
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     BentoBoxV1 BentBox = BentoBoxV1(0xF5BCE5077908a1b7370B9ae04AdC565EBd643966);
     CauldronMediumRiskV1 Cauldron = CauldronMediumRiskV1(0xbb02A884621FB8F5BFd263A67F58B65df5b090f3);
     IERC20 xSUSHI = IERC20(0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272);
@@ -111,4 +116,5 @@ contract ContractTest is Test {
         Router.swapTokensForExactTokens(swapAmount, type(uint256).max, path, address(this), block.timestamp);
         xSUSHI.transfer(address(BentBox), 450_225 * 1e18);
     }
+
 }

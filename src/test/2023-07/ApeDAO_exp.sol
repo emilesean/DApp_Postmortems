@@ -14,10 +14,13 @@ import "./../interface.sol";
 // https://twitter.com/BeosinAlert/status/1681316257034035201
 
 interface IAPEDAO is IERC20 {
+
     function goDead() external;
+
 }
 
 contract ApeDAOTest is Test {
+
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IAPEDAO APEDAO = IAPEDAO(0xB47955B5B7EAF49C815EBc389850eb576C460092);
     IDPPOracle DPPOracle1 = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
@@ -97,4 +100,5 @@ contract ApeDAOTest is Test {
         uint256[] memory amounts = Router.getAmountsOut(amountIn, path);
         Pair.swap(amounts[1], 0, address(this), bytes(""));
     }
+
 }

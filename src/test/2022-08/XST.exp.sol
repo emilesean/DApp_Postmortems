@@ -9,6 +9,7 @@ import "./../interface.sol";
 // https://tools.blocksec.com/tx/eth/0x873f7c77d5489c1990f701e9bb312c103c5ebcdcf0a472db726730814bfd55f3
 
 contract XSTExpTest is Test {
+
     address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address constant UniswapV20x694f = 0x694f8F9E0ec188f528d6354fdd0e47DcA79B6f2C;
     address constant XST = 0x91383A15C391c142b80045D8b4730C1c37ac0378;
@@ -70,4 +71,5 @@ contract XSTExpTest is Test {
     }
 
     fallback() external payable {}
+
 }

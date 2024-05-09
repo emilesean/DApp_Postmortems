@@ -17,6 +17,7 @@ import "forge-std/Test.sol";
 // https://twitter.com/BeosinAlert/status/1584551399941365763
 
 contract Liquidator {
+
     CErc20Interface private constant CErc20_mmooCurvestMATIC_MATIC_4 =
         CErc20Interface(0x570Bc2b7Ad1399237185A27e66AEA9CfFF5F3dB8);
     ICErc20Delegate private constant CErc20Delegate_mMAI_4 = ICErc20Delegate(0x3dC7E6FF0fB79770FA6FB05d1ea4deACCe823943);
@@ -39,9 +40,11 @@ contract Liquidator {
         beefyVault.transfer(main, beefyVault.balanceOf(address(this)));
         miMATIC.transfer(main, miMATIC.balanceOf(address(this)));
     }
+
 }
 
 contract MarketExploitTest is Test {
+
     WETH9 private constant WMATIC = WETH9(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 private constant stMATIC = IERC20(0x3A58a54C066FdC0f2D55FC9C89F0415C92eBf3C4);
 
@@ -199,28 +202,34 @@ contract MarketExploitTest is Test {
         });
         routerV3.exactInputSingle(_Params);
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface CErc20Interface {
+
     function mint(uint256 mintAmount) external returns (uint256);
     function balanceOf(address account) external view returns (uint256);
     function borrow(uint256 borrowAmount) external returns (uint256);
     function redeem(uint256 amount) external;
     function withdrawAll() external;
     function transfer(address to, uint256 amount) external returns (bool);
+
 }
 
 interface ICErc20Delegate {
+
     function liquidateBorrow(
         address borrower,
         uint256 repayAmount,
         address cTokenCollateral
     ) external returns (uint256);
     function borrow(uint256 borrowAmount) external returns (uint256);
+
 }
 
 interface BeefyVault {
+
     function deposit(uint256 _amount) external;
     function withdraw(uint256 _amount) external;
     function withdrawAll() external;
@@ -229,31 +238,39 @@ interface BeefyVault {
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address owner) external view returns (uint256);
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IUnitroller {
+
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
     function exitMarket(address cTokenAddress) external returns (uint256);
     function cTokensByUnderlying(address) external view returns (address);
     function getAccountLiquidity(address account) external view returns (uint256, uint256, uint256);
+
 }
 
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface WETH9 {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface ILendingPool {
+
     function flashLoan(
         address receiverAddress,
         address[] calldata assets,
@@ -263,23 +280,29 @@ interface ILendingPool {
         bytes calldata params,
         uint16 referralCode
     ) external;
+
 }
 
 interface IBalancerVault {
+
     function flashLoan(
         address recipient,
         address[] memory tokens,
         uint256[] memory amounts,
         bytes memory userData
     ) external;
+
 }
 
 interface ICurvePool {
+
     function remove_liquidity(uint256 _amount, uint256[2] calldata min_amounts, bool donate_dust) external;
     function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount) external returns (uint256);
+
 }
 
 interface IRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -287,9 +310,11 @@ interface IRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface Uni_Router_V3 {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -301,4 +326,5 @@ interface Uni_Router_V3 {
     }
 
     function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
+
 }

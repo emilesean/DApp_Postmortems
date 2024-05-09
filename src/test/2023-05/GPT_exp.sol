@@ -12,6 +12,7 @@ import "./../interface.sol";
 // Token fee machenism broken
 
 contract CSExp is Test, IDODOCallee {
+
     IDPPOracle oracle1 = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     IDPPOracle oracle2 = IDPPOracle(0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A);
     IDPPOracle oracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
@@ -76,4 +77,5 @@ contract CSExp is Test, IDODOCallee {
     }
 
     receive() external payable {}
+
 }

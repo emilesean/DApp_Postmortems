@@ -43,6 +43,7 @@ address constant USDC_TSUKA_UniV2Pair = 0x67CeA36eEB36Ace126A3Ca6E21405258130CF3
 address constant KNDX_WETH_UniV2Pair = 0x9267C29e4f517cE9f6d603a15B50Aa47cE32278D;
 
 contract Attacker is Test {
+
     address[4] victims = [FEG_WETH_UniV2Pair, USDC_CAW_UniV2Pair, USDC_TSUKA_UniV2Pair, KNDX_WETH_UniV2Pair];
     uint256[4] migrateId; // Will fill those from preWork()
     uint160 constant newPriceX96 = 79_210_883_607_084_793_911_461_085_816;
@@ -220,11 +221,13 @@ contract Attacker is Test {
     }
 
     receive() external payable {}
+
 }
 
 /* -------------------- Interface -------------------- */
 
 interface IV3Migrator {
+
     struct MigrateParams {
         address pair; // the Uniswap v2-compatible pair
         uint256 liquidityToMigrate; // expected to be balanceOf(msg.sender)
@@ -240,9 +243,11 @@ interface IV3Migrator {
         uint256 deadline;
         bool refundAsETH;
     }
+
 }
 
 interface ILockToken {
+
     struct Items {
         address tokenAddress;
         address withdrawalAddress;
@@ -270,4 +275,5 @@ interface ILockToken {
     ) external payable returns (uint256 _id);
 
     function extendLockDuration(uint256 _id, uint256 _unlockTime) external;
+
 }

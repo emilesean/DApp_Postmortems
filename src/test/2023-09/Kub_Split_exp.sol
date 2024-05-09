@@ -14,16 +14,21 @@ import "./../interface.sol";
 // https://twitter.com/CertiKAlert/status/1705966214319612092
 
 interface IStakingRewards {
+
     function stake(address token, address token1, address token2, address up, uint256 amount) external;
 
     function sell(address token, address token1, uint256 amount) external;
+
 }
 
 interface ISplit is IERC20 {
+
     function setPair(address token) external;
+
 }
 
 contract ContractTest is Test {
+
     Uni_Pair_V2 private constant BUSDT_KUB_LP = Uni_Pair_V2(0x39aDFE6ec5a19bb573a2Fd8A5028031C0dc57600);
     Uni_Pair_V2 private constant KUB_Split = Uni_Pair_V2(0x16bF07CC3b84c6C2F97c32a6C66aEB726AbfC570);
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -220,4 +225,5 @@ contract ContractTest is Test {
         uint256 c = (b * reserve) / a;
         return (token.balanceOf(address(stakingRewards)) + c);
     }
+
 }

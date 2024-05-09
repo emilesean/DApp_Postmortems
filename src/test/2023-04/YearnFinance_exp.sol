@@ -12,13 +12,16 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0xd55e43c1602b28d4fd4667ee445d570c8f298f5401cf04e62ec329759ecda95d
 
 interface IIEarnAPRWithPool {
+
     function recommend(address _token)
         external
         view
         returns (string memory choice, uint256 capr, uint256 iapr, uint256 aapr, uint256 dapr);
+
 }
 
 interface IyToken {
+
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceAave() external view returns (uint256);
     function balance() external view returns (uint256);
@@ -28,20 +31,26 @@ interface IyToken {
     function getPricePerFullShare() external view returns (uint256);
     function withdraw(uint256 _shares) external;
     function rebalance() external;
+
 }
 
 interface IAaveLendingPoolCoreV1 {
+
     function getUserBorrowBalances(address _reserve, address _user) external view returns (uint256, uint256, uint256);
+
 }
 
 interface IbZxiUSDC {
+
     function mint(address receiver, uint256 depositAmount) external returns (uint256 mintAmount);
     function balanceOf(address _owner) external view returns (uint256);
     function tokenPrice() external view returns (uint256 price);
     function transfer(address _to, uint256 _value) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     uint256 internal constant FLASHLOAN_DAI_AMOUNT = 5_000_000 * 1e18;
     uint256 internal constant FLASHLOAN_USDC_AMOUNT = 5_000_000 * 1e6;
     uint256 internal constant FLASHLOAN_USDT_AMOUNT = 2_000_000 * 1e6;
@@ -515,4 +524,5 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("[End]   Attacker DAI balance after exploit", dai.balanceOf(address(this)), 18);
         emit log_named_decimal_uint("[End]   Attacker YTUSD balance after exploit", yTUSD.balanceOf(address(this)), 18);
     }
+
 }

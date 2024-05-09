@@ -6,6 +6,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     IERC20 usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
     ICEtherDelegate fETH_127 = ICEtherDelegate(payable(0x26267e41CeCa7C8E0f143554Af707336f27Fa051));
@@ -98,4 +99,5 @@ contract ContractTest is Test {
     receive() external payable {
         rari_Comptroller.exitMarket(address(fusdc_127));
     }
+
 }

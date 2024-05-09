@@ -16,14 +16,19 @@ import "./../interface.sol";
 //LOAN ： 0xdec12a1dcbc1f741ccd02dfd862ab226f6383003
 
 interface LOAN {
+
     function supply(address supplyToken, uint256 supplyAmount) external;
+
 }
 
 interface LUSDPOOL {
+
     function withdraw(uint256 amount) external;
+
 }
 
 contract LUSDTEST is Test {
+
     IERC20 BEP20USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 BTCB = IERC20(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
     IERC20 LUSD = IERC20(0x3cD632C25A4Db4c1A636cFb23B9285Be1097A60d);
@@ -95,4 +100,5 @@ contract LUSDTEST is Test {
     function takeFlashloan(IDPPOracle Oracle) internal {
         Oracle.flashLoan(0, BEP20USDT.balanceOf(address(Oracle)), address(this), new bytes(1));
     }
+
 }

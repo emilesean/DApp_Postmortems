@@ -17,13 +17,16 @@ import "./../interface.sol";
 // Protocol-specific price manipulation
 
 interface IJimboController {
+
     function shift() external;
     function reset() external;
     function anchorBin() external view returns (uint24);
     function triggerBin() external view returns (uint24);
+
 }
 
 interface ILBPair {
+
     function getActiveId() external view returns (uint24 activeId);
 
     function getBin(uint24 id) external view returns (uint128 binReserveX, uint128 binReserveY);
@@ -32,9 +35,11 @@ interface ILBPair {
         uint128 amountOut,
         bool swapForY
     ) external view returns (uint128 amountIn, uint128 amountOutLeft, uint128 fee);
+
 }
 
 interface ILBRouter {
+
     enum Version {
         V1,
         V2,
@@ -128,9 +133,11 @@ interface ILBRouter {
         address payable to,
         uint256 deadline
     ) external returns (uint256[] memory amountsIn);
+
 }
 
 contract JimboExp is Test {
+
     IJimboController controller = IJimboController(0x271944d9D8CA831F7c0dBCb20C4ee482376d6DE7);
     ILBPair pair = ILBPair(0x16a5D28b20A3FddEcdcaf02DF4b3935734df1A1f);
     ILBRouter router = ILBRouter(0xb4315e873dBcf96Ffd0acd8EA43f689D8c20fB30);
@@ -309,4 +316,5 @@ contract JimboExp is Test {
     }
 
     receive() external payable {}
+
 }

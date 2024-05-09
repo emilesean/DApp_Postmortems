@@ -13,10 +13,13 @@ import "./../interface.sol";
 // https://twitter.com/gbaleeeee/status/1642520517788966915
 
 interface IBridgeSwap {
+
     function swap(uint256 amount, bytes32 token, bytes32 receiveToken, address recipient) external;
+
 }
 
 interface ISwap {
+
     function swap(
         address fromToken,
         address toToken,
@@ -25,16 +28,20 @@ interface ISwap {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface AllBridgePool {
+
     function tokenBalance() external view returns (uint256);
     function vUsdBalance() external view returns (uint256);
     function deposit(uint256 amount) external;
     function withdraw(uint256 amountLp) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IBridgeSwap BridgeSwap = IBridgeSwap(0x7E6c2522fEE4E74A0182B9C6159048361BC3260A);
@@ -110,4 +117,5 @@ contract ContractTest is Test {
         Swap.swap(address(USDT), address(BUSD), USDT.balanceOf(address(this)), 1, address(this), block.timestamp);
         BUSD.transfer(address(Pair), 7_522_500 * 1e18);
     }
+
 }

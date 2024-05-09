@@ -12,16 +12,21 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xc09678fec49c643a30fc8e4dec36d0507dae7e9123c270e1f073d335deab6cf0
 
 interface IStakingDYNA {
+
     function deposit(uint256 _stakeAmount) external;
     function redeem(uint256 _redeemAmount) external;
+
 }
 
 interface IDYNA is IERC20 {
+
     function _setMaxSoldAmount(uint256 maxvalue) external;
     function _maxSoldAmount() external view returns (uint256);
+
 }
 
 contract StakingReward {
+
     IERC20 DYNA = IERC20(0x5c0d0111ffc638802c9EfCcF55934D5C63aB3f79);
     IStakingDYNA StakingDYNA = IStakingDYNA(0xa7B5eabC3Ee82c585f5F4ccC26b81c3Bd62Ff3a9);
     address Owner;
@@ -39,9 +44,11 @@ contract StakingReward {
         StakingDYNA.redeem(amount);
         DYNA.transfer(Owner, DYNA.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     IDYNA DYNA = IDYNA(0x5c0d0111ffc638802c9EfCcF55934D5C63aB3f79);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IStakingDYNA StakingDYNA = IStakingDYNA(0xa7B5eabC3Ee82c585f5F4ccC26b81c3Bd62Ff3a9);
@@ -116,4 +123,5 @@ contract ContractTest is Test {
         );
         cheats.stopPrank();
     }
+
 }

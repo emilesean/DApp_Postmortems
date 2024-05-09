@@ -16,11 +16,14 @@ import "./../interface.sol";
     malicious data and then called `emergencyExit` to get away with the funds.*/
 
 interface DAOMaker {
+
     function init(uint256, uint256[] calldata, uint256[] calldata, address) external;
     function emergencyExit(address) external;
+
 }
 
 contract ContractTest is Test {
+
     DAOMaker daomaker = DAOMaker(0x2FD602Ed1F8cb6DEaBA9BEDd560ffE772eb85940);
     IERC20 DERC = IERC20(0x9fa69536d1cda4A04cFB50688294de75B505a9aE);
 
@@ -46,4 +49,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

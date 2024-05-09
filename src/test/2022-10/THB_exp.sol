@@ -5,15 +5,18 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IERC721Receiver {
+
     function onERC721Received(
         address operator,
         address from,
         uint256 tokenId,
         bytes calldata data
     ) external returns (bytes4);
+
 }
 
 interface HouseWallet {
+
     function winners(uint256 id, address player) external view returns (uint256);
     function claimReward(
         uint256 _ID,
@@ -34,9 +37,11 @@ interface HouseWallet {
         bool nftcheck,
         bool dystopianCheck
     ) external payable;
+
 }
 
 contract ContractTest is Test {
+
     HouseWallet houseWallet = HouseWallet(0xae191Ca19F0f8E21d754c6CAb99107eD62B6fe53);
     uint256 randomNumber = 12_345_678_000_000_000_000_000_000;
 
@@ -87,4 +92,5 @@ contract ContractTest is Test {
         }
         return this.onERC721Received.selector;
     }
+
 }

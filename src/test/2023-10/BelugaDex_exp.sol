@@ -15,6 +15,7 @@ import "./../interface.sol";
 // https://twitter.com/CertiKAlert/status/1712707006979613097
 
 interface IPool {
+
     function deposit(
         address token,
         uint256 amount,
@@ -43,9 +44,11 @@ interface IPool {
         address to,
         uint256 deadline
     ) external returns (uint256 amount);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 private constant USDT = IERC20(0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9);
     IERC20 private constant USDCe = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 private constant WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
@@ -167,4 +170,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

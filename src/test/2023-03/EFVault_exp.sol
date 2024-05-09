@@ -12,10 +12,13 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0x1fe5a53405d00ce2f3e15b214c7486c69cbc5bf165cf9596e86f797f62e81914
 
 interface IENF is IERC20 {
+
     function redeem(uint256 shares, address receiver) external;
+
 }
 
 contract ContractTest is Test {
+
     IENF ENF = IENF(0xBDB515028A6fA6CD1634B5A9651184494aBfD336);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address exploiter = 0x8B5A8333eC272c9Bca1E43F4d009E9B2FAd5EFc9;
@@ -34,4 +37,5 @@ contract ContractTest is Test {
 
         emit log_named_decimal_uint("Exploiter USDC balance after exploit", USDC.balanceOf(exploiter), USDC.decimals());
     }
+
 }

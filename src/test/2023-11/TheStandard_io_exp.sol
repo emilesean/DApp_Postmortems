@@ -15,6 +15,7 @@ import "./../interface.sol";
 // https://twitter.com/CertiKAlert/status/1721839125836321195
 
 interface NonfungiblePositionManager {
+
     struct CollectParams {
         uint256 tokenId;
         address recipient;
@@ -43,9 +44,11 @@ interface NonfungiblePositionManager {
         address recipient;
         uint256 deadline;
     }
+
 }
 
 interface IPositionsNFT is IPoolInitializer {
+
     function collect(NonfungiblePositionManager.CollectParams memory params)
         external
         payable
@@ -60,19 +63,25 @@ interface IPositionsNFT is IPoolInitializer {
         external
         payable
         returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
+
 }
 
 interface ISmartVaultManagerV2 {
+
     function mint() external returns (address vault, uint256 tokenId);
+
 }
 
 interface ISmartVaultV2 {
+
     function mint(address _to, uint256 _amount) external;
 
     function swap(bytes32 _inToken, bytes32 _outToken, uint256 _amount) external;
+
 }
 
 interface ISwapRouter {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -82,16 +91,20 @@ interface ISwapRouter {
         uint256 amountOutMinimum;
         uint160 limitSqrtPrice;
     }
+
 }
 
 interface ICamelotRouter {
+
     function exactInputSingle(ISwapRouter.ExactInputSingleParams memory params)
         external
         payable
         returns (uint256 amountOut);
+
 }
 
 contract ContractTest is Test {
+
     IPositionsNFT private constant PositionsNFT = IPositionsNFT(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
     IERC20 private constant WBTC = IERC20(0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f);
     IERC20 private constant PAXG = IERC20(0xfEb4DfC8C4Cf7Ed305bb08065D08eC6ee6728429);
@@ -232,4 +245,5 @@ contract ContractTest is Test {
 
         Router.exactOutputSingle(params);
     }
+
 }

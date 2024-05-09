@@ -9,6 +9,7 @@ import "./../interface.sol";
 // Tx: https://bscscan.com/tx/0x8b3e0e3ea04829f941ca24c85032c3b4aeb1f8b1b278262901c2c5847dc72f1c
 
 interface ISheepFarm {
+
     function register(address neighbor) external;
 
     function addGems() external payable;
@@ -18,9 +19,11 @@ interface ISheepFarm {
     function sellVillage() external;
 
     function withdrawMoney(uint256 wool) external;
+
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
@@ -42,9 +45,11 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract AttackContract {
+
     ISheepFarm public constant Farm = ISheepFarm(0x4726010da871f4b57b5031E3EA48Bde961F122aA);
     address public constant neighbor = 0x14598f3a9f3042097486DC58C65780Daf3e3acFB;
 
@@ -67,4 +72,5 @@ contract AttackContract {
     }
 
     receive() external payable {}
+
 }

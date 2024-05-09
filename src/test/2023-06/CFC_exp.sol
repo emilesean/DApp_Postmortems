@@ -12,6 +12,7 @@ import "./../interface.sol";
 // @Analysis : https://twitter.com/hexagate_/status/1669280632738906113 - Second TX
 
 contract CFCTest is Test {
+
     IERC20 BEP20USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SAFE = IERC20(0x4d7Fa587Ec8e50bd0E9cD837cb4DA796f47218a1);
     IERC20 CFC = IERC20(0xdd9B223AEC6ea56567A62f21Ff89585ff125632c);
@@ -117,4 +118,5 @@ contract CFCTest is Test {
     function takeFlashloan(IDPPOracle Oracle) internal {
         Oracle.flashLoan(0, BEP20USDT.balanceOf(address(Oracle)), address(this), new bytes(1));
     }
+
 }

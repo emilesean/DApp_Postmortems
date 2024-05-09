@@ -39,6 +39,7 @@ address constant staking = 0xe6D97B2099F142513be7A2a068bE040656Ae4591;
 address constant delegatemanager = 0x4d7968ebfD390D5E7926Cb3587C39eFf2F9FB225;
 
 interface IGovernence {
+
     enum Vote {
         None,
         No,
@@ -74,13 +75,17 @@ interface IGovernence {
         string calldata _description
     ) external returns (uint256);
     function submitVote(uint256 _proposalId, Vote _vote) external;
+
 }
 
 interface IStaking {
+
     function initialize(address _tokenAddress, address _governanceAddress) external;
+
 }
 
 interface IDelegateManagerV2 {
+
     function initialize(
         address _tokenAddress,
         address _governanceAddress,
@@ -88,10 +93,12 @@ interface IDelegateManagerV2 {
     ) external;
     function setServiceProviderFactoryAddress(address _spFactory) external;
     function delegateStake(address _targetSP, uint256 _amount) external returns (uint256);
+
 }
 
 /* Contract: 0xf70f691d30ce23786cfb3a1522cfd76d159aca8d */
 contract AttackContract is Test {
+
     address constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
     function setUp() public {
@@ -199,4 +206,5 @@ contract AttackContract is Test {
     function validateAccountStakeBalance(address) external pure {}
 
     receive() external payable {}
+
 }

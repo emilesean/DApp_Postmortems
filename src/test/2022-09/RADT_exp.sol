@@ -4,16 +4,21 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IWRAP {
+
     function withdraw(address from, address to, uint256 amount) external;
+
 }
 
 interface IDODO {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
 
     function _BASE_TOKEN_() external view returns (address);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 RADT = IERC20(0xDC8Cb92AA6FC7277E3EC32e3f00ad7b8437AE883);
     Uni_Pair_V2 pair = Uni_Pair_V2(0xaF8fb60f310DCd8E488e4fa10C48907B7abf115e);
@@ -63,4 +68,5 @@ contract ContractTest is Test {
             RADT.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

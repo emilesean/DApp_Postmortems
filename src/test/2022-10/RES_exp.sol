@@ -21,10 +21,13 @@ import "./../interface.sol";
 // Article QuillAudits : https://quillaudits.medium.com/res-token-290k-flash-loan-exploit-quillaudits-9300657fff7b
 
 interface IRES is IERC20 {
+
     function thisAToB() external;
+
 }
 
 contract ContractTest is Test {
+
     IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
     IERC20 constant ALL_TOKEN = IERC20(0x04C0f31C0f59496cf195d2d7F1dA908152722DE7);
     IPancakeRouter constant PS_ROUTER = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
@@ -177,4 +180,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

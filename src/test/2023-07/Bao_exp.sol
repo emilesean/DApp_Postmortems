@@ -22,17 +22,22 @@ import "./../interface.sol";
 // https://blog.hundred.finance/15-04-23-hundred-finance-hack-post-mortem-d895b618cf33
 
 interface IbSTBL is IERC20 {
+
     function joinPool(uint256) external;
     function exitPool(uint256) external;
+
 }
 
 interface IbdbSTBL is IERC20 {
+
     function mint(uint256, bool) external;
     function redeem(uint256 redeemTokens) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 aDAI = IERC20(0x028171bCA77440897B824Ca71D1c56caC55b68A3);
@@ -87,7 +92,7 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = 17_550_000 * 1e6;
         amounts[1] = 17_510_000 * 1e18;
-        uint256[] memory modes = new uint[](2);
+        uint256[] memory modes = new uint256[](2);
         modes[0] = 0;
         modes[1] = 0;
         AaveV2.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -164,4 +169,5 @@ contract ContractTest is Test {
         });
         Router.exactOutputSingle(_Param2);
     }
+
 }

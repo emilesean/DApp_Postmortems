@@ -19,18 +19,23 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IConicPool {
+
     function deposit(uint256 underlyingAmount, uint256 minLpReceived, bool stake) external returns (uint256);
 
     function withdraw(uint256 conicLpAmount, uint256 minUnderlyingReceived) external returns (uint256);
+
 }
 
 interface IcrvUSDController {
+
     function create_loan(uint256 collateral, uint256 debt, uint256 N) external payable;
 
     function repay(uint256 _d_debt, address _for, int256 max_active_band, bool use_eth) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -128,4 +133,5 @@ contract ContractTest is Test {
         USDCAndUSDTTocrvUSD(USDC.balanceOf(address(this)), USDT.balanceOf(address(this)));
         ConicPool.withdraw(cncCRVUSD.balanceOf(address(this)), 0);
     }
+
 }

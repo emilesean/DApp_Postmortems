@@ -39,11 +39,14 @@ address constant pool15 = 0x409E377A7AfFB1FD3369cfc24880aD58895D1dD9;   // ANTEX
 address constant pool16 = 0xD534fAE679f7F02364D177E9D44F1D15963c0Dd7;   // DODO/WBNB Pool*/
 
 interface ISpaceGodzilla {
+
     function swapAndLiquifyStepv1() external;
     function swapTokensForOther(uint256 tokenAmount) external;
+
 }
 
 contract AttackContract is Test {
+
     using stdStorage for StdStorage;
 
     CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
@@ -121,4 +124,5 @@ contract AttackContract is Test {
     }
 
     receive() external payable {}
+
 }

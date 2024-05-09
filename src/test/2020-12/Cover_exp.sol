@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface Blacksmith {
+
     function claimRewardsForPools(address[] calldata _lpTokens) external;
 
     function claimRewards(address _lpToken) external;
@@ -12,9 +13,11 @@ interface Blacksmith {
     function deposit(address _lpToken, uint256 _amount) external;
 
     function withdraw(address _lpToken, uint256 _amount) external;
+
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     Blacksmith public bs = Blacksmith(0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5);
@@ -38,4 +41,5 @@ contract ContractTest is Test {
             "After claimRewards, Cover Balance", Cover.balanceOf(0x00007569643bc1709561ec2E86F385Df3759e5DD)
         );
     }
+
 }

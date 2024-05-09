@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://defimon.xyz/exploit/bsc/0x5366c6ba729d9cf8d472500afc1a2976ac2fe9ff
 
 interface IRewardVaultDelegator {
+
     function initialize(address bnftRegistry, address vrfCoordinator, uint64 subscriptionId) external;
 
     function setImplementation(address implementation) external;
@@ -21,9 +22,11 @@ interface IRewardVaultDelegator {
     function admin() external view returns (address);
 
     function a(address addr) external;
+
 }
 
 contract ContractTest is Test {
+
     IRewardVaultDelegator private constant RewardVaultDelegator =
         IRewardVaultDelegator(0x7bACB1c805CbbF7c4f74556a4B34FDE7793d0887);
     Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -120,4 +123,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

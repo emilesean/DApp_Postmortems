@@ -23,11 +23,14 @@ import "./../interface.sol";
 // Twitter Daniel Von Fange : https://twitter.com/danielvf/status/1580936010556661761
 
 interface IEFLeverVault {
+
     function deposit(uint256) external payable;
     function withdraw(uint256) external;
+
 }
 
 contract ContractTest is Test {
+
     IWETH constant WETH_TOKEN = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IEFLeverVault constant EFLEVER_VAULT = IEFLeverVault(0xe39fd820B58f83205Db1D9225f28105971c3D309);
     IBalancerVault constant BALANCER_VAULT = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
@@ -84,4 +87,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

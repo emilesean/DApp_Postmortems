@@ -6,6 +6,7 @@ import "../../interface.sol";
 import "./utils.sol";
 
 interface IEthCrossChainManager {
+
     function verifyHeaderAndExecuteTx(
         bytes memory proof,
         bytes memory rawHeader,
@@ -13,9 +14,11 @@ interface IEthCrossChainManager {
         bytes memory curRawHeader,
         bytes memory headerSig
     ) external returns (bool);
+
 }
 
 interface IEthCrossChainData {
+
     function putCurEpochStartHeight(uint32 curEpochStartHeight) external returns (bool);
     function getCurEpochStartHeight() external view returns (uint32);
     function putCurEpochConPubKeyBytes(bytes calldata curEpochPkBytes) external returns (bool);
@@ -32,9 +35,11 @@ interface IEthCrossChainData {
     function paused() external view returns (bool);
     // Not used currently by ECCM
     function getEthTxHash(uint256 ethTxHashIndex) external view returns (bytes32);
+
 }
 
 contract ContractTest is Test {
+
     struct Header {
         uint32 version;
         uint64 chainId;
@@ -192,4 +197,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

@@ -12,6 +12,7 @@ import "forge-std/Script.sol";
  poc refers to: https://github.com/0xNezha/luckyHack
 */
 contract luckyHack is Script {
+
     event Log(string);
 
     address owner = address(this);
@@ -72,4 +73,5 @@ contract luckyHack is Script {
     }
 
     receive() external payable {}
+
 }

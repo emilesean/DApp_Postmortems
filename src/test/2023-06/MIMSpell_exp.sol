@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/hexagate_/status/1671188024607100928?cxt=HHwWgMC--e2poLEuAAAA
 
 interface IDegenBox {
+
     function deposit(
         address token_,
         address from,
@@ -21,9 +22,11 @@ interface IDegenBox {
         uint256 amount,
         uint256 share
     ) external returns (uint256 amountOut, uint256 shareOut);
+
 }
 
 interface ISwapper {
+
     function swap(
         address from,
         address to,
@@ -32,9 +35,11 @@ interface ISwapper {
         uint256 shareFrom,
         bytes calldata swapData
     ) external;
+
 }
 
 contract MIMTest is Test {
+
     struct CurveData {
         address curveAddress;
         bytes4 exchangeFunctionSelector;
@@ -106,4 +111,5 @@ contract MIMTest is Test {
             "Exploiter's amount of MIM tokens after attack", MIM.balanceOf(exploiter), MIM.decimals()
         );
     }
+
 }

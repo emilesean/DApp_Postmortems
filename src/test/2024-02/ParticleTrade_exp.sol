@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/Phalcon_xyz/status/1758028270770250134
 
 interface IParticleExchange {
+
     function offerBid(
         address collection,
         uint256 margin,
@@ -36,9 +37,11 @@ interface IParticleExchange {
         uint256 loanStartTime; // loan start block.timestamp
         uint256 auctionStartTime; // auction start block.timestamp
     }
+
 }
 
 contract ContractTest is Test {
+
     address zero = 0x0000000000000000000000000000000000000000;
     IParticleExchange proxy = IParticleExchange(0x7c5C9AfEcf4013c43217Fb6A626A4687381f080D);
     address Azuki = 0xB6a37b5d14D502c3Ab0Ae6f3a0E058BC9517786e;
@@ -106,6 +109,6 @@ contract ContractTest is Test {
         return;
     }
 
-    receive() external payable {
-    }
+    receive() external payable {}
+
 }

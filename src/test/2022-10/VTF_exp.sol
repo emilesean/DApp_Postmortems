@@ -13,10 +13,13 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xc2d2d7164a9d3cfce1e1dac7dc328b350c693feb0a492a6989ceca7104eef9b7
 
 interface IVTF is IERC20 {
+
     function updateUserBalance(address _user) external;
+
 }
 
 interface IROUTER {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -24,9 +27,11 @@ interface IROUTER {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract claimReward {
+
     IVTF VTF = IVTF(0xc6548caF18e20F88cC437a52B6D388b0D54d830D);
 
     constructor() {
@@ -37,9 +42,11 @@ contract claimReward {
         VTF.updateUserBalance(address(this));
         VTF.transfer(receiver, VTF.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     address constant dodo = 0x26d0c625e5F5D6de034495fbDe1F6e9377185618;
     IVTF VTF = IVTF(0xc6548caF18e20F88cC437a52B6D388b0D54d830D);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -106,4 +113,5 @@ contract ContractTest is Test {
             contractList.push(_add);
         }
     }
+
 }

@@ -16,6 +16,7 @@ import "forge-std/Test.sol";
 // Twitter Guy : https://x.com/phalcon_xyz/status/1725058908144746992
 
 interface IUniswapV2Pair {
+
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     function balanceOf(address owner) external view returns (uint256);
@@ -31,9 +32,11 @@ interface IUniswapV2Pair {
     );
 
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
+
 }
 
 contract LinkDao_exp is Test {
+
     address immutable r = address(this);
 
     receive() external payable {}
@@ -67,4 +70,5 @@ contract LinkDao_exp is Test {
         }
         revert("no such function");
     }
+
 }

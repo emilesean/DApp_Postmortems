@@ -40,6 +40,7 @@ import "./../interface.sol";
 // Multiple tokens has been stolen, and 114 ETH deposited to Tornado Cash
 
 contract ContractTest is Test {
+
     IRabbySwap constant RABBYSWAP_ROUTER = IRabbySwap(0x6eb211CAF6d304A76efE37D9AbDFAdDC2d4363d1);
     IUSDT constant USDT_TOKEN = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IUSDC constant USDC_TOKEN = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -128,10 +129,12 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 /* -------------------- RabbySwap Interface -------------------- */
 interface IRabbySwap {
+
     function swap(
         address srcToken,
         uint256 amount,
@@ -142,4 +145,5 @@ interface IRabbySwap {
         bytes memory data,
         uint256 deadline
     ) external;
+
 }

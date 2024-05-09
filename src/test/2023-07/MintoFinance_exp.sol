@@ -14,6 +14,7 @@ import "./../interface.sol";
 // @Analysis
 // Twitter Guy : https://twitter.com/bbbb/status/1683180340548890631?s=20
 interface ReferalCrowdSales {
+
     struct LinkParameters {
         bytes32 linkHash;
         address linkFather;
@@ -34,9 +35,11 @@ interface ReferalCrowdSales {
     }
 
     function buyTokens(LinkParameters memory linkParams, PurchaseParameters memory purchaseParams) external;
+
 }
 
 interface PancakeRouter3 {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -48,9 +51,11 @@ interface PancakeRouter3 {
     }
 
     function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
+
 }
 
 contract MintoFinance_exp is Test {
+
     address constant BUSD = 0x55d398326f99059fF775485246999027B3197955; //correct
     IERC20 BTCMT;
 
@@ -98,4 +103,5 @@ contract MintoFinance_exp is Test {
     function transferFrom(address a, address b, uint256 amount) external returns (bool) {
         return true;
     }
+
 }

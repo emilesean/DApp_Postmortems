@@ -14,18 +14,23 @@ import "./../interface.sol";
 // https://twitter.com/BlockSecTeam/status/1683680026766737408
 
 interface IVault {
+
     function buyUSDP(address _receiver) external returns (uint256);
 
     function sellUSDP(address _receiver) external returns (uint256);
+
 }
 
 interface ILiquidityEvent {
+
     function purchasePlp(uint256 _amountIn, uint256 _minUsdp, uint256 _minPlp) external returns (uint256 amountOut);
 
     function unstakeAndRedeemPlp(uint256 _plpAmount, uint256 _minOut, address _receiver) external returns (uint256);
+
 }
 
 contract PalmswapTest is Test {
+
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 PLP = IERC20(0x8b47515579c39a31871D874a23Fb87517b975eCC);
     IERC20 USDP = IERC20(0x04C7c8476F91D2D6Da5CaDA3B3e17FC4532Fe0cc);
@@ -97,4 +102,5 @@ contract PalmswapTest is Test {
         modes[0] = 0;
         RadiantLP.flashLoan(address(this), assets, amounts, modes, address(this), bytes(""), 0);
     }
+
 }

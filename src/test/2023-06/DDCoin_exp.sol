@@ -15,6 +15,7 @@ import "./../interface.sol";
 // https://twitter.com/ChainAegis/status/1664192344726581255?cxt=HHwWjsDRldmHs5guAAAA
 
 interface IMarketPlace {
+
     struct SellListing {
         uint256 itemId;
         uint256 index;
@@ -37,9 +38,11 @@ interface IMarketPlace {
     function listItem(uint256 _amount, address invite) external returns (uint256);
 
     function sellItem(uint256 _amount) external returns (SellListing memory);
+
 }
 
 contract DDTest is Test {
+
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 DD = IERC20(0x50ab0D88045F540b8B79C8A7Dc25790dB493BBC5);
     IDPPOracle DPPOracle1 = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
@@ -129,9 +132,11 @@ contract DDTest is Test {
             amountOut, BUSDT.balanceOf(address(this)), path, address(this), block.timestamp + 100
         );
     }
+
 }
 
 contract HelperContract {
+
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IMarketPlace MarketPlace = IMarketPlace(0xb3a636ac4c271e6CD962caD98Eae9Cf71f5A49c8);
 
@@ -139,4 +144,5 @@ contract HelperContract {
         BUSDT.approve(address(MarketPlace), type(uint256).max);
         MarketPlace.listItem(500e18, msg.sender);
     }
+
 }

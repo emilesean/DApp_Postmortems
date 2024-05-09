@@ -10,41 +10,56 @@ import "./../interface.sol";
 // https://bscscan.com/txs?a=0xb12011c14e087766f30f4569ccaf735ec2182165
 
 interface Bond {
+
     function buyBond(uint256 lpAmount, uint256 bondId) external;
     function claim(uint256 index) external;
+
 }
 
 interface VBUSD {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VBNB {
+
     function mint() external payable;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VETH {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VBTC {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VUSDT {
+
     function borrow(uint256 borrowAmount) external;
     function repayBorrow(uint256 repayAmount) external;
+
 }
 
 interface Unitroller {
+
     function getAccountLiquidity(address account) external returns (uint256, uint256, uint256);
     function enterMarkets(address[] calldata vTokens) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 INUKO = IERC20(0xEa51801b8F5B88543DdaD3D1727400c15b209D8f);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
@@ -299,4 +314,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

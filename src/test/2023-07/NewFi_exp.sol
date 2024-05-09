@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IStakedV3 {
+
     function Invest(
         uint256 id,
         uint256 amount,
@@ -27,9 +28,11 @@ interface IStakedV3 {
         uint256 cycle,
         uint256 deadline
     ) external payable;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     Uni_Router_V3 Router = Uni_Router_V3(0x13f4EA83D0bd40E75C8222255bc855a974568Dd4);
@@ -97,4 +100,5 @@ contract ContractTest is Test {
             Uni_Router_V3.ExactInputParams(path, recipient, amountIn, amountOutMinimum);
         Router.exactInput(ExactInputParams);
     }
+
 }

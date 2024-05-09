@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     I88mph mphNFT = I88mph(0xF0b7DE03134857391d8D43Ed48e20EDF21461097);
 
@@ -37,4 +38,5 @@ contract ContractTest is Test {
     function onERC721Received(address, address, uint256, bytes memory) public returns (bytes4) {
         return this.onERC721Received.selector;
     }
+
 }

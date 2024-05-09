@@ -6,20 +6,25 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IpancakePair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
 
     function token0() external view returns (address);
 
     function token1() external view returns (address);
+
 }
 
 interface Token {
+
     function balanceOf(address account) external view returns (uint256);
 
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 contract ContractTest is Test {
+
     IpancakePair ipancake = IpancakePair(0x0eD7e52944161450477ee417DE9Cd3a859b14fD0);
     WBNB wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Surge surge = Surge(0xE1E1Aa58983F6b8eE8E4eCD206ceA6578F036c21);
@@ -68,4 +73,5 @@ contract ContractTest is Test {
             time++;
         }
     }
+
 }

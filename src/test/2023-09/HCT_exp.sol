@@ -15,6 +15,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ICoinToken {
+
     function balanceOf(address account) external view returns (uint256);
 
     function transfer(address recipient, uint256 amount) external returns (bool);
@@ -30,9 +31,11 @@ interface ICoinToken {
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     event Approval(address indexed owner, address indexed spender, uint256 value);
+
 }
 
 contract ContractTest is Test {
+
     IPancakePair PancakePair = IPancakePair(0xdbE783014Cb0662c629439FBBBa47e84f1B6F2eD);
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     ICoinToken HCT = ICoinToken(0x0FDfcfc398Ccc90124a0a41d920d6e2d0bD8CcF5);
@@ -99,4 +102,5 @@ contract ContractTest is Test {
         WBNB.approve(address(router), baseAMount);
         HCT.approve(address(router), baseAMount);
     }
+
 }

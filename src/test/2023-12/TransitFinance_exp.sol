@@ -30,6 +30,7 @@ struct ExactInputV3SwapParams {
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     address router = 0x00000047bB99ea4D791bb749D970DE71EE0b1A34;
@@ -93,14 +94,18 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 interface ITransitRouter {
+
     function transitFee() external view returns (uint256, uint256);
     function exactInputV3Swap(ExactInputV3SwapParams calldata params) external payable returns (uint256 returnAmount);
+
 }
 
 interface IUniswapV3Pool {
+
     function token0() external view returns (address);
     function token1() external view returns (address);
     function fee() external view returns (uint24);
@@ -111,4 +116,5 @@ interface IUniswapV3Pool {
         uint160 sqrtPriceLimitX96,
         bytes calldata data
     ) external returns (int256 amount0, int256 amount1);
+
 }

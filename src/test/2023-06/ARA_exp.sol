@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/BeosinAlert/status/1670638160550965248
 
 interface IPancakeRouterV3 {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -25,9 +26,11 @@ interface IPancakeRouterV3 {
     }
 
     function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
+
 }
 
 contract ARATest is Test {
+
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 ARA = IERC20(0x5542958FA9bD89C96cB86D1A6Cb7a3e644a3d46e);
     IPancakeRouterV3 Router = IPancakeRouterV3(0x13f4EA83D0bd40E75C8222255bc855a974568Dd4);
@@ -104,4 +107,5 @@ contract ARATest is Test {
         });
         Router.exactInputSingle(params);
     }
+
 }

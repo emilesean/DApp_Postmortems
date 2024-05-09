@@ -4,20 +4,25 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IPair {
+
     function approve(address, uint256) external;
     function balanceOf(address) external returns (uint256);
+
 }
 
 interface IDPC {
+
     function approve(address, uint256) external;
     function balanceOf(address) external returns (uint256);
     function tokenAirdrop(address, address, uint256) external;
     function stakeLp(address, address, uint256) external;
     function claimStakeLp(address, uint256) external;
     function claimDpcAirdrop(address) external;
+
 }
 
 contract ContractTest is Test {
+
     IDPC DPC = IDPC(0xB75cA3C3e99747d0e2F6e75A9fBD17F5Ac03cebE);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -92,4 +97,5 @@ contract ContractTest is Test {
             DPC.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

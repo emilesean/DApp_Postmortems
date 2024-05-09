@@ -10,6 +10,7 @@ import {IERC721} from "../IERC721.sol";
  * @dev See https://eips.ethereum.org/EIPS/eip-721
  */
 interface IERC721Metadata is IERC721 {
+
     /**
      * @dev Returns the token collection name.
      */
@@ -24,4 +25,5 @@ interface IERC721Metadata is IERC721 {
      * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
      */
     function tokenURI(uint256 tokenId) external view returns (string memory);
+
 }

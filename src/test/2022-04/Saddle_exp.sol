@@ -5,18 +5,25 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IEuler {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes calldata data) external returns (bool);
+
 }
 
 interface ICurve {
+
     function exchange(int128 i, int128 j, uint256 dx, uint256 min_dy) external;
+
 }
 
 interface ISaddle {
+
     function swap(uint8 i, uint8 j, uint256 dx, uint256 min_dy, uint256 deadline) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     address private constant eulerLoans = 0x07df2ad9878F8797B4055230bbAE5C808b8259b3;
     address private constant usdc = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     address private constant susd = 0x57Ab1ec28D129707052df4dF418D58a2D46d5f51;
@@ -85,4 +92,5 @@ contract ContractTest is Test {
         ISaddle(saddlepool).swap(1, 0, amount, 1, block.timestamp);
         console.log("SUSD swapped: %s", IERC20(susd).balanceOf(address(this)));
     }
+
 }

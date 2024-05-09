@@ -10,14 +10,17 @@ import "./../interface.sol";
 // https://snowtrace.io/tx/0xc6fb8217e45870a93c25e2098f54f6e3b24674a3083c30664867de474bf0212d
 
 interface LSWUSDC {
+
     function maxFlashLoan(address token) external view returns (uint256);
     function flashFee(address token, uint256 amount) external view returns (uint256);
     function flashLoan(address receiver, address token, uint256 amount, bytes calldata data) external;
     function deposit(uint256 amount, address to) external returns (uint256);
     function redeem(uint256 shares, address receiver, address owner) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E);
     LSWUSDC LSW = LSWUSDC(0xfF152e21C5A511c478ED23D1b89Bb9391bE6de96);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0xf4003F4efBE8691B60249E6afbD307aBE7758adb);
@@ -56,4 +59,5 @@ contract ContractTest is Test {
         depositAmount = LSW.deposit(flashLoanAmount, address(this));
         return keccak256("ERC3156FlashBorrower.onFlashLoan");
     }
+
 }

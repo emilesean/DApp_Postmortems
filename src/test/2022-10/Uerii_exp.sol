@@ -18,10 +18,13 @@ import "./../interface.sol";
 // Article Quillaudits : https://quillaudits.medium.com/access-control-vulnerability-in-defi-quillaudits-909e7ed4582c
 
 interface IUERII is IERC20 {
+
     function mint() external;
+
 }
 
 contract ContractTest is Test {
+
     IUERII constant UERII_TOKEN = IUERII(0x418C24191aE947A78C99fDc0e45a1f96Afb254BE);
     IUSDC constant USDC_TOKEN = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IWETH constant WETH_TOKEN = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
@@ -92,4 +95,5 @@ contract ContractTest is Test {
         });
         UNI_ROUTER.exactInputSingle(_Params);
     }
+
 }

@@ -20,10 +20,13 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IairdropToken is IERC20 {
+
     function lastAirdropAddress() external view returns (address);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IairdropToken FFIST = IairdropToken(0x80121DA952A74c06adc1d7f85A237089b57AF347);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -78,4 +81,5 @@ contract ContractTest is Test {
             FFIST.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

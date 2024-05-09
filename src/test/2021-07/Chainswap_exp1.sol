@@ -17,6 +17,7 @@ struct Signature {
 // }
 
 contract ContractTest is Test {
+
     address exploiter = 0x941a9E3B91E1cc015702B897C512D265fAE88A9c;
     address proxy = 0x7fe68FC06e1A870DcbeE0acAe8720396DC12FC86;
     address impl = 0x373CE6Da1AEB73A9bcA412F2D3b7eD07Af3AD490;
@@ -76,4 +77,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

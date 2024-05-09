@@ -19,18 +19,23 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface ICurveBurner {
+
     function execute() external;
+
 }
 
 interface ICurve {
+
     function add_liquidity(uint256[3] memory amounts, uint256 min_mint_amount) external;
 
     function remove_liquidity_imbalance(uint256[3] memory amounts, uint256 max_burn_amount) external;
 
     function remove_liquidity_one_coin(uint256 token_amount, int128 i, uint256 min_amount) external;
+
 }
 
 contract ContractTest is Test {
+
     ICurveBurner CurveBurner = ICurveBurner(0x786B374B5eef874279f4B7b4de16940e57301A58);
     IERC20 wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IWETH WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
@@ -149,4 +154,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

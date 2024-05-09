@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IPancakeRouter pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     ILiquidityMigrationV2 liquidityMigrationV2 =
@@ -70,4 +71,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

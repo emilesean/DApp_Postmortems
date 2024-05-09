@@ -5,7 +5,9 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface IERC20Custom {
+
     function transfer(address, uint256) external;
+
 }
 
 /*
@@ -17,6 +19,7 @@ interface IERC20Custom {
     uint balance1Adjusted = balance1.mul(10000).sub(amount1In.mul(15));
     require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'Nimbus: K');*/
 contract ContractTest is Test {
+
     address public pair = 0xc0A6B8c534FaD86dF8FA1AbB17084A70F86EDDc1;
     address public usdt = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
     CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
@@ -37,4 +40,5 @@ contract ContractTest is Test {
     function NimbusCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
         IERC20Custom(usdt).transfer(pair, amount0 / 10);
     }
+
 }

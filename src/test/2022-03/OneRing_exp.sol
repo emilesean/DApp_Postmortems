@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 contract ContractTest is Test {
+
     IUniswapV2Pair pair = IUniswapV2Pair(0xbcab7d083Cf6a01e0DdA9ed7F8a02b47d125e682);
     IERC20 usdc = IERC20(0x04068DA6C83AFCFA0e13ba15A6696662335D5B75);
     IOneRingVault vault = IOneRingVault(0x4e332D616b5bA1eDFd87c899E534D996c336a2FC);
@@ -27,4 +28,5 @@ contract ContractTest is Test {
         usdc.transfer(msg.sender, (amount0 / 9999 * 10_000) + 10_000);
         usdc.transfer(tx.origin, usdc.balanceOf(address(this)));
     }
+
 }

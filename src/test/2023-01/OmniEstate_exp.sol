@@ -13,12 +13,15 @@ import "./../interface.sol";
 // https://bscscan.com/tx/0xa916674fb8203fac6d78f5f9afc604be468a514aa61ea36c6d6ef26ecfbd0e97
 
 interface OmniStakingPool {
+
     function invest(uint256 end_date, uint256 qty_ort) external;
     function withdrawAndClaim(uint256 lockId) external;
     function getUserStaking(address user) external returns (uint256[] memory);
+
 }
 
 contract ContractTest is Test {
+
     address Omni = 0x6f40A3d0c89cFfdC8A1af212A019C220A295E9bB;
     address ORT = 0x1d64327C74d6519afeF54E58730aD6fc797f05Ba;
     Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
@@ -54,4 +57,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

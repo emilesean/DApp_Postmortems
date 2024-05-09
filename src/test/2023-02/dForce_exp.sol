@@ -12,38 +12,53 @@ import "./../interface.sol";
 // https://arbiscan.io/tx/0x5db5c2400ab56db697b3cc9aa02a05deab658e1438ce2f8692ca009cc45171dd
 
 interface uniswapV3Flash {
+
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface ISwapFlashLoan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory params) external;
+
 }
 
 interface IVWSTETHCRVGAUGE is IERC20 {
+
     function redeem(address receiver, uint256 amount) external;
+
 }
 
 interface ICurvePools is ICurvePool {
+
     function remove_liquidity(
         uint256 token_amount,
         uint256[2] memory min_amounts
     ) external returns (uint256[2] memory);
+
 }
 
 interface IDForce {
+
     function borrowBalanceStored(address account) external returns (uint256);
     function liquidateBorrow(address _borrower, uint256 _repayAmount, address _assetCollateral) external;
+
 }
 
 interface IPriceOracleV2 {
+
     function getUnderlyingPrice(address _asset) external returns (uint256);
+
 }
 
 interface GMXVAULT {
+
     function swap(address _tokenIn, address _tokenOut, address _receiver) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 USX = IERC20(0x641441c631e2F909700d2f41FD87F0aA6A6b4EDb);
@@ -162,7 +177,7 @@ contract ContractTest is Test {
         assets[0] = address(WETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = aaveV3FlashloanAmount;
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
     }
@@ -192,7 +207,7 @@ contract ContractTest is Test {
         assets[0] = address(WETH);
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = WETH.balanceOf(rWETH);
-        uint256[] memory modes = new uint[](1);
+        uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         emit log_named_decimal_uint("3.Radiant Flashloan WETH amount", amounts[0], WETH.decimals());
         Radiant.flashLoan(address(this), assets, amounts, modes, address(0), new bytes(1), 0);
@@ -344,9 +359,11 @@ contract ContractTest is Test {
             WSTETHCRVGAUGE.withdraw(WSTETHCRVGAUGE.balanceOf(address(this)));
         }
     }
+
 }
 
 contract Borrower is Test {
+
     IERC20 WSTETHCRV = IERC20(0xDbcD16e622c95AcB2650b38eC799f76BFC557a0b);
     IERC20 WSTETHCRVGAUGE = IERC20(0x098EF55011B6B8c99845128114A9D9159777d697);
     IERC20 USX = IERC20(0x641441c631e2F909700d2f41FD87F0aA6A6b4EDb);
@@ -374,4 +391,5 @@ contract Borrower is Test {
         USX.transfer(msg.sender, USX.balanceOf(address(this)));
         console.log("--------------------------------------------------");
     }
+
 }

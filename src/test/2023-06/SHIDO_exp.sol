@@ -20,11 +20,14 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IShidoLock {
+
     function lockTokens() external;
     function claimTokens() external;
+
 }
 
 interface IFeeFreeRouter {
+
     function addLiquidityETH(
         address token,
         uint256 amountTokenDesired,
@@ -33,9 +36,11 @@ interface IFeeFreeRouter {
         address payable to,
         uint256 deadline
     ) external payable returns (uint256 amountToken, uint256 amountETH, uint256 liquidity);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 SHIDO = IERC20(0xa963eE460Cf4b474c35ded8fFF91c4eC011FB640);
     IERC20 SHIDOINU = IERC20(0x733Af324146DCfe743515D8D77DC25140a07F9e0);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
@@ -105,4 +110,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

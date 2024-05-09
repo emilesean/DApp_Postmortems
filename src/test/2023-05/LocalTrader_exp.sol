@@ -15,10 +15,13 @@ import "./../interface.sol";
 // not open source; maybe inproper access control
 
 interface LCTExchange {
+
     function buyTokens() external payable;
+
 }
 
 contract LCTExp is Test {
+
     address victim_proxy = 0x303554d4D8Bd01f18C6fA4A8df3FF57A96071a41;
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     LCTExchange exchange = LCTExchange(0xcE3e12bD77DD54E20a18cB1B94667F3E697bea06);
@@ -75,4 +78,5 @@ contract LCTExp is Test {
     }
 
     receive() external payable {}
+
 }

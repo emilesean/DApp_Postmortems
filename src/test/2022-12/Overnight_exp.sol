@@ -10,20 +10,25 @@ import "./../interface.sol";
 // https://snowtrace.io/address/0xfe2c4cb637830b3f1cdc626b99f31b1ff4842e2c
 
 interface JoeRouter {
+
     function swapAVAXForExactTokens(
         uint256 amountOut,
         address[] calldata path,
         address to,
         uint256 deadline
     ) external payable returns (uint256[] memory amounts);
+
 }
 
 interface USDPlus {
+
     function buy(address _referredBy, uint256 amount) external returns (uint256);
     function redeem(address to, uint256 amount) external returns (uint256 redeemed);
+
 }
 
 interface SwapFlashLoan {
+
     function calculateTokenAmount(uint256[] calldata amounts, bool deposit) external view returns (uint256);
 
     function addLiquidity(uint256[] calldata amounts, uint256 minToMint, uint256 deadline) external returns (uint256);
@@ -43,9 +48,11 @@ interface SwapFlashLoan {
         uint256 minDy,
         uint256 deadline
     ) external returns (uint256);
+
 }
 
 interface BenqiFinance {
+
     function enterMarkets(address[] memory qiTokens) external returns (uint256[] memory);
     function getAccountLiquidity(address account) external view returns (uint256, uint256, uint256);
     function getHypotheticalAccountLiquidity(
@@ -54,24 +61,32 @@ interface BenqiFinance {
         uint256 redeemTokens,
         uint256 borrowAmount
     ) external view returns (uint256, uint256, uint256);
+
 }
 
 interface BenqiChainlinkOracle {
+
     function getUnderlyingPrice(address qiToken) external view returns (uint256);
+
 }
 
 interface QiUSDCn {
+
     function mint(uint256 mintAmount) external returns (uint256);
     function redeemUnderlying(uint256 redeemAmount) external returns (uint256);
+
 }
 
 interface QiUSDC {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
     function repayBorrow(uint256 repayAmount) external returns (uint256);
     function borrowBalanceStored(address account) external view returns (uint256);
+
 }
 
 interface PlatypusFinance {
+
     function swap(
         address fromToken,
         address toToken,
@@ -80,17 +95,23 @@ interface PlatypusFinance {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface NetAsset {
+
     function netAssetValue() external view returns (uint256);
+
 }
 
 interface TotalNetAsset {
+
     function totalNetAssets() external view returns (uint256);
+
 }
 
 interface SicleRouter {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -98,9 +119,11 @@ interface SicleRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     JoeRouter Router = JoeRouter(0x60aE616a2155Ee3d9A68541Ba4544862310933d4);
     SicleRouter sicleRouter = SicleRouter(0xC7f372c62238f6a5b79136A9e5D16A2FD7A3f0F5);
     USDPlus USDplus = USDPlus(0x73cb180bf0521828d8849bc8CF2B920918e23032);
@@ -158,7 +181,7 @@ contract ContractTest is Test {
             assets[0] = address(USDC_e);
             uint256[] memory amounts = new uint256[](1);
             amounts[0] = PoolV2BorrowAmount;
-            uint256[] memory modes = new uint[](1);
+            uint256[] memory modes = new uint256[](1);
             modes[0] = 0;
             LendingPoolV2.flashLoan(address(this), assets, amounts, modes, address(this), "", 0); // FlashLoan USDC.e
             cheats.roll(block.number + 1); // USD+ buy and redeem not allowed in one block
@@ -189,7 +212,7 @@ contract ContractTest is Test {
             assets1[0] = address(USDC);
             uint256[] memory amounts1 = new uint256[](1);
             amounts1[0] = PoolV2BorrowAmount / 2;
-            uint256[] memory modes = new uint[](1);
+            uint256[] memory modes = new uint256[](1);
             modes[0] = 0;
             PoolV3.flashLoan(address(this), assets1, amounts1, modes, address(this), "", 0); // FlashLoan USDC
 
@@ -263,4 +286,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

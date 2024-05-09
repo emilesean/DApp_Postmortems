@@ -14,10 +14,13 @@ import "./../interface.sol";
 // @Analysis: https://twitter.com/numencyber/status/1661213691893944320
 
 interface ILCTExchange {
+
     function buyTokens() external payable;
+
 }
 
 contract LocalTraders is Test {
+
     ILCTExchange LCTExchange = ILCTExchange(0xcE3e12bD77DD54E20a18cB1B94667F3E697bea06);
     IPancakeRouter Router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 LCT = IERC20(0x5C65BAdf7F97345B7B92776b22255c973234EfE7);
@@ -102,4 +105,5 @@ contract LocalTraders is Test {
         bytes32 valInslot3 = cheats.load(upgradeableProxy, bytes32(uint256(3)));
         return uint256(valInslot3);
     }
+
 }

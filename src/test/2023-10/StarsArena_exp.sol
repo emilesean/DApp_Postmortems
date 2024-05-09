@@ -16,6 +16,7 @@ import "./../interface.sol";
 // https://twitter.com/peckshield/status/1710555944269292009
 
 contract ContractTest is Test {
+
     address private constant victimContract = 0xA481B139a1A654cA19d2074F174f17D7534e8CeC;
     bool private reenter = true;
 
@@ -46,4 +47,5 @@ contract ContractTest is Test {
             reenter = false;
         }
     }
+
 }

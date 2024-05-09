@@ -10,11 +10,14 @@ import "./../interface.sol";
 // https://snowtrace.io/tx/0xab39a17cdc200c812ecbb05aead6e6f574712170eafbd73736b053b168555680
 
 interface MUBank {
+
     function mu_bond(address stable, uint256 amount) external;
     function mu_gold_bond(address stable, uint256 amount) external;
+
 }
 
 contract ContractTest is Test {
+
     MUBank Bank = MUBank(0x4aA679402c6afcE1E0F7Eb99cA4f09a30ce228ab);
     IERC20 MU = IERC20(0xD036414fa2BCBb802691491E323BFf1348C5F4Ba);
     IERC20 MUG = IERC20(0xF7ed17f0Fb2B7C9D3DDBc9F0679b2e1098993e81);
@@ -76,4 +79,5 @@ contract ContractTest is Test {
             MUG.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

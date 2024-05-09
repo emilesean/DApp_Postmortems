@@ -84,10 +84,13 @@ Explanation by: Kayaba-Attribution
 */
 
 interface ICarrot is IERC20 {
+
     function transReward(bytes memory data) external;
+
 }
 
 contract ContractTest is Test {
+
     Uni_Router_V2 constant PS_ROUTER = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     ICarrot constant CARROT_TOKEN = ICarrot(0xcFF086EaD392CcB39C49eCda8C974ad5238452aC);
     IERC20 constant BUSDT_TOKEN = IERC20(0x55d398326f99059fF775485246999027B3197955); // Binance USDT
@@ -143,4 +146,5 @@ contract ContractTest is Test {
             CARROT_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

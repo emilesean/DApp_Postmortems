@@ -20,13 +20,16 @@ import "./../interface.sol";
 // Twitter Ancilia : https://twitter.com/AnciliaInc/status/1578952542926491650
 
 contract Enum {
+
     enum Operation {
         Call,
         DelegateCall
     }
+
 }
 
 interface IDaoModule {
+
     function getTransactionHash(
         address to,
         uint256 value,
@@ -50,17 +53,23 @@ interface IDaoModule {
     function buildQuestion(string memory proposalId, bytes32[] memory txHashes) external pure returns (string memory);
 
     function questionIds(bytes32) external returns (bytes32);
+
 }
 
 interface IRealitio {
+
     function submitAnswer(bytes32 question_id, bytes32 answer, uint256 max_previous) external payable;
+
 }
 
 interface IPrimaryBridge {
+
     function owner() external view returns (address);
+
 }
 
 contract XaveFinanceExploit is Test {
+
     IERC20 constant RNBW_TOKEN = IERC20(0xE94B97b6b43639E238c851A7e693F50033EfD75C);
     IERC20 constant LPOP_TOKEN = IERC20(0x6335A2E4a2E304401fcA4Fc0deafF066B813D055);
     IPrimaryBridge constant PRIMARY_BRIDGE = IPrimaryBridge(0x579270F151D142eb8BdC081043a983307Aa15786);
@@ -212,4 +221,5 @@ contract XaveFinanceExploit is Test {
             "[After proposal Execution] Attacker's $RNBW Token Balance: ", RNBW_TOKEN.balanceOf(ATTACKER_EOA), 18
         );
     }
+
 }

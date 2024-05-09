@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://blog.solidityscan.com/pawnfi-hack-analysis-38ac9160cbb4
 
 interface ApeStakingStorage {
+
     struct DepositInfo {
         uint256[] mainTokenIds;
         uint256[] bakcTokenIds;
@@ -32,9 +33,11 @@ interface ApeStakingStorage {
         uint256 liquidatePawnAmount;
         uint256 feeRate;
     }
+
 }
 
 interface IApeCoinStaking {
+
     struct PairNft {
         uint128 mainTokenId;
         uint128 bakcTokenId;
@@ -64,9 +67,11 @@ interface IApeCoinStaking {
         uint96 rewardsPerHour;
         uint96 capPerPosition;
     }
+
 }
 
 interface IApeStaking {
+
     function depositAndBorrowApeAndStake(
         ApeStakingStorage.DepositInfo memory depositInfo,
         ApeStakingStorage.StakingInfo memory stakingInfo,
@@ -93,13 +98,17 @@ interface IApeStaking {
         );
 
     function getTimeRangeBy(uint256 _poolId, uint256 _index) external view returns (IApeCoinStaking.TimeRange memory);
+
 }
 
 interface IPToken is IERC20 {
+
     function randomTrade(uint256 nftIdCount) external returns (uint256[] memory nftIds);
+
 }
 
 contract PawnfiTest is Test {
+
     Uni_Pair_V3 private constant UniV3Pool = Uni_Pair_V3(0xAc4b3DacB91461209Ae9d41EC517c2B9Cb1B7DAF);
     IERC20 private constant APE = IERC20(payable(0x4d224452801ACEd8B2F0aebE155379bb5D594381));
     IERC20 private constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -236,4 +245,5 @@ contract PawnfiTest is Test {
     }
 
     receive() external payable {}
+
 }

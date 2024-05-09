@@ -5,6 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 import "forge-std/Test.sol";
 
 interface CheatCodes {
+
     // This allows us to getRecordedLogs()
     struct Log {
         bytes32[] topics;
@@ -177,9 +178,11 @@ interface CheatCodes {
     /// Returns all rpc urls and their aliases `[alias, url][]`
     function rpcUrls() external returns (string[2][] memory);
     function makePersistent(address account) external;
+
 }
 
 interface IERC20 {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -203,9 +206,11 @@ interface IERC20 {
     function withdraw(uint256 wad) external;
     function deposit(uint256 wad) external returns (bool);
     function owner() external view returns (address);
+
 }
 
 interface ICErc20Delegate {
+
     event AccrueInterest(uint256 cashPrior, uint256 interestAccumulated, uint256 borrowIndex, uint256 totalBorrows);
     event Approval(address indexed owner, address indexed spender, uint256 amount);
     event Borrow(address borrower, uint256 borrowAmount, uint256 accountBorrows, uint256 totalBorrows);
@@ -353,13 +358,17 @@ interface ICErc20Delegate {
     function transferFrom(address src, address dst, uint256 amount) external returns (bool);
 
     function underlying() external view returns (address);
+
 }
 
 interface ERC1820Registry {
+
     function setInterfaceImplementer(address _addr, bytes32 _interfaceHash, address _implementer) external;
+
 }
 
 interface IUniswapV2Factory {
+
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
     function feeTo() external view returns (address);
@@ -373,9 +382,11 @@ interface IUniswapV2Factory {
 
     function setFeeTo(address) external;
     function setFeeToSetter(address) external;
+
 }
 
 interface IUniswapV2Pair {
+
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
     function skim(address to) external;
     function token0() external view returns (address);
@@ -387,17 +398,21 @@ interface IUniswapV2Pair {
     function approve(address spender, uint256 value) external returns (bool);
     function transfer(address to, uint256 value) external returns (bool);
     function transferFrom(address from, address to, uint256 value) external returns (bool);
+
 }
 
 interface IBacon {
+
     function lend(uint256 index) external;
 
     function redeem(uint256 index) external;
 
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 library DataTypesAave {
+
     // refer to the whitepaper, section 1.1 basic concepts for a formal description of these properties.
     struct ReserveData {
         //stores the reserve configuration
@@ -455,9 +470,11 @@ library DataTypesAave {
         //The maximum amount of tokens allowed to be used as collateral for aggregate user borrowings
         uint256 collateralUsageLimit;
     }
+
 }
 
 interface IPriceOracleGetter {
+
     /**
      * @dev returns the asset price in ETH
      * @param asset the address of the asset
@@ -471,9 +488,11 @@ interface IPriceOracleGetter {
     function setAssetSources(address[] calldata assets, address[] calldata sources) external;
     function getSourceOfAsset(address asset) external view returns (address);
     function owner() external view returns (address);
+
 }
 
 interface IACOWriter {
+
     function erc20proxy() external view returns (address);
 
     function weth() external view returns (address);
@@ -486,9 +505,11 @@ interface IACOWriter {
     ) external payable;
 
     receive() external payable;
+
 }
 
 interface IRevest {
+
     struct FNFTConfig {
         address asset;
         address pipeToContract;
@@ -621,9 +642,11 @@ interface IRevest {
     function unlockFNFT(uint256 fnftId) external;
 
     function withdrawFNFT(uint256 fnftId, uint256 quantity) external;
+
 }
 
 interface AnyswapV4Router {
+
     function anySwapOutUnderlyingWithPermit(
         address from,
         address token,
@@ -635,9 +658,11 @@ interface AnyswapV4Router {
         bytes32 s,
         uint256 toChainID
     ) external;
+
 }
 
 interface WETH {
+
     function approve(address guy, uint256 wad) external returns (bool);
 
     function withdraw(uint256 wad) external;
@@ -645,9 +670,11 @@ interface WETH {
     function balanceOf(address) external view returns (uint256);
 
     function transfer(address dst, uint256 wad) external returns (bool);
+
 }
 
 interface AnyswapV1ERC20 {
+
     function mint(address to, uint256 amount) external returns (bool);
 
     function burn(address from, uint256 amount) external returns (bool);
@@ -659,9 +686,11 @@ interface AnyswapV1ERC20 {
     function withdrawVault(address from, uint256 amount, address to) external returns (uint256);
 
     function underlying() external view returns (address);
+
 }
 
 interface IERC1820Registry {
+
     function setInterfaceImplementer(address _addr, bytes32 _interfaceHash, address _implementer) external;
 
     function getManager(address _addr) external view returns (address);
@@ -680,9 +709,11 @@ interface IERC1820Registry {
 
     event InterfaceImplementerSet(address indexed addr, bytes32 indexed interfaceHash, address indexed implementer);
     event ManagerChanged(address indexed addr, address indexed newManager);
+
 }
 
 interface IERC777 {
+
     function name() external view returns (string memory);
 
     function symbol() external view returns (string memory);
@@ -735,9 +766,11 @@ interface IERC777 {
     event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
 
     event RevokedOperator(address indexed operator, address indexed tokenHolder);
+
 }
 
 interface Uni_Pair_V3 {
+
     function token0() external view returns (address);
     function token1() external view returns (address);
     function swap(
@@ -748,9 +781,11 @@ interface Uni_Pair_V3 {
         bytes calldata data
     ) external returns (int256 amount0, int256 amount1);
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface Uni_Pair_V2 {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Burn(address indexed sender, uint256 amount0, uint256 amount1, address indexed to);
     event Mint(address indexed sender, uint256 amount0, uint256 amount1);
@@ -826,9 +861,11 @@ interface Uni_Pair_V2 {
     function transfer(address to, uint256 value) external returns (bool);
 
     function transferFrom(address from, address to, uint256 value) external returns (bool);
+
 }
 
 interface Uni_Router_V3 {
+
     struct ExactInputSingleParams {
         address tokenIn;
         address tokenOut;
@@ -879,9 +916,11 @@ interface Uni_Router_V3 {
     function exactInput(ExactInputParams memory params) external payable returns (uint256 amountOut);
 
     function exactOutput(ExactOutputParams calldata params) external payable returns (uint256 amountIn);
+
 }
 
 interface Uni_Router_V2 {
+
     function WETH() external view returns (address);
 
     function addLiquidity(
@@ -1061,9 +1100,11 @@ interface Uni_Router_V2 {
         uint256 deadline
     ) external returns (uint256[] memory amounts);
     // receive () external payable;
+
 }
 
 interface WETH9 {
+
     function name() external view returns (string memory);
 
     function approve(address guy, uint256 wad) external returns (bool);
@@ -1090,9 +1131,11 @@ interface WETH9 {
     event Transfer(address indexed src, address indexed dst, uint256 wad);
     event Deposit(address indexed dst, uint256 wad);
     event Withdrawal(address indexed src, uint256 wad);
+
 }
 
 interface crETH {
+
     event AccrueInterest(uint256 cashPrior, uint256 interestAccumulated, uint256 borrowIndex, uint256 totalBorrows);
     event Approval(address indexed owner, address indexed spender, uint256 amount);
     event Borrow(address borrower, uint256 borrowAmount, uint256 accountBorrows, uint256 totalBorrows);
@@ -1210,9 +1253,11 @@ interface crETH {
     function transfer(address dst, uint256 amount) external returns (bool);
 
     function transferFrom(address src, address dst, uint256 amount) external returns (bool);
+
 }
 
 interface crAMP {
+
     event AccrueInterest(uint256 cashPrior, uint256 interestAccumulated, uint256 borrowIndex, uint256 totalBorrows);
     event Approval(address indexed owner, address indexed spender, uint256 amount);
     event Borrow(address borrower, uint256 borrowAmount, uint256 accountBorrows, uint256 totalBorrows);
@@ -1342,9 +1387,11 @@ interface crAMP {
     function transferFrom(address src, address dst, uint256 amount) external returns (bool);
 
     function underlying() external view returns (address);
+
 }
 
 interface AMP {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event ApprovalByPartition(bytes32 indexed partition, address indexed owner, address indexed spender, uint256 value);
     event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
@@ -1483,9 +1530,11 @@ interface AMP {
     ) external returns (bytes32);
 
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool);
+
 }
 
 interface IUSDC {
+
     function Swapin(bytes32 txhash, address account, uint256 amount) external returns (bool);
 
     function transfer(address to, uint256 value) external returns (bool);
@@ -1495,9 +1544,11 @@ interface IUSDC {
     function approve(address spender, uint256 value) external returns (bool);
 
     function allowance(address owner, address spender) external view returns (uint256);
+
 }
 
 interface IBaseV1Router01 {
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -1519,9 +1570,11 @@ interface IBaseV1Router01 {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }
 
 interface IDeiLenderSolidex {
+
     function addCollateral(address to, uint256 amount) external;
 
     function borrow(
@@ -1532,6 +1585,7 @@ interface IDeiLenderSolidex {
         bytes memory reqId,
         SchnorrSign[] memory sigs
     ) external returns (uint256 debt);
+
 }
 
 struct SchnorrSign {
@@ -1541,18 +1595,25 @@ struct SchnorrSign {
 }
 
 interface ISSPv4 {
+
     function buyDei(uint256 amountIn) external;
+
 }
 
 interface ILpDepositor {
+
     function deposit(address pool, uint256 amount) external;
+
 }
 
 interface IOracle {
+
     function getOnChainPrice() external view returns (uint256);
+
 }
 
 interface DVM {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
 
     function init(
@@ -1568,25 +1629,31 @@ interface DVM {
 
     function _BASE_TOKEN_() external returns (address);
     function _QUOTE_TOKEN_() external returns (address);
+
 }
 
 interface Surge {
+
     function sell(uint256 tokenAmount) external returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
 
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface USDT {
+
     function transfer(address to, uint256 value) external;
 
     function balanceOf(address account) external view returns (uint256);
 
     function approve(address spender, uint256 value) external;
+
 }
 
 interface IMasterChef {
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -1760,13 +1827,17 @@ interface IMasterChef {
     function withdrawSingle(address tokenOut, uint256 _pid, uint256 _amount, address[][2] memory paths) external;
 
     function withdraw_tickets(uint256 _pid, uint256 tokenId) external;
+
 }
 
 interface IPancakeCallee {
+
     function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 interface IPancakePair {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -1843,9 +1914,11 @@ interface IPancakePair {
     function sync() external;
 
     function initialize(address, address) external;
+
 }
 
 interface IPancakeRouter {
+
     function WETH() external view returns (address);
 
     function addLiquidity(
@@ -2026,9 +2099,11 @@ interface IPancakeRouter {
     ) external returns (uint256[] memory amounts);
 
     receive() external payable;
+
 }
 
 interface GymSinglePool {
+
     function depositFromOtherContract(
         uint256 _depositAmount,
         uint8 _periodId,
@@ -2037,17 +2112,21 @@ interface GymSinglePool {
     ) external;
 
     function withdraw(uint256 _depositId) external;
+
 }
 
 interface GymToken {
+
     function approve(address spender, uint256 rawAmount) external returns (bool);
 
     function balanceOf(address owner) external view returns (uint256);
 
     function allowance(address owner, address spender) external view returns (uint256);
+
 }
 
 interface ILiquidityMigrationV2 {
+
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event migration(uint256 LPspended, uint256 LPrecived);
 
@@ -2074,9 +2153,11 @@ interface ILiquidityMigrationV2 {
     function withdrawTokens() external;
 
     receive() external payable;
+
 }
 
 interface WBNB {
+
     function deposit() external payable;
 
     function withdraw(uint256 wad) external;
@@ -2084,9 +2165,11 @@ interface WBNB {
     function balanceOf(address account) external view returns (uint256);
 
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IWBNB {
+
     function name() external view returns (string memory);
 
     function approve(address guy, uint256 wad) external returns (bool);
@@ -2117,9 +2200,11 @@ interface IWBNB {
     event Transfer(address indexed src, address indexed dst, uint256 wad);
     event Deposit(address indexed dst, uint256 wad);
     event Withdrawal(address indexed src, uint256 wad);
+
 }
 
 interface Pool {
+
     event FeesUpdated(uint256 _mintingFee, uint256 _redemptionFee);
     event MaxXftmSupplyUpdated(uint256 _value);
     event MinCollateralRatioUpdated(uint256 _minCollateralRatio);
@@ -2274,9 +2359,11 @@ interface Pool {
     function zap(uint256 _minXftmOut) external payable;
 
     receive() external payable;
+
 }
 
 interface Monoswap {
+
     event AddLiquidity(
         address indexed provider,
         uint256 indexed pid,
@@ -2479,9 +2566,11 @@ interface Monoswap {
     function updatePoolStatus(address _token, uint8 _status) external;
 
     function updatePriceAdjuster(address account, bool _status) external;
+
 }
 
 interface IDMMExchangeRouter {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -2545,9 +2634,11 @@ interface IDMMExchangeRouter {
         address[] calldata poolsPath,
         IERC20[] calldata path
     ) external view returns (uint256[] memory amounts);
+
 }
 
 interface MonoXPool {
+
     event ApprovalForAll(address indexed account, address indexed operator, bool approved);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event TransferBatch(
@@ -2623,9 +2714,11 @@ interface MonoXPool {
     function uri(uint256) external view returns (string memory);
 
     function withdrawWETH(uint256 amount) external;
+
 }
 
 interface USDC {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event AuthorizationCanceled(address indexed authorizer, bytes32 indexed nonce);
     event AuthorizationUsed(address indexed authorizer, bytes32 indexed nonce);
@@ -2780,9 +2873,11 @@ interface USDC {
     function updateRescuer(address newRescuer) external;
 
     function version() external view returns (string memory);
+
 }
 
 interface MonoToken {
+
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate);
     event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance);
@@ -2878,17 +2973,21 @@ interface MonoToken {
     function updateChildChainManager(address newChildChainManagerProxy) external;
 
     function withdraw(uint256 amount) external;
+
 }
 
 interface IOneRingVault {
+
     function depositSafe(uint256 _amount, address _token, uint256 _minAmount) external;
 
     function withdraw(uint256 _amount, address _underlying) external;
 
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 interface ICEtherDelegate {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
 
     function getCash() external view returns (uint256);
@@ -2902,9 +3001,11 @@ interface ICEtherDelegate {
     function transferFrom(address src, address dst, uint256 amount) external returns (bool);
 
     function underlying() external view returns (address);
+
 }
 
 interface IUnitroller {
+
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
 
     function exitMarket(address cTokenAddress) external returns (uint256);
@@ -2915,9 +3016,11 @@ interface IUnitroller {
 
     function borrowCaps(address) external view returns (uint256);
     function getAllMarkets() external view returns (address[] memory);
+
 }
 
 interface IBalancerVault {
+
     enum SwapKind {
         GIVEN_IN,
         GIVEN_OUT
@@ -3002,9 +3105,11 @@ interface IBalancerVault {
         external
         view
         returns (IERC20[] memory tokens, uint256[] memory balances, uint256 lastChangeBlock);
+
 }
 
 interface ICointroller {
+
     event ActionPaused(string action, bool pauseState);
     event ActionPaused(address rToken, string action, bool pauseState);
     event ContributorRifiSpeedUpdated(address indexed contributor, uint256 newSpeed);
@@ -3229,9 +3334,11 @@ interface ICointroller {
     function transferVerify(address rToken, address src, address dst, uint256 transferTokens) external;
 
     function updateContributorRewards(address contributor) external;
+
 }
 
 interface IPriceFeed {
+
     function decimals() external view returns (uint8);
 
     function description() external view returns (string memory);
@@ -3249,9 +3356,11 @@ interface IPriceFeed {
         returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
 
     function fetchPrice() external returns (uint256);
+
 }
 
 interface IRToken {
+
     event AccrueInterest(uint256 cashPrior, uint256 interestAccumulated, uint256 borrowIndex, uint256 totalBorrows);
     event Approval(address indexed owner, address indexed spender, uint256 amount);
     event Borrow(address borrower, uint256 borrowAmount, uint256 accountBorrows, uint256 totalBorrows);
@@ -3397,9 +3506,11 @@ interface IRToken {
     function transferFrom(address src, address dst, uint256 amount) external returns (bool);
 
     function underlying() external view returns (address);
+
 }
 
 interface ISimplePriceOracle {
+
     event PricePosted(
         address asset, uint256 previousPriceMantissa, uint256 requestedPriceMantissa, uint256 newPriceMantissa
     );
@@ -3411,9 +3522,11 @@ interface ISimplePriceOracle {
     function oracleData(address) external view returns (address);
 
     function setOracleData(address rToken, address _oracle) external;
+
 }
 
 interface ITreasureMarketplaceBuyer {
+
     function buyItem(
         address _nftAddress,
         uint256 _tokenId,
@@ -3441,9 +3554,11 @@ interface ITreasureMarketplaceBuyer {
     function withdraw() external;
 
     function withdrawNFT(address _nftAddress, uint256 _tokenId, uint256 _quantity) external;
+
 }
 
 interface IERC721 {
+
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
     event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
     event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
@@ -3467,9 +3582,11 @@ interface IERC721 {
     function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;
 
     function burn(uint256 id) external;
+
 }
 
 interface IRewardsHypervisor {
+
     function deposit(uint256 visrDeposit, address from, address to) external returns (uint256 shares);
 
     function owner() external view returns (address);
@@ -3485,21 +3602,27 @@ interface IRewardsHypervisor {
     function vvisr() external view returns (address);
 
     function withdraw(uint256 shares, address to, address from) external returns (uint256 rewards);
+
 }
 
 interface IvVISR {
+
     function balanceOf(address account) external view returns (uint256);
 
     function mint(address account, uint256 amount) external;
+
 }
 
 interface InotVerified {
+
     function mint(uint256 value) external;
 
     function redeem(uint256 value) external;
+
 }
 
 interface IRouter {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -3522,9 +3645,11 @@ interface IRouter {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 interface ILendingPool {
+
     function flashLoan(
         address receiverAddress,
         address[] calldata assets,
@@ -3593,9 +3718,11 @@ interface ILendingPool {
     ) external;
     function getReserveData(address asset) external view returns (DataTypesAave.ReserveData memory);
     function withdraw(address asset, uint256 amount, address to) external returns (uint256);
+
 }
 
 interface ILendingPoolAddressesProvider {
+
     event MarketIdSet(string newMarketId);
     event LendingPoolUpdated(address indexed newAddress);
     event ConfigurationAdminUpdated(address indexed newAddress);
@@ -3644,14 +3771,17 @@ interface ILendingPoolAddressesProvider {
     function getLendingRateOracle() external view returns (address);
 
     function setLendingRateOracle(address lendingRateOracle) external;
+
 }
 
 interface AToken {
+
     function redeem(uint256 amount) external;
+
 }
 
-
 interface VyperContract {
+
     function add_liquidity(uint256[3] calldata amounts, uint256 min_mint_amount) external;
 
     function balanceOf(address account) external view returns (uint256);
@@ -3674,33 +3804,43 @@ interface VyperContract {
     ) external returns (uint256);
 
     function remove_liquidity_one_coin(uint256 _token_amount, int128 i, uint256 min_amount) external;
+
 }
 
 interface IAggregator {
+
     function latestAnswer() external view returns (int256 answer);
+
 }
 
 interface CErc20Interface {
+
     function mint(uint256 mintAmount) external returns (uint256);
 
     function balanceOf(address account) external view returns (uint256);
 
     function borrow(uint256 borrowAmount) external returns (uint256);
+
 }
 
 interface IUSDT {
+
     function approve(address _spender, uint256 _value) external;
 
     function balanceOf(address owner) external view returns (uint256);
 
     function transfer(address _to, uint256 _value) external;
+
 }
 
 interface IDaiFlashloan {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes calldata data) external returns (bool);
+
 }
 
 interface IAaveFlashloan {
+
     function flashLoan(
         address receiverAddress,
         address[] calldata assets,
@@ -3738,23 +3878,29 @@ interface IAaveFlashloan {
     ) external returns (uint256);
 
     function withdraw(address asset, uint256 amount, address to) external returns (uint256);
+
 }
 
 interface IcurveYSwap {
+
     function exchange(int128 i, int128 j, uint256 dx, uint256 min_dy) external;
 
     function exchange_underlying(int128 i, int128 j, uint256 dx, uint256 min_dy) external;
+
 }
 
 interface IHarvestUsdcVault {
+
     function deposit(uint256 amountWei) external;
 
     function withdraw(uint256 numberOfShares) external;
 
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 interface IUniswapV2Router {
+
     function WETH() external view returns (address);
 
     function addLiquidity(
@@ -3935,9 +4081,11 @@ interface IUniswapV2Router {
     ) external returns (uint256[] memory amounts);
 
     receive() external payable;
+
 }
 
 interface ICurvePool {
+
     function A() external view returns (uint256 out);
 
     function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount) external payable returns (uint256);
@@ -4009,9 +4157,11 @@ interface ICurvePool {
     function remove_liquidity_imbalance(uint256[3] memory amounts, uint256 max_burn_amount) external;
 
     function remove_liquidity_one_coin(uint256 token_amount, int128 i, uint256 min_amount) external;
+
 }
 
 interface IBeanStalk {
+
     function depositBeans(uint256) external;
 
     function emergencyCommit(uint32 bip) external;
@@ -4039,9 +4189,11 @@ interface IBeanStalk {
     ) external;
 
     function numberOfBips() external view returns (uint32);
+
 }
 
 library TransferHelper {
+
     function safeApprove(address token, address to, uint256 value) internal {
         // bytes4(keccak256(bytes('approve(address,uint256)')));
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0x095ea7b3, to, value));
@@ -4071,9 +4223,11 @@ library TransferHelper {
         (bool success,) = to.call{value: value}(new bytes(0));
         require(success, "TransferHelper::safeTransferETH: ETH transfer failed");
     }
+
 }
 
 library Clones {
+
     /**
      * @dev Deploys and returns the address of a clone that mimics the behaviour of `implementation`.
      *
@@ -4142,17 +4296,21 @@ library Clones {
     ) internal view returns (address predicted) {
         return predictDeterministicAddress(implementation, salt, address(this));
     }
+
 }
 
 interface INOVO {
+
     function approve(address spender, uint256 value) external returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
 
     function transferFrom(address from, address to, uint256 value) external returns (bool);
+
 }
 
 interface IBuildFinance {
+
     function propose(address _target, uint256 _value, bytes memory _data) external returns (uint256);
 
     function vote(uint256 _proposalId, bool _support) external;
@@ -4169,9 +4327,11 @@ interface IBuildFinance {
     function proposalCount() external returns (int256);
 
     function state(uint256 proposalId) external returns (uint256);
+
 }
 
 interface MultiSig {
+
     function confirmTransaction(uint256 transactionId) external;
 
     function submitTransaction(
@@ -4183,15 +4343,19 @@ interface MultiSig {
     function getConfirmations(uint256 transactionId) external view returns (address[] memory _confirmations);
 
     function required() external view returns (uint256);
+
 }
 
 interface Flippaz {
+
     function bid() external payable;
 
     function ownerWithdrawAllTo(address toAddress) external;
+
 }
 
 interface IDOODLENFTXVault {
+
     function flashLoan(address receiver, address token, uint256 amount, bytes memory data) external returns (bool);
     function redeem(uint256 amount, uint256[] calldata specificIds) external returns (uint256[] calldata);
     function balanceOf(address account) external view returns (uint256);
@@ -4199,9 +4363,11 @@ interface IDOODLENFTXVault {
         uint256[] calldata tokenIds,
         uint256[] calldata amounts /* ignored for ERC721 vaults */
     ) external returns (uint256);
+
 }
 
 interface ISushiSwap {
+
     function swapTokensForExactTokens(
         uint256 amountOut,
         uint256 amountInMax,
@@ -4210,9 +4376,11 @@ interface ISushiSwap {
         uint256 deadline
     ) external returns (uint256[] memory amounts);
     function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
+
 }
 
 interface IOmni {
+
     function supplyERC721(
         address asset,
         DataTypes.ERC721SupplyParams[] memory tokenData,
@@ -4255,68 +4423,90 @@ interface IOmni {
             uint256 healthFactor,
             uint256 erc721HealthFactor
         );
+
 }
 
 interface DataTypes {
+
     struct ERC721SupplyParams {
         uint256 tokenId;
         bool useAsCollateral;
     }
+
 }
 
 interface ILib {
+
     function attack() external returns (bool);
 
     function withdrawAll() external returns (bool);
+
 }
 
 interface IARTH is IERC20 {}
 
 interface IARTHUSD {
+
     function balanceOf(address) external returns (uint256);
     function approve(address, uint256) external returns (bool);
+
 }
 
 interface IVyper {
+
     function exchange_underlying(int128, int128, uint256, uint256, address) external returns (uint256);
+
 }
 
 interface I88mph {
+
     function init(address newOwner, string memory tokenName, string memory tokenSymbol) external;
     function mint(address to, uint256 tokenId) external;
     function burn(uint256 tokenId) external;
     function owner() external view returns (address);
     function ownerOf(uint256 tokenId) external view returns (address);
+
 }
 
 interface IBAYCi {
+
     function setApprovalForAll(address operator, bool approved) external;
     function transferFrom(address from, address to, uint256 tokenId) external;
+
 }
 
 interface INFTXVault {
+
     function redeem(uint256 amount, uint256[] memory specificIds) external returns (uint256[] memory);
     function flashLoan(address receiver, address token, uint256 amount, bytes memory data) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function mint(uint256[] memory tokenIds, uint256[] memory amounts) external returns (uint256);
+
 }
 
 interface IAirdrop {
+
     function claimTokens() external;
+
 }
 
 interface ILand {
+
     function _burn(address from, address owner, uint256 id) external;
     function _numNFTPerAddress(address) external view returns (uint256);
+
 }
 
 interface IERC20Metadata is IERC20 {
+
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
+
 }
 
 interface IWFTM is IERC20Metadata {
+
     event Deposit(address indexed dst, uint256 wad);
     event Withdrawal(address indexed src, uint256 wad);
 
@@ -4324,9 +4514,11 @@ interface IWFTM is IERC20Metadata {
     fallback() external payable;
     function deposit() external payable;
     function withdraw(uint256 wad) external;
+
 }
 
 interface IWETH is IERC20Metadata {
+
     event Deposit(address indexed dst, uint256 wad);
     event Withdrawal(address indexed src, uint256 wad);
 
@@ -4334,9 +4526,11 @@ interface IWETH is IERC20Metadata {
     fallback() external payable;
     function deposit() external payable;
     function withdraw(uint256 wad) external;
+
 }
 
 interface IGrimBoostVault {
+
     event NewStratCandidate(address implementation);
     event UpgradeStrat(address implementation);
 
@@ -4353,57 +4547,71 @@ interface IGrimBoostVault {
     function upgradeStrat() external;
     function inCaseTokensGetStuck(address _token) external;
     function depositFor(address token, uint256 _amount, address user) external;
+
 }
 
 interface IFlashLoanRecipient {
+
     function receiveFlashLoan(
         IERC20[] memory tokens,
         uint256[] memory amounts,
         uint256[] memory feeAmounts,
         bytes memory userData
     ) external;
+
 }
 
 interface IBeethovenVault {
+
     function flashLoan(
         IFlashLoanRecipient recipient,
         IERC20[] memory tokens,
         uint256[] memory amounts,
         bytes memory userData
     ) external;
+
 }
 
 interface IRedactedCartelSafeERC20 {
+
     function unFreezeToken() external;
     function balanceOf(address account) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function allowance(address owner, address spender) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IBadGuysRPFERC721 {
+
     function WhiteListMint(bytes32[] calldata _merkleProof, uint256 chosenAmount) external;
 
     function balanceOf(address owner) external view returns (uint256 balance);
 
     function flipPauseMinting() external;
+
 }
 
 interface IAkutarNFT {
+
     function processRefunds() external;
 
     function bid(uint8 amount) external payable;
 
     function claimProjectFunds() external;
+
 }
 
 interface IFortubeBank {
+
     function flashloan(address receiver, address token, uint256 amount, bytes memory params) external;
     function repay(address token, uint256 repayAmount) external payable returns (uint256);
     function controller() external returns (address);
+
 }
 
 interface IVaultFlipToFlip {
+
     function deposit(uint256 _amount) external;
     function earned(address account) external view returns (uint256);
     function balanceOf(address account) external view returns (uint256);
@@ -4411,38 +4619,50 @@ interface IVaultFlipToFlip {
     function harvest() external returns (uint256 bounty);
     function pid() external returns (uint256);
     function getReward() external;
+
 }
 
 interface IBunnyZap {
+
     function zapIn(address _to) external payable;
     function zapInToken(address _from, uint256 amount, address _to) external;
+
 }
 
 interface IElevenNeverSellVault {
+
     function depositAll() external;
     function emergencyBurn() external;
     function withdrawAll() external;
+
 }
 
 interface IOpyn {
+
     function addERC20CollateralOption(uint256 amtToCreate, uint256 amtCollateral, address receiver) external;
 
     function exercise(uint256 oTokensToExercise, address payable[] memory vaultsToExerciseFrom) external payable;
 
     function removeUnderlying() external;
+
 }
 
 interface ICFToken {
+
     function _transfer(address from, address to, uint256 amount) external;
     function balanceOf(address account) external view returns (uint256);
     function transfer(address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IDPPOracle {
+
     function flashLoan(uint256 baseAmount, uint256 quoteAmount, address _assetTo, bytes calldata data) external;
+
 }
 
 interface IDODOCallee {
+
     // function DVMSellShareCall(
     //     address sender,
     //     uint256 burnShareAmount,
@@ -4485,9 +4705,11 @@ interface IDODOCallee {
     //       uint256 quoteAmount,
     //       bytes calldata
     //   ) external;
+
 }
 
 interface IQuoter {
+
     function quoteExactInputSingle(
         address,
         address,
@@ -4495,18 +4717,22 @@ interface IQuoter {
         uint256 amountIn,
         uint160 sqrtPriceLimitX96
     ) external returns (uint256);
+
 }
 
 interface IPoolInitializer {
+
     function createAndInitializePoolIfNecessary(
         address token0,
         address token1,
         uint24 fee,
         uint160 sqrtPriceX96
     ) external payable returns (address pool);
+
 }
 
 interface INonfungiblePositionManager is IPoolInitializer {
+
     event IncreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
 
     event DecreaseLiquidity(uint256 indexed tokenId, uint128 liquidity, uint256 amount0, uint256 amount1);
@@ -4587,9 +4813,11 @@ interface INonfungiblePositionManager is IPoolInitializer {
     function collect(CollectParams calldata params) external payable returns (uint256 amount0, uint256 amount1);
 
     function burn(uint256 tokenId) external payable;
+
 }
 
 interface IERC4626 is IERC20 {
+
     function deposit(uint256 assets, address receiver) external returns (uint256 shares);
 
     function mint(uint256 shares, address receiver) external returns (uint256 assets);
@@ -4619,18 +4847,22 @@ interface IERC4626 is IERC20 {
     function maxWithdraw(address owner) external view returns (uint256);
 
     function maxRedeem(address owner) external view returns (uint256);
+
 }
 
 interface IPresaleV4 {
+
     function directTotalTokensSold() external view returns (uint256);
     function maxTokensToSell() external view returns (uint256);
     function buyWithEthDynamic(uint256 amount) external payable returns (bool);
+
 }
 
 /// @notice Arithmetic library with operations for fixed-point numbers.
 /// @author Solmate (https://github.com/transmissions11/solmate/blob/main/src/utils/FixedPointMathLib.sol)
 /// @author Inspired by USM (https://github.com/usmfum/USM/blob/master/contracts/WadMath.sol)
 library FixedPointMathLib {
+
     /*//////////////////////////////////////////////////////////////
                     SIMPLIFIED FIXED POINT OPERATIONS
     //////////////////////////////////////////////////////////////*/
@@ -4854,9 +5086,11 @@ library FixedPointMathLib {
             z := add(gt(mod(x, y), 0), div(x, y))
         }
     }
+
 }
 
 library SafeTransferLib {
+
     /*//////////////////////////////////////////////////////////////
                              ETH OPERATIONS
     //////////////////////////////////////////////////////////////*/
@@ -4964,9 +5198,11 @@ library SafeTransferLib {
 
         require(success, "APPROVE_FAILED");
     }
+
 }
 
 abstract contract Nonces {
+
     /**
      * @dev The nonce used for an `account` is not the expected current nonce.
      */
@@ -5005,9 +5241,11 @@ abstract contract Nonces {
         }
         return current;
     }
+
 }
 
 interface IPancakeV3PoolActions {
+
     function initialize(uint160 sqrtPriceX96) external;
 
     function mint(
@@ -5043,9 +5281,11 @@ interface IPancakeV3PoolActions {
     function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
 
     function increaseObservationCardinalityNext(uint16 observationCardinalityNext) external;
+
 }
 
 interface IPancakeV3PoolDerivedState {
+
     function observe(uint32[] calldata secondsAgos)
         external
         view
@@ -5055,9 +5295,11 @@ interface IPancakeV3PoolDerivedState {
         int24 tickLower,
         int24 tickUpper
     ) external view returns (int56 tickCumulativeInside, uint160 secondsPerLiquidityInsideX128, uint32 secondsInside);
+
 }
 
 interface IPancakeV3PoolImmutables {
+
     function factory() external view returns (address);
 
     function token0() external view returns (address);
@@ -5069,9 +5311,11 @@ interface IPancakeV3PoolImmutables {
     function tickSpacing() external view returns (int24);
 
     function maxLiquidityPerTick() external view returns (uint128);
+
 }
 
 interface IPancakeV3PoolState {
+
     function slot0()
         external
         view
@@ -5129,9 +5373,11 @@ interface IPancakeV3PoolState {
             uint160 secondsPerLiquidityCumulativeX128,
             bool initialized
         );
+
 }
 
 interface IPancakeV3PoolOwnerActions {
+
     function setFeeProtocol(uint32 feeProtocol0, uint32 feeProtocol1) external;
 
     function collectProtocol(
@@ -5141,6 +5387,7 @@ interface IPancakeV3PoolOwnerActions {
     ) external returns (uint128 amount0, uint128 amount1);
 
     function setLmPool(address lmPool) external;
+
 }
 
 interface IPancakeV3Pool is

@@ -14,15 +14,20 @@ import "./../interface.sol";
 // https://medium.com/floordao/floor-post-mortem-incident-summary-september-5-2023-e054a2d5afa4
 
 interface IFloorStaking {
+
     function unstake(address _to, uint256 _amount, bool _trigger, bool _rebasing) external;
     function stake(address _to, uint256 _amount, bool _rebasing, bool _claim) external returns (uint256);
+
 }
 
 interface IsFloor is IERC20 {
+
     function circulatingSupply() external returns (uint256);
+
 }
 
 contract FloorStakingExploit is Test {
+
     IERC20 floor = IERC20(0xf59257E961883636290411c11ec5Ae622d19455e);
     IsFloor sFloor = IsFloor(0x164AFe96912099543BC2c48bb9358a095Db8e784);
     IERC20 gFloor = IERC20(0xb1Cc59Fc717b8D4783D41F952725177298B5619d);
@@ -79,4 +84,5 @@ contract FloorStakingExploit is Test {
         }
         floor.transfer(msg.sender, uint256(amount));
     }
+
 }

@@ -20,6 +20,7 @@ import "./../interface.sol";
 // Hacking God : https://www.google.com/
 
 interface IPlatypusPool {
+
     function deposit(address token, uint256 amount, address to, uint256 deadline) external returns (uint256);
 
     function withdraw(
@@ -38,9 +39,11 @@ interface IPlatypusPool {
         address to,
         uint256 deadline
     ) external returns (uint256, uint256);
+
 }
 
 contract ContractTest is Test {
+
     IERC20 WAVAX = IERC20(0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7);
     IERC20 SAVAX = IERC20(0x2b2C81e08f1Af8835a78Bb2A90AE924ACE0eA4bE);
     IERC20 LP_AVAX = IERC20(0xC73eeD4494382093C6a7C284426A9a00f6C79939);
@@ -68,7 +71,7 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](2);
         amounts[0] = 1_054_969 * 1e18;
         amounts[1] = 950_996 * 1e18;
-        uint256[] memory modes = new uint[](2);
+        uint256[] memory modes = new uint256[](2);
         modes[0] = 0;
         modes[1] = 0;
         aaveV3.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
@@ -110,4 +113,5 @@ contract ContractTest is Test {
 
         return true;
     }
+
 }

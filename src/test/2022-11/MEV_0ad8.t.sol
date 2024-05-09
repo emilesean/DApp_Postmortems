@@ -12,6 +12,7 @@ import "forge-std/Test.sol";
 // https://twitter.com/Supremacy_CA/status/1590337718755954690
 
 contract Exploit is Test {
+
     WETH9 private constant WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
@@ -36,22 +37,27 @@ contract Exploit is Test {
 
         console.log("Attacker's profit: %s USDC", USDC.balanceOf(attacker) / 1e6);
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
     function deliver(uint256 tAmount) external;
+
 }
 
 interface WETH9 {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }

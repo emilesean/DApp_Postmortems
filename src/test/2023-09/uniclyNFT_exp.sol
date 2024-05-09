@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://twitter.com/DecurityHQ/status/1703096116047421863
 
 interface IPointFarm {
+
     function balanceOf(address account, uint256 id) external view returns (uint256);
 
     function setApprovalForAll(address operator, bool _approved) external;
@@ -21,13 +22,17 @@ interface IPointFarm {
     function deposit(uint256 _pid, uint256 _amount) external;
 
     function withdraw(uint256 _pid, uint256 _amount) external;
+
 }
 
 interface IPointShop {
+
     function redeem(address _uToken, uint256 internalID) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 private constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant uJENNY = IERC20(0xa499648fD0e80FD911972BbEb069e4c20e68bF22);
     Uni_Pair_V2 private constant uJENNY_WETH = Uni_Pair_V2(0xEC5100AD159F660986E47AFa0CDa1081101b471d);
@@ -120,4 +125,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

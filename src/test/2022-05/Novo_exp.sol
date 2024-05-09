@@ -14,10 +14,13 @@ import "./../interface.sol";
 // Vulnerable Contract: https://bscscan.com/address/0xa0787daad6062349f63b7c228cbfd5d8a3db08f1#code
 
 interface INOVOLP {
+
     function sync() external;
+
 }
 
 contract ContractTest is Test {
+
     IPancakePair PancakePair = IPancakePair(0xEeBc161437FA948AAb99383142564160c92D2974);
     IPancakeRouter PancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IWBNB wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
@@ -87,4 +90,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

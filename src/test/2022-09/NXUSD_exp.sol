@@ -10,6 +10,7 @@ import "./../interface.sol";
 // Refer: https://dashboard.tenderly.co/tx/ava/0x0ab12913f9232b27b0664cd2d50e482ad6aa896aeb811b53081712f42d54c026
 
 abstract contract IDegenBox {
+
     function setMasterContractApproval(
         address user,
         address masterContract,
@@ -20,9 +21,11 @@ abstract contract IDegenBox {
     ) public virtual;
 
     function masterContractApproved(address masterContract, address user) external view virtual returns (bool);
+
 }
 
 interface ICauldronV2 {
+
     function updateExchangeRate() external returns (bool, uint256);
 
     function cook(
@@ -30,9 +33,11 @@ interface ICauldronV2 {
         uint256[] calldata values,
         bytes[] calldata datas
     ) external payable returns (uint256, uint256);
+
 }
 
 contract ContractTest is Test {
+
     ILendingPool aaveLendingPool = ILendingPool(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
     Uni_Router_V2 Router = Uni_Router_V2(0x60aE616a2155Ee3d9A68541Ba4544862310933d4);
     Uni_Pair_V2 Pair = Uni_Pair_V2(0xf4003F4efBE8691B60249E6afbD307aBE7758adb);
@@ -151,4 +156,5 @@ contract ContractTest is Test {
         path[1] = address(USDC);
         Router.swapExactTokensForTokens(USDC_e.balanceOf(address(this)), 0, path, address(this), block.timestamp + 60);
     }
+
 }

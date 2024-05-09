@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "./../interface.sol";
 
 interface Quixotic {
+
     function fillSellOrder(
         address seller,
         address contractAddress,
@@ -18,9 +19,11 @@ interface Quixotic {
         bytes memory signature,
         address buyer
     ) external payable;
+
 }
 
 contract ContractTest is Test {
+
     CheatCodes cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IERC20 op = IERC20(0x4200000000000000000000000000000000000042);
     Quixotic quixotic = Quixotic(0x065e8A87b8F11aED6fAcf9447aBe5E8C5D7502b6);
@@ -57,4 +60,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

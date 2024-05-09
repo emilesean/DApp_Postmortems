@@ -15,10 +15,13 @@ import "./../interface.sol";
 // https://twitter.com/BeosinAlert/status/1677548773269213184
 
 interface ICiv {
+
     function uniswapV3MintCallback(uint256 amount0, uint256 amount1, bytes calldata data) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IERC20 BONE = IERC20(0x9813037ee2218799597d83D4a5B6F3b6778218d9);
     IERC20 WOOF = IERC20(0x6BC08509B36A98E829dFfAD49Fde5e412645d0a3);
@@ -244,4 +247,5 @@ contract ContractTest is Test {
             0, victimsAssets[num].balanceOf(victims[num]), abi.encode(victims[num])
         );
     }
+
 }
