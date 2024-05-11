@@ -1,11 +1,14 @@
+// SPDX-License-Identifier: UNLICENSED
 // https://github.com/polynetwork/eth-contracts/tree/d16252b2b857eecf8e558bd3e1f3bb14cff30e9b
+pragma solidity ^0.8.10;
 library Utils {
-
     /* @notice      Convert the bytes array to bytes32 type, the bytes array length must be 32
-    *  @param _bs   Source bytes array
-    *  @return      bytes32
-    */
-    function bytesToBytes32(bytes memory _bs) internal returns (bytes32 value) {
+     *  @param _bs   Source bytes array
+     *  @return      bytes32
+     */
+    function bytesToBytes32(
+        bytes memory _bs
+    ) internal pure returns (bytes32 value) {
         require(_bs.length == 32, "bytes length is not 32.");
         assembly {
             // load 32 bytes from memory starting from position _bs + 0x20 since the first 0x20 bytes stores _bs length
@@ -14,24 +17,36 @@ library Utils {
     }
 
     /* @notice      Convert bytes to uint256
-    *  @param _b    Source bytes should have length of 32
-    *  @return      uint256
-    */
-    function bytesToUint256(bytes memory _bs) internal returns (uint256 value) {
+     *  @param _b    Source bytes should have length of 32
+     *  @return      uint256
+     */
+    function bytesToUint256(
+        bytes memory _bs
+    ) internal pure returns (uint256 value) {
         require(_bs.length == 32, "bytes length is not 32.");
         assembly {
             // load 32 bytes from memory starting from position _bs + 32
             value := mload(add(_bs, 0x20))
         }
-        require(value <= 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, "Value exceeds the range");
+        require(
+            value <=
+                0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+            "Value exceeds the range"
+        );
     }
 
     /* @notice      Convert uint256 to bytes
-    *  @param _b    uint256 that needs to be converted
-    *  @return      bytes
-    */
-    function uint256ToBytes(uint256 _value) internal returns (bytes memory bs) {
-        require(_value <= 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, "Value exceeds the range");
+     *  @param _b    uint256 that needs to be converted
+     *  @return      bytes
+     */
+    function uint256ToBytes(
+        uint256 _value
+    ) internal pure returns (bytes memory bs) {
+        require(
+            _value <=
+                0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+            "Value exceeds the range"
+        );
         assembly {
             // Get a location of some free memory and store it in result as
             // Solidity does for memory variables.
@@ -46,10 +61,12 @@ library Utils {
     }
 
     /* @notice      Convert bytes to address
-    *  @param _bs   Source bytes: bytes length must be 20
-    *  @return      Converted address from source bytes
-    */
-    function bytesToAddress(bytes memory _bs) internal returns (address addr) {
+     *  @param _bs   Source bytes: bytes length must be 20
+     *  @return      Converted address from source bytes
+     */
+    function bytesToAddress(
+        bytes memory _bs
+    ) internal pure returns (address addr) {
         require(_bs.length == 20, "bytes length does not match address");
         assembly {
             // for _bs, first word store _bs.length, second word store _bs.value
@@ -59,10 +76,12 @@ library Utils {
     }
 
     /* @notice      Convert address to bytes
-    *  @param _addr Address need to be converted
-    *  @return      Converted bytes from address
-    */
-    function addressToBytes(address _addr) internal returns (bytes memory bs) {
+     *  @param _addr Address need to be converted
+     *  @return      Converted bytes from address
+     */
+    function addressToBytes(
+        address _addr
+    ) internal pure returns (bytes memory bs) {
         assembly {
             // Get a location of some free memory and store it in result as
             // Solidity does for memory variables.
@@ -77,19 +96,24 @@ library Utils {
     }
 
     /* @notice          Do hash leaf as the multi-chain does
-    *  @param _data     Data in bytes format
-    *  @return          Hashed value in bytes32 format
-    */
-    function hashLeaf(bytes memory _data) internal returns (bytes32 result) {
+     *  @param _data     Data in bytes format
+     *  @return          Hashed value in bytes32 format
+     */
+    function hashLeaf(
+        bytes memory _data
+    ) internal pure returns (bytes32 result) {
         result = sha256(abi.encodePacked(bytes1(0x0), _data));
     }
 
     /* @notice          Do hash children as the multi-chain does
-    *  @param _l        Left node
-    *  @param _r        Right node
-    *  @return          Hashed value in bytes32 format
-    */
-    function hashChildren(bytes32 _l, bytes32 _r) internal returns (bytes32 result) {
+     *  @param _l        Left node
+     *  @param _r        Right node
+     *  @return          Hashed value in bytes32 format
+     */
+    function hashChildren(
+        bytes32 _l,
+        bytes32 _r
+    ) internal pure returns (bytes32 result) {
         result = sha256(abi.encodePacked(bytes1(0x01), _l, _r));
     }
 
@@ -99,7 +123,10 @@ library Utils {
     *  @param _postBytes    The bytes stored in memory
     *  @return              Bool type indicating if they are equal
     */
-    function equalStorage(bytes storage _preBytes, bytes memory _postBytes) internal view returns (bool) {
+    function equalStorage(
+        bytes storage _preBytes,
+        bytes memory _postBytes
+    ) internal view returns (bool) {
         bool success = true;
 
         assembly {
@@ -112,7 +139,10 @@ library Utils {
             // If the slot is even, bitwise and the slot with 255 and divide by
             // two to get the length. If the slot is odd, bitwise and the slot
             // with -1 and divide by two.
-            let slength := div(and(fslot, sub(mul(0x100, iszero(and(fslot, 1))), 1)), 2)
+            let slength := div(
+                and(fslot, sub(mul(0x100, iszero(and(fslot, 1))), 1)),
+                2
+            )
             let mlength := mload(_postBytes)
 
             // if lengths don't match the arrays are not equal
@@ -149,7 +179,9 @@ library Utils {
 
                         // the next line is the loop condition:
                         // while(uint(mc < end) + cb == 2)
-                        for {} eq(add(lt(mc, end), cb), 2) {
+                        for {
+
+                        } eq(add(lt(mc, end), cb), 2) {
                             sc := add(sc, 1)
                             mc := add(mc, 0x20)
                         } {
@@ -178,7 +210,11 @@ library Utils {
     *  @param _length       The index of _bytes for the end of sliced bytes
     *  @return              The sliced bytes
     */
-    function slice(bytes memory _bytes, uint256 _start, uint256 _length) internal pure returns (bytes memory) {
+    function slice(
+        bytes memory _bytes,
+        uint256 _start,
+        uint256 _length
+    ) internal pure returns (bytes memory) {
         require(_bytes.length >= (_start + _length));
 
         bytes memory tempBytes;
@@ -205,17 +241,28 @@ library Utils {
                 // because when slicing multiples of 32 bytes (lengthmod == 0)
                 // the following copy loop was copying the origin's length
                 // and then ending prematurely not copying everything it should.
-                let mc := add(add(tempBytes, lengthmod), mul(0x20, iszero(lengthmod)))
+                let mc := add(
+                    add(tempBytes, lengthmod),
+                    mul(0x20, iszero(lengthmod))
+                )
                 let end := add(mc, _length)
 
                 for {
                     // The multiplication in the next line has the same exact purpose
                     // as the one above.
-                    let cc := add(add(add(_bytes, lengthmod), mul(0x20, iszero(lengthmod))), _start)
+                    let cc := add(
+                        add(
+                            add(_bytes, lengthmod),
+                            mul(0x20, iszero(lengthmod))
+                        ),
+                        _start
+                    )
                 } lt(mc, end) {
                     mc := add(mc, 0x20)
                     cc := add(cc, 0x20)
-                } { mstore(mc, mload(cc)) }
+                } {
+                    mstore(mc, mload(cc))
+                }
 
                 mstore(tempBytes, _length)
 
@@ -234,17 +281,17 @@ library Utils {
         return tempBytes;
     }
     /* @notice              Check if the elements number of _signers within _keepers array is no less than _m
-    *  @param _keepers      The array consists of serveral address
-    *  @param _signers      Some specific addresses to be looked into
-    *  @param _m            The number requirement parameter
-    *  @return              True means containment, false meansdo do not contain.
-    */
+     *  @param _keepers      The array consists of serveral address
+     *  @param _signers      Some specific addresses to be looked into
+     *  @param _m            The number requirement parameter
+     *  @return              True means containment, false meansdo do not contain.
+     */
 
     function containMAddresses(
         address[] memory _keepers,
         address[] memory _signers,
         uint256 _m
-    ) internal returns (bool) {
+    ) internal pure returns (bool) {
         uint256 m = 0;
         for (uint256 i = 0; i < _signers.length; i++) {
             for (uint256 j = 0; j < _keepers.length; j++) {
@@ -258,10 +305,12 @@ library Utils {
     }
 
     /* @notice              TODO
-    *  @param key
-    *  @return
-    */
-    function compressMCPubKey(bytes memory key) internal returns (bytes memory newkey) {
+     *  @param key
+     *  @return
+     */
+    function compressMCPubKey(
+        bytes memory key
+    ) internal pure returns (bytes memory newkey) {
         require(key.length >= 67, "key lenggh is too short");
         newkey = slice(key, 0, 35);
         if (uint8(key[66]) % 2 == 0) {
@@ -300,24 +349,26 @@ library Utils {
         }
         return (codehash != 0x0 && codehash != accountHash);
     }
-
 }
 
 library ZeroCopySink {
-
     /* @notice          Convert boolean value into bytes
-    *  @param b         The boolean value
-    *  @return          Converted bytes array
-    */
-    function WriteBool(bool b) internal returns (bytes memory) {
+     *  @param b         The boolean value
+     *  @return          Converted bytes array
+     */
+    function WriteBool(bool b) internal pure returns (bytes memory) {
         bytes memory buff;
         assembly {
             buff := mload(0x40)
             mstore(buff, 1)
             switch iszero(b)
-            case 1 { mstore(add(buff, 0x20), shl(248, 0x00)) }
+            case 1 {
+                mstore(add(buff, 0x20), shl(248, 0x00))
+            }
             // mstore8(add(buff, 0x20), 0x00)
-            default { mstore(add(buff, 0x20), shl(248, 0x01)) }
+            default {
+                mstore(add(buff, 0x20), shl(248, 0x01))
+            }
             // mstore8(add(buff, 0x20), 0x01)
 
             mstore(0x40, add(buff, 0x21))
@@ -326,18 +377,18 @@ library ZeroCopySink {
     }
 
     /* @notice          Convert byte value into bytes
-    *  @param b         The byte value
-    *  @return          Converted bytes array
-    */
-    function WriteByte(bytes1 b) internal returns (bytes memory) {
+     *  @param b         The byte value
+     *  @return          Converted bytes array
+     */
+    function WriteByte(bytes1 b) internal pure returns (bytes memory) {
         return WriteUint8(uint8(b));
     }
 
     /* @notice          Convert uint8 value into bytes
-    *  @param v         The uint8 value
-    *  @return          Converted bytes array
-    */
-    function WriteUint8(uint8 v) internal returns (bytes memory) {
+     *  @param v         The uint8 value
+     *  @return          Converted bytes array
+     */
+    function WriteUint8(uint8 v) internal pure returns (bytes memory) {
         bytes memory buff;
         assembly {
             buff := mload(0x40)
@@ -350,10 +401,10 @@ library ZeroCopySink {
     }
 
     /* @notice          Convert uint16 value into bytes
-    *  @param v         The uint16 value
-    *  @return          Converted bytes array
-    */
-    function WriteUint16(uint16 v) internal returns (bytes memory) {
+     *  @param v         The uint16 value
+     *  @return          Converted bytes array
+     */
+    function WriteUint16(uint16 v) internal pure returns (bytes memory) {
         bytes memory buff;
 
         assembly {
@@ -366,17 +417,19 @@ library ZeroCopySink {
             } lt(mindex, byteLen) {
                 mindex := add(mindex, 0x01)
                 vindex := sub(vindex, 0x01)
-            } { mstore8(add(add(buff, 0x20), mindex), byte(vindex, v)) }
+            } {
+                mstore8(add(add(buff, 0x20), mindex), byte(vindex, v))
+            }
             mstore(0x40, add(buff, 0x22))
         }
         return buff;
     }
 
     /* @notice          Convert uint32 value into bytes
-    *  @param v         The uint32 value
-    *  @return          Converted bytes array
-    */
-    function WriteUint32(uint32 v) internal returns (bytes memory) {
+     *  @param v         The uint32 value
+     *  @return          Converted bytes array
+     */
+    function WriteUint32(uint32 v) internal pure returns (bytes memory) {
         bytes memory buff;
         assembly {
             buff := mload(0x40)
@@ -388,17 +441,19 @@ library ZeroCopySink {
             } lt(mindex, byteLen) {
                 mindex := add(mindex, 0x01)
                 vindex := sub(vindex, 0x01)
-            } { mstore8(add(add(buff, 0x20), mindex), byte(vindex, v)) }
+            } {
+                mstore8(add(add(buff, 0x20), mindex), byte(vindex, v))
+            }
             mstore(0x40, add(buff, 0x24))
         }
         return buff;
     }
 
     /* @notice          Convert uint64 value into bytes
-    *  @param v         The uint64 value
-    *  @return          Converted bytes array
-    */
-    function WriteUint64(uint64 v) internal returns (bytes memory) {
+     *  @param v         The uint64 value
+     *  @return          Converted bytes array
+     */
+    function WriteUint64(uint64 v) internal pure returns (bytes memory) {
         bytes memory buff;
 
         assembly {
@@ -411,18 +466,24 @@ library ZeroCopySink {
             } lt(mindex, byteLen) {
                 mindex := add(mindex, 0x01)
                 vindex := sub(vindex, 0x01)
-            } { mstore8(add(add(buff, 0x20), mindex), byte(vindex, v)) }
+            } {
+                mstore8(add(add(buff, 0x20), mindex), byte(vindex, v))
+            }
             mstore(0x40, add(buff, 0x28))
         }
         return buff;
     }
 
     /* @notice          Convert limited uint256 value into bytes
-    *  @param v         The uint256 value
-    *  @return          Converted bytes array
-    */
-    function WriteUint255(uint256 v) internal returns (bytes memory) {
-        require(v <= 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, "Value exceeds uint255 range");
+     *  @param v         The uint256 value
+     *  @return          Converted bytes array
+     */
+    function WriteUint255(uint256 v) internal pure returns (bytes memory) {
+        require(
+            v <=
+                0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+            "Value exceeds uint255 range"
+        );
         bytes memory buff;
 
         assembly {
@@ -435,22 +496,24 @@ library ZeroCopySink {
             } lt(mindex, byteLen) {
                 mindex := add(mindex, 0x01)
                 vindex := sub(vindex, 0x01)
-            } { mstore8(add(add(buff, 0x20), mindex), byte(vindex, v)) }
+            } {
+                mstore8(add(add(buff, 0x20), mindex), byte(vindex, v))
+            }
             mstore(0x40, add(buff, 0x40))
         }
         return buff;
     }
 
     /* @notice          Encode bytes format data into bytes
-    *  @param data      The bytes array data
-    *  @return          Encoded bytes array
-    */
-    function WriteVarBytes(bytes memory data) internal returns (bytes memory) {
+     *  @param data      The bytes array data
+     *  @return          Encoded bytes array
+     */
+    function WriteVarBytes(bytes memory data) internal pure returns (bytes memory) {
         uint64 l = uint64(data.length);
         return abi.encodePacked(WriteVarUint(l), data);
     }
 
-    function WriteVarUint(uint64 v) internal returns (bytes memory) {
+    function WriteVarUint(uint64 v) internal pure returns (bytes memory) {
         if (v < 0xFD) {
             return WriteUint8(uint8(v));
         } else if (v <= 0xFFFF) {
@@ -461,11 +524,9 @@ library ZeroCopySink {
             return abi.encodePacked(WriteByte(0xFF), WriteUint64(uint64(v)));
         }
     }
-
 }
 
 library ZeroCopySource {
-
     event log_named_address(string key, address val);
     event log_named_bytes32(string key, bytes32 val);
     event log_named_decimal_int(string key, int256 val, uint256 decimals);
@@ -476,12 +537,18 @@ library ZeroCopySource {
     event log_named_string(string key, string val);
 
     /* @notice              Read next byte as boolean type starting at offset from buff
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the boolean value
-    *  @return              The read boolean value and new offset
-    */
-    function NextBool(bytes memory buff, uint256 offset) internal returns (bool, uint256) {
-        require(offset + 1 <= buff.length && offset < offset + 1, "Offset exceeds limit");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the boolean value
+     *  @return              The read boolean value and new offset
+     */
+    function NextBool(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (bool, uint256) {
+        require(
+            offset + 1 <= buff.length && offset < offset + 1,
+            "Offset exceeds limit"
+        );
         // byte === bytes1
         bytes1 v;
         assembly {
@@ -499,12 +566,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next byte starting at offset from buff
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the byte value
-    *  @return              The read byte value and new offset
-    */
-    function NextByte(bytes memory buff, uint256 offset) internal returns (bytes1, uint256) {
-        require(offset + 1 <= buff.length && offset < offset + 1, "NextByte, Offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the byte value
+     *  @return              The read byte value and new offset
+     */
+    function NextByte(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (bytes1, uint256) {
+        require(
+            offset + 1 <= buff.length && offset < offset + 1,
+            "NextByte, Offset exceeds maximum"
+        );
         bytes1 v;
         assembly {
             v := mload(add(add(buff, 0x20), offset))
@@ -513,12 +586,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next byte as uint8 starting at offset from buff
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the byte value
-    *  @return              The read uint8 value and new offset
-    */
-    function NextUint8(bytes memory buff, uint256 offset) internal returns (uint8, uint256) {
-        require(offset + 1 <= buff.length && offset < offset + 1, "NextUint8, Offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the byte value
+     *  @return              The read uint8 value and new offset
+     */
+    function NextUint8(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (uint8, uint256) {
+        require(
+            offset + 1 <= buff.length && offset < offset + 1,
+            "NextUint8, Offset exceeds maximum"
+        );
         uint8 v;
         assembly {
             let tmpbytes := mload(0x40)
@@ -531,12 +610,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next two bytes as uint16 type starting from offset
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the uint16 value
-    *  @return              The read uint16 value and updated offset
-    */
-    function NextUint16(bytes memory buff, uint256 offset) internal returns (uint16, uint256) {
-        require(offset + 2 <= buff.length && offset < offset + 2, "NextUint16, offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the uint16 value
+     *  @return              The read uint16 value and updated offset
+     */
+    function NextUint16(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (uint16, uint256) {
+        require(
+            offset + 2 <= buff.length && offset < offset + 2,
+            "NextUint16, offset exceeds maximum"
+        );
 
         uint16 v;
         assembly {
@@ -551,12 +636,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next four bytes as uint32 type starting from offset
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the uint32 value
-    *  @return              The read uint32 value and updated offset
-    */
-    function NextUint32(bytes memory buff, uint256 offset) internal returns (uint32, uint256) {
-        require(offset + 4 <= buff.length && offset < offset + 4, "NextUint32, offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the uint32 value
+     *  @return              The read uint32 value and updated offset
+     */
+    function NextUint32(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (uint32, uint256) {
+        require(
+            offset + 4 <= buff.length && offset < offset + 4,
+            "NextUint32, offset exceeds maximum"
+        );
         uint32 v;
         assembly {
             let tmpbytes := mload(0x40)
@@ -568,7 +659,9 @@ library ZeroCopySource {
             } lt(tindex, byteLen) {
                 tindex := add(tindex, 0x01)
                 bindex := sub(bindex, 0x01)
-            } { mstore8(add(tmpbytes, tindex), byte(bindex, bvalue)) }
+            } {
+                mstore8(add(tmpbytes, tindex), byte(bindex, bvalue))
+            }
             mstore(0x40, add(tmpbytes, byteLen))
             v := mload(sub(tmpbytes, sub(0x20, byteLen)))
         }
@@ -576,12 +669,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next eight bytes as uint64 type starting from offset
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the uint64 value
-    *  @return              The read uint64 value and updated offset
-    */
-    function NextUint64(bytes memory buff, uint256 offset) internal returns (uint64, uint256) {
-        require(offset + 8 <= buff.length && offset < offset + 8, "NextUint64, offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the uint64 value
+     *  @return              The read uint64 value and updated offset
+     */
+    function NextUint64(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (uint64, uint256) {
+        require(
+            offset + 8 <= buff.length && offset < offset + 8,
+            "NextUint64, offset exceeds maximum"
+        );
         uint64 v;
         assembly {
             let tmpbytes := mload(0x40)
@@ -593,7 +692,9 @@ library ZeroCopySource {
             } lt(tindex, byteLen) {
                 tindex := add(tindex, 0x01)
                 bindex := sub(bindex, 0x01)
-            } { mstore8(add(tmpbytes, tindex), byte(bindex, bvalue)) }
+            } {
+                mstore8(add(tmpbytes, tindex), byte(bindex, bvalue))
+            }
             mstore(0x40, add(tmpbytes, byteLen))
             v := mload(sub(tmpbytes, sub(0x20, byteLen)))
         }
@@ -606,8 +707,14 @@ library ZeroCopySource {
     *  @param offset        The position from where we read the uint256 value
     *  @return              The read uint256 value and updated offset
     */
-    function NextUint255(bytes memory buff, uint256 offset) internal returns (uint256, uint256) {
-        require(offset + 32 <= buff.length && offset < offset + 32, "NextUint255, offset exceeds maximum");
+    function NextUint255(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (uint256, uint256) {
+        require(
+            offset + 32 <= buff.length && offset < offset + 32,
+            "NextUint255, offset exceeds maximum"
+        );
         uint256 v;
         assembly {
             let tmpbytes := mload(0x40)
@@ -619,11 +726,17 @@ library ZeroCopySource {
             } lt(tindex, byteLen) {
                 tindex := add(tindex, 0x01)
                 bindex := sub(bindex, 0x01)
-            } { mstore8(add(tmpbytes, tindex), byte(bindex, bvalue)) }
+            } {
+                mstore8(add(tmpbytes, tindex), byte(bindex, bvalue))
+            }
             mstore(0x40, add(tmpbytes, byteLen))
             v := mload(tmpbytes)
         }
-        require(v <= 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, "Value exceeds the range");
+        require(
+            v <=
+                0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff,
+            "Value exceeds the range"
+        );
         return (v, offset + 32);
     }
     /* @notice              Read next variable bytes starting from offset,
@@ -633,12 +746,18 @@ library ZeroCopySource {
     *  @return              The read variable bytes array value and updated offset
     */
 
-    function NextVarBytes(bytes memory buff, uint256 offset) internal returns (bytes memory, uint256) {
+    function NextVarBytes(
+        bytes memory buff,
+        uint256 offset
+    ) internal returns (bytes memory, uint256) {
         uint256 len;
         (len, offset) = NextVarUint(buff, offset);
         emit log_named_uint("NextVarBytes len", len);
         emit log_named_uint("NextVarBytes offset", offset);
-        require(offset + len <= buff.length && offset < offset + len, "NextVarBytes, offset exceeds maximum");
+        require(
+            offset + len <= buff.length && offset < offset + len,
+            "NextVarBytes, offset exceeds maximum"
+        );
         bytes memory tempBytes;
         assembly {
             switch iszero(len)
@@ -661,17 +780,25 @@ library ZeroCopySource {
                 // because when slicing multiples of 32 bytes (lengthmod == 0)
                 // the following copy loop was copying the origin's length
                 // and then ending prematurely not copying everything it should.
-                let mc := add(add(tempBytes, lengthmod), mul(0x20, iszero(lengthmod)))
+                let mc := add(
+                    add(tempBytes, lengthmod),
+                    mul(0x20, iszero(lengthmod))
+                )
                 let end := add(mc, len)
 
                 for {
                     // The multiplication in the next line has the same exact purpose
                     // as the one above.
-                    let cc := add(add(add(buff, lengthmod), mul(0x20, iszero(lengthmod))), offset)
+                    let cc := add(
+                        add(add(buff, lengthmod), mul(0x20, iszero(lengthmod))),
+                        offset
+                    )
                 } lt(mc, end) {
                     mc := add(mc, 0x20)
                     cc := add(cc, 0x20)
-                } { mstore(mc, mload(cc)) }
+                } {
+                    mstore(mc, mload(cc))
+                }
 
                 mstore(tempBytes, len)
 
@@ -690,13 +817,19 @@ library ZeroCopySource {
         return (tempBytes, offset + len);
     }
     /* @notice              Read next 32 bytes starting from offset,
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the bytes value
-    *  @return              The read bytes32 value and updated offset
-    */
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the bytes value
+     *  @return              The read bytes32 value and updated offset
+     */
 
-    function NextHash(bytes memory buff, uint256 offset) internal returns (bytes32, uint256) {
-        require(offset + 32 <= buff.length && offset < offset + 32, "NextHash, offset exceeds maximum");
+    function NextHash(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (bytes32, uint256) {
+        require(
+            offset + 32 <= buff.length && offset < offset + 32,
+            "NextHash, offset exceeds maximum"
+        );
         bytes32 v;
         assembly {
             v := mload(add(buff, add(offset, 0x20)))
@@ -705,12 +838,18 @@ library ZeroCopySource {
     }
 
     /* @notice              Read next 20 bytes starting from offset,
-    *  @param buff          Source bytes array
-    *  @param offset        The position from where we read the bytes value
-    *  @return              The read bytes20 value and updated offset
-    */
-    function NextBytes20(bytes memory buff, uint256 offset) internal returns (bytes20, uint256) {
-        require(offset + 20 <= buff.length && offset < offset + 20, "NextBytes20, offset exceeds maximum");
+     *  @param buff          Source bytes array
+     *  @param offset        The position from where we read the bytes value
+     *  @return              The read bytes20 value and updated offset
+     */
+    function NextBytes20(
+        bytes memory buff,
+        uint256 offset
+    ) internal pure returns (bytes20, uint256) {
+        require(
+            offset + 20 <= buff.length && offset < offset + 20,
+            "NextBytes20, offset exceeds maximum"
+        );
         bytes20 v;
         assembly {
             v := mload(add(buff, add(offset, 0x20)))
@@ -718,7 +857,10 @@ library ZeroCopySource {
         return (v, offset + 20);
     }
 
-    function NextVarUint(bytes memory buff, uint256 offset) internal returns (uint256, uint256) {
+    function NextVarUint(
+        bytes memory buff,
+        uint256 offset
+    ) internal returns (uint256, uint256) {
         bytes1 v;
         (v, offset) = NextByte(buff, offset);
         emit log_named_bytes32("NextVarUint v", v);
@@ -726,12 +868,18 @@ library ZeroCopySource {
         if (v == 0xFD) {
             // return NextUint16(buff, offset);
             (value, offset) = NextUint16(buff, offset);
-            require(value >= 0xFD && value <= 0xFFFF, "NextUint16, value outside range");
+            require(
+                value >= 0xFD && value <= 0xFFFF,
+                "NextUint16, value outside range"
+            );
             return (value, offset);
         } else if (v == 0xFE) {
             // return NextUint32(buff, offset);
             (value, offset) = NextUint32(buff, offset);
-            require(value > 0xFFFF && value <= 0xFFFFFFFF, "NextVarUint, value outside range");
+            require(
+                value > 0xFFFF && value <= 0xFFFFFFFF,
+                "NextVarUint, value outside range"
+            );
             return (value, offset);
         } else if (v == 0xFF) {
             // return NextUint64(buff, offset);
@@ -745,11 +893,9 @@ library ZeroCopySource {
             return (value, offset);
         }
     }
-
 }
 
 library ECCUtils {
-
     event log_named_address(string key, address val);
     event log_named_bytes32(string key, bytes32 val);
     event log_named_decimal_int(string key, int256 val, uint256 decimals);
@@ -793,11 +939,14 @@ library ECCUtils {
     uint256 constant POLYCHAIN_SIGNATURE_LEN = 65;
 
     /* @notice                  Verify Poly chain transaction whether exist or not
-    *  @param _auditPath        Poly chain merkle proof
-    *  @param _root             Poly chain root
-    *  @return                  The verified value included in _auditPath
-    */
-    function merkleProve(bytes memory _auditPath, bytes32 _root) internal returns (bytes memory) {
+     *  @param _auditPath        Poly chain merkle proof
+     *  @param _root             Poly chain root
+     *  @return                  The verified value included in _auditPath
+     */
+    function merkleProve(
+        bytes memory _auditPath,
+        bytes32 _root
+    ) internal returns (bytes memory) {
         uint256 off = 0;
         bytes memory value;
         emit log_named_bytes("_auditPath", _auditPath);
@@ -823,29 +972,39 @@ library ECCUtils {
             }
             emit log_named_bytes32("hash", hash);
         }
-        require(hash == _root, "merkleProve, expect root is not equal actual root");
+        require(
+            hash == _root,
+            "merkleProve, expect root is not equal actual root"
+        );
         return value;
     }
 
     /* @notice              calculate next book keeper according to public key list
-    *  @param _keyLen       consensus node number
-    *  @param _m            minimum signature number
-    *  @param _pubKeyList   consensus node public key list
-    *  @return              two element: next book keeper, consensus node signer addresses
-    */
+     *  @param _keyLen       consensus node number
+     *  @param _m            minimum signature number
+     *  @param _pubKeyList   consensus node public key list
+     *  @return              two element: next book keeper, consensus node signer addresses
+     */
     function _getBookKeeper(
         uint256 _keyLen,
         uint256 _m,
         bytes memory _pubKeyList
-    ) internal returns (bytes20, address[] memory) {
+    ) internal pure returns (bytes20, address[] memory) {
         bytes memory buff;
         buff = ZeroCopySink.WriteUint16(uint16(_keyLen));
         address[] memory keepers = new address[](_keyLen);
         bytes32 hash;
         bytes memory publicKey;
         for (uint256 i = 0; i < _keyLen; i++) {
-            publicKey = Utils.slice(_pubKeyList, i * POLYCHAIN_PUBKEY_LEN, POLYCHAIN_PUBKEY_LEN);
-            buff = abi.encodePacked(buff, ZeroCopySink.WriteVarBytes(Utils.compressMCPubKey(publicKey)));
+            publicKey = Utils.slice(
+                _pubKeyList,
+                i * POLYCHAIN_PUBKEY_LEN,
+                POLYCHAIN_PUBKEY_LEN
+            );
+            buff = abi.encodePacked(
+                buff,
+                ZeroCopySink.WriteVarBytes(Utils.compressMCPubKey(publicKey))
+            );
             hash = keccak256(Utils.slice(publicKey, 3, 64));
             keepers[i] = address(uint160(uint256(hash)));
         }
@@ -856,30 +1015,35 @@ library ECCUtils {
     }
 
     /* @notice              Verify public key derived from Poly chain
-    *  @param _pubKeyList   serialized consensus node public key list
-    *  @param _sigList      consensus node signature list
-    *  @return              return two element: next book keeper, consensus node signer addresses
-    */
-    function verifyPubkey(bytes memory _pubKeyList) internal returns (bytes20, address[] memory) {
-        require(_pubKeyList.length % POLYCHAIN_PUBKEY_LEN == 0, "_pubKeyList length illegal!");
+     *  @param _pubKeyList   serialized consensus node public key list
+     *  @param _sigList      consensus node signature list
+     *  @return              return two element: next book keeper, consensus node signer addresses
+     */
+    function verifyPubkey(
+        bytes memory _pubKeyList
+    ) internal pure returns (bytes20, address[] memory) {
+        require(
+            _pubKeyList.length % POLYCHAIN_PUBKEY_LEN == 0,
+            "_pubKeyList length illegal!"
+        );
         uint256 n = _pubKeyList.length / POLYCHAIN_PUBKEY_LEN;
         require(n >= 1, "too short _pubKeyList!");
         return _getBookKeeper(n, n - (n - 1) / 3, _pubKeyList);
     }
 
     /* @notice              Verify Poly chain consensus node signature
-    *  @param _rawHeader    Poly chain block header raw bytes
-    *  @param _sigList      consensus node signature list
-    *  @param _keepers      addresses corresponding with Poly chain book keepers' public keys
-    *  @param _m            minimum signature number
-    *  @return              true or false
-    */
+     *  @param _rawHeader    Poly chain block header raw bytes
+     *  @param _sigList      consensus node signature list
+     *  @param _keepers      addresses corresponding with Poly chain book keepers' public keys
+     *  @param _m            minimum signature number
+     *  @return              true or false
+     */
     function verifySig(
         bytes memory _rawHeader,
         bytes memory _sigList,
         address[] memory _keepers,
         uint256 _m
-    ) internal returns (bool) {
+    ) internal pure returns (bool) {
         bytes32 hash = getHeaderHash(_rawHeader);
 
         uint256 signed = 0;
@@ -889,8 +1053,12 @@ library ECCUtils {
         bytes32 s;
         uint8 v;
         for (uint256 j = 0; j < sigCount; j++) {
-            r = Utils.bytesToBytes32(Utils.slice(_sigList, j * POLYCHAIN_SIGNATURE_LEN, 32));
-            s = Utils.bytesToBytes32(Utils.slice(_sigList, j * POLYCHAIN_SIGNATURE_LEN + 32, 32));
+            r = Utils.bytesToBytes32(
+                Utils.slice(_sigList, j * POLYCHAIN_SIGNATURE_LEN, 32)
+            );
+            s = Utils.bytesToBytes32(
+                Utils.slice(_sigList, j * POLYCHAIN_SIGNATURE_LEN + 32, 32)
+            );
             v = uint8(_sigList[j * POLYCHAIN_SIGNATURE_LEN + 64]) + 27;
             signers[j] = ecrecover(sha256(abi.encodePacked(hash)), v, r, s);
         }
@@ -898,23 +1066,30 @@ library ECCUtils {
     }
 
     /* @notice               Serialize Poly chain book keepers' info in Ethereum addresses format into raw bytes
-    *  @param keepersBytes   The serialized addresses
-    *  @return               serialized bytes result
-    */
-    function serializeKeepers(address[] memory keepers) internal returns (bytes memory) {
+     *  @param keepersBytes   The serialized addresses
+     *  @return               serialized bytes result
+     */
+    function serializeKeepers(
+        address[] memory keepers
+    ) internal pure returns (bytes memory) {
         uint256 keeperLen = keepers.length;
         bytes memory keepersBytes = ZeroCopySink.WriteUint64(uint64(keeperLen));
         for (uint256 i = 0; i < keeperLen; i++) {
-            keepersBytes = abi.encodePacked(keepersBytes, ZeroCopySink.WriteVarBytes(Utils.addressToBytes(keepers[i])));
+            keepersBytes = abi.encodePacked(
+                keepersBytes,
+                ZeroCopySink.WriteVarBytes(Utils.addressToBytes(keepers[i]))
+            );
         }
         return keepersBytes;
     }
 
     /* @notice               Deserialize bytes into Ethereum addresses
-    *  @param keepersBytes   The serialized addresses derived from Poly chain book keepers in bytes format
-    *  @return               addresses
-    */
-    function deserializeKeepers(bytes memory keepersBytes) internal returns (address[] memory) {
+     *  @param keepersBytes   The serialized addresses derived from Poly chain book keepers in bytes format
+     *  @return               addresses
+     */
+    function deserializeKeepers(
+        bytes memory keepersBytes
+    ) internal returns (address[] memory) {
         uint256 off = 0;
         uint64 keeperLen;
         (keeperLen, off) = ZeroCopySource.NextUint64(keepersBytes, off);
@@ -928,24 +1103,38 @@ library ECCUtils {
     }
 
     /* @notice               Deserialize Poly chain transaction raw value
-    *  @param _valueBs       Poly chain transaction raw bytes
-    *  @return               ToMerkleValue struct
-    */
-    function deserializeMerkleValue(bytes memory _valueBs) internal returns (ToMerkleValue memory) {
+     *  @param _valueBs       Poly chain transaction raw bytes
+     *  @return               ToMerkleValue struct
+     */
+    function deserializeMerkleValue(
+        bytes memory _valueBs
+    ) internal returns (ToMerkleValue memory) {
         ToMerkleValue memory toMerkleValue;
         uint256 off = 0;
 
-        (toMerkleValue.txHash, off) = ZeroCopySource.NextVarBytes(_valueBs, off);
+        (toMerkleValue.txHash, off) = ZeroCopySource.NextVarBytes(
+            _valueBs,
+            off
+        );
 
-        (toMerkleValue.fromChainID, off) = ZeroCopySource.NextUint64(_valueBs, off);
+        (toMerkleValue.fromChainID, off) = ZeroCopySource.NextUint64(
+            _valueBs,
+            off
+        );
 
         TxParam memory txParam;
 
         (txParam.txHash, off) = ZeroCopySource.NextVarBytes(_valueBs, off);
 
-        (txParam.crossChainId, off) = ZeroCopySource.NextVarBytes(_valueBs, off);
+        (txParam.crossChainId, off) = ZeroCopySource.NextVarBytes(
+            _valueBs,
+            off
+        );
 
-        (txParam.fromContract, off) = ZeroCopySource.NextVarBytes(_valueBs, off);
+        (txParam.fromContract, off) = ZeroCopySource.NextVarBytes(
+            _valueBs,
+            off
+        );
 
         (txParam.toChainId, off) = ZeroCopySource.NextUint64(_valueBs, off);
 
@@ -960,10 +1149,12 @@ library ECCUtils {
     }
 
     /* @notice            Deserialize Poly chain block header raw bytes
-    *  @param _valueBs    Poly chain block header raw bytes
-    *  @return            Header struct
-    */
-    function deserializeHeader(bytes memory _headerBs) internal returns (Header memory) {
+     *  @param _valueBs    Poly chain block header raw bytes
+     *  @return            Header struct
+     */
+    function deserializeHeader(
+        bytes memory _headerBs
+    ) internal returns (Header memory) {
         Header memory header;
         uint256 off = 0;
         (header.version, off) = ZeroCopySource.NextUint32(_headerBs, off);
@@ -972,7 +1163,10 @@ library ECCUtils {
 
         (header.prevBlockHash, off) = ZeroCopySource.NextHash(_headerBs, off);
 
-        (header.transactionsRoot, off) = ZeroCopySource.NextHash(_headerBs, off);
+        (header.transactionsRoot, off) = ZeroCopySource.NextHash(
+            _headerBs,
+            off
+        );
 
         (header.crossStatesRoot, off) = ZeroCopySource.NextHash(_headerBs, off);
 
@@ -984,19 +1178,26 @@ library ECCUtils {
 
         (header.consensusData, off) = ZeroCopySource.NextUint64(_headerBs, off);
 
-        (header.consensusPayload, off) = ZeroCopySource.NextVarBytes(_headerBs, off);
+        (header.consensusPayload, off) = ZeroCopySource.NextVarBytes(
+            _headerBs,
+            off
+        );
 
-        (header.nextBookkeeper, off) = ZeroCopySource.NextBytes20(_headerBs, off);
+        (header.nextBookkeeper, off) = ZeroCopySource.NextBytes20(
+            _headerBs,
+            off
+        );
 
         return header;
     }
 
     /* @notice            Deserialize Poly chain block header raw bytes
-    *  @param rawHeader   Poly chain block header raw bytes
-    *  @return            header hash same as Poly chain
-    */
-    function getHeaderHash(bytes memory rawHeader) internal returns (bytes32) {
+     *  @param rawHeader   Poly chain block header raw bytes
+     *  @return            header hash same as Poly chain
+     */
+    function getHeaderHash(
+        bytes memory rawHeader
+    ) internal pure returns (bytes32) {
         return sha256(abi.encodePacked(sha256(rawHeader)));
     }
-
 }

