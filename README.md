@@ -4,6 +4,7 @@
 
 DAppHackPOC is a project aimed at aggressively refactoring [DefiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) with the following objectives:
 
+- Reduce compile time for each POC test by modularizing the codebase.
 - Simplify the codebase to enhance readability and facilitate contributions.
 - Keep all Proof of Concepts (POCs) up to date by aligning them with the latest testing practices in Foundry.
 - Standardize the codebase to improve maintainability and scalability.
@@ -27,6 +28,14 @@ The repository includes **404 incidents**.
     forge test --contracts <contract> -vvv
     # Example: forge test --contracts ./test/2022-07/Audius.t.sol -vvv
     ```
+   some POC are dependent on older EVM Versions The @KeyInfo Section of the POC will not Specify EVM version . To run them, you need to specify the EVM version:
+
+    ```
+    forge test --contracts <contract> --evm-version <evm-version> -vvv
+    # Example: forge test --contracts ./test/2022-08/LuckyTiger.t.sol --evm-version london -vvv
+    ```
+
+
 
 4. Check out the [Contributing Guidelines](https://github.com/emilesean/DAppHackPOC/blob/main/CONTRIBUTING.md)
 
