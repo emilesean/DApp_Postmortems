@@ -1,6 +1,11 @@
 # Contribution Guidelines
 
 We're thrilled to have you contribute to the DAppHackPOCs project. Your contributions are vital in keeping our repository a rich and accurate resource for DeFi hack incidents and their proof-of-concept (POC) exploits. Below is a streamlined process for adding new incident entries.
+### Note on Contributions
+
+- **Simplicity is Key**: We prioritize simplicity in our codebase. Our focus is on Solidity and maintaining a clean, straightforward environment for development.
+- **Language Specificity**: While we value expertise in various programming languages, we encourage contributors to refrain from integrating tools or practices that deviate from our core language: Solidity.
+- **Stay Focused**: If you find yourself contemplating the inclusion of external tools or languages, take a moment to realign with the project's goals. Our aim is to foster a dedicated Solidity development space.
 
 ## How to Add a New Incident Entry
 
