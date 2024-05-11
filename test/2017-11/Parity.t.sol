@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-Attack Method: Attacker gained ownership of the MultiSig by calling initWallet with no checks to prevent post-initialization calls, then used execute to drain funds.
 
 interface parity {
     function isOwner(address _addr) external view returns (bool);
