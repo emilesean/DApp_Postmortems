@@ -1,11 +1,11 @@
 [profile.default]
 # The Solc instance to use if any.
 # This takes precedence over `auto_detect_solc`, if a version is set then this overrides auto-detection.
-solc-version = "0.8.25"
+# solc-version = "0.8.25"
 # The source directory
-src = 'src'
+src = 'src1'
 # The test directory
-test = 'test'
+test = 'test1'
 # The script directory
 script = 'script'
 # The artifact directory
@@ -49,9 +49,12 @@ optimizer_runs = 200
 # The verbosity of tests
 verbosity = 1
 # A list of ignored solc error codes
-ignored_error_codes = [1878, 5574, 3860, 5667]
-# 5667 used try/catch parameter 
+ignored_error_codes = [1878, 5574, 2072, 5667, 5159]
+# 5159 Selfdestruct depcrication 
+# 5667 unused function parameter
 # 3860 contract initcode size exceeds 49 bytes 
+# 2018 Function State Mutability can be resticted to pure
+# Unused local variable
 # Ignore warnings from a file
 ignored_warnings_from = [
     "path/to/warnings/file1.sol",
@@ -131,10 +134,13 @@ sparse_mode = false
 [rpc_endpoints]
 mainnet = "https://rpc.ankr.com/eth"
 blast = "https://rpc.ankr.com/blast"
-optimism = "https://opt-mainnet.g.alchemy.com/v2/demo"
+# optimism = "https://opt-mainnet.g.alchemy.com/v2/demo"
+optimism = "https://rpc.ankr.com/optimism"
 fantom = "https://rpc.ankr.com/fantom"
 arbitrum = "https://rpc.ankr.com/arbitrum"
 bsc = "https://rpc.ankr.com/bsc"
+# bsc = "https://bsc-dataseed1.binance.org/"
+# bsc = "https://bsc-rpc.publicnode.com"
 moonriver = "https://moonriver.public.blastapi.io"
 gnosis = "https://rpc.ankr.com/gnosis"
 Avalanche = "https://rpc.ankr.com/avalanche"
