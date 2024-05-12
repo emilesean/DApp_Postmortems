@@ -3,6 +3,7 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 interface ILendingPool {
+
     function flashLoan(
         address receiverAddress,
         address[] calldata assets,
@@ -23,9 +24,7 @@ interface ILendingPool {
      * @return healthFactor the current health factor of the user
      *
      */
-    function getUserAccountData(
-        address user
-    )
+    function getUserAccountData(address user)
         external
         view
         returns (
@@ -36,34 +35,17 @@ interface ILendingPool {
             uint256 ltv,
             uint256 healthFactor
         );
-    function deposit(
-        address asset,
-        uint256 amount,
-        address onBehalfOf,
-        uint16 referralCode
-    ) external;
+    function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
     /**
      * @dev Allows depositors to enable/disable a specific deposited asset as collateral
      * @param asset The address of the underlying asset deposited
      * @param useAsCollateral `true` if the user wants to use the deposit as collateral, `false` otherwise
      *
      */
-    function setUserUseReserveAsCollateral(
-        address asset,
-        bool useAsCollateral
-    ) external;
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
-    function repay(
-        address _reserve,
-        uint256 _amount,
-        address _onBehalfOf
-    ) external payable;
+    function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
+    function repay(address _reserve, uint256 _amount, address _onBehalfOf) external payable;
     /**
      * @dev Function to liquidate a non-healthy position collateral-wise, with Health Factor below 1
      * - The caller (liquidator) covers `debtToCover` amount of debt of the user getting liquidated using the reserve asset,
@@ -83,17 +65,13 @@ interface ILendingPool {
         uint256 debtToCover,
         bool receiveAToken
     ) external;
-    function getReserveData(
-        address asset
-    ) external view returns (DataTypesAave.ReserveData memory);
-    function withdraw(
-        address asset,
-        uint256 amount,
-        address to
-    ) external returns (uint256);
+    function getReserveData(address asset) external view returns (DataTypesAave.ReserveData memory);
+    function withdraw(address asset, uint256 amount, address to) external returns (uint256);
+
 }
 
 library DataTypesAave {
+
     // refer to the whitepaper, section 1.1 basic concepts for a formal description of these properties.
     struct ReserveData {
         //stores the reserve configuration
@@ -151,4 +129,5 @@ library DataTypesAave {
         //The maximum amount of tokens allowed to be used as collateral for aggregate user borrowings
         uint256 collateralUsageLimit;
     }
+
 }

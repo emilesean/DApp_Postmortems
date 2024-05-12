@@ -3,15 +3,9 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 interface IUSDC {
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
-    event AuthorizationCanceled(
-        address indexed authorizer,
-        bytes32 indexed nonce
-    );
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event AuthorizationCanceled(address indexed authorizer, bytes32 indexed nonce);
     event AuthorizationUsed(address indexed authorizer, bytes32 indexed nonce);
     event Blacklisted(address indexed _account);
     event BlacklisterChanged(address indexed newBlacklister);
@@ -34,27 +28,15 @@ interface IUSDC {
 
     function PERMIT_TYPEHASH() external view returns (bytes32);
 
-    function RECEIVE_WITH_AUTHORIZATION_TYPEHASH()
-        external
-        view
-        returns (bytes32);
+    function RECEIVE_WITH_AUTHORIZATION_TYPEHASH() external view returns (bytes32);
 
-    function TRANSFER_WITH_AUTHORIZATION_TYPEHASH()
-        external
-        view
-        returns (bytes32);
+    function TRANSFER_WITH_AUTHORIZATION_TYPEHASH() external view returns (bytes32);
 
-    function allowance(
-        address owner,
-        address spender
-    ) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
 
     function approve(address spender, uint256 value) external returns (bool);
 
-    function authorizationState(
-        address authorizer,
-        bytes32 nonce
-    ) external view returns (bool);
+    function authorizationState(address authorizer, bytes32 nonce) external view returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
 
@@ -64,32 +46,17 @@ interface IUSDC {
 
     function burn(uint256 _amount) external;
 
-    function cancelAuthorization(
-        address authorizer,
-        bytes32 nonce,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+    function cancelAuthorization(address authorizer, bytes32 nonce, uint8 v, bytes32 r, bytes32 s) external;
 
-    function configureMinter(
-        address minter,
-        uint256 minterAllowedAmount
-    ) external returns (bool);
+    function configureMinter(address minter, uint256 minterAllowedAmount) external returns (bool);
 
     function currency() external view returns (string memory);
 
     function decimals() external view returns (uint8);
 
-    function decreaseAllowance(
-        address spender,
-        uint256 decrement
-    ) external returns (bool);
+    function decreaseAllowance(address spender, uint256 decrement) external returns (bool);
 
-    function increaseAllowance(
-        address spender,
-        uint256 increment
-    ) external returns (bool);
+    function increaseAllowance(address spender, uint256 increment) external returns (bool);
 
     function initialize(
         string memory tokenName,
@@ -128,15 +95,8 @@ interface IUSDC {
 
     function pauser() external view returns (address);
 
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external;
 
     function receiveWithAuthorization(
         address from,
@@ -152,11 +112,7 @@ interface IUSDC {
 
     function removeMinter(address minter) external returns (bool);
 
-    function rescueERC20(
-        address tokenContract,
-        address to,
-        uint256 amount
-    ) external;
+    function rescueERC20(address tokenContract, address to, uint256 amount) external;
 
     function rescuer() external view returns (address);
 
@@ -166,11 +122,7 @@ interface IUSDC {
 
     function transfer(address to, uint256 value) external returns (bool);
 
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) external returns (bool);
+    function transferFrom(address from, address to, uint256 value) external returns (bool);
 
     function transferOwnership(address newOwner) external;
 
@@ -199,4 +151,5 @@ interface IUSDC {
     function updateRescuer(address newRescuer) external;
 
     function version() external view returns (string memory);
+
 }

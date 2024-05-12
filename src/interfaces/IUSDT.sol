@@ -3,12 +3,9 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 interface IUSDT {
+
     event AddedBlackList(address _user);
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 value);
     event Deprecate(address newAddress);
     event DestroyedBlackFunds(address _blackListedUser, uint256 _balance);
     event Issue(uint256 amount);
@@ -22,10 +19,7 @@ interface IUSDT {
     function MAX_UINT() external view returns (uint256);
     function _totalSupply() external view returns (uint256);
     function addBlackList(address _evilUser) external;
-    function allowance(
-        address _owner,
-        address _spender
-    ) external view returns (uint256 remaining);
+    function allowance(address _owner, address _spender) external view returns (uint256 remaining);
     function allowed(address, address) external view returns (uint256);
     function approve(address _spender, uint256 _value) external;
     function balanceOf(address who) external view returns (uint256);
@@ -54,4 +48,5 @@ interface IUSDT {
     function transferOwnership(address newOwner) external;
     function unpause() external;
     function upgradedAddress() external view returns (address);
+
 }

@@ -4,6 +4,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 // Named "Swap Router" In Uniswap V3 Docs
 interface IUniswapV3Router {
+
     struct ExactInputParams {
         bytes path;
         address recipient;
@@ -45,60 +46,26 @@ interface IUniswapV3Router {
     receive() external payable;
 
     function WETH9() external view returns (address);
-    function exactInput(
-        ExactInputParams memory params
-    ) external payable returns (uint256 amountOut);
-    function exactInputSingle(
-        ExactInputSingleParams memory params
-    ) external payable returns (uint256 amountOut);
-    function exactOutput(
-        ExactOutputParams memory params
-    ) external payable returns (uint256 amountIn);
-    function exactOutputSingle(
-        ExactOutputSingleParams memory params
-    ) external payable returns (uint256 amountIn);
+    function exactInput(ExactInputParams memory params) external payable returns (uint256 amountOut);
+    function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
+    function exactOutput(ExactOutputParams memory params) external payable returns (uint256 amountIn);
+    function exactOutputSingle(ExactOutputSingleParams memory params) external payable returns (uint256 amountIn);
     function factory() external view returns (address);
-    function multicall(
-        bytes[] memory data
-    ) external payable returns (bytes[] memory results);
+    function multicall(bytes[] memory data) external payable returns (bytes[] memory results);
     function refundETH() external payable;
-    function selfPermit(
-        address token,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external payable;
-    function selfPermitAllowed(
-        address token,
-        uint256 nonce,
-        uint256 expiry,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external payable;
-    function selfPermitAllowedIfNecessary(
-        address token,
-        uint256 nonce,
-        uint256 expiry,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external payable;
-    function selfPermitIfNecessary(
-        address token,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external payable;
-    function sweepToken(
-        address token,
-        uint256 amountMinimum,
-        address recipient
-    ) external payable;
+    function selfPermit(address token, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external
+        payable;
+    function selfPermitAllowed(address token, uint256 nonce, uint256 expiry, uint8 v, bytes32 r, bytes32 s)
+        external
+        payable;
+    function selfPermitAllowedIfNecessary(address token, uint256 nonce, uint256 expiry, uint8 v, bytes32 r, bytes32 s)
+        external
+        payable;
+    function selfPermitIfNecessary(address token, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external
+        payable;
+    function sweepToken(address token, uint256 amountMinimum, address recipient) external payable;
     function sweepTokenWithFee(
         address token,
         uint256 amountMinimum,
@@ -106,19 +73,10 @@ interface IUniswapV3Router {
         uint256 feeBips,
         address feeRecipient
     ) external payable;
-    function uniswapV3SwapCallback(
-        int256 amount0Delta,
-        int256 amount1Delta,
-        bytes memory _data
-    ) external;
-    function unwrapWETH9(
-        uint256 amountMinimum,
-        address recipient
-    ) external payable;
-    function unwrapWETH9WithFee(
-        uint256 amountMinimum,
-        address recipient,
-        uint256 feeBips,
-        address feeRecipient
-    ) external payable;
+    function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes memory _data) external;
+    function unwrapWETH9(uint256 amountMinimum, address recipient) external payable;
+    function unwrapWETH9WithFee(uint256 amountMinimum, address recipient, uint256 feeBips, address feeRecipient)
+        external
+        payable;
+
 }

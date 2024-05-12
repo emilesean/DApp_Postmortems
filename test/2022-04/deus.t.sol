@@ -3,12 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
 interface IUSDC {
-    function Swapin(
-        bytes32 txhash,
-        address account,
-        uint256 amount
-    ) external returns (bool);
+
+    function Swapin(bytes32 txhash, address account, uint256 amount) external returns (bool);
 
     function transfer(address to, uint256 value) external returns (bool);
 
@@ -16,19 +14,24 @@ interface IUSDC {
 
     function approve(address spender, uint256 value) external returns (bool);
 
-    function allowance(
-        address owner,
-        address spender
-    ) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
+
 }
+
 interface IOracle {
+
     function getOnChainPrice() external view returns (uint256);
+
 }
 
 interface ILpDepositor {
+
     function deposit(address pool, uint256 amount) external;
+
 }
+
 interface IBaseV1Router01 {
+
     function addLiquidity(
         address tokenA,
         address tokenB,
@@ -50,9 +53,11 @@ interface IBaseV1Router01 {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }
 
 interface IDeiLenderSolidex {
+
     function addCollateral(address to, uint256 amount) external;
 
     function borrow(
@@ -63,6 +68,7 @@ interface IDeiLenderSolidex {
         bytes memory reqId,
         SchnorrSign[] memory sigs
     ) external returns (uint256 debt);
+
 }
 
 struct SchnorrSign {
@@ -72,14 +78,16 @@ struct SchnorrSign {
 }
 
 interface ISSPv4 {
-    function buyDei(uint256 amountIn) external;
-}
-contract ContractTest is Test {
-    IBaseV1Router01 router =
-        IBaseV1Router01(0xa38cd27185a464914D3046f0AB9d43356B34829D);
 
-    IDeiLenderSolidex DeiLenderSolidex =
-        IDeiLenderSolidex(0x8D643d954798392403eeA19dB8108f595bB8B730);
+    function buyDei(uint256 amountIn) external;
+
+}
+
+contract ContractTest is Test {
+
+    IBaseV1Router01 router = IBaseV1Router01(0xa38cd27185a464914D3046f0AB9d43356B34829D);
+
+    IDeiLenderSolidex DeiLenderSolidex = IDeiLenderSolidex(0x8D643d954798392403eeA19dB8108f595bB8B730);
 
     IUSDC usdc = IUSDC(0x04068DA6C83AFCFA0e13ba15A6696662335D5B75);
 
@@ -93,8 +101,7 @@ contract ContractTest is Test {
 
     address owner_of_usdc = 0xC564EE9f21Ed8A2d8E7e76c085740d5e4c5FaFbE;
 
-    ILpDepositor LpDepositor =
-        ILpDepositor(0x26E1A0d851CF28E697870e1b7F053B605C8b060F);
+    ILpDepositor LpDepositor = ILpDepositor(0x26E1A0d851CF28E697870e1b7F053B605C8b060F);
 
     IOracle oracle = IOracle(0x8129026c585bCfA530445a6267f9389057761A00);
 
@@ -106,9 +113,7 @@ contract ContractTest is Test {
         vm.prank(owner_of_usdc);
 
         usdc.Swapin(
-            0x33e48143c6ea17476eeabfa202d8034190ea3f2280b643e2570c54265fe33c98,
-            address(this),
-            150_000_000 * 10 ** 6
+            0x33e48143c6ea17476eeabfa202d8034190ea3f2280b643e2570c54265fe33c98, address(this), 150_000_000 * 10 ** 6
         );
 
         uint256 balance_of_usdc = usdc.balanceOf(address(this));
@@ -145,10 +150,7 @@ contract ContractTest is Test {
 
         uint256 balance_of_LpToken = lpToken.balanceOf(address(this));
 
-        emit log_named_uint(
-            "The LPToken After adding Liquidity",
-            balance_of_LpToken
-        );
+        emit log_named_uint("The LPToken After adding Liquidity", balance_of_LpToken);
 
         lpToken.approve(address(LpDepositor), type(uint256).max);
 
@@ -158,10 +160,7 @@ contract ContractTest is Test {
 
         uint256 balance_of_DepositToken = DepositToken.balanceOf(address(this));
 
-        emit log_named_uint(
-            "The DepositToken After depositting LPtoken",
-            balance_of_DepositToken
-        );
+        emit log_named_uint("The DepositToken After depositting LPtoken", balance_of_DepositToken);
 
         DepositToken.approve(address(DeiLenderSolidex), type(uint256).max);
 
@@ -169,10 +168,7 @@ contract ContractTest is Test {
 
         balance_of_DepositToken = DepositToken.balanceOf(address(this));
 
-        emit log_named_uint(
-            "The DepositToken After addCollateral",
-            balance_of_DepositToken
-        );
+        emit log_named_uint("The DepositToken After addCollateral", balance_of_DepositToken);
 
         balance_of_usdc = usdc.balanceOf(address(this));
 
@@ -181,13 +177,7 @@ contract ContractTest is Test {
         usdc.approve(address(router), type(uint256).max);
 
         router.swapExactTokensForTokensSimple(
-            143_200_000_000_000,
-            0,
-            address(usdc),
-            address(dei),
-            true,
-            address(this),
-            block.timestamp
+            143_200_000_000_000, 0, address(usdc), address(dei), true, address(this), block.timestamp
         );
 
         balance_of_dei = dei.balanceOf(address(this));
@@ -204,8 +194,7 @@ contract ContractTest is Test {
 
         sigs[0] = sig;
 
-        bytes
-            memory repID = "0x01701220183a8e97b39ebe3c38b6166cd7c9ddfe3c38fd76352e5652b9c25467aa47b040";
+        bytes memory repID = "0x01701220183a8e97b39ebe3c38b6166cd7c9ddfe3c38fd76352e5652b9c25467aa47b040";
 
         uint256 price = oracle.getOnChainPrice();
 
@@ -229,13 +218,7 @@ contract ContractTest is Test {
         emit log_named_uint("The DEI after borrowing", balance_of_dei);
 
         router.swapExactTokensForTokensSimple(
-            12_000_000_000_000_000_000_000_000,
-            0,
-            address(dei),
-            address(usdc),
-            true,
-            address(this),
-            block.timestamp
+            12_000_000_000_000_000_000_000_000, 0, address(dei), address(usdc), true, address(this), block.timestamp
         );
 
         usdc.transfer(owner_of_usdc, 150_000_000 * 10 ** 6);
@@ -248,4 +231,5 @@ contract ContractTest is Test {
 
         emit log_named_uint("The DEI after paying back", balance_of_dei);
     }
+
 }

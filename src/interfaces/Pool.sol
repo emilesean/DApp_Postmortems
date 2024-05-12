@@ -1,43 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity >=0.7.0 <0.9.0;
+
 interface Pool {
+
     event FeesUpdated(uint256 _mintingFee, uint256 _redemptionFee);
     event MaxXftmSupplyUpdated(uint256 _value);
     event MinCollateralRatioUpdated(uint256 _minCollateralRatio);
-    event Mint(
-        address minter,
-        uint256 amount,
-        uint256 ftmIn,
-        uint256 fantasmIn,
-        uint256 fee
-    );
+    event Mint(address minter, uint256 amount, uint256 ftmIn, uint256 fantasmIn, uint256 fee);
     event NewCollateralRatioOptions(
-        uint256 _ratioStepUp,
-        uint256 _ratioStepDown,
-        uint256 _priceBand,
-        uint256 _refreshCooldown
+        uint256 _ratioStepUp, uint256 _ratioStepDown, uint256 _priceBand, uint256 _refreshCooldown
     );
     event NewCollateralRatioSet(uint256 _cr);
     event OracleChanged(address indexed _oracle);
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event PoolUtilsChanged(address indexed _addr);
     event Recollateralized(address indexed _sender, uint256 _amount);
-    event Redeem(
-        address redeemer,
-        uint256 amount,
-        uint256 ftmOut,
-        uint256 fantasmOut,
-        uint256 fee
-    );
-    event SwapConfigUpdated(
-        address indexed _router,
-        uint256 _slippage,
-        address[] _paths
-    );
+    event Redeem(address redeemer, uint256 amount, uint256 ftmOut, uint256 fantasmOut, uint256 fee);
+    event SwapConfigUpdated(address indexed _router, uint256 _slippage, address[] _paths);
     event Toggled(bool _mintPaused, bool _redeemPaused);
     event UpdateCollateralRatioPaused(bool _collateralRatioPaused);
     event ZapMint(address minter, uint256 amount, uint256 ftmIn, uint256 fee);
@@ -46,47 +26,22 @@ interface Pool {
 
     function REDEMPTION_FEE_MAX() external view returns (uint256);
 
-    function calcExcessFtmBalance()
-        external
-        view
-        returns (uint256 _delta, bool _exceeded);
+    function calcExcessFtmBalance() external view returns (uint256 _delta, bool _exceeded);
 
-    function calcMint(
-        uint256 _ftmIn,
-        uint256 _fantasmIn
-    )
+    function calcMint(uint256 _ftmIn, uint256 _fantasmIn)
         external
         view
-        returns (
-            uint256 _xftmOut,
-            uint256 _minFtmIn,
-            uint256 _minFantasmIn,
-            uint256 _fee
-        );
+        returns (uint256 _xftmOut, uint256 _minFtmIn, uint256 _minFantasmIn, uint256 _fee);
 
-    function calcRedeem(
-        uint256 _xftmIn
-    )
+    function calcRedeem(uint256 _xftmIn)
         external
         view
-        returns (
-            uint256 _ftmOut,
-            uint256 _fantasmOut,
-            uint256 _ftmFee,
-            uint256 _requiredFtmBalance
-        );
+        returns (uint256 _ftmOut, uint256 _fantasmOut, uint256 _ftmFee, uint256 _requiredFtmBalance);
 
-    function calcZapMint(
-        uint256 _ftmIn
-    )
+    function calcZapMint(uint256 _ftmIn)
         external
         view
-        returns (
-            uint256 _xftmOut,
-            uint256 _fantasmOut,
-            uint256 _ftmFee,
-            uint256 _ftmSwapIn
-        );
+        returns (uint256 _xftmOut, uint256 _fantasmOut, uint256 _ftmFee, uint256 _ftmSwapIn);
 
     function collateralRatio() external view returns (uint256);
 
@@ -94,11 +49,7 @@ interface Pool {
 
     function collect() external;
 
-    function configSwap(
-        address _swapRouter,
-        uint256 _swapSlippage,
-        address[] memory _swapPaths
-    ) external;
+    function configSwap(address _swapRouter, uint256 _swapSlippage, address[] memory _swapPaths) external;
 
     function fantasm() external view returns (address);
 
@@ -146,11 +97,7 @@ interface Pool {
 
     function recollateralizeETH() external payable;
 
-    function redeem(
-        uint256 _xftmIn,
-        uint256 _minFantasmOut,
-        uint256 _minFtmOut
-    ) external;
+    function redeem(uint256 _xftmIn, uint256 _minFantasmOut, uint256 _minFtmOut) external;
 
     function redeemPaused() external view returns (bool);
 
@@ -201,21 +148,15 @@ interface Pool {
 
     function usableFtmBalance() external view returns (uint256);
 
-    function userInfo(
-        address
-    )
+    function userInfo(address)
         external
         view
-        returns (
-            uint256 xftmBalance,
-            uint256 fantasmBalance,
-            uint256 ftmBalance,
-            uint256 lastAction
-        );
+        returns (uint256 xftmBalance, uint256 fantasmBalance, uint256 ftmBalance, uint256 lastAction);
 
     function xftm() external view returns (address);
 
     function zap(uint256 _minXftmOut) external payable;
 
     receive() external payable;
+
 }

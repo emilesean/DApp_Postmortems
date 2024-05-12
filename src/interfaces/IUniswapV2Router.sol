@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.10;
+
 interface IUniswapV2Router {
+
     receive() external payable;
 
     function WETH() external view returns (address);
@@ -22,34 +24,19 @@ interface IUniswapV2Router {
         uint256 amountETHMin,
         address to,
         uint256 deadline
-    )
-        external
-        payable
-        returns (uint256 amountToken, uint256 amountETH, uint256 liquidity);
+    ) external payable returns (uint256 amountToken, uint256 amountETH, uint256 liquidity);
     function factory() external view returns (address);
-    function getAmountIn(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) external pure returns (uint256 amountIn);
-    function getAmountOut(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) external pure returns (uint256 amountOut);
-    function getAmountsIn(
-        uint256 amountOut,
-        address[] memory path
-    ) external view returns (uint256[] memory amounts);
-    function getAmountsOut(
-        uint256 amountIn,
-        address[] memory path
-    ) external view returns (uint256[] memory amounts);
-    function quote(
-        uint256 amountA,
-        uint256 reserveA,
-        uint256 reserveB
-    ) external pure returns (uint256 amountB);
+    function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut)
+        external
+        pure
+        returns (uint256 amountIn);
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
+        external
+        pure
+        returns (uint256 amountOut);
+    function getAmountsIn(uint256 amountOut, address[] memory path) external view returns (uint256[] memory amounts);
+    function getAmountsOut(uint256 amountIn, address[] memory path) external view returns (uint256[] memory amounts);
+    function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) external pure returns (uint256 amountB);
     function removeLiquidity(
         address tokenA,
         address tokenB,
@@ -112,18 +99,14 @@ interface IUniswapV2Router {
         bytes32 r,
         bytes32 s
     ) external returns (uint256 amountA, uint256 amountB);
-    function swapETHForExactTokens(
-        uint256 amountOut,
-        address[] memory path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256[] memory amounts);
-    function swapExactETHForTokens(
-        uint256 amountOutMin,
-        address[] memory path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256[] memory amounts);
+    function swapETHForExactTokens(uint256 amountOut, address[] memory path, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256[] memory amounts);
+    function swapExactETHForTokens(uint256 amountOutMin, address[] memory path, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256[] memory amounts);
     function swapExactETHForTokensSupportingFeeOnTransferTokens(
         uint256 amountOutMin,
         address[] memory path,
@@ -172,4 +155,5 @@ interface IUniswapV2Router {
         address to,
         uint256 deadline
     ) external returns (uint256[] memory amounts);
+
 }

