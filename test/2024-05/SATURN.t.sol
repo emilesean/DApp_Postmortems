@@ -9,7 +9,7 @@ import {IWBNB} from "src/interfaces/IWBNB.sol";
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 // @KeyInfo - Total Lost : ~15 BNB
 // Attacker : 0xc468D9A3a5557BfF457586438c130E3AFbeC2ff9

