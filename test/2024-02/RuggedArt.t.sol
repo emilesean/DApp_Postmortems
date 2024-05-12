@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~5 $ETH
 // Attacker : https://etherscan.io/address/0x9733303117504c146a4e22261f2685ddb79780ef
@@ -53,19 +52,18 @@ contract ContractTest is Test {
     IRUGGEDPROXY proxy = IRUGGEDPROXY(0x2648f5592c09a260C601ACde44e7f8f2944944Fb);
     IRUGGED RUGGED = IRUGGED(0xbE33F57f41a20b2f00DEc91DcC1169597f36221F);
     IWeth WETH = IWeth(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     uint256 flashnumber = 22 * 1e18;
 
     function setUp() public {
         // evm_version Requires to be "shanghai"
-        cheats.createSelectFork("mainnet", 19_262_234 - 1);
-        cheats.label(address(proxy), "proxy");
-        cheats.label(address(RUGGED), "RUGGED");
-        cheats.label(address(pool), "pool");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(0xFe380fe1DB07e531E3519b9AE3EA9f7888CE20C6), "RuggedMarket");
-        cheats.label(address(0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD), "Universal_Router");
+        vm.createSelectFork("mainnet", 19_262_234 - 1);
+        vm.label(address(proxy), "proxy");
+        vm.label(address(RUGGED), "RUGGED");
+        vm.label(address(pool), "pool");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(0xFe380fe1DB07e531E3519b9AE3EA9f7888CE20C6), "RuggedMarket");
+        vm.label(address(0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD), "Universal_Router");
     }
 
     function testExploit() public {

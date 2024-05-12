@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "../interface.sol";
 
 // @KeyInfo - Total Lost : ~$2M (DAI + GoodDollarToken. Info from 'balance changes' in Blocksec Explorer)
 // Exploiter : https://etherscan.io/address/0x6738fa889ff31f82d9fe8862ec025dbe318f3fde
@@ -17,12 +16,9 @@ interface IGDX is IERC20 {
 
     function buy(uint256 _tokenAmount, uint256 _minReturn, address _targetAddress) external returns (uint256);
 
-    function sell(
-        uint256 _gdAmount,
-        uint256 _minReturn,
-        address _target,
-        address _seller
-    ) external returns (uint256, uint256);
+    function sell(uint256 _gdAmount, uint256 _minReturn, address _target, address _seller)
+        external
+        returns (uint256, uint256);
 
 }
 

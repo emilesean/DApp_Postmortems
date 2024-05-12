@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1661098394130198528
@@ -16,12 +15,11 @@ contract CSExp is Test, IPancakeCallee {
 
     IPancakePair pair = IPancakePair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00);
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IERC20 BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 CS = IERC20(0x8BC6Ce23E5e2c4f0A96429E3C9d482d74171215e);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_466_976);
+        vm.createSelectFork("bsc", 28_466_976);
     }
 
     function testExp() external {

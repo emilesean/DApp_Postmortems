@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~150K USD$
 // Attacker : https://bscscan.com/address/0x25bcbbb92c2ae9d0c6f4db814e46fd5c632e2bd3
@@ -24,20 +23,18 @@ contract CarsonTest is Test {
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     // Closed source contract
-    Uni_Router_V2 Router = Uni_Router_V2(0x2bDFb2f33E1aaEe08719F50d05Ef28057BB6341a);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x2bDFb2f33E1aaEe08719F50d05Ef28057BB6341a);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_306_324);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(Carson), "Carson");
-        cheats.label(address(DPPOracle1), "DPPOracle1");
-        cheats.label(address(DPPOracle2), "DPPOracle2");
-        cheats.label(address(DPPOracle3), "DPPOracle3");
-        cheats.label(address(DPP), "DPP");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(Router), "Router");
+        vm.createSelectFork("bsc", 30_306_324);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(Carson), "Carson");
+        vm.label(address(DPPOracle1), "DPPOracle1");
+        vm.label(address(DPPOracle2), "DPPOracle2");
+        vm.label(address(DPPOracle3), "DPPOracle3");
+        vm.label(address(DPP), "DPP");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(Router), "Router");
     }
 
     function testExploit() public {

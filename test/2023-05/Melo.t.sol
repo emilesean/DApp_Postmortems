@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1654667621139349505
@@ -21,13 +20,11 @@ contract ContractTest is Test {
 
     IMEL MEL = IMEL(0x9A1aEF8C9ADA4224aD774aFdaC07C24955C92a54);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x6a8C4448763C08aDEb80ADEbF7A29b9477Fa0628);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x6a8C4448763C08aDEb80ADEbF7A29b9477Fa0628);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 27_960_445);
+        vm.createSelectFork("bsc", 27_960_445);
     }
 
     function testExploit() external {

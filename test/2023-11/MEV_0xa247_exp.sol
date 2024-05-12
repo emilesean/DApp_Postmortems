@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$150K
 // Attacker : https://etherscan.io/address/0x4e087743e8025012c4704a1953c87eeff1e6ef48
@@ -31,7 +30,7 @@ contract ContractTest is Test {
     IERC20 private constant ODDZ = IERC20(0xCd2828fc4D8E8a0eDe91bB38CF64B1a81De65Bf6);
     IUSDT private constant USDT = IUSDT(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IWETH private constant WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_552_866);

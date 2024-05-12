@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~176 ETH
 // Attacker : https://etherscan.io/address/0x6057a831d43c395198a10cf2d7d6d6a063b1fce4
@@ -21,11 +20,11 @@ contract ContractTest is Test {
 
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 WERX = IERC20(0x4306B12F8e824cE1fa9604BbD88f2AD4f0FE3c54);
-    Uni_Router_V2 Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    Uni_Pair_V2 pair = Uni_Pair_V2(0xa41529982BcCCDfA1105C6f08024DF787CA758C4);
+    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair pair = IUniswapV2Pair(0xa41529982BcCCDfA1105C6f08024DF787CA758C4);
 
     function setUp() public {
-        vm.createSelectFork("https://eth.llamarpc.com", 17_826_202);
+        vm.createSelectFork("mainnet", 17_826_202);
         vm.label(address(WETH), "WETH");
         vm.label(address(WERX), "WERX");
         vm.label(address(Router), "Router");

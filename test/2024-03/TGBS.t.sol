@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$150K
 // Attacker : https://bscscan.com/address/0xff1db040e4f2a44305e28f8de728dabff58f01e1
@@ -25,7 +24,7 @@ contract ContractTest is Test {
     DVM private constant DPPOracle = DVM(0x05d968B7101701b6AD5a69D45323746E9a791eB5);
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     ITGBS private constant TGBS = ITGBS(0xedecfA18CAE067b2489A2287784a543069f950F4);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     function setUp() public {
         vm.createSelectFork("bsc", 36_725_819);

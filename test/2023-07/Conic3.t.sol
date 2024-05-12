@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~3M USD$
 // Attacker : https://etherscan.io/address/0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa
@@ -41,25 +40,23 @@ contract ConicFinanceTest is Test {
     address private constant vyperContract1 = 0x0f3159811670c117c372428D4E69AC32325e4D0F;
     address private constant vyperContract2 = 0x5FAE7E604FC3e24fd43A72867ceBaC94c65b404A;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_740_954);
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(rETH), "rETH");
-        cheats.label(address(stETH), "stETH");
-        cheats.label(address(cbETH), "cbETH");
-        cheats.label(address(steCRV), "steCRV");
-        cheats.label(address(cbETH_ETHf), "cbETH_ETHf");
-        cheats.label(address(rETH_ETHf), "rETH_ETHf");
-        cheats.label(address(cncETH), "cncETH");
-        cheats.label(address(BalancerVault), "BalancerVault");
-        cheats.label(address(AaveV2), "AaveV2");
-        cheats.label(address(AaveV3), "AaveV3");
-        cheats.label(address(ConicPool), "ConicPool");
-        cheats.label(lidoPool, "Lido");
-        cheats.label(vyperContract1, "vyperContract1");
-        cheats.label(vyperContract2, "vyperContract2");
+        vm.createSelectFork("mainnet", 17_740_954);
+        vm.label(address(WETH), "WETH");
+        vm.label(address(rETH), "rETH");
+        vm.label(address(stETH), "stETH");
+        vm.label(address(cbETH), "cbETH");
+        vm.label(address(steCRV), "steCRV");
+        vm.label(address(cbETH_ETHf), "cbETH_ETHf");
+        vm.label(address(rETH_ETHf), "rETH_ETHf");
+        vm.label(address(cncETH), "cncETH");
+        vm.label(address(BalancerVault), "BalancerVault");
+        vm.label(address(AaveV2), "AaveV2");
+        vm.label(address(AaveV3), "AaveV3");
+        vm.label(address(ConicPool), "ConicPool");
+        vm.label(lidoPool, "Lido");
+        vm.label(vyperContract1, "vyperContract1");
+        vm.label(vyperContract2, "vyperContract2");
     }
 
     function testExploit() public {
@@ -101,13 +98,10 @@ contract ConicFinanceTest is Test {
         return true;
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initiator,
-        bytes memory params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes memory params)
+        external
+        returns (bool)
+    {
         address[] memory tokens = new address[](3);
         tokens[0] = address(rETH);
         tokens[1] = address(cbETH);

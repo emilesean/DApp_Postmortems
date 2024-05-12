@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~7K USD$
 // Attacker : https://bscscan.com/address/0x10703f7114dce7beaf8d23cde4bf72130bb0f56a
@@ -28,22 +27,20 @@ contract ApeDAOTest is Test {
     IDPPOracle DPPOracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xee2a9D05B943C1F33f3920C750Ac88F74D0220c3);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xee2a9D05B943C1F33f3920C750Ac88F74D0220c3);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_072_293);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(APEDAO), "APEDAO");
-        cheats.label(address(DPPOracle1), "DPPOracle1");
-        cheats.label(address(DPPOracle2), "DPPOracle2");
-        cheats.label(address(DPPOracle3), "DPPOracle3");
-        cheats.label(address(DPP), "DPP");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(Pair), "Pair");
+        vm.createSelectFork("bsc", 30_072_293);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(APEDAO), "APEDAO");
+        vm.label(address(DPPOracle1), "DPPOracle1");
+        vm.label(address(DPPOracle2), "DPPOracle2");
+        vm.label(address(DPPOracle3), "DPPOracle3");
+        vm.label(address(DPP), "DPP");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(Router), "Router");
+        vm.label(address(Pair), "Pair");
     }
 
     function testExploit() public {

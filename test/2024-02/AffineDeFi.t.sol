@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 /*
     @KeyInfo
@@ -32,13 +31,11 @@ contract ExploitTest is Test {
     address LidoLevV3 = 0xcd6ca2f0d0c182C5049D9A1F65cDe51A706ae142;
     address WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 19_132_935 - 1);
-        cheats.label(address(aEthwstETH), "aEthwstETH");
-        cheats.label(address(Balancer), "Balancer");
-        cheats.label(address(LidoLevV3), "LidoLevV3");
+        vm.createSelectFork("mainnet", 19_132_935 - 1);
+        vm.label(address(aEthwstETH), "aEthwstETH");
+        vm.label(address(Balancer), "Balancer");
+        vm.label(address(LidoLevV3), "LidoLevV3");
     }
 
     function testExploit() external {

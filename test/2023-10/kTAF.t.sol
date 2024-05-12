@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$8K
 // Attacker : https://etherscan.io/address/0x9b99d7ce9e39c68ab93348fd31fd4c99f79e4b19
@@ -19,21 +18,18 @@ interface ICErc20Immutable {
 
     function borrowBalanceStored(address account) external view returns (uint256);
 
-    function liquidateBorrow(
-        address borrower,
-        uint256 repayAmount,
-        address cTokenCollateral
-    ) external returns (uint256);
+    function liquidateBorrow(address borrower, uint256 repayAmount, address cTokenCollateral)
+        external
+        returns (uint256);
 
 }
 
 interface IComptroller {
 
-    function liquidateCalculateSeizeTokens(
-        address cTokenBorrowed,
-        address cTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateCalculateSeizeTokens(address cTokenBorrowed, address cTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
     function enterMarkets(address[] memory cTokens) external returns (uint256[] memory);
 

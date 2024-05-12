@@ -8,8 +8,8 @@ import {
     IUnitroller,
     IAaveFlashloan,
     IBalancerVault,
-    Uni_Pair_V2,
-    Uni_Pair_V3
+    IUniswapV2Pair,
+    IUniswapV3Pair
 } from "./../interface.sol";
 
 // @KeyInfo
@@ -55,13 +55,9 @@ interface IAlgebraPool {
 
 interface ISwapFlashLoan {
 
-    function swap(
-        uint8 tokenIndexFrom,
-        uint8 tokenIndexTo,
-        uint256 dx,
-        uint256 minDy,
-        uint256 deadline
-    ) external returns (uint256);
+    function swap(uint8 tokenIndexFrom, uint8 tokenIndexTo, uint256 dx, uint256 minDy, uint256 deadline)
+        external
+        returns (uint256);
 
 }
 
@@ -97,19 +93,17 @@ contract ContractTest is Test {
     IAlgebraPool AlgebraPool1 = IAlgebraPool(0x80DeeCE4befd9F27D2df88064cf75f080d3ce1b2);
     IAlgebraPool AlgebraPool2 = IAlgebraPool(0x55CAaBB0d2b704FD0eF8192A7E35D8837e678207);
     IAlgebraPool AlgebraPool3 = IAlgebraPool(0xe3703608393727C6B3761471d13e064c77c8d836);
-    Uni_Pair_V2 SLP = Uni_Pair_V2(0xf69e93771F11AECd8E554aA165C3Fe7fd811530c);
-    Uni_Pair_V2 UniV2Pair = Uni_Pair_V2(0xcCB9d2100037f1253e6C1682AdF7dC9944498AFF);
-    Uni_Pair_V2 AavegotchiPoolPair = Uni_Pair_V2(0x096C5CCb33cFc5732Bcd1f3195C13dBeFC4c82f4);
-    Uni_Pair_V3 UniV3Pair1 = Uni_Pair_V3(0xA374094527e1673A86dE625aa59517c5dE346d32);
-    Uni_Pair_V3 UniV3Pair2 = Uni_Pair_V3(0x50eaEDB835021E4A108B7290636d62E9765cc6d7);
-    Uni_Pair_V3 UniV3Pair3 = Uni_Pair_V3(0x8f16A8E864162ec84a2906646E08a561b5A7f72d);
-    Uni_Pair_V3 UniV3Pair4 = Uni_Pair_V3(0x45dDa9cb7c25131DF268515131f647d726f50608);
+    IUniswapV2Pair SLP = IUniswapV2Pair(0xf69e93771F11AECd8E554aA165C3Fe7fd811530c);
+    IUniswapV2Pair UniV2Pair = IUniswapV2Pair(0xcCB9d2100037f1253e6C1682AdF7dC9944498AFF);
+    IUniswapV2Pair AavegotchiPoolPair = IUniswapV2Pair(0x096C5CCb33cFc5732Bcd1f3195C13dBeFC4c82f4);
+    IUniswapV3Pair UniV3Pair1 = IUniswapV3Pair(0xA374094527e1673A86dE625aa59517c5dE346d32);
+    IUniswapV3Pair UniV3Pair2 = IUniswapV3Pair(0x50eaEDB835021E4A108B7290636d62E9765cc6d7);
+    IUniswapV3Pair UniV3Pair3 = IUniswapV3Pair(0x8f16A8E864162ec84a2906646E08a561b5A7f72d);
+    IUniswapV3Pair UniV3Pair4 = IUniswapV3Pair(0x45dDa9cb7c25131DF268515131f647d726f50608);
     ISwapFlashLoan swapFlashLoan = ISwapFlashLoan(0x85fCD7Dd0a1e1A9FCD5FD886ED522dE8221C3EE5);
     IDMMLP DMMLP = IDMMLP(0xAb08b0C9DADC343d3795dAE5973925c3b6e39977);
 
     Exploiter exploiter;
-
-    // CheatCodes vm = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
         vm.createSelectFork("polygon", 42_054_768);

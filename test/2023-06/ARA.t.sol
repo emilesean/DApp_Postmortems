@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~125K USD$
 // Attacker : https://bscscan.com/address/0xf84efa8a9f7e68855cf17eaac9c2f97a9d131366
@@ -38,16 +37,15 @@ contract ARATest is Test {
     address public constant exploitableSwapContract = 0x7BA5dd9Bb357aFa2231446198c75baC17CEfCda9;
     // Address param required for calling the exploitable contract
     address public constant approvedAddress = 0xB817Ef68d764F150b8d73A2ad7ce9269674538E0;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_214_010);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(ARA), "ARA");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(DPPOracle), "DPPOracle");
-        cheats.label(exploitableSwapContract, "Exploitable Contract");
-        cheats.label(approvedAddress, "Approved Address");
+        vm.createSelectFork("bsc", 29_214_010);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(ARA), "ARA");
+        vm.label(address(Router), "Router");
+        vm.label(address(DPPOracle), "DPPOracle");
+        vm.label(exploitableSwapContract, "Exploitable Contract");
+        vm.label(approvedAddress, "Approved Address");
     }
 
     function testExploit() public {

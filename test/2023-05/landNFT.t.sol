@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 200 land NFT => 28,601 $XQJ  => 149,616 $BUSD
 // Attack Tx : https://bscscan.com/tx/0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048
@@ -23,12 +22,10 @@ contract ContractTest is Test {
     IERC721 landNFT = IERC721(0x1a62fe088F46561bE92BB5F6e83266289b94C154);
     IMiner minerContract = IMiner(0x2e599883715D2f92468Fa5ae3F9aab4E930E3aC7);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_208_132);
-        cheats.label(address(landNFT), "landNFT");
-        cheats.label(address(minerContract), "Miner");
+        vm.createSelectFork("bsc", 28_208_132);
+        vm.label(address(landNFT), "landNFT");
+        vm.label(address(minerContract), "Miner");
     }
 
     function testExploit() public {

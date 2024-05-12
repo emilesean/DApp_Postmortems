@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~83,994 USD$
 // Attacker : https://etherscan.io/address/0x413e4fb75c300b92fec12d7c44e4c0b4faab4d04
@@ -19,17 +18,15 @@ interface IUniBotRouter {}
 
 contract IUniBotRouterExploit is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IUniBotRouter router = IUniBotRouter(0x126c9FbaB3A2FCA24eDfd17322E71a5e36E91865);
     IERC20 UniBot = IERC20(0xf819d9Cb1c2A819Fd991781A822dE3ca8607c3C9);
-    WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     function setUp() public {
-        cheats.createSelectFork("https://rpc.ankr.com/eth", 18_467_805);
+        vm.createSelectFork("mainnet", 18_467_805);
 
-        cheats.label(address(router), "UniBotRouter");
-        cheats.label(address(UniBot), "UniBot Token");
+        vm.label(address(router), "UniBotRouter");
+        vm.label(address(UniBot), "UniBot Token");
     }
 
     function testExploit() public {

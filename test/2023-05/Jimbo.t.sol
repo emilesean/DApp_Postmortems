@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/cryptofishx/status/1662888991446941697
@@ -31,10 +30,10 @@ interface ILBPair {
 
     function getBin(uint24 id) external view returns (uint128 binReserveX, uint128 binReserveY);
 
-    function getSwapIn(
-        uint128 amountOut,
-        bool swapForY
-    ) external view returns (uint128 amountIn, uint128 amountOutLeft, uint128 fee);
+    function getSwapIn(uint128 amountOut, bool swapForY)
+        external
+        view
+        returns (uint128 amountIn, uint128 amountOutLeft, uint128 fee);
 
 }
 
@@ -112,19 +111,15 @@ interface ILBRouter {
         uint256 deadline
     ) external returns (uint256 amountOut);
 
-    function swapExactNATIVEForTokens(
-        uint256 amountOutMin,
-        Path memory path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256 amountOut);
+    function swapExactNATIVEForTokens(uint256 amountOutMin, Path memory path, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256 amountOut);
 
-    function swapNATIVEForExactTokens(
-        uint256 amountOut,
-        Path memory path,
-        address to,
-        uint256 deadline
-    ) external payable returns (uint256[] memory amountsIn);
+    function swapNATIVEForExactTokens(uint256 amountOut, Path memory path, address to, uint256 deadline)
+        external
+        payable
+        returns (uint256[] memory amountsIn);
 
     function swapTokensForExactNATIVE(
         uint256 amountOut,
@@ -144,13 +139,11 @@ contract JimboExp is Test {
 
     IAaveFlashloan pool = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
 
-    WETH9 weth = WETH9(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IWETH weth = IWETH(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 Jimbo = IERC20(0xC3813645Ad2Ea0AC9D4d72D77c3755ac3B819e38);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 95_144_404);
+        vm.createSelectFork("arbitrum", 95_144_404);
         deal(address(this), 0);
     }
 

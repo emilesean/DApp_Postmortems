@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~1,6M
 // Attacker : https://etherscan.io/address/0x4d0d746e0f66bf825418e6b3def1a46ec3c0b847
@@ -67,12 +66,11 @@ contract ContractTest is Test {
         emit log_named_uint("Attacker PPG token balance after attack", PPG.balanceOf(address(this)));
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external pure returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        pure
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
 

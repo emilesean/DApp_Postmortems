@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~27,174K USD$
 // Attacker : https://etherscan.io/address/0x0e816b0d0a66252c72af822d3e0773a2676f3278
@@ -58,23 +57,22 @@ contract ContractTest is Test {
     IERC20 yUSDT = IERC20(0x83f798e925BcD4017Eb265844FDDAbb448f1707D);
     IERC20 yTUSD = IERC20(0x73a052500105205d34Daf004eAb301916DA8190f);
     IERC20 CentreUSDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    Uni_Pair_V3 DAIUSDCPool = Uni_Pair_V3(0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168);
+    IUniswapV3Pair DAIUSDCPool = IUniswapV3Pair(0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168);
     ICurveSwap CurveFiSwap = ICurveSwap(0x45F783CCE6B7FF23B2ab2D70e416cdb7D6055f51);
     IStrategyCurve StrategyDAICurve = IStrategyCurve(0xaf274e912243b19B882f02d731dacd7CD13072D0);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_426_064);
-        cheats.label(address(DAI), "DAI");
-        cheats.label(address(cDAI), "cDAI");
-        cheats.label(address(yDAI), "yDAI");
-        cheats.label(address(yUSDC), "yUSDC");
-        cheats.label(address(yUSDT), "yUSDT");
-        cheats.label(address(yTUSD), "yTUSD");
-        cheats.label(address(CentreUSDC), "CentreUSDC");
-        cheats.label(address(DAIUSDCPool), "DAIUSDCPool");
-        cheats.label(address(CurveFiSwap), "CurveFiSwap");
-        cheats.label(address(StrategyDAICurve), "StrategyDAICurve");
+        vm.createSelectFork("mainnet", 17_426_064);
+        vm.label(address(DAI), "DAI");
+        vm.label(address(cDAI), "cDAI");
+        vm.label(address(yDAI), "yDAI");
+        vm.label(address(yUSDC), "yUSDC");
+        vm.label(address(yUSDT), "yUSDT");
+        vm.label(address(yTUSD), "yTUSD");
+        vm.label(address(CentreUSDC), "CentreUSDC");
+        vm.label(address(DAIUSDCPool), "DAIUSDCPool");
+        vm.label(address(CurveFiSwap), "CurveFiSwap");
+        vm.label(address(StrategyDAICurve), "StrategyDAICurve");
     }
 
     function testExploit() public {

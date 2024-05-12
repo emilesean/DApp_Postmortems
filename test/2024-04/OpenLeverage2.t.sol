@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~234K
 // Attacker : https://bscscan.com/address/0x5bb5b6d41c3e5e41d9b9ed33d12f1537a1293d5f
@@ -15,11 +14,10 @@ import "./../interface.sol";
 
 interface ITradeController {
 
-    function activeTrades(
-        address,
-        uint16,
-        bool
-    ) external view returns (uint256 deposited, uint256 held, bool depositToken, uint128 lastBlockNum);
+    function activeTrades(address, uint16, bool)
+        external
+        view
+        returns (uint256 deposited, uint256 held, bool depositToken, uint128 lastBlockNum);
 
     function getCash() external view returns (uint256);
 
@@ -93,8 +91,8 @@ contract ContractTest is Test {
     IERC20 private constant OLE = IERC20(0xB7E2713CF55cf4b469B5a8421Ae6Fc0ED18F1467);
     IxOLE private constant xOLE = IxOLE(0x71F1158D76aF5B6762D5EbCdEE19105eab2C77d2);
     ILToken private constant LToken = ILToken(payable(0x7c5e04894410e98b1788fbdB181FfACbf8e60617));
-    Uni_Pair_V2 private constant USDC_OLE = Uni_Pair_V2(0x44f508dcDa27E8AFa647cD978510EAC5e63E16a4);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair private constant USDC_OLE = IUniswapV2Pair(0x44f508dcDa27E8AFa647cD978510EAC5e63E16a4);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     ITradeController private constant TradeController = ITradeController(0x6A75aC4b8d8E76d15502E69Be4cb6325422833B4);
     IOPBorrowingDelegator private constant OPBorrowingDelegator =
         IOPBorrowingDelegator(0xF436F8FE7B26D87eb74e5446aCEc2e8aD4075E47);
@@ -224,7 +222,7 @@ contract Executor {
 
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address private immutable owner;
 
     // address private constant AggregationRouterAddr = 0x1111111254EEB25477B68fb85Ed929f73A960582;

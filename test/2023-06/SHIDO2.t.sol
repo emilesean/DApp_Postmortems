@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~977 WBNB
 // Attacker : https://bscscan.com/address/0x69810917928b80636178b1bb011c746efe61770d
@@ -27,20 +26,20 @@ contract ShidoTest is Test {
     // SHIDO Standard Token
     IERC20 SHIDO = IERC20(0xa963eE460Cf4b474c35ded8fFF91c4eC011FB640);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
-    Uni_Router_V2 PancakeRouter = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Router_V2 AddRemoveLiquidityForFeeOnTransferTokens = Uni_Router_V2(0x9869674E80D632F93c338bd398408273D20a6C8e);
+    IUniswapV2Router PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router AddRemoveLiquidityForFeeOnTransferTokens =
+        IUniswapV2Router(0x9869674E80D632F93c338bd398408273D20a6C8e);
     IShidoLock ShidoLock = IShidoLock(0xaF0CA21363219C8f3D8050E7B61Bb5f04e02F8D4);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_365_171);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(SHIDOInu), "SHIDOInu");
-        cheats.label(address(SHIDO), "SHIDO");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(PancakeRouter), "PancakeRouter");
-        cheats.label(address(AddRemoveLiquidityForFeeOnTransferTokens), "AddRemoveLiquidityForFeeOnTransferTokens");
-        cheats.label(address(ShidoLock), "ShidoLock");
+        vm.createSelectFork("bsc", 29_365_171);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(SHIDOInu), "SHIDOInu");
+        vm.label(address(SHIDO), "SHIDO");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(PancakeRouter), "PancakeRouter");
+        vm.label(address(AddRemoveLiquidityForFeeOnTransferTokens), "AddRemoveLiquidityForFeeOnTransferTokens");
+        vm.label(address(ShidoLock), "ShidoLock");
     }
 
     function testExploit() external {

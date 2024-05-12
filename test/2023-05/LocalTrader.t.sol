@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/numencyber/status/1661213691893944320
@@ -27,10 +26,8 @@ contract LCTExp is Test {
     LCTExchange exchange = LCTExchange(0xcE3e12bD77DD54E20a18cB1B94667F3E697bea06);
     IERC20 LCT = IERC20(0x5C65BAdf7F97345B7B92776b22255c973234EfE7);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_460_897);
+        vm.createSelectFork("bsc", 28_460_897);
         deal(address(this), 1 ether);
     }
 

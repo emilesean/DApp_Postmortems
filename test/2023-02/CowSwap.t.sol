@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/MevRefund/status/1622793836291407873
@@ -33,10 +32,9 @@ contract ContractTest is Test {
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     SwapGuard swapGuard = SwapGuard(0xcD07a7695E3372aCD2B2077557DE93e667B92bd8);
     address GPv2Settlement = 0x9008D19f58AAbD9eD0D60971565AA8510560ab41;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_574_048);
+        vm.createSelectFork("mainnet", 16_574_048);
         vm.label(address(DAI), "DAI");
         vm.label(address(swapGuard), "SwapGuard");
         vm.label(address(GPv2Settlement), "GPv2Settlement");

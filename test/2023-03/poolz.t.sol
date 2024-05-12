@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 contract ContractTest is Test {
 
@@ -23,10 +22,8 @@ contract ContractTest is Test {
 
     LockedDeal constant poolzpool = LockedDeal(payable(0x8BfAA473a899439d8E07BF86a8C6cE5De42fE54B));
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_475_403);
+        vm.createSelectFork("bsc", 26_475_403);
     }
 
     function testExploit() external {
@@ -256,12 +253,9 @@ interface LockedDeal {
         address[] memory _Owner
     ) external returns (uint256, uint256);
 
-    function CreateNewPool(
-        address _Token,
-        uint64 _FinishTime,
-        uint256 _StartAmount,
-        address _Owner
-    ) external returns (uint256);
+    function CreateNewPool(address _Token, uint64 _FinishTime, uint256 _StartAmount, address _Owner)
+        external
+        returns (uint256);
 
     function CreatePoolsWrtTime(
         address _Token,

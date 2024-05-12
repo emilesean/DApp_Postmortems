@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 /*
 @Analysis
@@ -26,7 +25,7 @@ contract ContractTest is Test {
     address usdt = 0x55d398326f99059fF775485246999027B3197955;
     address pot_usdt_pool = 0x9117df9aA33B23c0A9C2C913aD0739273c3930b3;
     address wbnb = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     function setUp() public {
         vm.createSelectFork("bsc", 27_264_384 - 1);

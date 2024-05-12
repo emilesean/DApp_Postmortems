@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1630111965942018049
@@ -16,7 +15,7 @@ contract ContractTest is Test {
     IERC20 DND = IERC20(0x34EA3F7162E6f6Ed16bD171267eC180fD5c848da);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    Uni_Router_V2 Router = Uni_Router_V2(0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8);
+    IUniswapV2Router Router = IUniswapV2Router(0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8);
     address[] victims = [
         0x0b70e2Abe6F1A056E23658aED1FF9EF9901CB2A3,
         0x210C9E1d9E0572da30B2b8b9ca57E5e380528534,
@@ -36,15 +35,13 @@ contract ContractTest is Test {
         0xe5d985b7b934dc0e0E1043Fc11f50ba9E229465C
     ];
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_023_088);
-        cheats.label(address(swapX), "swapX");
-        cheats.label(address(DND), "DND");
-        cheats.label(address(BUSD), "BUSD");
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(Router), "Router");
+        vm.createSelectFork("bsc", 26_023_088);
+        vm.label(address(swapX), "swapX");
+        vm.label(address(DND), "DND");
+        vm.label(address(BUSD), "BUSD");
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(Router), "Router");
     }
 
     function testExploit() external {

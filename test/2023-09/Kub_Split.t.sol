@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~78K USD$
 // Attacker : https://bscscan.com/address/0x7ccf451d3c48c8bb747f42f29a0cde4209ff863e
@@ -29,8 +28,8 @@ interface ISplit is IERC20 {
 
 contract ContractTest is Test {
 
-    Uni_Pair_V2 private constant BUSDT_KUB_LP = Uni_Pair_V2(0x39aDFE6ec5a19bb573a2Fd8A5028031C0dc57600);
-    Uni_Pair_V2 private constant KUB_Split = Uni_Pair_V2(0x16bF07CC3b84c6C2F97c32a6C66aEB726AbfC570);
+    IUniswapV2Pair private constant BUSDT_KUB_LP = IUniswapV2Pair(0x39aDFE6ec5a19bb573a2Fd8A5028031C0dc57600);
+    IUniswapV2Pair private constant KUB_Split = IUniswapV2Pair(0x16bF07CC3b84c6C2F97c32a6C66aEB726AbfC570);
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 private constant KUB = IERC20(0x808602d91e58f2d58D7C09306044b88234ab4628);
     ISplit private constant Split = ISplit(0xc98E183D2e975F0567115CB13AF893F0E3c0d0bD);
@@ -40,12 +39,12 @@ contract ContractTest is Test {
     IDPPOracle private constant DPPOracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
     IDPPOracle private constant DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     IDPPOracle private constant DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Router_V2 private constant PancakeRouter1 = Uni_Router_V2(0xfDE81E1f340C3ec271142723781df9e685653213);
-    Uni_Router_V2 private constant PancakeRouter2 = Uni_Router_V2(0x5D82aeA1fE75CB40AfE792dAe1cf76EA8E2808CE);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant PancakeRouter1 = IUniswapV2Router(0xfDE81E1f340C3ec271142723781df9e685653213);
+    IUniswapV2Router private constant PancakeRouter2 = IUniswapV2Router(0x5D82aeA1fE75CB40AfE792dAe1cf76EA8E2808CE);
     IStakingRewards private constant StakingRewards1 = IStakingRewards(0x26Eea9ff2f3caDec4d6Fc4f462F677b58AB31Ab0);
     IStakingRewards private constant StakingRewards2 = IStakingRewards(0x3A006dD44a4a0e43C942f57d452a6a7Ada25AdC3);
-    Uni_Pair_V2 private constant BUSDT_Split = Uni_Pair_V2(0xe4D038DE672e226877Db8FA2670C5ba9778155fF);
+    IUniswapV2Pair private constant BUSDT_Split = IUniswapV2Pair(0xe4D038DE672e226877Db8FA2670C5ba9778155fF);
     address private constant BUSDT_KUB = 0x1E338D9Db6bb78cFd8eE1F756907899C006711AF;
     address private constant upAddressForStake = 0x67Bf514E9e07b2F95C8805f9a035f60512384d1c;
     address private constant exploiter = 0x7Ccf451D3c48C8bb747f42F29A0CdE4209FF863e;
@@ -148,7 +147,7 @@ contract ContractTest is Test {
             // Send tokens to newly created token pair - USDC-Split
             fakeUSDC.transfer(fakeUSDC_Split, 1e6);
             Split.transfer(fakeUSDC_Split, amountSplit);
-            Uni_Pair_V2(fakeUSDC_Split).sync();
+            IUniswapV2Pair(fakeUSDC_Split).sync();
 
             Split.setPair(address(fakeUSDC));
             fakeUSDC.approve(address(Router), type(uint256).max);
@@ -214,12 +213,11 @@ contract ContractTest is Test {
         );
     }
 
-    function calcAmountOut(
-        Uni_Pair_V2 pool,
-        IStakingRewards stakingRewards,
-        uint112 reserve,
-        IERC20 token
-    ) internal view returns (uint256) {
+    function calcAmountOut(IUniswapV2Pair pool, IStakingRewards stakingRewards, uint112 reserve, IERC20 token)
+        internal
+        view
+        returns (uint256)
+    {
         uint256 a = pool.totalSupply() * 1000;
         uint256 b = pool.balanceOf(address(stakingRewards)) * 7;
         uint256 c = (b * reserve) / a;

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~16k
 // Attacker contract address : https://bscscan.com/address/0x21ad028c185ac004474c21ec5666189885f9e518
@@ -41,18 +40,17 @@ contract LUSDTEST is Test {
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     IPancakeRouter Router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IPancakePair CakeLP = IPancakePair(payable(0x3F803EC2b816Ea7F06EC76aA2B6f2532F9892d62));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_756_866);
-        cheats.label(address(BEP20USDT), "BEP20USDT");
-        cheats.label(address(DPPOracle1), "DPPOracle1");
-        cheats.label(address(DPPOracle2), "DPPOracle2");
-        cheats.label(address(DPPOracle3), "DPPOracle3");
-        cheats.label(address(DPP), "DPP");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(CakeLP), "CakeLP");
+        vm.createSelectFork("bsc", 29_756_866);
+        vm.label(address(BEP20USDT), "BEP20USDT");
+        vm.label(address(DPPOracle1), "DPPOracle1");
+        vm.label(address(DPPOracle2), "DPPOracle2");
+        vm.label(address(DPPOracle3), "DPPOracle3");
+        vm.label(address(DPP), "DPP");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(Router), "Router");
+        vm.label(address(CakeLP), "CakeLP");
     }
 
     function testSkim() public {

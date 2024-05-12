@@ -67,15 +67,8 @@ interface IPancakePair {
     function PERMIT_TYPEHASH() external pure returns (bytes32);
     function nonces(address owner) external view returns (uint256);
 
-    function permit(
-        address owner,
-        address spender,
-        uint256 value,
-        uint256 deadline,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external;
+    function permit(address owner, address spender, uint256 value, uint256 deadline, uint8 v, bytes32 r, bytes32 s)
+        external;
 
     event Mint(address indexed sender, uint256 amount0, uint256 amount1);
     event Burn(address indexed sender, uint256 amount0, uint256 amount1, address indexed to);
@@ -128,7 +121,7 @@ contract ShibaToken_exp is Test {
     receive() external payable {}
 
     function setUp() public {
-        vm.createSelectFork("https://rpc.ankr.com/bsc", 33_528_882);
+        vm.createSelectFork("bsc", 33_528_882);
         // vm.createSelectFork("https://rpc.ankr.com/bsc", bytes32(0x75a26224da9faf37c2b3a4a634a096af7fec561f631a02c93e11e4a19d159477));
     }
 

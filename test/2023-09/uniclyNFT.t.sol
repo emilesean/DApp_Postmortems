@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 1 NFT (ID: 4689)
 // Attacker : https://etherscan.io/address/0x92cfcb70b2591ceb1e3c6d90e21e8154e7d29832
@@ -35,7 +34,7 @@ contract ContractTest is Test {
 
     IERC20 private constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant uJENNY = IERC20(0xa499648fD0e80FD911972BbEb069e4c20e68bF22);
-    Uni_Pair_V2 private constant uJENNY_WETH = Uni_Pair_V2(0xEC5100AD159F660986E47AFa0CDa1081101b471d);
+    IUniswapV2Pair private constant uJENNY_WETH = IUniswapV2Pair(0xEC5100AD159F660986E47AFa0CDa1081101b471d);
     IPointFarm private constant PointFarm = IPointFarm(0xd3C41c85bE295607E8EA5c58487eC5894300ee67);
     IPointShop private constant PointShop = IPointShop(0xcDCc535503CBA9286489b338b36156b4b75008f6);
     IERC721 private constant Realm = IERC721(0x7AFe30cB3E53dba6801aa0EA647A0EcEA7cBe18d);
@@ -101,13 +100,10 @@ contract ContractTest is Test {
         return b / (a + c);
     }
 
-    function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC1155Received(address operator, address from, uint256 id, uint256 value, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         uint256 pointFarmBalance = PointFarm.balanceOf(address(this), 0);
         if (pointFarmBalance <= 10_000) {
             PointFarm.deposit(0, 0);
@@ -115,12 +111,10 @@ contract ContractTest is Test {
         return this.onERC1155Received.selector;
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
 

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~800K USD$
 // Attacker : https://etherscan.io/address/0x1e8419e724d51e87f78e222d935fbbdeb631a08b
@@ -33,13 +32,8 @@ interface IMetaStablePool is IERC20 {
 
 interface LendingPool {
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
     function getUserAccountData(address user)
         external
@@ -75,19 +69,13 @@ interface ILPVault {
 
 interface IBalancerQueries {
 
-    function queryJoin(
-        bytes32 poolId,
-        address sender,
-        address recipient,
-        IBalancerVault.JoinPoolRequest memory request
-    ) external returns (uint256 bptOut, uint256[] memory amountsIn);
+    function queryJoin(bytes32 poolId, address sender, address recipient, IBalancerVault.JoinPoolRequest memory request)
+        external
+        returns (uint256 bptOut, uint256[] memory amountsIn);
 
-    function queryExit(
-        bytes32 poolId,
-        address sender,
-        address recipient,
-        IBalancerVault.ExitPoolRequest memory request
-    ) external returns (uint256 bptIn, uint256[] memory amountsOut);
+    function queryExit(bytes32 poolId, address sender, address recipient, IBalancerVault.ExitPoolRequest memory request)
+        external
+        returns (uint256 bptIn, uint256[] memory amountsOut);
 
 }
 
@@ -99,7 +87,7 @@ interface ISturdyOracle {
 
 contract ContractTest is Test {
 
-    WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IwstETH wstETH = IwstETH(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 steCRV = IERC20(0x06325440D014e39736583c165C2963BA99fAf14E);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
@@ -192,7 +180,7 @@ contract Exploiter is Test {
 
     address owner;
     uint256 nonce;
-    WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IwstETH wstETH = IwstETH(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
     IERC20 steCRV = IERC20(0x06325440D014e39736583c165C2963BA99fAf14E);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);

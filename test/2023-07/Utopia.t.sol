@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$119K
 // Attacker : https://bscscan.com/address/0xe84ef3615b8df94c52e5b6ef21acbf0039b29113
@@ -26,17 +25,15 @@ contract UtopiaTest is Test {
 
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IUtopia Utopia = IUtopia(0xb1da08C472567eb0EC19639b1822F578d39F3333);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xfeEf619a56fCE9D003E20BF61393D18f62B0b2D5);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xfeEf619a56fCE9D003E20BF61393D18f62B0b2D5);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_119_396);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(Utopia), "Utopia");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(Pair), "Pair");
+        vm.createSelectFork("bsc", 30_119_396);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(Utopia), "Utopia");
+        vm.label(address(Router), "Router");
+        vm.label(address(Pair), "Pair");
     }
 
     function testExploit() public {

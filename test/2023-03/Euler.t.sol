@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/FrankResearcher/status/1635241475989721089
@@ -50,19 +49,11 @@ interface IEuler {
         uint256 conversionRate;
     }
 
-    function liquidate(
-        address violator,
-        address underlying,
-        address collateral,
-        uint256 repay,
-        uint256 minYield
-    ) external;
-    function checkLiquidation(
-        address liquidator,
-        address violator,
-        address underlying,
-        address collateral
-    ) external returns (LiquidationOpportunity memory liqOpp);
+    function liquidate(address violator, address underlying, address collateral, uint256 repay, uint256 minYield)
+        external;
+    function checkLiquidation(address liquidator, address violator, address underlying, address collateral)
+        external
+        returns (LiquidationOpportunity memory liqOpp);
 
 }
 
@@ -77,15 +68,13 @@ contract ContractTest is Test {
     Iviolator violator;
     Iliquidator liquidator;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_817_995);
-        cheats.label(address(DAI), "DAI");
-        cheats.label(address(eDAI), "eDAI");
-        cheats.label(address(dDAI), "dDAI");
-        cheats.label(address(Euler), "Euler");
-        cheats.label(address(AaveV2), "AaveV2");
+        vm.createSelectFork("mainnet", 16_817_995);
+        vm.label(address(DAI), "DAI");
+        vm.label(address(eDAI), "eDAI");
+        vm.label(address(dDAI), "dDAI");
+        vm.label(address(Euler), "Euler");
+        vm.label(address(AaveV2), "AaveV2");
     }
 
     function testExploit() public {

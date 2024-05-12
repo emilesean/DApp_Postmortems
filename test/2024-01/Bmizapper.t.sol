@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 /*
     @KeyInfo
@@ -39,12 +38,11 @@ contract ExploitTest is Test {
 
     address victim = 0x07d7685bECB1a72a1Cf614b4067419334C9f1b4d;
     address attacker = address(this);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 19_029_290 - 1);
-        cheats.label(address(bmiZapper), "BMIZapper");
-        cheats.label(address(USDC), "USDC");
+        vm.createSelectFork("mainnet", 19_029_290 - 1);
+        vm.label(address(bmiZapper), "BMIZapper");
+        vm.label(address(USDC), "USDC");
     }
 
     function testExploit() external {

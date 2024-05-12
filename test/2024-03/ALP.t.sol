@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // TX : https://phalcon.blocksec.com/explorer/tx/bsc/0x9983ca8eaee9ee69629f74537eaf031272af75f1e5a7725911d8b06df17c67ca
 // GUY : https://twitter.com/0xNickLFranklin/status/1765296663667875880
@@ -40,10 +39,9 @@ contract ContractTest is Test {
     IERC20 constant USDT = Alp(0x55d398326f99059fF775485246999027B3197955);
     Alp constant ALP_APO = Alp(0x9Ad45D46e2A2ca19BBB5D5a50Df319225aD60e0d);
     Vun constant VUN = Vun(0xD188492217F09D18f2B0ecE3F8948015981e961a);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 36_727_073);
+        vm.createSelectFork("bsc", 36_727_073);
         deal(address(USDT), address(this), 0);
     }
 

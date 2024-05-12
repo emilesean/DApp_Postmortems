@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$4,5M
 // Attacker : https://arbiscan.io/address/0x826d5f4d8084980366f975e10db6c4cf1f9dde6d
@@ -16,13 +15,8 @@ import "./../interface.sol";
 
 interface IRadiant is IAaveFlashloan {
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
 }
 
@@ -34,7 +28,7 @@ contract ContractTest is Test {
     IERC20 private constant rUSDCn = IERC20(0x3a2d44e354f2d88EF6DA7A5A4646fd70182A7F55);
     IERC20 private constant rWETH = IERC20(0x0dF5dfd95966753f01cb80E76dc20EA958238C46);
     IWETH private constant WETH = IWETH(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
-    Uni_Pair_V3 private constant WETH_USDC = Uni_Pair_V3(0xC6962004f452bE9203591991D15f6b388e09E8D0);
+    IUniswapV3Pair private constant WETH_USDC = IUniswapV3Pair(0xC6962004f452bE9203591991D15f6b388e09E8D0);
     uint160 private constant MAX_SQRT_RATIO = 1_461_446_703_485_210_103_287_273_052_203_988_822_378_723_970_342;
     uint160 private constant MIN_SQRT_RATIO = 4_295_128_739;
     uint8 private operationId;

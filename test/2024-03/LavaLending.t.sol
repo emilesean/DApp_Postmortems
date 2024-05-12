@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~340K
 // Attacker : https://arbiscan.io/address/0x851aa754c39bf23cdaac2025367514dfd7530418
@@ -19,13 +18,8 @@ import "./../interface.sol";
 
 interface ILendingPoolProxy {
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
     function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 
@@ -39,12 +33,9 @@ interface IUniV3Wrapper {
 
     function getAssets() external view returns (uint256 amount0, uint256 amount1);
 
-    function deposit(
-        uint256 startingAmount0,
-        uint256 startingAmount1,
-        uint256 minAmount0Added,
-        uint256 minAmount1Added
-    ) external returns (uint128 liquidityMinted, uint256 sharesMinted);
+    function deposit(uint256 startingAmount0, uint256 startingAmount1, uint256 minAmount0Added, uint256 minAmount1Added)
+        external
+        returns (uint128 liquidityMinted, uint256 sharesMinted);
 
     function transfer(address to, uint256 value) external returns (bool);
 
@@ -62,9 +53,9 @@ contract ContractTest is Test {
     IERC20 private constant ausdcUsdcLP = IERC20(0x1e482f0606152890F84dD59617e13EC06581B45a);
     IBalancerVault private constant BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IUniV3Wrapper private constant USDC_USDC_LP = IUniV3Wrapper(0x10bdA01aC4E644fD84a04Dab01E15A5eDcEE46dD);
-    Uni_Pair_V3 private constant WETH_USDC = Uni_Pair_V3(0xC6962004f452bE9203591991D15f6b388e09E8D0);
-    Uni_Pair_V3 private constant WETH_USDCe = Uni_Pair_V3(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
-    Uni_Pair_V3 private constant USDC_USDCe = Uni_Pair_V3(0x8e295789c9465487074a65b1ae9Ce0351172393f);
+    IUniswapV3Pair private constant WETH_USDC = IUniswapV3Pair(0xC6962004f452bE9203591991D15f6b388e09E8D0);
+    IUniswapV3Pair private constant WETH_USDCe = IUniswapV3Pair(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
+    IUniswapV3Pair private constant USDC_USDCe = IUniswapV3Pair(0x8e295789c9465487074a65b1ae9Ce0351172393f);
     IAaveFlashloan private constant AaveFlashloan = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
     ILendingPoolProxy private constant LendingPool = ILendingPoolProxy(0x403049E886b13E42C149f15450CEB795216cddC6);
     address private constant aUSDC = 0x16Cb622CaE7Ad9fd2b0780b2026ED301414781fE;

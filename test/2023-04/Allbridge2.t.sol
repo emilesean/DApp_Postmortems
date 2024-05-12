@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1642356701100916736
@@ -48,19 +47,17 @@ contract ContractTest is Test {
     ISwap Swap = ISwap(0x312Bc7eAAF93f1C60Dc5AfC115FcCDE161055fb0);
     AllBridgePool USDTPool = AllBridgePool(0xB19Cd6AB3890f18B662904fd7a40C003703d2554);
     AllBridgePool BUSDPool = AllBridgePool(0x179aaD597399B9ae078acFE2B746C09117799ca0);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x7EFaEf62fDdCCa950418312c6C91Aef321375A00);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_982_067);
-        cheats.label(address(BUSD), "BUSD");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(BridgeSwap), "BridgeSwap");
-        cheats.label(address(Swap), "Swap");
-        cheats.label(address(USDTPool), "USDTPool");
-        cheats.label(address(BUSDPool), "BUSDPool");
-        cheats.label(address(Pair), "Pair");
+        vm.createSelectFork("bsc", 26_982_067);
+        vm.label(address(BUSD), "BUSD");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(BridgeSwap), "BridgeSwap");
+        vm.label(address(Swap), "Swap");
+        vm.label(address(USDTPool), "USDTPool");
+        vm.label(address(BUSDPool), "BUSDPool");
+        vm.label(address(Pair), "Pair");
     }
 
     function testExploit() public {

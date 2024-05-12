@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~17K USD$
 // Attacker : https://etherscan.io/address/0x9d4fd681aacbc49d79c6405c9aa70d1afd5accf3
@@ -15,13 +14,9 @@ import "./../interface.sol";
 
 interface IDegenBox {
 
-    function deposit(
-        address token_,
-        address from,
-        address to,
-        uint256 amount,
-        uint256 share
-    ) external returns (uint256 amountOut, uint256 shareOut);
+    function deposit(address token_, address from, address to, uint256 amount, uint256 share)
+        external
+        returns (uint256 amountOut, uint256 shareOut);
 
 }
 
@@ -62,20 +57,19 @@ contract MIMTest is Test {
     address private constant curveLiquidityProvider = 0x561B94454b65614aE3db0897B74303f4aCf7cc75;
     // Exploiter EOA address
     address private constant exploiter = 0x9d4fD681AacBc49D79c6405C9aA70d1afd5aCCF3;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_521_638);
+        vm.createSelectFork("mainnet", 17_521_638);
         deal(address(SUSDT), exploiter, 3e6);
-        cheats.startPrank(exploiter);
+        vm.startPrank(exploiter);
         SUSDT.approve(address(this), type(uint256).max);
-        cheats.stopPrank();
-        cheats.label(address(SUSDT), "SUSDT");
-        cheats.label(address(MIM), "MIM");
-        cheats.label(address(DegenBox), "DegenBox");
-        cheats.label(address(ZeroXStargateLPSwapper), "ZeroXStargateLPSwapper");
-        cheats.label(curveLiquidityProvider, "CurveLiquidityProvider");
-        cheats.label(exploiter, "Exploiter");
+        vm.stopPrank();
+        vm.label(address(SUSDT), "SUSDT");
+        vm.label(address(MIM), "MIM");
+        vm.label(address(DegenBox), "DegenBox");
+        vm.label(address(ZeroXStargateLPSwapper), "ZeroXStargateLPSwapper");
+        vm.label(curveLiquidityProvider, "CurveLiquidityProvider");
+        vm.label(exploiter, "Exploiter");
     }
 
     // "Transaction" - name taken from the function name of the exploiter contract

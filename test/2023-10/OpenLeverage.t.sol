@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$8K
 // Attacker : https://bscscan.com/address/0x8ebd046992afe07eacce6b9b3878fdb45830f42b
@@ -29,7 +28,7 @@ contract ContractTest is Test {
 
     IRewardVaultDelegator private constant RewardVaultDelegator =
         IRewardVaultDelegator(0x7bACB1c805CbbF7c4f74556a4B34FDE7793d0887);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IERC20 private constant RACA = IERC20(0x12BB890508c125661E03b09EC06E404bc9289040);
     IERC20 private constant BUSDT = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 private constant FLOKI = IERC20(0xfb5B838b6cfEEdC2873aB27866079AC55363D37E);

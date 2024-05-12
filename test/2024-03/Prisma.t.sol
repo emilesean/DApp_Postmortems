@@ -35,24 +35,17 @@ interface IERC20 {
 
 interface IMKUSDLoan {
 
-    function flashLoan(
-        IERC3156FlashBorrower receiver,
-        address token,
-        uint256 amount,
-        bytes calldata data
-    ) external returns (bool);
+    function flashLoan(IERC3156FlashBorrower receiver, address token, uint256 amount, bytes calldata data)
+        external
+        returns (bool);
 
 }
 
 interface IERC3156FlashBorrower {
 
-    function onFlashLoan(
-        address initiator,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata data
-    ) external returns (bytes32);
+    function onFlashLoan(address initiator, address token, uint256 amount, uint256 fee, bytes calldata data)
+        external
+        returns (bytes32);
 
 }
 
@@ -82,12 +75,8 @@ interface IPriceFeed {
 
 interface IBalancerVault {
 
-    function flashLoan(
-        address recipient,
-        address[] memory tokens,
-        uint256[] memory amounts,
-        bytes memory userData
-    ) external;
+    function flashLoan(address recipient, address[] memory tokens, uint256[] memory amounts, bytes memory userData)
+        external;
 
 }
 
@@ -108,7 +97,7 @@ contract PrismaExploit is Test {
 
     function setUp() public {
         // set up the fork
-        vm.createSelectFork("https://rpc.ankr.com/eth", attackTx);
+        vm.createSelectFork("mainnet", attackTx);
 
         // chainlink price feed and balancer vault
         priceFeed = IPriceFeed(0xC105CeAcAeD23cad3E9607666FEF0b773BC86aac);

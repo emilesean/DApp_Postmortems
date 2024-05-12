@@ -2,7 +2,6 @@
 pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
-import "../interface.sol";
 
 // @KeyInfo - Total Lost : 48M USD
 // Attacker : https://etherscan.io/address/0xDed2b1a426E1b7d415A40Bcad44e98F47181dda2
@@ -103,12 +102,10 @@ contract HedgeyFinance is Test {
         );
     }
 
-    function receiveFlashLoan(
-        address[] memory,
-        uint256[] memory amounts,
-        uint256[] memory fees,
-        bytes memory
-    ) external payable {
+    function receiveFlashLoan(address[] memory, uint256[] memory amounts, uint256[] memory fees, bytes memory)
+        external
+        payable
+    {
         // Start new campage
         USDC.approve(address(HedgeyFinance), loan);
 

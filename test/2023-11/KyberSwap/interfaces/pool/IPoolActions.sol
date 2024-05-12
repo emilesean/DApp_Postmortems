@@ -47,11 +47,9 @@ interface IPoolActions {
     /// @return qty0 token0 quantity sent to the caller
     /// @return qty1 token1 quantity sent to the caller
     /// @return feeGrowthInside position's updated feeGrowthInside value
-    function burn(
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 qty
-    ) external returns (uint256 qty0, uint256 qty1, uint256 feeGrowthInside);
+    function burn(int24 tickLower, int24 tickUpper, uint128 qty)
+        external
+        returns (uint256 qty0, uint256 qty1, uint256 feeGrowthInside);
 
     /// @notice Burns reinvestment tokens in exchange to receive the fees collected in token0 and token1
     /// @param qty Reinvestment token quantity to burn
@@ -72,13 +70,9 @@ interface IPoolActions {
     /// @param data Any data to be passed through to the callback
     /// @return qty0 Exact token0 qty sent to recipient if < 0. Minimally received quantity if > 0.
     /// @return qty1 Exact token1 qty sent to recipient if < 0. Minimally received quantity if > 0.
-    function swap(
-        address recipient,
-        int256 swapQty,
-        bool isToken0,
-        uint160 limitSqrtP,
-        bytes calldata data
-    ) external returns (int256 qty0, int256 qty1);
+    function swap(address recipient, int256 swapQty, bool isToken0, uint160 limitSqrtP, bytes calldata data)
+        external
+        returns (int256 qty0, int256 qty1);
 
     /// @notice Receive token0 and/or token1 and pay it back, plus a fee, in the callback
     /// @dev The caller of this method receives a callback in the form of IFlashCallback#flashCallback

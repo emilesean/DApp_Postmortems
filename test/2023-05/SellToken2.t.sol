@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1657324561577435136
@@ -27,10 +26,9 @@ contract SellTokenExp is Test, IDODOCallee {
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IPancakeRouter p_router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IWBNB wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_168_034);
+        vm.createSelectFork("bsc", 28_168_034);
         deal(address(wbnb), address(this), 10 ether);
         payable(0x0).transfer(address(this).balance);
     }
@@ -50,7 +48,7 @@ contract SellTokenExp is Test, IDODOCallee {
             balance -= 10 ether;
         }
         //emit log_named_decimal_uint("WBNB before", wbnb.balanceOf(address(this)), 18);
-        uint256 swap_balance = balance * 99 / 100;
+        uint256 swap_balance = (balance * 99) / 100;
         uint256 short_balance = balance - swap_balance;
         wbnb.withdraw(short_balance);
         // 1. lift price

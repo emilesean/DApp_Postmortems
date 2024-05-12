@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~260K USD$
 // Attacker : c0ffeebabe.eth (wihtehat)
@@ -49,7 +48,7 @@ contract ContractTest is Test {
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IPositionNFTs PositionNFTs = IPositionNFTs(0x9D6d4e2AfAB382ae9B52807a4B36A8d2Afc78b07);
     IWiseLending WiseLending = IWiseLending(0x84524bAa1951247b3A2617A843e6eCe915Bb9674);
-    Uni_Pair_V3 WETH_WBTC_Pair = Uni_Pair_V3(0xCBCdF9626bC03E24f779434178A73a0B4bad62eD);
+    IUniswapV3Pair WETH_WBTC_Pair = IUniswapV3Pair(0xCBCdF9626bC03E24f779434178A73a0B4bad62eD);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     Recover recover;
 

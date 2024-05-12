@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1645742620897955842
@@ -33,18 +32,16 @@ contract ContractTest is Test {
     Exploiter exploiter;
     uint256 nonce;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 79_308_097);
-        cheats.label(address(WBTC), "WBTC");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(pUSDT), "pUSDT");
-        cheats.label(address(pETH), "pETH");
-        cheats.label(address(pWBTC), "pWBTC");
-        cheats.label(address(aaveV3), "aaveV3");
-        cheats.label(address(curvePool), "curvePool");
+        vm.createSelectFork("arbitrum", 79_308_097);
+        vm.label(address(WBTC), "WBTC");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(pUSDT), "pUSDT");
+        vm.label(address(pETH), "pETH");
+        vm.label(address(pWBTC), "pWBTC");
+        vm.label(address(aaveV3), "aaveV3");
+        vm.label(address(curvePool), "curvePool");
     }
 
     function testExploit() external {
@@ -80,7 +77,7 @@ contract ContractTest is Test {
 
         exploiter = new Exploiter();
         WETH.transfer(address(exploiter), 100 * 1e18);
-        cheats.label(address(exploiter), "exploiter");
+        vm.label(address(exploiter), "exploiter");
         exploiter.mint();
 
         WETH.withdraw(WETH.balanceOf(address(this)));

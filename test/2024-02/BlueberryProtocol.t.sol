@@ -1,7 +1,5 @@
 import "forge-std/Test.sol";
 
-import "./../interface.sol";
-
 // @KeyInfo - Total Lost : ~$1,400,000 USD
 // Attacker : https://etherscan.io/address/0xc0ffeebabe5d496b2dde509f9fa189c25cf29671 (whitehat)
 // Attack Contract : https://etherscan.io/address/0x3aa228a80f50763045bdfc45012da124bd0a6809
@@ -39,7 +37,7 @@ interface bBep20Interface {
 
 contract ContractTest is Test {
 
-    WETH9 private WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH private WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private OHM = IERC20(0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5);
     IERC20 private USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 private WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
@@ -53,7 +51,7 @@ contract ContractTest is Test {
 
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
-    Uni_Router_V3 pool = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router pool = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 19_287_289 - 1);
@@ -102,7 +100,7 @@ contract ContractTest is Test {
         bOHM.borrow(8_616_071_267_266);
         bUSDC.borrow(913_262_603_416);
         bWBTC.borrow(686_690_100);
-        Uni_Router_V3.ExactOutputSingleParams memory params = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory params = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(OHM),
             tokenOut: address(WETH),
             fee: 3000,

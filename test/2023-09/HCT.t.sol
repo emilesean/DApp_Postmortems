@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 30.5BNB
 // Attacker : https://bscscan.com/address/0xc892d5576c65e5b0db194c1a28aa758a43bb42a5
@@ -86,7 +85,7 @@ contract ContractTest is Test {
             if (HCT.balanceOf(address(this)) <= 70) {
                 break;
             }
-            HCT.burn(HCT.balanceOf(address(this)) * 8 / 10 - 1);
+            HCT.burn((HCT.balanceOf(address(this)) * 8) / 10 - 1);
         }
     }
 

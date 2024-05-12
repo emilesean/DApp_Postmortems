@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~36K USD$
 // Attacker : https://polygonscan.com/address/0x11576cb3d8d6328cf319e85b10e09a228e84a8de
@@ -32,12 +31,10 @@ contract ContractTest is Test {
     IVLFI VLFI = IVLFI(0xfc604b6fD73a1bc60d31be111F798dd0D4137812);
     Claimer claimer;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("polygon", 43_025_776);
-        cheats.label(address(LFI), "LFI");
-        cheats.label(address(VLFI), "VLFI");
+        vm.createSelectFork("polygon", 43_025_776);
+        vm.label(address(LFI), "LFI");
+        vm.label(address(VLFI), "VLFI");
     }
 
     function testExploit() external {

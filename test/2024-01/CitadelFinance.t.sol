@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$93K
 // Attacker : https://arbiscan.io/address/0xfcf88e5e1314ca3b6be7eed851568834233f8b49
@@ -50,7 +49,7 @@ contract ContractTest is Test {
 
     ICitadelStaking private constant CitadelStaking = ICitadelStaking(0x5e93c07a22111b327EE0EaEC64028064448ae848);
     ICitadelRedeem private constant CitadelRedeem = ICitadelRedeem(0x34b666992fcCe34669940ab6B017fE11e5750799);
-    Uni_Pair_V3 private constant WETH_USDC = Uni_Pair_V3(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
+    IUniswapV3Pair private constant WETH_USDC = IUniswapV3Pair(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
     IERC20 private constant WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 private constant USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 private constant CIT = IERC20(0x43cF1856606df2CB22AEdbA1a3e23725f1594E81);

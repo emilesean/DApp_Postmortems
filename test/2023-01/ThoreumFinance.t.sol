@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~2000 BNB (6 BNB in this tx)
 // Attacker : 0x1ae2dc57399b2f4597366c5bf4fe39859c006f99
@@ -16,7 +15,6 @@ import "./../interface.sol";
 // @Analysis
 // Ancilia : https://twitter.com/AnciliaInc/status/1615944396134043648
 
-CheatCodes constant cheat = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 IPancakeRouter constant router = IPancakeRouter(payable(0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8));
 
 address constant wbnb_addr = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
@@ -30,12 +28,12 @@ contract Attacker is Test {
 
     //  forge test --contracts ./src/test/ThoreumFinance_exp.sol -vvv
     function setUp() public {
-        cheat.label(address(router), "router");
-        cheat.label(thoreum_addr, "thoreum");
-        cheat.label(exploiter, "exploiter");
-        cheat.label(wbnb_addr, "wbnb");
-        cheat.label(wbnb_thoreum_lp_addr, "wbnb_thoreum_lp");
-        cheat.createSelectFork("bsc", 24_913_171);
+        vm.label(address(router), "router");
+        vm.label(thoreum_addr, "thoreum");
+        vm.label(exploiter, "exploiter");
+        vm.label(wbnb_addr, "wbnb");
+        vm.label(wbnb_thoreum_lp_addr, "wbnb_thoreum_lp");
+        vm.createSelectFork("bsc", 24_913_171);
     }
 
     function testExploit() public {

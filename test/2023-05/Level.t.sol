@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1653149493133729794
@@ -15,13 +14,8 @@ import "./../interface.sol";
 
 interface IPool {
 
-    function swap(
-        address _tokenIn,
-        address _tokenOut,
-        uint256 _minOut,
-        address _to,
-        bytes calldata extradata
-    ) external;
+    function swap(address _tokenIn, address _tokenOut, uint256 _minOut, address _to, bytes calldata extradata)
+        external;
 
 }
 
@@ -55,16 +49,14 @@ contract ContractTest is Test {
     address dodo = 0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d;
     Exploiter exploiter;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 27_830_139);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(LVL), "LVL");
-        cheats.label(address(LevelReferralControllerV2), "LevelReferralControllerV2");
-        cheats.label(address(pool), "pool");
-        cheats.label(address(dodo), "dodo");
+        vm.createSelectFork("bsc", 27_830_139);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(LVL), "LVL");
+        vm.label(address(LevelReferralControllerV2), "LevelReferralControllerV2");
+        vm.label(address(pool), "pool");
+        vm.label(address(dodo), "dodo");
     }
 
     function testExploit() external {

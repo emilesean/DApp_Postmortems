@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1626493024879673344
@@ -50,13 +49,11 @@ contract ContractTest is Test {
     IDexible Dexible = IDexible(0xDE62E1b0edAa55aAc5ffBE21984D321706418024);
     address victim = 0x58f5F0684C381fCFC203D77B2BbA468eBb29B098;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_646_022);
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(TRU), "TRU");
-        cheats.label(address(Dexible), "Dexible");
+        vm.createSelectFork("mainnet", 16_646_022);
+        vm.label(address(USDC), "USDC");
+        vm.label(address(TRU), "TRU");
+        vm.label(address(Dexible), "Dexible");
     }
 
     function testExploit() external {

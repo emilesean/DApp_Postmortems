@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://mirror.xyz/revertfinance.eth/3sdpQ3v9vEKiOjaHXUi3TdEfhleAXXlAEWeODrRHJtU
@@ -32,12 +31,10 @@ contract ContractTest is Test {
     address[] victims = [0x067D0F9089743271058D4Bf2a1a29f4E9C6fdd1b, 0x4107A0A4a50AC2c4cc8C5a3954Bc01ff134506b2];
     uint256 counter;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 16_653_389);
-        cheats.label(address(utils), "utils");
-        cheats.label(address(USDC), "USDC");
+        vm.createSelectFork("mainnet", 16_653_389);
+        vm.label(address(utils), "utils");
+        vm.label(address(USDC), "USDC");
     }
 
     function testExploit() external {

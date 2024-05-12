@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~111K USD$
 // Attacker : https://etherscan.io/address/0xc0ffeebabe5d496b2dde509f9fa189c25cf29671
@@ -30,17 +29,15 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IExchangeBetweenPools ExchangeBetweenPools = IExchangeBetweenPools(0x765b8d7Cd8FF304f796f4B6fb1BCf78698333f6D);
     IcurveYSwap curveYSwap = IcurveYSwap(0x45F783CCE6B7FF23B2ab2D70e416cdb7D6055f51);
-    Uni_Pair_V3 Pair = Uni_Pair_V3(0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168);
+    IUniswapV3Pair Pair = IUniswapV3Pair(0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168);
     uint256 victimAmount = 119_023_523_157;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_376_906);
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(ExchangeBetweenPools), "ExchangeBetweenPools");
-        cheats.label(address(curveYSwap), "curveYSwap");
+        vm.createSelectFork("mainnet", 17_376_906);
+        vm.label(address(USDC), "USDC");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(ExchangeBetweenPools), "ExchangeBetweenPools");
+        vm.label(address(curveYSwap), "curveYSwap");
     }
 
     function testExploit() external {

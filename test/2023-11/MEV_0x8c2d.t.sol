@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$365K
 // Attacker : https://bscscan.com/address/0x69e068eb917115ed103278b812ec7541f021cea0
@@ -16,7 +15,7 @@ import "./../interface.sol";
 contract ContractTest is Test {
 
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    Uni_Pair_V2 private constant WBNB_BUSDT = Uni_Pair_V2(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+    IUniswapV2Pair private constant WBNB_BUSDT = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
     address private constant victimMevBot = 0x8C2D4ed92Badb9b65f278EfB8b440F4BC995fFe7;
     address private constant assetHarvestingContract = 0x19a23DdAA47396335894229E0439D3D187D89eC9;
 

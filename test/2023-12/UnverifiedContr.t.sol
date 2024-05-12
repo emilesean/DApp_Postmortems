@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$500K
 // Attacker : https://bscscan.com/address/0xa9edec4496bd013dac805fb221edefc53cbfaf05
@@ -33,7 +32,7 @@ contract ContractTest is Test {
     IERC20 private constant KLEN = IERC20(0x05CbF8417401028dE10d6B949061336dF8233a9f);
     IERC20 private constant TRUST = IERC20(0x31952292c193c05AE91e19456312E2Be1419c040);
     IERC20 private constant MDAO = IERC20(0x6cc1eACe0794bcc5852c7Ff70656c4dF0F02d950);
-    Uni_Pair_V2 private constant FCN_BUSDT = Uni_Pair_V2(0xACB496dd4A8b6B9D1B99D422b8700F6EF932Bc10);
+    IUniswapV2Pair private constant FCN_BUSDT = IUniswapV2Pair(0xACB496dd4A8b6B9D1B99D422b8700F6EF932Bc10);
     IBUSDT_MetaWin private constant BUSDT_MetaWin = IBUSDT_MetaWin(0x90bf82c772f16651d6ae51D42c90c84aE703Eb42);
     IBindingContract private constant BindingContract = IBindingContract(0x04c5bcFcae55591D72E01c548863F4E754C74339);
     address private constant vulnContract = 0x431Abb27dAB05f4E7cDeAA18390fE39364197500;

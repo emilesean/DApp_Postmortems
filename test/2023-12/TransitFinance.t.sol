@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 /*
     Attack tx: https://explorer.phalcon.xyz/tx/bsc/0x93ae5f0a121d5e1aadae052c36bc5ecf2d406d35222f4c6a5d63fef1d6de1081
@@ -31,8 +30,6 @@ struct ExactInputV3SwapParams {
 
 contract ContractTest is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     address router = 0x00000047bB99ea4D791bb749D970DE71EE0b1A34;
 
     address pool_usd_wbnb = 0x36696169C63e42cd08ce11f5deeBbCeBae652050;
@@ -44,7 +41,7 @@ contract ContractTest is Test {
     address bnb = address(0);
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 34_506_417 - 1);
+        vm.createSelectFork("bsc", 34_506_417 - 1);
         deal(address(this), 1);
     }
 

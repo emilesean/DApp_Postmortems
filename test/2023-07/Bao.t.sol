@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~46K USD$
 // Attacker : https://etherscan.io/address/0x00693a01221a5e93fb872637e3a9391ef5f48300
@@ -52,7 +51,7 @@ contract ContractTest is Test {
     IbdbSTBL bdbSTBL = IbdbSTBL(0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e);
     ICErc20Delegate bdbaoETH = ICErc20Delegate(0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    Uni_Router_V3 Router = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     IAaveFlashloan AaveV2 = IAaveFlashloan(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
 
     function setUp() public {
@@ -146,7 +145,7 @@ contract ContractTest is Test {
         });
         Balancer.swap(singleSwap, funds, 39 ether, block.timestamp);
 
-        Uni_Router_V3.ExactOutputSingleParams memory _Param1 = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory _Param1 = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(WETH),
             tokenOut: address(USDC),
             fee: 500,
@@ -157,7 +156,7 @@ contract ContractTest is Test {
             sqrtPriceLimitX96: 0
         });
         Router.exactOutputSingle(_Param1);
-        Uni_Router_V3.ExactOutputSingleParams memory _Param2 = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory _Param2 = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(WETH),
             tokenOut: address(DAI),
             fee: 500,

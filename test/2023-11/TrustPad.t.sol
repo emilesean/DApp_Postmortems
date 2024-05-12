@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$155K
 // Attacker : https://bscscan.com/address/0x1a7b15354e2f6564fcf6960c79542de251ce0dc9
@@ -48,7 +47,7 @@ contract ContractTest is Test {
     IERC20 private constant TPAD = IERC20(0xADCFC6bf853a0a8ad7f9Ff4244140D10cf01363C);
     IERC20 private constant DDD = IERC20(0x2e1FC745937a44ae8313bC889EE023ee303F2488);
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address private constant TrustPadProtocolExploiter = 0x1a7b15354e2F6564fcf6960c79542DE251cE0dC9;
     HelperContract helperContract;
 

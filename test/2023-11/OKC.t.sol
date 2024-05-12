@@ -2,7 +2,6 @@
 pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
-import "../interface.sol";
 
 // @Analysis
 // https://lunaray.medium.com/okc-project-hack-analysis-0907312f519b

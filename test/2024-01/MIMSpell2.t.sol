@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$6,5M
 // Attacker : https://etherscan.io/address/0x87f585809ce79ae39a5fa0c7c96d0d159eb678c9
@@ -22,21 +21,14 @@ interface IDegenBox {
 
     function flashLoan(address borrower, address receiver, address token, uint256 amount, bytes memory data) external;
 
-    function deposit(
-        address token_,
-        address from,
-        address to,
-        uint256 amount,
-        uint256 share
-    ) external payable returns (uint256 amountOut, uint256 shareOut);
+    function deposit(address token_, address from, address to, uint256 amount, uint256 share)
+        external
+        payable
+        returns (uint256 amountOut, uint256 shareOut);
 
-    function withdraw(
-        address token_,
-        address from,
-        address to,
-        uint256 amount,
-        uint256 share
-    ) external returns (uint256 amountOut, uint256 shareOut);
+    function withdraw(address token_, address from, address to, uint256 amount, uint256 share)
+        external
+        returns (uint256 amountOut, uint256 shareOut);
 
 }
 
@@ -68,8 +60,8 @@ contract ContractTest is Test {
     ICauldronV4 private constant CauldronV4 = ICauldronV4(0x7259e152103756e1616A77Ae982353c3751A6a90);
     ICurvePool private constant MIM_3LP3CRV = ICurvePool(0x5a6A4D54456819380173272A5E8E9B9904BdF41B);
     ICurvePool private constant USDT_WBTC_WETH = ICurvePool(0xD51a44d3FaE010294C616388b506AcdA1bfAAE46);
-    Uni_Pair_V3 private constant MIM_USDC = Uni_Pair_V3(0x298b7c5e0770D151e4C5CF6cCA4Dae3A3FFc8E27);
-    Uni_Pair_V3 private constant USDC_WETH = Uni_Pair_V3(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
+    IUniswapV3Pair private constant MIM_USDC = IUniswapV3Pair(0x298b7c5e0770D151e4C5CF6cCA4Dae3A3FFc8E27);
+    IUniswapV3Pair private constant USDC_WETH = IUniswapV3Pair(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 19_118_659);
@@ -124,13 +116,10 @@ contract ContractTest is Test {
         );
     }
 
-    function onFlashLoan(
-        address initiator,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata data
-    ) external returns (bytes32) {
+    function onFlashLoan(address initiator, address token, uint256 amount, uint256 fee, bytes calldata data)
+        external
+        returns (bytes32)
+    {
         (uint128 elastic,) = CauldronV4.totalBorrow();
         uint128 amount = uint128(uint128(elastic + uint128(50e18)) - uint128(240_000 * 1e18));
 

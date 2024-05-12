@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~18ETH
 // Attacker : https://etherscan.io/address/0x0000000f95c09138dfea7d9bcf3478fc2e13dcab
@@ -18,8 +17,8 @@ contract ContractTest is Test {
 
     IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
     IERC20 GAIN = IERC20(0xdE59b88abEFA5e6C8aA6D742EeE0f887Dab136ac);
-    Uni_Pair_V3 univ3USDT = Uni_Pair_V3(0xc7bBeC68d12a0d1830360F8Ec58fA599bA1b0e9b);
-    Uni_Pair_V2 univ2GAIN = Uni_Pair_V2(0x31d80EA33271891986D873B397d849A92EF49255);
+    IUniswapV3Pair univ3USDT = IUniswapV3Pair(0xc7bBeC68d12a0d1830360F8Ec58fA599bA1b0e9b);
+    IUniswapV2Pair univ2GAIN = IUniswapV2Pair(0x31d80EA33271891986D873B397d849A92EF49255);
     address[] private addrPath = new address[](2);
     uint256 totalBorrowed = 0.1 ether;
 

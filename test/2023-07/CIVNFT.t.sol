@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~180K USD$
 // Attacker : https://etherscan.io/address/0xbf9df575670c739d9bf1424d4913e7244ed3ff66
@@ -42,14 +41,12 @@ contract CIVNFTTest is Test {
     address private constant CIVNFT = 0xF169BD68ED72B2fdC3C9234833197171AA000580;
     address private constant victim = 0x512e9701D314b365921BcB3b8265658A152C9fFD;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_649_875);
-        cheats.label(address(CIV), "CIV");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(CIVNFT, "CIVNFT");
-        cheats.label(victim, "victim");
+        vm.createSelectFork("mainnet", 17_649_875);
+        vm.label(address(CIV), "CIV");
+        vm.label(address(WETH), "WETH");
+        vm.label(CIVNFT, "CIVNFT");
+        vm.label(victim, "victim");
     }
 
     function testExploit() public {
@@ -83,13 +80,10 @@ contract CIVNFTTest is Test {
         });
     }
 
-    function mint(
-        address recipient,
-        int24 tickLower,
-        int24 tickUpper,
-        uint128 amount,
-        bytes calldata data
-    ) external returns (uint256 amount0, uint256 amount1) {
+    function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amount, bytes calldata data)
+        external
+        returns (uint256 amount0, uint256 amount1)
+    {
         callUniswapV3MintCallback();
     }
 

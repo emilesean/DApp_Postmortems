@@ -114,12 +114,10 @@ interface IBasePositionManager is IRouterTokenHelper, IBasePositionManagerEvents
     /// @param fee the fee for the pool
     /// @param currentSqrtP the initial price of the pool
     /// @return pool returns the pool address
-    function createAndUnlockPoolIfNecessary(
-        address token0,
-        address token1,
-        uint24 fee,
-        uint160 currentSqrtP
-    ) external payable returns (address pool);
+    function createAndUnlockPoolIfNecessary(address token0, address token1, uint24 fee, uint160 currentSqrtP)
+        external
+        payable
+        returns (address pool);
 
     function mint(MintParams calldata params)
         external

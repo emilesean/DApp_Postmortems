@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~400K USD$
 // Attacker : https://optimistic.etherscan.io/address/0xd3641c912a6a4c30338787e3c464420b561a9467
@@ -40,15 +39,11 @@ interface LendingPool {
 
 interface IVault {
 
-    function vaultManagementAction(
-        address actionHandler,
-        bytes calldata actionData
-    ) external returns (address, uint256);
-    function deposit(
-        address[] calldata assetAddresses,
-        uint256[] calldata assetIds,
-        uint256[] calldata assetAmounts
-    ) external;
+    function vaultManagementAction(address actionHandler, bytes calldata actionData)
+        external
+        returns (address, uint256);
+    function deposit(address[] calldata assetAddresses, uint256[] calldata assetIds, uint256[] calldata assetAmounts)
+        external;
     function openTrustedMarginAccount(address creditor) external;
 
 }

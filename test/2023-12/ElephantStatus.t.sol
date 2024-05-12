@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~165K USD$
 // Attacker : https://bscscan.com/address/0xbbcc139933d1580e7c40442e09263e90e6f1d66d
@@ -21,11 +20,11 @@ interface IElephantStatus {
 
 contract ContractTest is Test {
 
-    Uni_Pair_V3 private constant USDC_BUSD = Uni_Pair_V3(0x22536030B9cE783B6Ddfb9a39ac7F439f568E5e6);
-    Uni_Pair_V3 private constant BUSDT_BUSD = Uni_Pair_V3(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
-    Uni_Pair_V3 private constant WBNB_BUSD = Uni_Pair_V3(0x85FAac652b707FDf6907EF726751087F9E0b6687);
-    Uni_Pair_V3 private constant BTCB_BUSD = Uni_Pair_V3(0x369482C78baD380a036cAB827fE677C1903d1523);
-    Uni_Router_V2 private constant PancakeRouter = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV3Pair private constant USDC_BUSD = IUniswapV3Pair(0x22536030B9cE783B6Ddfb9a39ac7F439f568E5e6);
+    IUniswapV3Pair private constant BUSDT_BUSD = IUniswapV3Pair(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
+    IUniswapV3Pair private constant WBNB_BUSD = IUniswapV3Pair(0x85FAac652b707FDf6907EF726751087F9E0b6687);
+    IUniswapV3Pair private constant BTCB_BUSD = IUniswapV3Pair(0x369482C78baD380a036cAB827fE677C1903d1523);
+    IUniswapV2Router private constant PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IERC20 private constant BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IElephantStatus private constant Elephant = IElephantStatus(0x8Cf0A553aB3896e4832ebCC519a7A60828AB5740);

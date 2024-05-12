@@ -2,7 +2,6 @@
 pragma solidity ^0.8.20;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~464K USD$
 // Attacker : https://etherscan.io/address/0xb90cf1d740b206b6d80854bc525e609dc42b45dc
@@ -22,11 +21,9 @@ interface IWiseLending {
 
     function withdrawExactShares(uint256 _nftId, address _poolToken, uint256 _shares) external returns (uint256);
 
-    function withdrawExactAmount(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _withdrawAmount
-    ) external returns (uint256);
+    function withdrawExactAmount(uint256 _nftId, address _poolToken, uint256 _withdrawAmount)
+        external
+        returns (uint256);
 
     function getPositionLendingShares(uint256 _nftId, address _poolToken) external view returns (uint256);
 

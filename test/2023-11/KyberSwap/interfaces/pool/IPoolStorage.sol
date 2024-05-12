@@ -65,11 +65,10 @@ interface IPoolStorage {
     /// @notice Returns the information about a position by the position's key
     /// @return liquidity the liquidity quantity of the position
     /// @return feeGrowthInsideLast fee growth inside the tick range as of the last mint / burn action performed
-    function getPositions(
-        address owner,
-        int24 tickLower,
-        int24 tickUpper
-    ) external view returns (uint128 liquidity, uint256 feeGrowthInsideLast);
+    function getPositions(address owner, int24 tickLower, int24 tickUpper)
+        external
+        view
+        returns (uint128 liquidity, uint256 feeGrowthInsideLast);
 
     /// @notice Fetches the pool's prices, ticks and lock status
     /// @return sqrtP sqrt of current price: sqrt(token1/token0)
@@ -102,9 +101,9 @@ interface IPoolStorage {
     /// @param tickUpper The upper tick (of a position)
     /// @return secondsPerLiquidityInside active time (multiplied by 2^96)
     /// between the 2 ticks, per unit of liquidity.
-    function getSecondsPerLiquidityInside(
-        int24 tickLower,
-        int24 tickUpper
-    ) external view returns (uint128 secondsPerLiquidityInside);
+    function getSecondsPerLiquidityInside(int24 tickLower, int24 tickUpper)
+        external
+        view
+        returns (uint128 secondsPerLiquidityInside);
 
 }

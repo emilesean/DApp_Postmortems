@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~6k USD$
 // Attacker : https://etherscan.io/address/0x9748c8540a5f752ba747f1203ac13dae789033de
@@ -23,20 +22,18 @@ contract VinuTest is Test {
     // Viral INU token
     IVINU VINU = IVINU(0xF7ef0D57277ad6C2baBf87aB64bA61AbDd2590D2);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    Uni_Router_V2 UniswapV2Router02 = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    Uni_Pair_V2 Pair = Uni_Pair_V2(0xa8AF8ac7aCd97095c0d73eD51E30564d52b19cd8);
+    IUniswapV2Router UniswapV2Router02 = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Pair Pair = IUniswapV2Pair(0xa8AF8ac7aCd97095c0d73eD51E30564d52b19cd8);
     address private constant flashbotsAddress = 0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5;
     Router FakeRouter;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
         deal(address(this), 0.5 ether);
-        cheats.createSelectFork("mainnet", 17_421_006);
-        cheats.label(address(VINU), "VINU");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(UniswapV2Router02), "UniswapV2Router02");
-        cheats.label(flashbotsAddress, "flashbotsAddress");
+        vm.createSelectFork("mainnet", 17_421_006);
+        vm.label(address(VINU), "VINU");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(UniswapV2Router02), "UniswapV2Router02");
+        vm.label(flashbotsAddress, "flashbotsAddress");
     }
 
     function testExploit() public {

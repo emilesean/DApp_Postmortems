@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 819 BNB (~224K US$)
 // Attacker : 0x67a909f2953fb1138bea4b60894b51291d2d0795
@@ -189,14 +188,14 @@ interface IDPPAdvanced {
         bool isOpenTWAP
     ) external;
     function initOwner(address newOwner) external;
-    function querySellBase(
-        address trader,
-        uint256 payBaseAmount
-    ) external view returns (uint256 receiveQuoteAmount, uint256 mtFee, uint8 newRState, uint256 newBaseTarget);
-    function querySellQuote(
-        address trader,
-        uint256 payQuoteAmount
-    ) external view returns (uint256 receiveBaseAmount, uint256 mtFee, uint8 newRState, uint256 newQuoteTarget);
+    function querySellBase(address trader, uint256 payBaseAmount)
+        external
+        view
+        returns (uint256 receiveQuoteAmount, uint256 mtFee, uint8 newRState, uint256 newBaseTarget);
+    function querySellQuote(address trader, uint256 payQuoteAmount)
+        external
+        view
+        returns (uint256 receiveBaseAmount, uint256 mtFee, uint8 newRState, uint256 newQuoteTarget);
     function ratioSync() external;
     function reset(
         address assetTo,

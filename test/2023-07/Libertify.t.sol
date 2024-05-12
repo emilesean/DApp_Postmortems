@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~452K USD$
 // Attacker : https://polygonscan.com/address/0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02
@@ -46,11 +45,10 @@ interface oneInchV4Router {
         bytes permit;
     }
 
-    function swap(
-        IAggregationExecutor caller,
-        SwapDescription calldata desc,
-        bytes calldata data
-    ) external payable returns (uint256 returnAmount, uint256 spentAmount, uint256 gasLeft);
+    function swap(IAggregationExecutor caller, SwapDescription calldata desc, bytes calldata data)
+        external
+        payable
+        returns (uint256 returnAmount, uint256 spentAmount, uint256 gasLeft);
 
 }
 
@@ -61,7 +59,7 @@ contract ContractTest is Test {
     IAaveFlashloan aaveV2 = IAaveFlashloan(0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf);
     ILibertiVault LibertiVault = ILibertiVault(0x9c80a455ecaca7025A45F5fa3b85Fd6A462a447b);
     oneInchV4Router inchV4Router = oneInchV4Router(0x1111111254fb6c44bAC0beD2854e76F90643097d);
-    Uni_Router_V3 Router = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     uint256 nonce;
 
     function setUp() public {
@@ -142,7 +140,7 @@ contract ContractTest is Test {
 
     function WETHToUSDT(uint256 amount, uint256 premium) internal {
         WETH.approve(address(Router), type(uint256).max);
-        Uni_Router_V3.ExactOutputSingleParams memory _Param = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory _Param = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(WETH),
             tokenOut: address(USDT),
             fee: 3000,

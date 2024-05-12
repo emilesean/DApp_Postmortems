@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~286K USD$
 // Attacker : https://etherscan.io/address/0xee4b3dd20902fa3539706f25005fa51d3b7bdf1b
@@ -33,7 +32,7 @@ interface IENF_ETHLEV is IERC20 {
 contract ContractTest is Test {
 
     IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-    Uni_Pair_V3 Pair = Uni_Pair_V3(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
+    IUniswapV3Pair Pair = IUniswapV3Pair(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
     IENF_ETHLEV ENF_ETHLEV = IENF_ETHLEV(0x5655c442227371267c165101048E4838a762675d);
     address Controller = 0xE8688D014194fd5d7acC3c17477fD6db62aDdeE9;
     Exploiter exploiter;

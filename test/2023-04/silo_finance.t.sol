@@ -3,18 +3,14 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import "./../interface.sol";
-
 // It's a postmortem, now it's disclosed, just for studying.
 // analysis and code: https://medium.com/immunefi/silo-finance-logic-error-bugfix-review-35de29bd934a
 
 interface ISilo {
 
-    function deposit(
-        address _asset,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 collateralAmount, uint256 collateralShare);
+    function deposit(address _asset, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 collateralAmount, uint256 collateralShare);
 
     function borrow(address _asset, uint256 _amount) external returns (uint256 debtAmount, uint256 debtShare);
 
@@ -133,10 +129,9 @@ contract SiloBugFixReviewTest is Test {
     uint256 constant donatedAmount = 1e18;
 
     uint256 otherAccountDepositAmount = 545 * 1e18;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_139_470);
+        vm.createSelectFork("mainnet", 17_139_470);
 
         siloBugFixReview = new SiloBugFixReview();
         deal(address(siloBugFixReview.WETH()), address(siloBugFixReview), depositAmount + donatedAmount);
@@ -151,20 +146,20 @@ contract SiloBugFixReviewTest is Test {
         console.log("time stamp before = ", block.timestamp);
         console.log("block number before = ", block.number);
         siloBugFixReview.run();
-        cheats.makePersistent(address(siloBugFixReview));
-        cheats.makePersistent(address(siloBugFixReview.SILO()));
+        vm.makePersistent(address(siloBugFixReview));
+        vm.makePersistent(address(siloBugFixReview.SILO()));
 
-        cheats.makePersistent(WETH);
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).collateralToken));
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).collateralOnlyToken));
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).debtToken));
+        vm.makePersistent(WETH);
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).collateralToken));
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).collateralOnlyToken));
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(WETH).debtToken));
 
-        cheats.makePersistent(LINK);
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).collateralToken));
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).collateralOnlyToken));
-        cheats.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).debtToken));
+        vm.makePersistent(LINK);
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).collateralToken));
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).collateralOnlyToken));
+        vm.makePersistent(address(siloBugFixReview.SILO().assetStorage(LINK).debtToken));
 
-        cheats.rollFork(block.number + 1);
+        vm.rollFork(block.number + 1);
 
         console.log("time stamp after = ", block.timestamp);
         console.log("block number after = ", block.number);

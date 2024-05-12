@@ -84,12 +84,9 @@ contract ContractTest is Test {
         }
     }
 
-    function receiveFlashLoan(
-        address[] memory,
-        uint256[] memory amounts,
-        uint256[] memory feeAmounts,
-        bytes memory
-    ) public {
+    function receiveFlashLoan(address[] memory, uint256[] memory amounts, uint256[] memory feeAmounts, bytes memory)
+        public
+    {
         uint256[4] memory empty_arr;
         empty_arr[0] = 0;
         empty_arr[1] = 0;

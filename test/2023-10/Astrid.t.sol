@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~228591 USD$
 // Attacker : https://etherscan.io/address/0x792ec27874e1f614e757a1ae49d00ef5b2c73959
@@ -93,7 +92,6 @@ interface IuniswapV3 {
 
 contract ASTTest is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     Vulnerable vulnerable = Vulnerable(0xbAa87546cF87b5De1b0b52353A86792D40b8BA70);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
     IERC20 rETH = IERC20(0xae78736Cd615f374D3085123A210448E74Fc6393);
@@ -104,7 +102,7 @@ contract ASTTest is Test {
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     function setUp() public {
-        cheats.createSelectFork("https://rpc.ankr.com/eth", 18_448_167);
+        vm.createSelectFork("mainnet", 18_448_167);
     }
 
     function testExpolit() public {

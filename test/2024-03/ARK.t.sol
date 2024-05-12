@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // TX : https://phalcon.blocksec.com/explorer/tx/bsc/0xe8b0131fa14d0a96327f6b5690159ffa7650d66376db87366ba78d91f17cd677
 // GUY : https://twitter.com/Phalcon_xyz/status/1771728823534375249
@@ -19,12 +18,11 @@ contract ContractTest is Test {
 
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     Ark constant ARK = Ark(0xde698B5BBb4A12DDf2261BbdF8e034af34399999);
-    Uni_Pair_V2 ARK_WBNB = Uni_Pair_V2(0xc0F54B8755DAF1Fd78933335EfCD761e3D5B4a6F);
-    Uni_Router_V2 router = Uni_Router_V2(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+    IUniswapV2Pair ARK_WBNB = IUniswapV2Pair(0xc0F54B8755DAF1Fd78933335EfCD761e3D5B4a6F);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() external {
-        cheats.createSelectFork("bsc", 37_221_235);
+        vm.createSelectFork("bsc", 37_221_235);
         // explotier have
         deal(address(WBNB), address(this), 100);
         deal(address(ARK), address(this), 4 ether);

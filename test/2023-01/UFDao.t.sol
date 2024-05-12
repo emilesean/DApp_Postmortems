@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1613507804412940289
@@ -17,32 +16,26 @@ interface SHOP {
 
 interface IUFT is IERC20 {
 
-    function burn(
-        uint256 _amount,
-        address[] memory _tokens,
-        address[] memory _adapters,
-        address[] memory _pools
-    ) external;
+    function burn(uint256 _amount, address[] memory _tokens, address[] memory _adapters, address[] memory _pools)
+        external;
 
 }
 
 contract ContractTest is Test {
 
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     SHOP shop = SHOP(0xCA49EcF7e7bb9bBc9D1d295384663F6BA5c0e366);
     IUFT UFT = IUFT(0xf887A2DaC0DD432997C970BCE597A94EaD4A8c25);
     IERC20 USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     address UF = 0x2101e0F648A2b5517FD2C5D9618582E9De7a651A;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 24_705_058);
-        cheats.label(address(shop), "SHOP");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(UFT), "UFT");
-        cheats.label(address(WBNB), "WBNB");
+        vm.createSelectFork("bsc", 24_705_058);
+        vm.label(address(shop), "SHOP");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(UFT), "UFT");
+        vm.label(address(WBNB), "WBNB");
     }
 
     function testExploit() external {

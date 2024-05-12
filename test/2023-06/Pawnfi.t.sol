@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$820K
 // Attacker : https://etherscan.io/address/0x8f7370d5d461559f24b83ba675b4c7e2fdb514cc
@@ -109,7 +108,7 @@ interface IPToken is IERC20 {
 
 contract PawnfiTest is Test {
 
-    Uni_Pair_V3 private constant UniV3Pool = Uni_Pair_V3(0xAc4b3DacB91461209Ae9d41EC517c2B9Cb1B7DAF);
+    IUniswapV3Pair private constant UniV3Pool = IUniswapV3Pair(0xAc4b3DacB91461209Ae9d41EC517c2B9Cb1B7DAF);
     IERC20 private constant APE = IERC20(payable(0x4d224452801ACEd8B2F0aebE155379bb5D594381));
     IERC20 private constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     ICErc20Delegate private constant sAPE = ICErc20Delegate(payable(0x73625745eD66F0d4C68C91613086ECe1Fc5a0119));
@@ -235,12 +234,10 @@ contract PawnfiTest is Test {
         ApeStaking1.withdrawApeCoin(address(BAYC), _nfts, nftPairs_);
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
 

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1644907207530774530
@@ -50,13 +49,12 @@ contract SushiExp is Test, IUniswapV3Pool {
     IERC20 LINK = IERC20(0x514910771AF9Ca656af840dff83E8264EcF986CA);
     address victim = 0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1;
     IRouteProcessor2 processor = IRouteProcessor2(0x044b75f554b886A065b9567891e45c79542d7357);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_007_841);
+        vm.createSelectFork("mainnet", 17_007_841);
 
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(LINK), "LINK");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(LINK), "LINK");
     }
 
     function testExp() external {

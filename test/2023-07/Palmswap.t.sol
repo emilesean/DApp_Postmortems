@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$900K
 // Attacker : https://bscscan.com/address/0xf84efa8a9f7e68855cf17eaac9c2f97a9d131366
@@ -40,18 +39,16 @@ contract PalmswapTest is Test {
     address private constant plpManager = 0x6876B9804719d8D9F5AEb6ad1322270458fA99E0;
     address private constant fPLP = 0x305496cecCe61491794a4c36D322b42Bb81da9c4;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_248_637);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(PLP), "PLP");
-        cheats.label(address(USDP), "USDP");
-        cheats.label(address(Vault), "Vault");
-        cheats.label(address(LiquidityEvent), "LiquidityEvent");
-        cheats.label(address(RadiantLP), "RadiantLP");
-        cheats.label(plpManager, "plpManager");
-        cheats.label(fPLP, "fPLP");
+        vm.createSelectFork("bsc", 30_248_637);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(PLP), "PLP");
+        vm.label(address(USDP), "USDP");
+        vm.label(address(Vault), "Vault");
+        vm.label(address(LiquidityEvent), "LiquidityEvent");
+        vm.label(address(RadiantLP), "RadiantLP");
+        vm.label(plpManager, "plpManager");
+        vm.label(fPLP, "fPLP");
     }
 
     function testExploit() public {

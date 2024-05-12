@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$290K
 // Attacker : https://arbiscan.io/address/0x09ed480feaf4cbc363481717e04e2c394ab326b4
@@ -111,11 +110,11 @@ contract ContractTest is Test {
     IERC20 private constant EURO = IERC20(0x643b34980E635719C15a2D4ce69571a258F940E9);
     IWETH private constant WETH = IWETH(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
     IUSDC private constant USDC = IUSDC(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
-    Uni_Pair_V3 private constant WBTC_WETH = Uni_Pair_V3(0x2f5e87C9312fa29aed5c179E456625D79015299c);
+    IUniswapV3Pair private constant WBTC_WETH = IUniswapV3Pair(0x2f5e87C9312fa29aed5c179E456625D79015299c);
     ISmartVaultManagerV2 private constant SmartVaultManagerV2 =
         ISmartVaultManagerV2(0xba169cceCCF7aC51dA223e04654Cf16ef41A68CC);
     ICamelotRouter private constant RouterV3 = ICamelotRouter(0x1F721E2E82F6676FCE4eA07A5958cF098D339e18);
-    Uni_Router_V3 private constant Router = Uni_Router_V3(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router private constant Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     ISmartVaultV2 private SmartVaultV2;
 
     function setUp() public {
@@ -169,12 +168,10 @@ contract ContractTest is Test {
         WBTC.transfer(address(WBTC_WETH), WBTC.balanceOf(address(this)));
     }
 
-    function onERC721Received(
-        address operator,
-        address from,
-        uint256 tokenId,
-        bytes calldata data
-    ) external returns (bytes4) {
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
+        external
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
 
@@ -232,7 +229,7 @@ contract ContractTest is Test {
     }
 
     function USDCToWBTC(uint24 _fee) internal {
-        Uni_Router_V3.ExactOutputSingleParams memory params = Uni_Router_V3.ExactOutputSingleParams({
+        IUniswapV3Router.ExactOutputSingleParams memory params = IUniswapV3Router.ExactOutputSingleParams({
             tokenIn: address(USDC),
             tokenOut: address(WBTC),
             fee: 500,

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/eugenioclrc/status/1654576296507088906
@@ -29,10 +28,8 @@ contract DEIPocTest is Test {
     IDEI DEI = IDEI(0xDE1E704dae0B4051e80DAbB26ab6ad6c12262DA0);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("https://rpc.ankr.com/arbitrum", 87_626_024);
+        vm.createSelectFork("bsc", 87_626_024);
     }
 
     function testExploit() public {

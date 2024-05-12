@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : Unclear
 // Attacker : https://bscscan.com/address/0x97eace4702217c1fea71cf6b79647a8ad5ddb0eb
@@ -30,20 +29,18 @@ contract GYMTest is Test {
     IERC20 fakeUSDT = IERC20(0x2A1ee1278a8b64fd621B46e3ee9c08071cA3A8a5);
     // PancakeSwap V2: GYMNET-fakeUSDT
     IERC20 CakeLP = IERC20(0x8e1b75e6c43aEAf5055De07Ab4b76E356d7BB2db);
-    Uni_Pair_V2 PancakePair = Uni_Pair_V2(0xf5D3cba24783586Db9e7F35188EC0747FfB55F9B);
-    Uni_Router_V2 PancakeRouter = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair PancakePair = IUniswapV2Pair(0xf5D3cba24783586Db9e7F35188EC0747FfB55F9B);
+    IUniswapV2Router PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IGymRouter GymRouter = IGymRouter(0x6b869795937DD2B6F4E03d5A0Ffd07A8AD8c095B);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 30_448_986);
-        cheats.label(address(GYMNET), "GYMNET");
-        cheats.label(address(fakeUSDT), "fakeUSDT");
-        cheats.label(address(CakeLP), "CakeLP");
-        cheats.label(address(PancakePair), "PancakePair");
-        cheats.label(address(PancakeRouter), "PancakeRouter");
-        cheats.label(address(GymRouter), "GymRouter");
+        vm.createSelectFork("bsc", 30_448_986);
+        vm.label(address(GYMNET), "GYMNET");
+        vm.label(address(fakeUSDT), "fakeUSDT");
+        vm.label(address(CakeLP), "CakeLP");
+        vm.label(address(PancakePair), "PancakePair");
+        vm.label(address(PancakeRouter), "PancakeRouter");
+        vm.label(address(GymRouter), "GymRouter");
     }
 
     function testExploit() public {

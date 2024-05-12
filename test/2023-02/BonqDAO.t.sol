@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo
 // Total Lost : BEUR stablecoin and ALBT token (~88MUS$)
@@ -219,15 +218,15 @@ interface ITellorFlex {
     function depositStake(uint256 _amount) external;
     function getBlockNumberByTimestamp(bytes32 _queryId, uint256 _timestamp) external view returns (uint256);
     function getCurrentValue(bytes32 _queryId) external view returns (bytes memory _value);
-    function getDataBefore(
-        bytes32 _queryId,
-        uint256 _timestamp
-    ) external view returns (bool _ifRetrieve, bytes memory _value, uint256 _timestampRetrieved);
+    function getDataBefore(bytes32 _queryId, uint256 _timestamp)
+        external
+        view
+        returns (bool _ifRetrieve, bytes memory _value, uint256 _timestampRetrieved);
     function getGovernanceAddress() external view returns (address);
-    function getIndexForDataBefore(
-        bytes32 _queryId,
-        uint256 _timestamp
-    ) external view returns (bool _found, uint256 _index);
+    function getIndexForDataBefore(bytes32 _queryId, uint256 _timestamp)
+        external
+        view
+        returns (bool _found, uint256 _index);
     function getNewValueCountbyQueryId(bytes32 _queryId) external view returns (uint256);
     function getPendingRewardByStaker(address _stakerAddress) external returns (uint256 _pendingReward);
     function getRealStakingRewardsBalance() external view returns (uint256);
@@ -236,10 +235,10 @@ interface ITellorFlex {
     function getReporterLastTimestamp(address _reporter) external view returns (uint256);
     function getReportingLock() external view returns (uint256);
     function getReportsSubmittedByAddress(address _reporter) external view returns (uint256);
-    function getReportsSubmittedByAddressAndQueryId(
-        address _reporter,
-        bytes32 _queryId
-    ) external view returns (uint256);
+    function getReportsSubmittedByAddressAndQueryId(address _reporter, bytes32 _queryId)
+        external
+        view
+        returns (uint256);
     function getStakeAmount() external view returns (uint256);
     function getStakerInfo(address _stakerAddress)
         external
@@ -343,19 +342,11 @@ interface IOriginalTroveFactory {
         uint256 _borrowAmount,
         address _nextTrove
     ) external;
-    function emitLiquidationEvent(
-        address _token,
-        address _trove,
-        address stabilityPoolLiquidation,
-        uint256 collateral
-    ) external;
+    function emitLiquidationEvent(address _token, address _trove, address stabilityPoolLiquidation, uint256 collateral)
+        external;
     function emitTroveCollateralUpdate(address _token, uint256 _newAmount, uint256 _newCollateralization) external;
-    function emitTroveDebtUpdate(
-        address _token,
-        uint256 _newAmount,
-        uint256 _newCollateralization,
-        uint256 _feePaid
-    ) external;
+    function emitTroveDebtUpdate(address _token, uint256 _newAmount, uint256 _newCollateralization, uint256 _feePaid)
+        external;
     function feeRecipient() external view returns (address);
     function firstTrove(address _token) external view returns (address);
     function getBorrowingFee(uint256 _amount) external view returns (uint256);
@@ -455,10 +446,9 @@ interface ITrove {
     function netDebt() external view returns (uint256);
     function owner() external view returns (address);
     function recordedCollateral() external view returns (uint256);
-    function redeem(
-        address _recipient,
-        address _newNextTrove
-    ) external returns (uint256 _stableAmount, uint256 _collateralRecieved);
+    function redeem(address _recipient, address _newNextTrove)
+        external
+        returns (uint256 _stableAmount, uint256 _collateralRecieved);
     function removeOwner(address _ownerToRemove) external;
     function renounceOwnership() external;
     function renounceRole(bytes32 role, address account) external;

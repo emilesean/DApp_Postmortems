@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~8M
 // Attacker : https://arbiscan.io/address/0x9961190b258897bca7a12b8f37f415e689d281c4
@@ -42,11 +41,9 @@ interface ILBFlashLoanCallback {
 
 interface ISilo {
 
-    function deposit(
-        address _asset,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 collateralAmount, uint256 collateralShare);
+    function deposit(address _asset, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 collateralAmount, uint256 collateralShare);
 
     function liquidity(address _asset) external view returns (uint256);
 
@@ -54,11 +51,9 @@ interface ISilo {
 
     function repay(address _asset, uint256 _amount) external returns (uint256 repaidAmount, uint256 burnedShare);
 
-    function withdraw(
-        address _asset,
-        uint256 _amount,
-        bool _collateralOnly
-    ) external returns (uint256 withdrawnAmount, uint256 withdrawnShare);
+    function withdraw(address _asset, uint256 _amount, bool _collateralOnly)
+        external
+        returns (uint256 withdrawnAmount, uint256 withdrawnShare);
 
 }
 

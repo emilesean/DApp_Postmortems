@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~300K USD$
 // Attacker : https://bscscan.com/address/0x0a3fee894eb8fcb6f84460d5828d71be50612762
@@ -51,22 +50,21 @@ contract DDTest is Test {
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     IMarketPlace MarketPlace = IMarketPlace(0xb3a636ac4c271e6CD962caD98Eae9Cf71f5A49c8);
-    Uni_Router_V2 Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address private constant addrToInvite = 0x693166710b501e3379Cf104e5AaA803aF6CbbF1A;
     HelperContract OrdersPlacer;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_714_107);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(DD), "DD");
-        cheats.label(address(DPPOracle1), "DPPOracle1");
-        cheats.label(address(DPPOracle2), "DPPOracle2");
-        cheats.label(address(DPPOracle3), "DPPOracle3");
-        cheats.label(address(DPP), "DPP");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(MarketPlace), "MarketPlace");
-        cheats.label(address(Router), "Router");
+        vm.createSelectFork("bsc", 28_714_107);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(DD), "DD");
+        vm.label(address(DPPOracle1), "DPPOracle1");
+        vm.label(address(DPPOracle2), "DPPOracle2");
+        vm.label(address(DPPOracle3), "DPPOracle3");
+        vm.label(address(DPP), "DPP");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(MarketPlace), "MarketPlace");
+        vm.label(address(Router), "Router");
     }
 
     function testExploit() public {

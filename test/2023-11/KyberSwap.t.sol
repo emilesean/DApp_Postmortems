@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 import {IBasePositionManager as IKyberswapPositionManager} from
     "./KyberSwap/interfaces/periphery/IBasePositionManager.sol";
@@ -172,13 +171,10 @@ contract Exploiter is Test {
     // flash loan / funding callbacks /////////////////////////////////////////
 
     // Aave
-    function executeOperation(
-        address asset,
-        uint256 amount,
-        uint256 premium,
-        address initiator,
-        bytes memory params
-    ) external returns (bool) {
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes memory params)
+        external
+        returns (bool)
+    {
         return _flashCallback(amount + premium);
     }
 

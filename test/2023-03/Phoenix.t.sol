@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/HypernativeLabs/status/1633090456157401088
@@ -26,13 +25,11 @@ contract ContractTest is Test {
     IERC20 WETH = IERC20(0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619);
     SHITCOIN MYTOKEN;
     IPHXPROXY phxProxy = IPHXPROXY(0x65BaF1DC6fA0C7E459A36E2E310836B396D1B1de);
-    Uni_Router_V2 Router = Uni_Router_V2(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
+    IUniswapV2Router Router = IUniswapV2Router(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
     address dodo = 0x1093ceD81987Bf532c2b7907B2A8525cd0C17295;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("polygon", 40_066_946);
+        vm.createSelectFork("polygon", 40_066_946);
         vm.label(address(USDC), "USDC");
         vm.label(address(WETH), "WETH");
         vm.label(address(phxProxy), "phxProxy");

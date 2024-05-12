@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/peckshield/status/1643417467879059456
@@ -56,21 +55,20 @@ contract ContractTest is Test {
     IAccountManager AccountManager = IAccountManager(0x62c5AA8277E49B3EAd43dC67453ec91DC6826403);
     IWeightedBalancerLPOracle WeightedBalancerLPOracle =
         IWeightedBalancerLPOracle(0x16F3ae9C1727ee38c98417cA08BA785BB7641b5B);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 77_026_912);
-        cheats.label(address(WBTC), "WBTC");
-        cheats.label(address(USDT), "USDT");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(FRAX), "FRAX");
-        cheats.label(address(account), "account");
-        cheats.label(address(Balancer), "Balancer");
-        cheats.label(address(aaveV3), "aaveV3");
-        cheats.label(address(balancerToken), "balancerToken");
-        cheats.label(address(AccountManager), "AccountManager");
-        cheats.label(address(WeightedBalancerLPOracle), "WeightedBalancerLPOracle");
+        vm.createSelectFork("arbitrum", 77_026_912);
+        vm.label(address(WBTC), "WBTC");
+        vm.label(address(USDT), "USDT");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(FRAX), "FRAX");
+        vm.label(address(account), "account");
+        vm.label(address(Balancer), "Balancer");
+        vm.label(address(aaveV3), "aaveV3");
+        vm.label(address(balancerToken), "balancerToken");
+        vm.label(address(AccountManager), "AccountManager");
+        vm.label(address(WeightedBalancerLPOracle), "WeightedBalancerLPOracle");
     }
 
     function testExploit() external {

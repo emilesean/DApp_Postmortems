@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~80K USD$
 // Attacker : https://bscscan.com/address/0xdc459596aed13b9a52fb31e20176a7d430be8b94
@@ -30,35 +29,33 @@ contract WGPTTest is Test {
     // Token created by the exploiter
     IERC20 private constant ExpToken = IERC20(0xe1272a840F574b68dE861eC5009784e3411cb96c);
     IWGPT private constant WGPT = IWGPT(0x1f415255f7E2a8546559a553E962dE7BC60d7942);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     // Pancake Pair created by the exploiter
-    Uni_Pair_V2 private constant BUSDT_ExpToken = Uni_Pair_V2(0xaa07222e4c3295C4E881ac8640Fbe5fB921D6840);
-    Uni_Pair_V2 private constant WGPT_BUSDT = Uni_Pair_V2(0x5a596eAE0010E16ed3B021FC09BbF0b7f1B2d3cD);
+    IUniswapV2Pair private constant BUSDT_ExpToken = IUniswapV2Pair(0xaa07222e4c3295C4E881ac8640Fbe5fB921D6840);
+    IUniswapV2Pair private constant WGPT_BUSDT = IUniswapV2Pair(0x5a596eAE0010E16ed3B021FC09BbF0b7f1B2d3cD);
     IDPPOracle private constant DPPOracle1 = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     IDPPOracle private constant DPPOracle2 = IDPPOracle(0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A);
     IDPPOracle private constant DPPOracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
     IDPPOracle private constant DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle private constant DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
-    Uni_Pair_V3 private constant PoolV3 = Uni_Pair_V3(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
+    IUniswapV3Pair private constant PoolV3 = IUniswapV3Pair(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
     address private constant exploiter = 0xdC459596aeD13B9a52FB31E20176a7D430Be8b94;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 29_891_709);
-        cheats.label(address(BUSDT), "BUSDT");
-        cheats.label(address(ExpToken), "ExpToken");
-        cheats.label(address(WGPT), "WGPT");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(BUSDT_ExpToken), "BUSDT_ExpToken");
-        cheats.label(address(WGPT_BUSDT), "WGPT_BUSDT");
-        cheats.label(address(DPPOracle1), "DPPOracle1");
-        cheats.label(address(DPPOracle2), "DPPOracle2");
-        cheats.label(address(DPPOracle3), "DPPOracle3");
-        cheats.label(address(DPP), "DPP");
-        cheats.label(address(DPPAdvanced), "DPPAdvanced");
-        cheats.label(address(PoolV3), "PoolV3");
-        cheats.label(exploiter, "Exploiter");
+        vm.createSelectFork("bsc", 29_891_709);
+        vm.label(address(BUSDT), "BUSDT");
+        vm.label(address(ExpToken), "ExpToken");
+        vm.label(address(WGPT), "WGPT");
+        vm.label(address(Router), "Router");
+        vm.label(address(BUSDT_ExpToken), "BUSDT_ExpToken");
+        vm.label(address(WGPT_BUSDT), "WGPT_BUSDT");
+        vm.label(address(DPPOracle1), "DPPOracle1");
+        vm.label(address(DPPOracle2), "DPPOracle2");
+        vm.label(address(DPPOracle3), "DPPOracle3");
+        vm.label(address(DPP), "DPP");
+        vm.label(address(DPPAdvanced), "DPPAdvanced");
+        vm.label(address(PoolV3), "PoolV3");
+        vm.label(exploiter, "Exploiter");
     }
 
     function testExploit() public {

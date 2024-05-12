@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/DecurityHQ/status/1671803688996806656
@@ -24,10 +23,8 @@ contract ContractTest is Test {
     IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IPancakePair constant Bunn_Wbnb_Poll = IPancakePair(0xb4B84375Ae9bb94d19F416D3db553827Be349520);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() external {
-        cheats.createSelectFork("bsc", 29_304_627);
+        vm.createSelectFork("bsc", 29_304_627);
     }
 
     function testExploit() external {

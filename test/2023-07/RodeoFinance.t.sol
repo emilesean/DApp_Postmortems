@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~472 Ether (~$888K)
 // Attacker : https://arbiscan.io/address/0x2f3788f2396127061c46fc07bd0fcb91faace328
@@ -17,14 +16,9 @@ import "./../interface.sol";
 
 interface IInvestor {
 
-    function earn(
-        address usr,
-        address pol,
-        uint256 str,
-        uint256 amt,
-        uint256 bor,
-        bytes memory dat
-    ) external returns (uint256);
+    function earn(address usr, address pol, uint256 str, uint256 amt, uint256 bor, bytes memory dat)
+        external
+        returns (uint256);
 
 }
 
@@ -65,17 +59,16 @@ contract RodeoTest is Test {
     ISwapRouter SwapRouter = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     IBalancerVault Vault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     address private constant usdcPool = 0x0032F5E1520a66C6E572e96A11fBF54aea26f9bE;
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
-        cheats.createSelectFork("arbitrum", 110_043_452);
-        cheats.label(address(unshETH), "unsETH");
-        cheats.label(address(WETH), "WETH");
-        cheats.label(address(USDC), "USDC");
-        cheats.label(address(Investor), "Investor");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(SwapRouter), "SwapRouter");
-        cheats.label(address(Vault), "Vault");
+        vm.createSelectFork("arbitrum", 110_043_452);
+        vm.label(address(unshETH), "unsETH");
+        vm.label(address(WETH), "WETH");
+        vm.label(address(USDC), "USDC");
+        vm.label(address(Investor), "Investor");
+        vm.label(address(Router), "Router");
+        vm.label(address(SwapRouter), "SwapRouter");
+        vm.label(address(Vault), "Vault");
     }
 
     // Root Cause

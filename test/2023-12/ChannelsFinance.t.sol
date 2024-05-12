@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./interface.sol";
 
 // @KeyInfo - Total Lost : ~320K
 // Attacker : https://bscscan.com/address/0x20395d8e8a11cfd2541b942afdb810b7dcc64681
@@ -41,9 +40,9 @@ contract ContractTest is Test {
     IERC20 private constant USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);
     IERC20 private constant DAI = IERC20(0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3);
     ICointroller private constant Comptroller = ICointroller(0xFC518333F4bC56185BDd971a911fcE03dEe4fC8c);
-    Uni_Pair_V3 private constant BUSDT_BTCB = Uni_Pair_V3(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
-    Uni_Pair_V3 private constant BUSDT_BUSD = Uni_Pair_V3(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
-    Uni_Pair_V2 private constant BTCB_BUSD = Uni_Pair_V2(0xF45cd219aEF8618A92BAa7aD848364a158a24F33);
+    IUniswapV3Pair private constant BUSDT_BTCB = IUniswapV3Pair(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
+    IUniswapV3Pair private constant BUSDT_BUSD = IUniswapV3Pair(0x4f3126d5DE26413AbDCF6948943FB9D0847d9818);
+    IUniswapV2Pair private constant BTCB_BUSD = IUniswapV2Pair(0xF45cd219aEF8618A92BAa7aD848364a158a24F33);
     address private constant attackContract = 0x07e536F23a197F6FB76F42aD01ac2Bcdc3BF738E;
 
     function setUp() public {

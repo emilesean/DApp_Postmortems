@@ -2,7 +2,6 @@
 pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
-import "../interface.sol";
 
 // @KeyInfo - Total Lost : 36K
 // Attacker : https://arbiscan.io/address/0xc91cb089084f0126458a1938b794aa73b9f9189d
@@ -101,7 +100,7 @@ contract Rico is Test {
         uint256 tokenBalance = IERC20(token).balanceOf(address(this));
         IERC20(token).approve(UniV3Router, tokenBalance);
 
-        Uni_Router_V3.ExactInputSingleParams memory params;
+        IUniswapV3Router.ExactInputSingleParams memory params;
         params.tokenIn = token;
         params.tokenOut = USDC_TOKEN;
         params.fee = 3000;
@@ -110,7 +109,7 @@ contract Rico is Test {
         params.amountIn = tokenBalance;
         params.amountOutMinimum = 0;
         params.sqrtPriceLimitX96 = 0;
-        Uni_Router_V3(UniV3Router).exactInputSingle(params);
+        IUniswapV3Router(UniV3Router).exactInputSingle(params);
     }
 
 }

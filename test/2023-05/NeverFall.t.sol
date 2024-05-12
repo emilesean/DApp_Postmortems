@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 /*
 @Analysis
@@ -45,7 +44,7 @@ contract ContractTest is Test {
         // sell neverfall
         INeverFall(neverFall).sell(75_500_000 * 1e18);
 
-        IERC20(usdt).transfer(msg.sender, usdtBalance + usdtBalance * 30 / 10_000);
+        IERC20(usdt).transfer(msg.sender, usdtBalance + (usdtBalance * 30) / 10_000);
         emit log_named_decimal_uint("[After Attacks]  Attacker usdt balance", IERC20(usdt).balanceOf(address(this)), 18);
     }
 

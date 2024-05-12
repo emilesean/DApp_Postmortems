@@ -1,7 +1,5 @@
 import "forge-std/Test.sol";
 
-import "./../interface.sol";
-
 // @KeyInfo - Total Lost : ~$42000 USD
 // Attacker : https://bscscan.com/address/0x4645863205b47a0a3344684489e8c446a437d66c
 // Attack Contract : https://bscscan.com/address/0x38721b0d67dfdba1411bb277d95af3d53fa7200e
@@ -18,16 +16,15 @@ interface IMarketFacet {
 
     function isComptroller() external pure returns (bool);
 
-    function liquidateCalculateSeizeTokens(
-        address vTokenBorrowed,
-        address vTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateCalculateSeizeTokens(address vTokenBorrowed, address vTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
-    function liquidateVAICalculateSeizeTokens(
-        address vTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateVAICalculateSeizeTokens(address vTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
     // function checkMembership(address account, VToken vToken) external view returns (bool);
 
@@ -87,7 +84,7 @@ interface VBep20Interface {
 
 contract ContractTest is Test {
 
-    WETH9 private WBNB = WETH9(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWETH private WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 private LINK = IERC20(0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD);
     IERC20 private BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 private BTCB = IERC20(0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c);
@@ -112,7 +109,7 @@ contract ContractTest is Test {
     IDPPOracle DPPOracle_0x8191 = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
 
     IPancakePair pancakeSwap = IPancakePair(0x824eb9faDFb377394430d2744fa7C42916DE3eCe); // LINK-WBNB
-    Uni_Pair_V3 pool = Uni_Pair_V3(0x172fcD41E0913e95784454622d1c3724f546f849);
+    IUniswapV3Pair pool = IUniswapV3Pair(0x172fcD41E0913e95784454622d1c3724f546f849);
 
     function setUp() public {
         vm.createSelectFork("bsc", 36_145_772 - 1);

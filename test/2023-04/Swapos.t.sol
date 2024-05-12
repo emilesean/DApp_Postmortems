@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/CertiKAlert/status/1647530789947469825
@@ -27,12 +26,10 @@ contract ContractTest is Test {
     IWETH private constant WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     SWAPOS swapPos = SWAPOS(0x8ce2F9286F50FbE2464BFd881FAb8eFFc8Dc584f);
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
-
     function setUp() public {
-        cheats.createSelectFork("mainnet", 17_057_419);
-        cheats.label(address(WETH), "weth");
-        cheats.label(address(swpToken), "swpToken");
+        vm.createSelectFork("mainnet", 17_057_419);
+        vm.label(address(WETH), "weth");
+        vm.label(address(swpToken), "swpToken");
     }
 
     function testExploit() external {

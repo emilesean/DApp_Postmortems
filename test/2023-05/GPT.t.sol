@@ -2,7 +2,6 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import "./../interface.sol";
 
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1661424685320634368
@@ -22,12 +21,11 @@ contract CSExp is Test, IDODOCallee {
     IPancakePair pair = IPancakePair(0x77a684943aA033e2E9330f12D4a1334986bCa3ef);
     IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
-    CheatCodes cheats = CheatCodes(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
     IERC20 BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 GPT = IERC20(0xa1679abEF5Cd376cC9A1C4c2868Acf52e08ec1B3);
 
     function setUp() public {
-        cheats.createSelectFork("bsc", 28_494_868);
+        vm.createSelectFork("bsc", 28_494_868);
     }
 
     function doFlashLoan(IDPPOracle oracle) internal {

