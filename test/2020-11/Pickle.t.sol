@@ -48,27 +48,29 @@ contract FakeJar {
         return _token;
     }
 
-    function transfer(address to, uint256 amnt) public returns (bool) {
+    function transfer(address to, uint256 amnt) public pure returns (bool) {
+        to;
+        amnt;
         return true;
     }
 
-    function transferFrom(address, address, uint256) public returns (bool) {
+    function transferFrom(address, address, uint256) public pure returns (bool) {
         return true;
     }
 
-    function getRatio() public returns (uint256) {
+    function getRatio() public pure returns (uint256) {
         return 0;
     }
 
-    function decimals() public returns (uint256) {
+    function decimals() public pure returns (uint256) {
         return 0;
     }
 
-    function balanceOf(address) public returns (uint256) {
+    function balanceOf(address) public pure returns (uint256) {
         return 0;
     }
 
-    function approve(address, uint256) public returns (bool) {
+    function approve(address, uint256) public pure returns (bool) {
         return true;
     }
 
@@ -88,15 +90,15 @@ contract FakeUnderlying {
         target = _target;
     }
 
-    function balanceOf(address) public returns (address) {
+    function balanceOf(address) public view returns (address) {
         return target;
     }
 
-    function approve(address, uint256) public returns (bool) {
+    function approve(address, uint256) public pure returns (bool) {
         return true;
     }
 
-    function allowance(address, address) public returns (uint256) {
+    function allowance(address, address) public pure returns (uint256) {
         return 0;
     }
 

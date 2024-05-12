@@ -27,6 +27,7 @@ import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // _levelConfigs[3] = LevelConfig(1000, 2400000 * amountUnit, 20000 * amountUnit);
 // _feeDivFactor = 10000
 // rewrad: 162_000 = 1_200_000 * 0.1 + 600_000 * 0.05 + 300_000 * 0.03 + 300_000 * 0.01
+// Test runs take long
 
 interface UEarnPool {
 

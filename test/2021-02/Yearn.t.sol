@@ -6,7 +6,7 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "src/interfaces/IERC20.sol";
 
-import {SafeERC20 as TransferHelper} from "src/token/ERC20/utils/SafeERC20.sol";
+import {SafeERC20 as TransferHelper} from "src/interfaces/SafeERC20.sol";
 //Converted to foundry test from this file https://gist.github.com/xu3kev/cb1992269c429647d24b6759aff6261c
 
 // @KeyInfo - Total Lost : ~11M US$

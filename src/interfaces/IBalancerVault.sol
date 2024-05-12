@@ -2,7 +2,7 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-import {IERC20} from "OpenZeppelin/interfaces/IERC20.sol";
+import {IERC20} from "./IERC20.sol";
 
 interface IBalancerVault {
 
