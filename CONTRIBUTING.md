@@ -1,6 +1,7 @@
 # Contribution Guidelines
 
-We're thrilled to have you contribute to the DAppHackPOCs project. Your contributions are vital in keeping our repository a rich and accurate resource for DeFi hack incidents and their proof-of-concept (POC) exploits. Below is a streamlined process for adding new incident entries.
+We're thrilled to have you contribute to the DApp_Postmortems project. Your contributions are vital in keeping our repository a rich and accurate resource for DeFi hack incidents and their proof-of-concept (POC) exploits. Below is a streamlined process for adding new incident entries.
+
 ### Note on Contributions
 
 - **Simplicity is Key**: We prioritize simplicity in our codebase. Our focus is on Solidity and maintaining a clean, straightforward environment for development.
@@ -9,28 +10,31 @@ We're thrilled to have you contribute to the DAppHackPOCs project. Your contribu
 
 ## How to Add a New Incident Entry
 
-1. **Fork the Repository**: Start by forking the [DAppHackPOCs repository](https://github.com/emilesean/DAppHackPOC.git) on GitHub.
+1. **Fork the Repository**: Start by forking the [DApp_Postmortems repository](https://github.com/emilesean/DApp_Postmortems.git) on GitHub.
 
 2. **Clone Your Fork**: Clone the fork to your local machine and initialize submodules:
+
    ```bash
-   git clone https://github.com/your-username-here/DAppHackPOC.git
+   git clone https://github.com/your-username-here/DApp_Postmortems.git
    git submodule update --init --recursive
    ```
 
-3. **Prepare the POC**: Using the [POC template](./src//Poc-template.sol) Navigate to the project directory and run tests:
+3. **Prepare the POC**: Using the [POC template](./src/Poc-template.sol) Navigate to the project directory and run tests:
+
    ```bash
-   cd DAppHackPOCs
+   cd DApp_Postmortems
    forge test --contracts ./test/yyyy-mm/IncidentName.t.sol -vvv
    forge fmt
    ```
 
 4. **Commit Your Changes**: Create a new branch, commit your changes, and push them:
-    ```bash
-    git checkout -b IncidentName
-    git add .
-    git commit -m "feat: Add POC for IncidentName"
-    git push origin IncidentName
-    ```
+
+   ```bash
+   git checkout -b IncidentName
+   git add .
+   git commit -m "feat: Add POC for IncidentName"
+   git push origin IncidentName
+   ```
 
 5. **Open a Pull Request**: Submit a pull request to the main repository with a detailed description of the incident.
 
