@@ -1,0 +1,21 @@
+name: Check Formatting
+
+on: [push, pull_request,workflow_dispatch]
+
+jobs:
+  check:
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+         submodules: recursive 
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Check formatting
+        run: forge fmt ./test --check
+        run: forge fmt ./src --check
