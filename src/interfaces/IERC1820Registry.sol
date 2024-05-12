@@ -18,11 +18,8 @@ pragma solidity ^0.8.10;
  * For an in-depth explanation and source code analysis, see the EIP text.
  */
 interface IERC1820Registry {
-    event InterfaceImplementerSet(
-        address indexed account,
-        bytes32 indexed interfaceHash,
-        address indexed implementer
-    );
+
+    event InterfaceImplementerSet(address indexed account, bytes32 indexed interfaceHash, address indexed implementer);
 
     event ManagerChanged(address indexed account, address indexed newManager);
 
@@ -68,11 +65,7 @@ interface IERC1820Registry {
      * queried for support, unless `implementer` is the caller. See
      * {IERC1820Implementer-canImplementInterfaceForAddress}.
      */
-    function setInterfaceImplementer(
-        address account,
-        bytes32 _interfaceHash,
-        address implementer
-    ) external;
+    function setInterfaceImplementer(address account, bytes32 _interfaceHash, address implementer) external;
 
     /**
      * @dev Returns the implementer of `interfaceHash` for `account`. If no such
@@ -83,19 +76,14 @@ interface IERC1820Registry {
      *
      * `account` being the zero address is an alias for the caller's address.
      */
-    function getInterfaceImplementer(
-        address account,
-        bytes32 _interfaceHash
-    ) external view returns (address);
+    function getInterfaceImplementer(address account, bytes32 _interfaceHash) external view returns (address);
 
     /**
      * @dev Returns the interface hash for an `interfaceName`, as defined in the
      * corresponding
      * https://eips.ethereum.org/EIPS/eip-1820#interface-name[section of the EIP].
      */
-    function interfaceHash(
-        string calldata interfaceName
-    ) external pure returns (bytes32);
+    function interfaceHash(string calldata interfaceName) external pure returns (bytes32);
 
     /**
      * @notice Updates the cache with whether the contract implements an ERC165 interface or not.
@@ -113,10 +101,7 @@ interface IERC1820Registry {
      * @param interfaceId ERC165 interface to check.
      * @return True if `account` implements `interfaceId`, false otherwise.
      */
-    function implementsERC165Interface(
-        address account,
-        bytes4 interfaceId
-    ) external view returns (bool);
+    function implementsERC165Interface(address account, bytes4 interfaceId) external view returns (bool);
 
     /**
      * @notice Checks whether a contract implements an ERC165 interface or not without using or updating the cache.
@@ -124,8 +109,6 @@ interface IERC1820Registry {
      * @param interfaceId ERC165 interface to check.
      * @return True if `account` implements `interfaceId`, false otherwise.
      */
-    function implementsERC165InterfaceNoCache(
-        address account,
-        bytes4 interfaceId
-    ) external view returns (bool);
+    function implementsERC165InterfaceNoCache(address account, bytes4 interfaceId) external view returns (bool);
+
 }

