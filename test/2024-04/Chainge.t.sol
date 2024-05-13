@@ -123,15 +123,15 @@ contract Exploit is Test {
         return 11;
     }
 
-    function allowance(address, address) external view returns (uint256) {
+    function allowance(address, address) external pure returns (uint256) {
         return 100;
     }
 
-    function transfer(address, uint256) external returns (bool) {
+    function transfer(address, uint256) external pure returns (bool) {
         return true;
     }
 
-    function transferFrom(address, address, uint256) external returns (bool) {
+    function transferFrom(address, address, uint256) external pure returns (bool) {
         return true;
     }
 

