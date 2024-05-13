@@ -18,11 +18,10 @@ import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // Twitter alert by Peckshield: https://twitter.com/peckshield/status/1745907642118123774
 
 contract WiseLendingTest is Test {
-    IWiseLending public wiseLending =
-        IWiseLending(payable(0x37e49bf3749513A02FA535F0CbC383796E8107E4));
 
-    NFTManager public nft =
-        NFTManager(0x32E0A7F7C4b1A19594d25bD9b63EBA912b1a5f61);
+    IWiseLending public wiseLending = IWiseLending(payable(0x37e49bf3749513A02FA535F0CbC383796E8107E4));
+
+    NFTManager public nft = NFTManager(0x32E0A7F7C4b1A19594d25bD9b63EBA912b1a5f61);
 
     uint256 blockNumber = 18_983_652;
 
@@ -69,8 +68,7 @@ contract WiseLendingTest is Test {
 
         IERC20(poolToken).transfer(address(wiseLending), 1e9);
 
-        (uint256 pseudoTotalPool, uint256 totalDepositShares, ) = wiseLending
-            .lendingPoolData(poolToken);
+        (uint256 pseudoTotalPool, uint256 totalDepositShares,) = wiseLending.lendingPoolData(poolToken);
 
         skip(5 seconds);
 
@@ -81,178 +79,103 @@ contract WiseLendingTest is Test {
 
         uint256 i = 0;
         do {
-            (pseudoTotalPool, totalDepositShares, ) = wiseLending
-                .lendingPoolData(poolToken);
-            share = wiseLending.depositExactAmount(
-                nftId,
-                poolToken,
-                pseudoTotalPool * 2 - 1
-            );
+            (pseudoTotalPool, totalDepositShares,) = wiseLending.lendingPoolData(poolToken);
+            share = wiseLending.depositExactAmount(nftId, poolToken, pseudoTotalPool * 2 - 1);
 
             wiseLending.withdrawExactAmount(nftId, poolToken, share);
             ++i;
         } while (i < 20);
 
-        (pseudoTotalPool, totalDepositShares, ) = wiseLending.lendingPoolData(
-            poolToken
-        );
-        share = wiseLending.depositExactAmount(
-            nftId,
-            poolToken,
-            pseudoTotalPool * 2 - 1
-        );
-        (pseudoTotalPool, totalDepositShares, ) = wiseLending.lendingPoolData(
-            poolToken
-        );
+        (pseudoTotalPool, totalDepositShares,) = wiseLending.lendingPoolData(poolToken);
+        share = wiseLending.depositExactAmount(nftId, poolToken, pseudoTotalPool * 2 - 1);
+        (pseudoTotalPool, totalDepositShares,) = wiseLending.lendingPoolData(poolToken);
 
-        IERC20(poolToken).transfer(
-            other,
-            IERC20(poolToken).balanceOf(address(this))
-        );
+        IERC20(poolToken).transfer(other, IERC20(poolToken).balanceOf(address(this)));
         vm.startPrank(other);
         nftId = nft.mintPosition();
         IERC20(poolToken).approve(address(wiseLending), MAX);
 
-        wiseLending.depositExactAmount(
-            nftId,
-            poolToken,
-            IERC20(poolToken).balanceOf(other)
-        );
+        wiseLending.depositExactAmount(nftId, poolToken, IERC20(poolToken).balanceOf(other));
 
-        uint256 amount = IWiseSecurity(wiseSecurity).maximumBorrowToken(
-            nftId,
-            poolToken,
-            0
-        );
+        uint256 amount = IWiseSecurity(wiseSecurity).maximumBorrowToken(nftId, poolToken, 0);
 
         wiseLending.borrowExactAmount(nftId, wsteth, amount);
     }
 
     function _simulateOracleCall() internal {
-        (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        ) = Oracle(wstethOracle).latestRoundData();
+        (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) =
+            Oracle(wstethOracle).latestRoundData();
         vm.mockCall(
             wstethOracle,
             abi.encodeCall(Oracle.latestRoundData, ()),
-            abi.encode(
-                roundId,
-                answer,
-                block.timestamp,
-                block.timestamp,
-                answeredInRound
-            )
+            abi.encode(roundId, answer, block.timestamp, block.timestamp, answeredInRound)
         );
 
         uint80 _roundId;
-        (_roundId, answer, startedAt, updatedAt, answeredInRound) = Oracle(
-            wstethOracle
-        ).getRoundData(roundId);
+        (_roundId, answer, startedAt, updatedAt, answeredInRound) = Oracle(wstethOracle).getRoundData(roundId);
 
         vm.mockCall(
             wstethOracle,
             abi.encodeCall(Oracle.getRoundData, (roundId)),
-            abi.encode(
-                _roundId,
-                answer,
-                block.timestamp,
-                block.timestamp,
-                answeredInRound
-            )
+            abi.encode(_roundId, answer, block.timestamp, block.timestamp, answeredInRound)
         );
     }
+
 }
 
 interface Pool {
-    function depositExactAmount(
-        uint256 _underlyingLpAssetAmount
-    ) external returns (uint256, uint256);
-    function getPositionLendingShares(
-        uint256,
-        address
-    ) external returns (uint256);
+
+    function depositExactAmount(uint256 _underlyingLpAssetAmount) external returns (uint256, uint256);
+    function getPositionLendingShares(uint256, address) external returns (uint256);
+
 }
 
 interface NFTManager {
+
     function mintPosition() external returns (uint256);
+
 }
 
 interface Oracle {
+
     function latestRoundData()
         external
         view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        );
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
 
-    function getRoundData(
-        uint80 _roundId
-    )
+    function getRoundData(uint80 _roundId)
         external
         view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        );
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
+
 }
 
 interface IWiseLending {
-    function depositExactAmount(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _amount
-    ) external returns (uint256);
 
-    function withdrawExactShares(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _shares
-    ) external returns (uint256);
+    function depositExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
 
-    function withdrawExactAmount(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _withdrawAmount
-    ) external returns (uint256);
+    function withdrawExactShares(uint256 _nftId, address _poolToken, uint256 _shares) external returns (uint256);
 
-    function getPositionLendingShares(
-        uint256 _nftId,
-        address _poolToken
-    ) external view returns (uint256);
+    function withdrawExactAmount(uint256 _nftId, address _poolToken, uint256 _withdrawAmount)
+        external
+        returns (uint256);
 
-    function borrowExactAmount(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _amount
-    ) external returns (uint256);
+    function getPositionLendingShares(uint256 _nftId, address _poolToken) external view returns (uint256);
 
-    function lendingPoolData(
-        address _poolToken
-    )
+    function borrowExactAmount(uint256 _nftId, address _poolToken, uint256 _amount) external returns (uint256);
+
+    function lendingPoolData(address _poolToken)
         external
         view
-        returns (
-            uint256 pseudoTotalPool,
-            uint256 totalDepositShares,
-            uint256 collateralFactor
-        );
+        returns (uint256 pseudoTotalPool, uint256 totalDepositShares, uint256 collateralFactor);
+
 }
 
 interface IWiseSecurity {
-    function maximumBorrowToken(
-        uint256 _nftId,
-        address _poolToken,
-        uint256 _interval
-    ) external view returns (uint256 tokenAmount);
+
+    function maximumBorrowToken(uint256 _nftId, address _poolToken, uint256 _interval)
+        external
+        view
+        returns (uint256 tokenAmount);
+
 }

