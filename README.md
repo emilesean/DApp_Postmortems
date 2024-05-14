@@ -39,13 +39,23 @@ The repository includes **404 incidents**.
    # Example: forge test --contracts ./test/2022-07/Audius.t.sol -vvv
    ```
 
-   some POC are dependent on older EVM Versions The @KeyInfo Section of the POC will not Specify EVM version . To run them, you need to specify the EVM version:
+4.  Known Issues:
+
+
+  -  Some POC are dependent on older EVM Versions The @KeyInfo Section of the POC will Specify EVM version dependancy . To run them, you need to specify the EVM version:
 
    ```
    forge test --contracts <contract> --evm-version <evm-version> -vvv
    # Example: forge test --contracts ./test/2022-08/LuckyTiger.t.sol --evm-version london -vvv
    ```
+ - BSC POC take long to run BSC rpc nodes take long to respond to requests espcially when quering far into the past.
 
-4. Check out the [Contributing Guidelines](https://github.com/emilesean/DApp_Postmortems/blob/main/CONTRIBUTING.md)
+  - Many BSC nodes are non archiving or appear to have a limit on the number of blocks into the past you can query we keep running into this error with BSC nodes. We need a reliable rpc providers for BSC.
+ ``` 
+ It looks like you're trying to fork from an older block with a non-archive node which is not supported. Please try to change your RPC url to an archive node if the issue persists.  
+ ```
+ - Turning up the level of verbosity will slow down the test with each level of verbosity.
+
+5. Check out the [Contributing Guidelines](https://github.com/emilesean/DApp_Postmortems/blob/main/CONTRIBUTING.md)
 
 **Disclaimer:** This content serves solely as a proof of concept, showcasing past security incidents related to decentralized applications. It is strictly intended for educational purposes and should not be interpreted as encouragement or endorsement of any illegal activities or actual hacking attempts. Any actions taken based on this content are the sole responsibility of the individual, and usage should adhere to applicable laws, regulations, and ethical standards.
