@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 import "forge-std/Test.sol";
 
 // @KeyInfo - Total Lost : ~200K USD$
@@ -58,7 +59,7 @@ contract ContractTest is Test {
         );
     }
 
-    function xDomainMessageSender() external view returns (address) {
+    function xDomainMessageSender() external pure returns (address) {
         return messageSender;
     }
 

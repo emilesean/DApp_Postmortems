@@ -2,7 +2,10 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : Unclear
 // Attacker : https://bscscan.com/address/0x97eace4702217c1fea71cf6b79647a8ad5ddb0eb
 // Attack Contract : https://bscscan.com/address/0xb8f83f38e262f28f4e7d80aa5a0216378e92baf2
@@ -30,7 +33,7 @@ contract GYMTest is Test {
     // PancakeSwap V2: GYMNET-fakeUSDT
     IERC20 CakeLP = IERC20(0x8e1b75e6c43aEAf5055De07Ab4b76E356d7BB2db);
     IUniswapV2Pair PancakePair = IUniswapV2Pair(0xf5D3cba24783586Db9e7F35188EC0747FfB55F9B);
-    IUniswapV2Router PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router PancakeRouter = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IGymRouter GymRouter = IGymRouter(0x6b869795937DD2B6F4E03d5A0Ffd07A8AD8c095B);
 
     function setUp() public {

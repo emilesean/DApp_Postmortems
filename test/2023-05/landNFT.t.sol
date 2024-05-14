@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IERC721} from "src/interfaces/IERC721.sol";
 // @KeyInfo - Total Lost : 200 land NFT => 28,601 $XQJ  => 149,616 $BUSD
 // Attack Tx : https://bscscan.com/tx/0xe4db1550e3aa78a05e93bfd8fbe21b6eba5cce50dc06688949ab479ebed18048
 // @Analysis
@@ -40,7 +43,7 @@ contract ContractTest is Test {
         emit log_named_uint("Attacker amount of NFT land after mint", landNFT.balanceOf(address(this)));
     }
 
-    function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 

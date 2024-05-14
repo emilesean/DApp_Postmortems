@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~4 ETH
 // Original Attacker: https://etherscan.io/address/0x14d8ada7a0ba91f59dc0cb97c8f44f1d177c2195
 // Frontrunner: https://etherscan.io/address/0xe71aca93c0e0721f8250d2d0e4f883aa1c020361
@@ -27,14 +29,14 @@ contract SHOCOAttacker is Test {
     IERC20 weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     function setUp() public {
-        vm.createSelectFork("mainnet");
+        vm.createSelectFork("mainnet", 16_440_979);
 
         vm.label(address(shoco_weth), "shoco-weth UniswapPair");
         vm.label(address(weth), "WETH");
         vm.label(address(shoco), "SHOCO");
     }
 
-    function getMappingValue(address targetContract, uint256 mapSlot, address key) public returns (uint256) {
+    function getMappingValue(address targetContract, uint256 mapSlot, address key) public view returns (uint256) {
         bytes32 slotValue = vm.load(targetContract, keccak256(abi.encode(key, mapSlot)));
         return uint256(slotValue);
     }

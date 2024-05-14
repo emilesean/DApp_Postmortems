@@ -2,7 +2,12 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo -- Total Lost : ~$61k
 // Frontrunner: https://bscscan.com/address/0x7cb74265e3e2d2b707122bf45aea66137c6c8891
 // Original Attacker: https://bscscan.com/address/0x84f37F6cC75cCde5fE9bA99093824A11CfDc329D
@@ -37,7 +42,7 @@ contract AISExploit is Test {
 
     IUniswapV3Pair pool = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
     IUniswapV2Pair usdt_ais = IUniswapV2Pair(0x1219F2699893BD05FE03559aA78e0923559CF0cf);
-    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     VulContract vulContract = VulContract(0xFFAc2Ed69D61CF4a92347dCd394D36E32443D9d7);
 

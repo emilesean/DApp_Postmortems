@@ -3,6 +3,14 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IERC721} from "src/interfaces/IERC721.sol";
+import {ICointroller} from "src/interfaces/ICointroller.sol";
+import {ISimplePriceOracle} from "src/interfaces/ISimplePriceOracle.sol";
+
 // @KeyInfo - Total Lost : ~$820K
 // Attacker : https://etherscan.io/address/0x8f7370d5d461559f24b83ba675b4c7e2fdb514cc
 // Attacker Contract : https://etherscan.io/address/0xb618d91fe014bfcb9c8d440468b6c78e9ada9da1
@@ -236,6 +244,7 @@ contract PawnfiTest is Test {
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
         external
+        pure
         returns (bytes4)
     {
         return this.onERC721Received.selector;

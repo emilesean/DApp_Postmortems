@@ -3,10 +3,15 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+
 contract ContractTest is Test {
 
     IDPPAdvanced constant dppAdvanced = IDPPAdvanced(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
-    WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
 
     IERC20 constant mnz = IERC20(0x861f1E1397daD68289e8f6a09a2ebb567f1B895C);
 

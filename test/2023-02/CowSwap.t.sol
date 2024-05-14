@@ -3,11 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/MevRefund/status/1622793836291407873
 // https://twitter.com/peckshield/status/1622801412727148544
 // @TX
 // https://etherscan.io/tx/0x90b468608fbcc7faef46502b198471311baca3baab49242a4a85b73d4924379b
+
 interface SwapGuard {
 
     struct Data {

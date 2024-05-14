@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 // @KeyInfo - Total Lost : ~36K USD$
 // Attacker : https://polygonscan.com/address/0x11576cb3d8d6328cf319e85b10e09a228e84a8de
 // Attack Contract : https://polygonscan.com/address/0x43623b96936e854f8d85f893011f22ac91e58164

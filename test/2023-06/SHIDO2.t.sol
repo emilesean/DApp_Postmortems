@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~977 WBNB
 // Attacker : https://bscscan.com/address/0x69810917928b80636178b1bb011c746efe61770d
 // Attack Contract : https://bscscan.com/address/0xcdb3d057ca0cfdf630baf3f90e9045ddeb9ea4cc
@@ -21,14 +28,14 @@ interface IShidoLock {
 
 contract ShidoTest is Test {
 
-    IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWETH WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IERC20 SHIDOInu = IERC20(0x733Af324146DCfe743515D8D77DC25140a07F9e0);
     // SHIDO Standard Token
     IERC20 SHIDO = IERC20(0xa963eE460Cf4b474c35ded8fFF91c4eC011FB640);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
-    IUniswapV2Router PancakeRouter = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router PancakeRouter = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Router AddRemoveLiquidityForFeeOnTransferTokens =
-        IUniswapV2Router(0x9869674E80D632F93c338bd398408273D20a6C8e);
+        IUniswapV2Router(payable(0x9869674E80D632F93c338bd398408273D20a6C8e));
     IShidoLock ShidoLock = IShidoLock(0xaF0CA21363219C8f3D8050E7B61Bb5f04e02F8D4);
 
     function setUp() public {

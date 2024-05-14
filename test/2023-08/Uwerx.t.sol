@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~176 ETH
 // Attacker : https://etherscan.io/address/0x6057a831d43c395198a10cf2d7d6d6a063b1fce4
 // Attack Contract : https://etherscan.io/address/0xda2ccfc4557ba55eada3cbebd0aeffcf97fc14ca
@@ -20,7 +24,7 @@ contract ContractTest is Test {
 
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 WERX = IERC20(0x4306B12F8e824cE1fa9604BbD88f2AD4f0FE3c54);
-    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IUniswapV2Pair pair = IUniswapV2Pair(0xa41529982BcCCDfA1105C6f08024DF787CA758C4);
 
     function setUp() public {

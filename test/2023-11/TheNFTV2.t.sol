@@ -2,17 +2,68 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IERC721} from "src/interfaces/IERC721.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~19K USD$
 // Attacker - https://etherscan.io/address/0x2F746bC70f72aAF3340B8BbFd254fd91a3996218
 // Attack contract - https://etherscan.io/address/0x85301f7b943fd132c8dbc33f8fd9d77109a84f28
 // Attack Tx : https://etherscan.io/tx/0xd5b4d68432cbbd912130bbb5b93399031ddbb400d8f723c78050574de7533106
 
 // @Analysis - https://x.com/MetaTrustAlert/status/1728616715825848377?s=20
+
+interface ITheNFTV2 {
+
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+    event BaseURI(string);
+    event Burn(address owner, uint256 tokenId);
+    event Mint(address owner, uint256 tokenId);
+    event OwnershipTransferred(address previousOwner, address newOwner);
+    event Restore(address owner, uint256 tokenId);
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Upgrade(address owner, uint256 tokenId);
+
+    function PDF_SHA_256_HASH() external view returns (string memory);
+    function PNG_SHA_256_HASH() external view returns (string memory);
+    function approve(address _to, uint256 _tokenId) external;
+    function balanceOf(address _holder) external view returns (uint256);
+    function burn(uint256 id) external;
+    function curator() external view returns (address);
+    function getApproved(uint256 _tokenId) external view returns (address);
+    function getStats(address _user) external view returns (uint256[] memory);
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+    function mint(uint256 i) external;
+    function name() external pure returns (string memory);
+    function onERC721Received(address, address, uint256, bytes memory) external pure returns (bytes4);
+    function owner() external view returns (address);
+    function ownerOf(uint256 _tokenId) external view returns (address);
+    function renounceOwnership() external;
+    function restore(uint256 id) external;
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory _data) external;
+    function setApprovalForAll(address _operator, bool _approved) external;
+    function setBaseURI(string memory _uri) external;
+    function setCurator(address _curator) external;
+    function supportsInterface(bytes4 interfaceId) external pure returns (bool);
+    function symbol() external pure returns (string memory);
+    function toString(uint256 value) external pure returns (string memory);
+    function tokenByIndex(uint256 _index) external view returns (uint256);
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256);
+    function tokenURI(uint256 _tokenId) external view returns (string memory);
+    function totalSupply() external view returns (uint256);
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+    function upgrade(uint256[] memory _ids) external;
+
+}
+
 contract TheNFTV2Test is Test {
 
-    IERC721 THENFTV2 = IERC721(0x79a7D3559D73EA032120A69E59223d4375DEb595);
+    ITheNFTV2 THENFTV2 = ITheNFTV2(0x79a7D3559D73EA032120A69E59223d4375DEb595);
     IERC20 TheDAO = IERC20(0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413);
-    IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUniswapV2Pair uniswap = IUniswapV2Pair(0xE1eCaDb5FEC254c2c893C230b935Db30b8FfF0db);
     uint256 constant nftId = 1071;
     address hacker = 0x85301f7b943fd132c8dBc33f8FD9d77109A84f28;

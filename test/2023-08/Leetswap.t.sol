@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~630K USD$
 // Attacker : https://basescan.org/address/0x705f736145bb9d4a4a186f4595907b60815085c3
 // Attack Contract : https://basescan.org/address/0xea8f89f47f3d4293897b4fe8cb69b5c233b9f560
@@ -30,7 +33,7 @@ contract ContractTest is Test {
 
     IERC20 WETH = IERC20(0x4200000000000000000000000000000000000006);
     IERC20 axlUSDC = IERC20(0xEB466342C4d449BC9f53A865D5Cb90586f405215);
-    IUniswapV2Router Router = IUniswapV2Router(0xfCD3842f85ed87ba2889b4D35893403796e67FF1);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0xfCD3842f85ed87ba2889b4D35893403796e67FF1));
     ILeetSwapPiar Pair = ILeetSwapPiar(0x94dAC4a3Ce998143aa119c05460731dA80ad90cf);
 
     function setUp() public {

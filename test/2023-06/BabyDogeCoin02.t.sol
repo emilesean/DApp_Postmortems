@@ -3,6 +3,16 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {crETH} from "src/interfaces/crETH.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
+import {ISimplePriceOracle} from "src/interfaces/ISimplePriceOracle.sol";
 // @KeyInfo - Total Lost : ~100K USD$
 // Attacker : https://bscscan.com/address/0xee6764ac7aa45ed52482e4320906fd75615ba1d1
 // Attack Contract : https://bscscan.com/address/0x9a6b926281b0c7bc4f775e81f42b13eda9c1c98e
@@ -57,8 +67,8 @@ contract ContractTest is Test {
     ICErc20Delegate vUSDT = ICErc20Delegate(0xfD5840Cd36d94D7229439859C0112a4185BC0255);
     ICErc20Delegate vBUSD = ICErc20Delegate(0x95c78222B3D6e262426483D42CfA53685A67Ab9D);
     crETH vBNB = crETH(0xA07c5b74C9B40447a954e1466938b865b6BBea36);
-    IUniswapV2Router BabyDogeRouter = IUniswapV2Router(0xC9a0F685F39d05D835c369036251ee3aEaaF3c47);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router BabyDogeRouter = IUniswapV2Router(payable(0xC9a0F685F39d05D835c369036251ee3aEaaF3c47));
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IFeeFreeRouter FeeFreeRouter = IFeeFreeRouter(0x9869674E80D632F93c338bd398408273D20a6C8e);
     IUnitroller Unitroller = IUnitroller(0xfD36E2c2a6789Db23113685031d7F16329158384);
     ISimplePriceOracle VenusChainlinkOracle = ISimplePriceOracle(0xd8B6dA2bfEC71D684D3E2a2FC9492dDad5C3787F);

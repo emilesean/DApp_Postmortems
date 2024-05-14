@@ -7,6 +7,8 @@ import {IBasePositionManager as IKyberswapPositionManager} from
     "./KyberSwap/interfaces/periphery/IBasePositionManager.sol";
 import {IPool as IKyberswapPool} from "./KyberSwap/interfaces/IPool.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 // @KeyInfo - Total Lost : ~$46M
 // Attacker EOA: https://etherscan.io/address/0x50275E0B7261559cE1644014d4b78D4AA63BE836
 // Attacker Contracts : https://etherscan.io/address/0xaf2acf3d4ab78e4c702256d214a3189a874cdc13
@@ -52,7 +54,11 @@ interface IUniswapV3Pool {
 
 contract Logger is Test {
 
-    function logTag(string memory stage, string memory token, string memory label) internal returns (string memory) {
+    function logTag(string memory stage, string memory token, string memory label)
+        internal
+        pure
+        returns (string memory)
+    {
         string memory text_stage = string(abi.encodePacked(" [ ", stage, " ] "));
         string memory text_token = string(abi.encodePacked(" [ ", token, " ] "));
         string memory text_label = string(abi.encodePacked(" [ ", label, " ] "));

@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @KeyInfo - Total Lost : ~46K USD$
 // Attacker : https://etherscan.io/address/0x00693a01221a5e93fb872637e3a9391ef5f48300
 // Attack Contract : https://etherscan.io/address/0x3f99d5cd830203a3027eb0ed6548db7f81c3408f
@@ -51,7 +57,7 @@ contract ContractTest is Test {
     IbdbSTBL bdbSTBL = IbdbSTBL(0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e);
     ICErc20Delegate bdbaoETH = ICErc20Delegate(0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     IAaveFlashloan AaveV2 = IAaveFlashloan(0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9);
 
     function setUp() public {

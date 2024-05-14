@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo -- Total Lost : ~$2.4ETH
 // Attacker : https://etherscan.io/address/0x6CE9fa08F139F5e48bc607845E57efE9AA34C9F6
 // Attack Contract : https://etherscan.io/address/0x154863eb71De4a34F88Ea57450840eAB1c71abA6

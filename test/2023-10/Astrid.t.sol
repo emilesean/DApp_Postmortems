@@ -2,7 +2,10 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~228591 USD$
 // Attacker : https://etherscan.io/address/0x792ec27874e1f614e757a1ae49d00ef5b2c73959
 // Attack Contract : https://etherscan.io/address/0xb2e855411f67378c08f47401eacff37461e16188
@@ -21,7 +24,7 @@ contract MyERC20 {
     address public stakedTokenAddr;
     uint256 public scaledBalanceToBal;
 
-    constructor(address _stakedTokenAddress, uint256 bal) public {
+    constructor(address _stakedTokenAddress, uint256 bal) {
         stakedTokenAddr = _stakedTokenAddress;
         scaledBalanceToBal = bal;
     }
@@ -59,11 +62,11 @@ contract MyERC20 {
         return 0;
     }
 
-    function stakedTokenAddress() external returns (address) {
+    function stakedTokenAddress() external view returns (address) {
         return stakedTokenAddr;
     }
 
-    function scaledBalanceToBalance(uint256 a) external returns (uint256) {
+    function scaledBalanceToBalance(uint256 a) external view returns (uint256) {
         return scaledBalanceToBal;
     }
 
@@ -99,7 +102,7 @@ contract ASTTest is Test {
     ICurvePool LidoCurvePool = ICurvePool(0xDC24316b9AE028F1497c275EB9192a3Ea0f67022);
     IuniswapV3 rETHPool = IuniswapV3(0xa4e0faA58465A2D369aa21B3e42d43374c6F9613);
     IuniswapV3 cbETHPool = IuniswapV3(0x840DEEef2f115Cf50DA625F7368C24af6fE74410);
-    IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_448_167);

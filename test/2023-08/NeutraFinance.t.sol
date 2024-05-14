@@ -3,6 +3,9 @@ pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
 
+import {IFlashLoanRecipient} from "src/interfaces/IFlashLoanRecipient.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/phalcon_xyz/status/1686654241111429120?s=46&t=Oc_WAGUoXqc9c0LidD-zww
 // @TX

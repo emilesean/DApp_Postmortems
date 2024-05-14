@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 // @KeyInfo - Total Lost : ~260K USD$
 // Attacker : c0ffeebabe.eth (wihtehat)
 // Attack Contract : https://etherscan.io/address/0x3aa228a80f50763045bdfc45012da124bd0a6809 (Mev Contract)
@@ -126,7 +130,7 @@ contract ContractTest is Test {
         WETH.transfer(address(WETH_WBTC_Pair), uint256(amount1Delta));
     }
 
-    function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 
@@ -178,7 +182,7 @@ contract Recover {
         WBTC.transfer(msg.sender, WBTC.balanceOf(address(this)));
     }
 
-    function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 

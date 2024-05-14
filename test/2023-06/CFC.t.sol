@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @KeyInfo - Total Lost : ~16k
 // Attacker contract address : https://bscscan.com/address/0x8213e87bb381919b292ace364d97d3a1ee38caa4
 // Vulnerable contract : https://bscscan.com/address/0xdd9b223aec6ea56567a62f21ff89585ff125632c

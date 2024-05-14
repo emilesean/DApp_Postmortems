@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IERC721} from "src/interfaces/IERC721.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @KeyInfo - Total Lost : ~$505K
 // Attacker : https://bscscan.com/address/0xa6566574edc60d7b2adbacedb71d5142cf2677fb
 // Attacker Contract : https://bscscan.com/address/0xd138b9a58d3e5f4be1cd5ec90b66310e241c13cd
@@ -66,7 +70,7 @@ contract BNOTest is Test {
         BNO.transfer(address(PancakePair), 296_077 * 1e18);
     }
 
-    function onERC721Received(address, address, uint256, bytes memory) external returns (bytes4) {
+    function onERC721Received(address, address, uint256, bytes memory) external pure returns (bytes4) {
         return this.onERC721Received.selector;
     }
 

@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // @TX's:
 // 1. https://bscscan.com/tx/0x57b589f631f8ff20e2a89a649c4ec2e35be72eaecf155fdfde981c0fec2be5ba
 // 2. https://bscscan.com/tx/0xbea605b238c85aabe5edc636219155d8c4879d6b05c48091cf1f7286bd4702ba
@@ -46,7 +49,7 @@ contract LocalTraders is Test {
 
         // Changing address value in slot 0 (changing owner)
         address paramForCall1 = 0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE;
-        upgradeableProxy.call(abi.encodeWithSelector(0xb5863c10, paramForCall1));
+        (bool success8,) = upgradeableProxy.call(abi.encodeWithSelector(0xb5863c10, paramForCall1));
 
         address addrInSlot0After = getValFromSlot0();
         // Confirm address change in slot 0
@@ -61,7 +64,7 @@ contract LocalTraders is Test {
 
         // Changing uint value in slot 3 (token price)
         uint256 paramForCall2 = 1;
-        upgradeableProxy.call(abi.encodeWithSelector(0x925d400c, paramForCall2));
+        (bool success4,) = upgradeableProxy.call(abi.encodeWithSelector(0x925d400c, paramForCall2));
 
         uint256 uintInSlot3After = getValFromSlot3();
         // Confirm price change in slot 3
@@ -93,12 +96,12 @@ contract LocalTraders is Test {
         );
     }
 
-    function getValFromSlot0() internal returns (address) {
+    function getValFromSlot0() internal view returns (address) {
         bytes32 valInslot0 = vm.load(upgradeableProxy, bytes32(uint256(0)));
         return address(uint160(uint256(valInslot0)));
     }
 
-    function getValFromSlot3() internal returns (uint256) {
+    function getValFromSlot3() internal view returns (uint256) {
         bytes32 valInslot3 = vm.load(upgradeableProxy, bytes32(uint256(3)));
         return uint256(valInslot3);
     }

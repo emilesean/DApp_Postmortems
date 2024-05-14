@@ -2,15 +2,15 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {
-    ICErc20Delegate,
-    IERC20,
-    IUnitroller,
-    IAaveFlashloan,
-    IBalancerVault,
-    IUniswapV2Pair,
-    IUniswapV3Pair
-} from "./../interface.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 
 // @KeyInfo
 // Project: https://twitter.com/0vixProtocol
@@ -306,7 +306,7 @@ contract ContractTest is Test {
     }
 
     function WMATICToGHST() internal {
-        address(WMATIC).call{value: address(this).balance}("");
+        (bool success5,) = address(WMATIC).call{value: address(this).balance}("");
         AlgebraPool1.swap(address(this), true, 314_000 * 1e18, 4_495_990_861_938_833_545_658_574_552, new bytes(0));
         WMATIC.transfer(address(SLP), 100_000 * 1e18);
         SLP.swap(0, 44_000 * 1e18, address(this), new bytes(0));
@@ -382,9 +382,9 @@ contract ContractTest is Test {
 
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         if (amount0Delta > 0) {
-            IERC20(Uni_Pair_V3(msg.sender).token0()).transfer(msg.sender, uint256(amount0Delta));
+            IERC20(IUniswapV3Pair(msg.sender).token0()).transfer(msg.sender, uint256(amount0Delta));
         } else if (amount1Delta > 0) {
-            IERC20(Uni_Pair_V3(msg.sender).token1()).transfer(msg.sender, uint256(amount1Delta));
+            IERC20(IUniswapV3Pair(msg.sender).token1()).transfer(msg.sender, uint256(amount1Delta));
         }
     }
 

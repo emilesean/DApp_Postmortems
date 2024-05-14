@@ -1,7 +1,14 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+import {IcurveYSwap} from "src/interfaces/IcurveYSwap.sol";
+import {ILendingPool} from "src/interfaces/ILendingPool.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/cmichelio/status/1646422861219807233
 // https://twitter.com/BeosinAlert/status/1646481687445114881

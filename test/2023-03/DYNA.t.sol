@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1628319536117153794
 // https://twitter.com/BeosinAlert/status/1628301635834486784
@@ -51,7 +55,7 @@ contract ContractTest is Test {
     IDYNA DYNA = IDYNA(0x5c0d0111ffc638802c9EfCcF55934D5C63aB3f79);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IStakingDYNA StakingDYNA = IStakingDYNA(0xa7B5eabC3Ee82c585f5F4ccC26b81c3Bd62Ff3a9);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0xb6148c6fA6Ebdd6e22eF5150c5C3ceE78b24a3a0);
     StakingReward stakingReward;
     StakingReward[] StakingRewardList;

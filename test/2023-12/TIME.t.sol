@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~84.59 ETH
 // Attacker : https://etherscan.io/address/0xfde0d1575ed8e06fbf36256bcdfa1f359281455a
 // Attack Contract : https://etherscan.io/address/0x6980a47bee930a4584b09ee79ebe46484fbdbdd0
@@ -40,7 +45,7 @@ contract ContractTest is Test {
     ITIME private constant TIME = ITIME(0x4b0E9a7dA8bAb813EfAE92A6651019B8bd6c0a29);
     IWETH private constant WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IUniswapV2Pair private constant TIME_WETH = IUniswapV2Pair(0x760dc1E043D99394A10605B2FA08F123D60faF84);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IForwarder private constant Forwarder = IForwarder(0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81);
     address private constant recoverAddr = 0xa16A5F37774309710711a8B4E83b068306b21724;
 

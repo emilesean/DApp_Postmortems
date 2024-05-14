@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @Analysis
 // https://twitter.com/cryptofishx/status/1662888991446941697
 // https://docs.jimbosprotocol.xyz/protocol/liquidity-rebalancing-scenarios

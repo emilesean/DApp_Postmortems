@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$38K
 // Attacker : https://bscscan.com/address/0x7cb74265e3e2d2b707122bf45aea66137c6c8891
 // Attacker Contract : https://bscscan.com/address/0x9180981034364f683ea25bcce0cff5e03a595bef
@@ -16,7 +20,7 @@ contract BFCTest is Test {
 
     IUniswapV2Pair BUSDT_WBNB = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
     IUniswapV2Pair BUSDT_BFC = IUniswapV2Pair(0x71e1949A1180C0F945fe47C96f88b1a898760c05);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IERC20 BFC = IERC20(0x595eac4A0CE9b7175a99094680fbe55A774B5464);
     IERC20 BUSDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);

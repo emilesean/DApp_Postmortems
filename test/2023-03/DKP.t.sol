@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/CertiKAlert/status/1633421908996763648
 // @TX
@@ -24,7 +28,7 @@ contract ContractTest is Test {
     IERC20 DKP = IERC20(0xd06fa1BA7c80F8e113c2dc669A23A9524775cF19);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IUniswapV2Pair Pair = IUniswapV2Pair(0xBE654FA75bAD4Fd82D3611391fDa6628bB000CC7);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IDKPExchange DKPExchange = IDKPExchange(0x89257A52Ad585Aacb1137fCc8abbD03a963B9683);
 
     function setUp() public {

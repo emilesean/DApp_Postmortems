@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @Analysis
 // https://twitter.com/BeosinAlert/status/1642372700726505473
 // @Tx

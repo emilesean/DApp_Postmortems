@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1654667621139349505
 // @TX
@@ -20,7 +24,7 @@ contract ContractTest is Test {
 
     IMEL MEL = IMEL(0x9A1aEF8C9ADA4224aD774aFdaC07C24955C92a54);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0x6a8C4448763C08aDEb80ADEbF7A29b9477Fa0628);
 
     function setUp() public {

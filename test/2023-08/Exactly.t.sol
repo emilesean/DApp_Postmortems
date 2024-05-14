@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC4626} from "src/interfaces/IERC4626.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~$7M USD$
 // Attacker : https://optimistic.etherscan.io/address/0x3747dbbcb5c07786a4c59883e473a2e38f571af9
 // Attack Contract : https://optimistic.etherscan.io/address/0x6dd61c69415c8ecab3fefd80d079435ead1a5b4d
@@ -27,7 +30,7 @@ interface IQuoter {
 
 interface IexaUSDC is IERC4626 {
 
-    function asset() external returns (address);
+    function asset() external view returns (address);
     function auditor() external view returns (address);
     function borrowAtMaturity(uint256 maturity, uint256 assets, uint256 maxAssets, address receiver, address borrower)
         external
@@ -764,7 +767,7 @@ contract FakeMarket is Nonces {
         return fakeTokenAmount;
     }
 
-    function accounts(address owner) external view returns (Account memory) {
+    function accounts(address owner) external pure returns (Account memory) {
         return Account(0, 0, 0);
     }
 
@@ -772,7 +775,7 @@ contract FakeMarket is Nonces {
 
     // ******************** ERC4626 ******************** //
 
-    function maxWithdraw(address owner) external view returns (uint256) {
+    function maxWithdraw(address owner) external pure returns (uint256) {
         return 0;
     }
 

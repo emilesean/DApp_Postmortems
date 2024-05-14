@@ -3,6 +3,12 @@ pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @KeyInfo - Total Lost : 819 BNB (~224K US$)
 // Attacker : 0x67a909f2953fb1138bea4b60894b51291d2d0795
 // Vulnerable Contract : 0x449fea37d339a11efe1b181e5d5462464bba3752
@@ -28,7 +34,7 @@ import "forge-std/Test.sol";
 
 contract Attacker is Test {
 
-    WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     Exploit immutable exploit;
 
     constructor() {
@@ -47,7 +53,7 @@ contract Attacker is Test {
 contract Exploit is Test {
 
     IDPPAdvanced constant dppAdvanced = IDPPAdvanced(0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4);
-    WBNB constant wbnb = WBNB(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWBNB constant wbnb = IWBNB(payable(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c));
     IUSDT constant usdt = IUSDT(0x55d398326f99059fF775485246999027B3197955);
     IERC20 constant bra = IERC20(0x449FEA37d339a11EfE1B181e5D5462464bBa3752);
     IPancakeRouter constant pancakeRouter = IPancakeRouter(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));

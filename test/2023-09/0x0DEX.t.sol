@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$61K
 // Attacker : https://etherscan.io/address/0xcf28e9b8aa557616bc24cc9557ffa7fa2c013d53
 // Attacker Contract : https://etherscan.io/address/0xc44ea7650b27f83a6b310a8fed9e9daf2864a65b
@@ -65,7 +70,7 @@ contract ContractTest is Test {
     IWETH private constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IERC20 private constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IBalancerVault private constant BalancerVault = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
 
     // begin sync with library Sig1.
     uint256 private constant Bx =

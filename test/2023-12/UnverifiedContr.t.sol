@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~$500K
 // Attacker : https://bscscan.com/address/0xa9edec4496bd013dac805fb221edefc53cbfaf05
 // Attack Contract : https://bscscan.com/address/0x791626eb05e60fac973646ac8d67b008b939fe88

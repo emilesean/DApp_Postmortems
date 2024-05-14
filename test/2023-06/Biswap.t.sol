@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~72K
 // Attacker - https://bscscan.com/address/0xa1e31b29f94296fc85fac8739511360f279b1976
 // Attack contract - https://bscscan.com/address/0x1d448e9661c5abfc732ea81330c6439b0aa449b5
@@ -164,7 +167,7 @@ contract FakePair is SimpleERC20 {
         token1Amount = t1;
     }
 
-    function burn(address to) external returns (uint256, uint256) {
+    function burn(address to) external view returns (uint256, uint256) {
         return (token0Amount, token1Amount);
     }
 

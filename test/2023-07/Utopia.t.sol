@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$119K
 // Attacker : https://bscscan.com/address/0xe84ef3615b8df94c52e5b6ef21acbf0039b29113
 // Attacker Contract : https://bscscan.com/address/0x6191203510c2a6442faecdb6c7bb837a76f02d23
@@ -25,7 +29,7 @@ contract UtopiaTest is Test {
 
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IUtopia Utopia = IUtopia(0xb1da08C472567eb0EC19639b1822F578d39F3333);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0xfeEf619a56fCE9D003E20BF61393D18f62B0b2D5);
 
     function setUp() public {

@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo -- Total Lost : ~280 ETH
 // Attacker : https://etherscan.io/address/0xce6397e53c13ff2903ffe8735e478d31e648a2c6
 // Attack Contract : https://etherscan.io/address/0xe6c6e86e04de96c4e3a29ad480c94e7a471969ab
@@ -34,7 +38,7 @@ contract MaestroRouter2Exploit is Test {
     address router_logic = 0x8EAE9827b45bcC6570c4e82b9E4FE76692b2ff7a;
     IERC20 Mog = IERC20(0xaaeE1A9723aaDB7afA2810263653A34bA2C21C7a);
     IWETH WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Router UniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router UniRouter = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
 
     function setUp() public {
         vm.createSelectFork("mainnet");

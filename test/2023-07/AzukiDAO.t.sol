@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~$69K
 // Attacker : https://etherscan.io/address/0x85d231c204b82915c909a05847cca8557164c75e
 // Vulnerable Contract : https://etherscan.io/address/0x8189afbe7b0e81dae735ef027cd31371b3974feb

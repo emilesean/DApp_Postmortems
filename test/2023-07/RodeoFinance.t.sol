@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 // @KeyInfo - Total Lost : ~472 Ether (~$888K)
 // Attacker : https://arbiscan.io/address/0x2f3788f2396127061c46fc07bd0fcb91faace328
 // Attack Contract : https://arbiscan.io/address/0xe9544ee39821f72c4fc87a5588522230e340aa54

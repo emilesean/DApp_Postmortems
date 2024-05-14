@@ -3,6 +3,22 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+
+interface IPoolInitializer {
+
+    function createAndInitializePoolIfNecessary(address token0, address token1, uint24 fee, uint160 sqrtPriceX96)
+        external
+        payable
+        returns (address pool);
+
+}
+
 // @KeyInfo - Total Lost : ~$290K
 // Attacker : https://arbiscan.io/address/0x09ed480feaf4cbc363481717e04e2c394ab326b4
 // Attack Contract : https://arbiscan.io/address/0xb589d4a36ef8766d44c9785131413a049d51dbc0
@@ -114,7 +130,7 @@ contract ContractTest is Test {
     ISmartVaultManagerV2 private constant SmartVaultManagerV2 =
         ISmartVaultManagerV2(0xba169cceCCF7aC51dA223e04654Cf16ef41A68CC);
     ICamelotRouter private constant RouterV3 = ICamelotRouter(0x1F721E2E82F6676FCE4eA07A5958cF098D339e18);
-    IUniswapV3Router private constant Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router private constant Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     ISmartVaultV2 private SmartVaultV2;
 
     function setUp() public {
@@ -170,6 +186,7 @@ contract ContractTest is Test {
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
         external
+        pure
         returns (bytes4)
     {
         return this.onERC721Received.selector;

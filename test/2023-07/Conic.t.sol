@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
 // @KeyInfo - Total Lost : ~3.25M USD$
 // Attacker : https://etherscan.io/address/0x8d67db0b205e32a5dd96145f022fa18aae7dc8aa
 // Attack Contract : https://etherscan.io/address/0x743599ba5cfa3ce8c59691af5ef279aaafa2e4eb
@@ -46,7 +52,7 @@ interface ICurve {
 
 contract ContractTest is Test {
 
-    IWFTM WETH = IWFTM(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+    IWETH WETH = IWETH(payable(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
     IERC20 rETH = IERC20(0xae78736Cd615f374D3085123A210448E74Fc6393);
     IERC20 stETH = IERC20(0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84);
     IERC20 cbETH = IERC20(0xBe9895146f7AF43049ca1c1AE358B0541Ea49704);

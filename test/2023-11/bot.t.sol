@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @KeyInfo - Total Lost : ~$2M
 // Attacker : https://etherscan.io/address/0x46d9b3dfbc163465ca9e306487cba60bc438f5a2
 // Attack Contract : https://etherscan.io/address/0xeadf72fd4733665854c76926f4473389ff1b78b1

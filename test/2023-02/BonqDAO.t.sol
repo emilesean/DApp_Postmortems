@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-
+import {IERC20} from "src/interfaces/IERC20.sol";
 // @KeyInfo
 // Total Lost : BEUR stablecoin and ALBT token (~88MUS$)
 //   |_ 100,514,098.3407 BEUR from BonqDAO protocol

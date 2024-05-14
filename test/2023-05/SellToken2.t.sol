@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IDODOCallee} from "src/interfaces/IDODOCallee.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1657324561577435136
 // @TX

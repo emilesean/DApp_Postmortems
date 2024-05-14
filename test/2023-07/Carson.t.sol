@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~150K USD$
 // Attacker : https://bscscan.com/address/0x25bcbbb92c2ae9d0c6f4db814e46fd5c632e2bd3
 // Attack Contract : https://bscscan.com/address/0x9cffc95e742d22c1446a3d22e656bb23835a38ac
@@ -23,7 +29,7 @@ contract CarsonTest is Test {
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     // Closed source contract
-    IUniswapV2Router Router = IUniswapV2Router(0x2bDFb2f33E1aaEe08719F50d05Ef28057BB6341a);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x2bDFb2f33E1aaEe08719F50d05Ef28057BB6341a));
 
     function setUp() public {
         vm.createSelectFork("bsc", 30_306_324);

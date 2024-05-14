@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
 // @KeyInfo - Total Lost : ~452K USD$
 // Attacker : https://polygonscan.com/address/0xfd2d3ffb05ad00e61e3c8d8701cb9036b7a16d02
 // Attack Contract : https://polygonscan.com/address/0xdfcdb5a86b167b3a418f3909d6f7a2f2873f2969
@@ -59,7 +63,7 @@ contract ContractTest is Test {
     IAaveFlashloan aaveV2 = IAaveFlashloan(0x8dFf5E27EA6b7AC08EbFdf9eB090F32ee9a30fcf);
     ILibertiVault LibertiVault = ILibertiVault(0x9c80a455ecaca7025A45F5fa3b85Fd6A462a447b);
     oneInchV4Router inchV4Router = oneInchV4Router(0x1111111254fb6c44bAC0beD2854e76F90643097d);
-    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     uint256 nonce;
 
     function setUp() public {
@@ -118,6 +122,8 @@ contract ContractTest is Test {
     //     }
     //     USDT.transfer(address(inchV4Router), 2_500_000 * 1e6);
     // }
+
+    receive() external payable {}
 
     fallback() external payable {
         nonce++;

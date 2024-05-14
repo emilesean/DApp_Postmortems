@@ -3,6 +3,17 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {crETH} from "src/interfaces/crETH.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~$2M
 // Attacker : https://etherscan.io/address/0x085bdff2c522e8637d4154039db8746bb8642bff
 // Attack Contract : https://etherscan.io/address/0x526e8e98356194b64eae4c2d443cc8aad367336f
@@ -51,7 +62,7 @@ contract ContractTest is Test {
     IUniswapV2Pair private constant DAI_WETH = IUniswapV2Pair(0xA478c2975Ab1Ea89e8196811F51A7B7Ade33eB11);
     IUniswapV2Pair private constant WBTC_WETH = IUniswapV2Pair(0xBb2b8038a1640196FbE3e38816F3e67Cba72D940);
     IUniswapV2Pair private constant LINK_WETH = IUniswapV2Pair(0xa2107FA5B38d9bbd2C461D6EDf11B11A50F6b974);
-    IUniswapV2Router private constant Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router private constant Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
 
     function setUp() public {
         vm.createSelectFork("mainnet", 18_476_512);

@@ -3,6 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // @KeyInfo - Total Lost : 59.5 ETH and ~72.1k USDT (~$169k)
 // Attacker : https://bscscan.com/address/0x73d80500b30a6ca840bfab0234409d98cf588089
 // Attack Contract : https://bscscan.com/address/0xfdc6a621861ed2a846ab475c623e13764f6a5ad0

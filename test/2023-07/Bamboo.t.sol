@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
 // @KeyInfo - Total Lost : ~200BNB
 // Attacker : 0x00703face6621bd207d3b4ac9867058190c0bb09
 // Attack Contract : 0xcdf0eb202cfd1f502f3fdca9006a4b5729aadebc
@@ -35,7 +41,7 @@ contract BambooTest is Test {
         vm.label(address(router), "PancakeRouter");
     }
 
-    function toEth(uint256 _wei) internal returns (string memory) {
+    function toEth(uint256 _wei) internal pure returns (string memory) {
         string memory eth = vm.toString(_wei / 1 ether);
         string memory decs = vm.toString(_wei % 1 ether);
 

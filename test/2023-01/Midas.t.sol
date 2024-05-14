@@ -3,6 +3,13 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1614774855999844352
 // https://twitter.com/BlockSecTeam/status/1614864084956254209
@@ -128,7 +135,7 @@ contract ContractTest is Test {
     ICErc20Delegate FJGBP = ICErc20Delegate(0x7ADf374Fa8b636420D41356b1f714F18228e7ae2);
     ICErc20Delegate FAGEUR = ICErc20Delegate(0x5aa0197D0d3E05c4aA070dfA2f54Cd67A447173A);
     IDMMExchangeRouter KyberRouter = IDMMExchangeRouter(0x546C79662E028B661dFB4767664d0273184E4dD1);
-    IUniswapV3Router UniRouter = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router UniRouter = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
 
     IERC20 WMATIC = IERC20(0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270);
     IERC20 STMATCI_F = IERC20(0xe7CEA2F6d7b120174BF3A9Bc98efaF1fF72C997d);
@@ -141,7 +148,7 @@ contract ContractTest is Test {
     uint256 aaveV2FlashloanAmount;
 
     function setUp() public {
-        vm.createSelectFork("https://polygon.llamarpc.com", 38_118_347);
+        vm.createSelectFork("polygon", 38_118_347);
         vm.label(address(balancer), "balancer");
         vm.label(address(aaveV3), "aaveV3");
         vm.label(address(aaveV2), "aaveV2");
@@ -289,7 +296,7 @@ contract ContractTest is Test {
         STMATCI.approve(address(curvePool), type(uint256).max);
         curvePool.add_liquidity([STMATCI.balanceOf(address(this)), uint256(0)], 0);
         curvePool.remove_liquidity_one_coin(STMATCI_F.balanceOf(address(this)), 1, 0, false);
-        address(WMATIC).call{value: address(this).balance}("");
+        (bool success4,) = address(WMATIC).call{value: address(this).balance}("");
     }
 
     function JCHFToUSDC() internal {

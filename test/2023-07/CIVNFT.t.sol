@@ -3,6 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~180K USD$
 // Attacker : https://etherscan.io/address/0xbf9df575670c739d9bf1424d4913e7244ed3ff66
 // Attack Contract : https://etherscan.io/address/0x1ae3929e1975043e5443868be91cac12d8cc25ec
@@ -56,11 +57,11 @@ contract CIVNFTTest is Test {
         emit log_named_decimal_uint("Attacker CIV balance after exploit", CIV.balanceOf(address(this)), CIV.decimals());
     }
 
-    function token0() external view returns (address) {
+    function token0() external pure returns (address) {
         return address(CIV);
     }
 
-    function token1() external view returns (address) {
+    function token1() external pure returns (address) {
         return address(WETH);
     }
 

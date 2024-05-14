@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @Analysis
 // https://twitter.com/FrankResearcher/status/1635241475989721089
 // https://twitter.com/nomorebear/status/1635230621856600064

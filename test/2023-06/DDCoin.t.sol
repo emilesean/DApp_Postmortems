@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~300K USD$
 // Attacker : https://bscscan.com/address/0x0a3fee894eb8fcb6f84460d5828d71be50612762
 // Attack Contract : https://bscscan.com/address/0x105e9b0266ae0ae670b7fe9af08cf32049f0dd21
@@ -50,7 +55,7 @@ contract DDTest is Test {
     IDPPOracle DPP = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
     IDPPOracle DPPAdvanced = IDPPOracle(0x81917eb96b397dFb1C6000d28A5bc08c0f05fC1d);
     IMarketPlace MarketPlace = IMarketPlace(0xb3a636ac4c271e6CD962caD98Eae9Cf71f5A49c8);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     address private constant addrToInvite = 0x693166710b501e3379Cf104e5AaA803aF6CbbF1A;
     HelperContract OrdersPlacer;
 

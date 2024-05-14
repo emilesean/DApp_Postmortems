@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1636650252844294144
 // @TX
@@ -29,12 +35,12 @@ interface IAPEStaking {
 contract ContractTest is Test {
 
     IERC20 wstETH = IERC20(0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0);
-    IERC20 cAPE = IERC20(0xC5c9fB6223A989208Df27dCEE33fC59ff5c26fFF);
+    IWETH cAPE = IWETH(0xC5c9fB6223A989208Df27dCEE33fC59ff5c26fFF);
     IERC20 APE = IERC20(0x4d224452801ACEd8B2F0aebE155379bb5D594381);
     IERC20 USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IERC20 WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IParaProxy ParaProxy = IParaProxy(0x638a98BBB92a7582d07C52ff407D49664DC8b3Ee);
-    IUniswapV3Router Router = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IUniswapV3Router Router = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
     IAPEStaking APEStaking = IAPEStaking(0x5954aB967Bc958940b7EB73ee84797Dc8a2AFbb9);
     IAaveFlashloan AaveFlashloan = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     Slave slave;

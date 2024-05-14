@@ -3,6 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @KeyInfo - Total Lost : ~600 USD$
 // Vulnerable contract address: https://bscscan.com/address/0xf3f1abae8bfeca054b330c379794a7bf84988228
 
@@ -22,7 +26,7 @@ contract ContractTest is Test {
 
     IFAPEN FAPEN = IFAPEN(0xf3F1aBae8BfeCA054B330C379794A7bf84988228);
     IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
 
     function setUp() public {
         vm.createSelectFork("bsc", 28_637_846);

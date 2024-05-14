@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IPancakeV3Router} from "src/interfaces/IPancakeV3Router.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 // @KeyInfo - Total Lost : ~31K USD$
 // Attacker : https://bscscan.com/address/0x3a10408fd7a2b2a43bd14a17c0d4568430b93132
 // Attack Contract : https://bscscan.com/address/0x18703a4fd7b3688607abf25424b6ab304def2512
@@ -34,7 +39,7 @@ contract ContractTest is Test {
 
     IERC20 BUSD = IERC20(0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56);
     IERC20 USDT = IERC20(0x55d398326f99059fF775485246999027B3197955);
-    IPancakeV3Router Router = IPancakeV3Router(0x13f4EA83D0bd40E75C8222255bc855a974568Dd4);
+    IPancakeV3Router Router = IPancakeV3Router(payable(0x13f4EA83D0bd40E75C8222255bc855a974568Dd4));
     IUniswapV3Pair Pair1 = IUniswapV3Pair(0x22536030B9cE783B6Ddfb9a39ac7F439f568E5e6);
     IUniswapV3Pair Pair2 = IUniswapV3Pair(0x85FAac652b707FDf6907EF726751087F9E0b6687);
     IUniswapV3Pair Pair3 = IUniswapV3Pair(0x369482C78baD380a036cAB827fE677C1903d1523);

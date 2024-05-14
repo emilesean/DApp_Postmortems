@@ -2,7 +2,13 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/console.sol";
+import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 // @KeyInfo - Total Lost : ~2M
 // Attacker : https://etherscan.io/address/0xed187f37e5ad87d5b3b2624c01de56c5862b7a9b
 // Attack Contract : https://etherscan.io/address/0x2100dcd8758ab8b89b9b545a43a1e47e8e2944f0
@@ -32,7 +38,7 @@ contract ContractTest is Test {
     IAaveFlashloan aave = IAaveFlashloan(0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2);
     IERC20 aUSDC = IERC20(0xd093fA4Fb80D09bB30817FDcd442d4d02eD3E5de);
     IERC20 aDAI = IERC20(0x02d60b84491589974263d922D9cC7a3152618Ef6);
-    IUniswapV2Router Router = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IBalancerVault balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     BBToken bbaUSDC = BBToken(0x9210F1204b5a24742Eba12f710636D76240dF3d0);
     BBToken bbaDAI = BBToken(0x804CdB9116a10bB78768D3252355a1b18067bF8f);
@@ -104,15 +110,15 @@ contract ContractTest is Test {
         // 2 batch swap
         bbaUSDC.approve(address(balancer), type(uint256).max);
         {
-            address[] memory assets = new address[](8);
-            assets[0] = address(USDC);
-            assets[1] = address(aUSDC);
-            assets[2] = address(bbaUSDC);
-            assets[3] = address(bbaDAI);
-            assets[4] = address(DAI);
-            assets[5] = address(aDAI);
-            assets[6] = address(bbaUSD);
-            assets[7] = address(bbaUSDT);
+            address[] memory assets2 = new address[](8);
+            assets2[0] = address(USDC);
+            assets2[1] = address(aUSDC);
+            assets2[2] = address(bbaUSDC);
+            assets2[3] = address(bbaDAI);
+            assets2[4] = address(DAI);
+            assets2[5] = address(aDAI);
+            assets2[6] = address(bbaUSD);
+            assets2[7] = address(bbaUSDT);
             int256[] memory limits = new int256[](8);
             limits[0] = type(int256).max;
             limits[1] = type(int256).max;
@@ -136,7 +142,7 @@ contract ContractTest is Test {
             balancer.batchSwap(
                 IBalancerVault.SwapKind.GIVEN_IN,
                 steps,
-                assets,
+                assets2,
                 IBalancerVault.FundManagement(address(this), false, payable(address(this)), false),
                 limits,
                 2 ** 32

@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
+import {IERC721} from "src/interfaces/IERC721.sol";
 // @KeyInfo - Total Lost : 1 NFT (ID: 4689)
 // Attacker : https://etherscan.io/address/0x92cfcb70b2591ceb1e3c6d90e21e8154e7d29832
 // Attacker Contract : https://etherscan.io/address/0x9d9820f10772ffcef842770b6581c07a97fed9e4
@@ -113,6 +118,7 @@ contract ContractTest is Test {
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data)
         external
+        pure
         returns (bytes4)
     {
         return this.onERC721Received.selector;

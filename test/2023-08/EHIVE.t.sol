@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~$15K
 // Attacker : https://etherscan.io/address/0x0195448a9c4adeaf27002c6051c949f3c3234bb5
 // Attacker Contract : https://etherscan.io/address/0x98c2e1e85f8bf737d9c1450dd26d4a4bf880b892
@@ -109,7 +114,7 @@ contract EHIVETest is Test {
         EHIVE_WETH.swap(0, amount1Out - 100, address(this), bytes(""));
     }
 
-    function calcAmount(uint256 reserve1, uint256 reserve2, uint256 balance) internal returns (uint256) {
+    function calcAmount(uint256 reserve1, uint256 reserve2, uint256 balance) internal pure returns (uint256) {
         uint256 a = (balance * 997);
         uint256 b = a * reserve1;
         uint256 c = (reserve2 * 1000) + a;

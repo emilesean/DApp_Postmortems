@@ -3,6 +3,12 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~3.2 M USD$
 // Attacker : https://etherscan.io/address/0xc1f2b71a502b551a65eee9c96318afdd5fd439fa
 // Attack Contract : https://etherscan.io/address/0x0a3340129816a86b62b7eafd61427f743c315ef8
@@ -186,9 +192,9 @@ contract ContractTest is Test {
     }
 
     function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
-        if (Uni_Pair_V3(msg.sender).token0() == address(R)) {
+        if (IUniswapV3Pair(msg.sender).token0() == address(R)) {
             R.transfer(address(R_USDC_Pair), uint256(amount0Delta));
-        } else if (Uni_Pair_V3(msg.sender).token0() == address(USDC)) {
+        } else if (IUniswapV3Pair(msg.sender).token0() == address(USDC)) {
             USDC.transfer(address(WETH_USDC_Pair), uint256(amount0Delta));
         }
     }

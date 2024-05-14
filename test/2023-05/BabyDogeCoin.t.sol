@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~7.5M USD$
 // Attacker : https://bscscan.com/address/0xcbc0d0c1049eb011d7c7cfc4ff556d281f0afebb
 // Attack Contract : https://bscscan.com/address/0x51873a0b615a51115f2cfbc2e24d9db4bfa2e6e2
@@ -36,7 +41,7 @@ interface IFarmZAP {
 contract ContractTest is Test {
 
     IERC20 BABYDOGE = IERC20(0xc748673057861a797275CD8A068AbB95A902e8de);
-    IERC20 WBNB = IERC20(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
+    IWETH WBNB = IWETH(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     IUniswapV2Pair Pair = IUniswapV2Pair(0xc736cA3d9b1E90Af4230BD8F9626528B3D4e0Ee0);
     IFarmZAP FarmZAP = IFarmZAP(0x451583B6DA479eAA04366443262848e27706f762);
     IAaveFlashloan Radiant = IAaveFlashloan(0xd50Cf00b6e600Dd036Ba8eF475677d816d6c4281);

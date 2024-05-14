@@ -3,6 +3,11 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @Analysis
 // https://twitter.com/LTV888/status/1640563457094451214?t=OBHfonYm9yYKvMros6Uw_g&s=19
 // @Tx
@@ -50,7 +55,7 @@ contract ContractTest is Test {
     IERC20 USDC = IERC20(0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d);
     IERC20 wUSDR = IERC20(0x2952beb1326acCbB5243725bd4Da2fC937BCa087);
     IThenaRewardPool pool = IThenaRewardPool(0x39E29f4FB13AeC505EF32Ee6Ff7cc16e2225B11F);
-    IUniswapV2Router Router = IUniswapV2Router(0x20a304a7d126758dfe6B243D0fc515F83bCA8431);
+    IUniswapV2Router Router = IUniswapV2Router(payable(0x20a304a7d126758dfe6B243D0fc515F83bCA8431));
     IUniswapV2Pair USDC_BUSD = IUniswapV2Pair(0x618f9Eb0E1a698409621f4F487B563529f003643);
     IVolatileV1 wUSDR_USDC = IVolatileV1(0xA99c4051069B774102d6D215c6A9ba69BD616E6a);
 
