@@ -17,7 +17,19 @@ DApp_Postmortems is a project aimed at aggressively refactoring [DefiHackLabs](h
 - Keep all Proof of Concepts (POCs) up to date by aligning them with the latest testing practices in Foundry.
 - Standardize the codebase to improve maintainability and scalability.
 
-The repository includes **404 incidents**.
+The repository includes 
+| Year         | Incidents |
+| ------------ | --------- |
+| 2017         | 1         |
+| 2018         | 1         |
+| 2019         | 0         |
+| 2020         | 8         |
+| 2021         | 33        |
+| 2022         | 127       |
+| 2023         | 189       |
+| 2024         | 65        |
+| ----------   | --------- |
+| Total/Unique | 424/404   |
 
 [DApp Hacks Dashboard](https://scrawny-sumac-c62.notion.site/52b64769ce474d658e0109b7cad521cc?v=d33d0369be064263b2d44caff9b256a6)
 
@@ -58,4 +70,5 @@ The repository includes **404 incidents**.
 
 5. Check out the [Contributing Guidelines](https://github.com/emilesean/DApp_Postmortems/blob/main/CONTRIBUTING.md)
 
-**Disclaimer:** This content serves solely as a proof of concept, showcasing past security incidents related to decentralized applications. It is strictly intended for educational purposes and should not be interpreted as encouragement or endorsement of any illegal activities or actual hacking attempts. Any actions taken based on this content are the sole responsibility of the individual, and usage should adhere to applicable laws, regulations, and ethical standards.
+
+**Disclaimer:** This content serves solely as a proof of concept, showcasing past security incidents related to decentralized applications. It is strictly intended for educational purposes and should not be interpreted as encouragement or endorsement of any illegal activities or actual hacking attempts. Any actions taken based on this content are the sole responsibility of the individual, and usage should adhere to applicable laws, regulations, and ethical standards.find . -type f -name '*.t.sol' | wc -l
