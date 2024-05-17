@@ -27,8 +27,8 @@ The repository includes
 | 2021         | 33        |
 | 2022         | 127       |
 | 2023         | 189       |
-| 2024         | 65        |
-| Total/Unique | 424/404   |
+| 2024         | 67        |
+| Total/Unique | 426/406   |
 
 [DApp Hacks Dashboard](https://scrawny-sumac-c62.notion.site/52b64769ce474d658e0109b7cad521cc?v=d33d0369be064263b2d44caff9b256a6)
 
