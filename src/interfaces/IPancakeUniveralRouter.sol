@@ -2,6 +2,7 @@
 pragma solidity ^0.8.4;
 
 interface IPancakeIUniversalRouter {
+
     error BalanceTooLow();
     error BuyPancakeNFTFailed();
     error BuyPunkFailed();
@@ -65,4 +66,5 @@ interface IPancakeIUniversalRouter {
     function supportsInterface(bytes4 interfaceId) external pure returns (bool);
     function transferOwnership(address newOwner) external;
     function unpause() external;
+
 }
