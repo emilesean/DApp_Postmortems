@@ -18,7 +18,7 @@ import {IERC20} from "src/interfaces/IERC20.sol";
 // Attack Tx : https://bscscan.com/tx/0x948132f219c0a1adbffbee5d9dc63bec676dd69341a6eca23790632cb9475312
 // @Info
 // Vulnerable Contract Code : https://bscscan.com/address/0x9BDF251435cBC6774c7796632e9C80B233055b93#code
-
+// Saturn token hacking. When transferring tokens to Cake-Lp, a lot of tokens in pair are burnt, "sync" is called, and then transferring is done. What's wrong? Firstly, burn rate is too high, secondly, sync should be called in the end. $8k loss.
 // @Analysis
 // Post-mortem : https://www.google.com/
 // Twitter Guy : https://www.google.com/
