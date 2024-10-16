@@ -4,8 +4,6 @@
 
 [workflow]: https://img.shields.io/github/actions/workflow/status/emilesean/DApp_Postmortems/actions.yml
 [support]: https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support
-[workflow]: https://img.shields.io/github/actions/workflow/status/emilesean/DApp_Postmortems/actions.yml
-[support]: https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support
 
 ## Introduction
 
