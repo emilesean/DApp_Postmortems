@@ -1,9 +1,8 @@
 # Decentralized Applications (D-Apps) Security Incidents Postmortems.
 
-![Github Actions][workflow] ![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support)
+![Github Actions][workflow] [![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support)](https://x.com/i/communities/1846491947273236608)
 
 [workflow]: https://img.shields.io/github/actions/workflow/status/emilesean/DApp_Postmortems/actions.yml
-[support]: https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support
 
 ## Introduction
 
