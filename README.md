@@ -1,16 +1,13 @@
-# Decentralized Applications Security Incidents Postmortems
+# Decentralized Applications (D-Apps) Security Incidents Postmortems.
 
-![Github Actions][workflow] [![Telegram Chat][tg-badge]][tg-url] [![Telegram Support][tg-support-badge]][tg-support-url]
+![Github Actions][workflow] ![X Communites Support][support]
 
 [workflow]: https://img.shields.io/github/actions/workflow/status/emilesean/DApp_Postmortems/actions.yml
-[tg-badge]: https://img.shields.io/endpoint?color=neon&logo=telegram&label=chat&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2FDApp_Postmortems
-[tg-url]: https://t.me/DApp_Postmortems
-[tg-support-badge]: https://img.shields.io/endpoint?color=neon&logo=telegram&label=support&style=flat-square&url=https%3A%2F%2Ftg.sumanjay.workers.dev%2FDApp_Postmortems
-[tg-support-url]: https://t.me/DApp_Postmortems
+[support]: https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fi%2Fcommunities%2F1846491947273236608&label=Community%20Support
 
 ## Introduction
 
-DApp_Postmortems is a project aimed at aggressively refactoring [DefiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) with the following objectives:
+DApp_Postmortems is a fork of [DefiHackLabs](https://github.com/SunWeb3Sec/DeFiHackLabs) with the following aims
 
 - Reduce compile time for each POC test by modularizing the codebase.
 - Simplify the codebase to enhance readability and facilitate contributions.
@@ -27,10 +24,10 @@ The repository includes
 | 2021         | 33        |
 | 2022         | 127       |
 | 2023         | 189       |
-| 2024         | 67        |
-| Total/Unique | 426/406   |
+| 2024         | 115       |
+| Total/Unique | 474       |
 
-[DApp Hacks Dashboard](https://scrawny-sumac-c62.notion.site/52b64769ce474d658e0109b7cad521cc?v=d33d0369be064263b2d44caff9b256a6)
+[DApp Hacks Dashboard]( https://emilesean.notion.site/Chapter-3-D-Apps-Hacks-Leader-board-26805dab4aae41c18ed88e9933c34b03)
 
 ## Getting Started
 
