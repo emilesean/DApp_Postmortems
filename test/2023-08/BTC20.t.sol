@@ -3,7 +3,15 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
+
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
+import {IUniswapV3Router} from "src/interfaces/IUniswapV3Router.sol";
+
 // @KeyInfo - Total Lost : ~18ETH
 // Attacker : https://etherscan.io/address/0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6
 // Attack Contract : https://etherscan.io/address/0xb7fbf984a50cd7c66e6da3448d68d9f3b7f24f33
@@ -30,8 +38,8 @@ contract ContractTest is Test {
     IBalancerVault Balancer = IBalancerVault(0xBA12222222228d8Ba445958a75a0704d566BF2C8);
     IUniswapV3Pair SDEX_BTC20_Pair3 = IUniswapV3Pair(0xDb81b8cfB2718f7289ae2365DE800ac2c787E385);
     IUniswapV3Pair BTC20_WETH_Pair3 = IUniswapV3Pair(0x7234c91bd835a6Ed108c8e986E0663B14F9DE14e);
-    IUniswapV3Router uniRouterV3 = IUniswapV3Router(0xE592427A0AEce92De3Edee1F18E0157C05861564);
-    IUniswapV2Router uniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV3Router uniRouterV3 = IUniswapV3Router(payable(0xE592427A0AEce92De3Edee1F18E0157C05861564));
+    IUniswapV2Router uniRouter = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     IUniswapV2Pair BTC20_WETH_Pair2 = IUniswapV2Pair(0xd50C5B8f04587D67298915E099E170af3Cd6909A);
     IPresaleV4 PresaleV4 = IPresaleV4(0x1F006F43f57C45Ceb3659E543352b4FAe4662dF7);
     address[] private addrPath = new address[](2);

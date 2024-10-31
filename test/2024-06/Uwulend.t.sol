@@ -7,7 +7,6 @@ pragma solidity ^0.8.10;
  *  Date:
  *  Total Lost : ~999M US$
  *  Vulenerability:
- *  Description:
  *  Attack Tx : 0x123456789
  *  Post-mortem : https://www.google.com/
  *  Source : https://www.google.com/
@@ -20,6 +19,8 @@ pragma solidity ^0.8.10;
  * Interfaces
  */
 import "forge-std/Test.sol";
+import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
 
 contract ContractTest is Test {
 

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
 
-import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 // @KeyInfo - Total Lost : ~200K USD$
 // Attacker : https://etherscan.io/address/0x3ea6ba6d3415e4dfd380516c799aafa94e420519

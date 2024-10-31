@@ -7,9 +7,9 @@ import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 import {IUSDC} from "src/interfaces/IUSDC.sol";
 
+import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
-import {IUniswapV2Factory} from "src/interfaces/IUniswapV2Factory.sol";
 // @KeyInfo - Total Lost : ~827 USDC
 // Attacker : https://etherscan.io/address/0x7f284235aef122215c46656163f39212ffa77ed9
 // Attack Contract :https://etherscan.io/address/0xba2aa7426ec6529c25a38679478645b2db5fa19b

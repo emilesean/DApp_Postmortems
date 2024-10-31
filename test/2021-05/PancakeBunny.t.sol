@@ -5,8 +5,9 @@ import "forge-std/Test.sol";
 
 // import {IERC20} from "src/interfaces/IERC20.sol";
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
 /**
  * Exploit:

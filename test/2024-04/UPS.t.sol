@@ -3,6 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 import {IWBNB} from "src/interfaces/IWBNB.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
@@ -18,7 +21,7 @@ contract ContractTest is Test {
     IERC20 UPS = IERC20(0x3dA4828640aD831F3301A4597821Cc3461B06678);
     IUniswapV3Pair pool = IUniswapV3Pair(0x4f31Fa980a675570939B737Ebdde0471a4Be40Eb);
     IUniswapV2Pair ups_usdt = IUniswapV2Pair(0xA2633ca9Eb7465E7dB54be30f62F577f039a2984);
-    IUniswapV2Router router = IUniswapV2Router(0x10ED43C718714eb63d5aA57B78B54704E256024E);
+    IUniswapV2Router router = IUniswapV2Router(payable(0x10ED43C718714eb63d5aA57B78B54704E256024E));
     uint256 borrow_amount;
 
     function setUp() external {

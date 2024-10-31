@@ -7,10 +7,10 @@ import {IERC20} from "src/interfaces/IERC20.sol";
 
 import {ILendingPool} from "src/interfaces/ILendingPool.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {ICurvePool} from "src/interfaces/ICurvePool.sol";
 import {IUSDC} from "src/interfaces/IUSDC.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // @Analysis
 // https://medium.com/nereus-protocol/post-mortem-flash-loan-exploit-in-single-nxusd-market-343fa32f0c6

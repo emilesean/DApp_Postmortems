@@ -3,9 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IERC20} from "src/interfaces/IERC20.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IWBNB} from "src/interfaces/IWBNB.sol";
-import {IERC20} from "src/interfaces/IERC20.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1615232012834705408
 // @TX

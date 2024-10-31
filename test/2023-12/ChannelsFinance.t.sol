@@ -9,8 +9,8 @@ import {ICointroller} from "src/interfaces/ICointroller.sol";
 
 import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 // @KeyInfo - Total Lost : ~320K
 // Attacker : https://bscscan.com/address/0x20395d8e8a11cfd2541b942afdb810b7dcc64681
 // Attack Contract : https://bscscan.com/address/0x07e536f23a197f6fb76f42ad01ac2bcdc3bf738e

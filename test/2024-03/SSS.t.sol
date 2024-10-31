@@ -5,6 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost: $4.8M
 // Attacker: 0x6a89a8C67B5066D59BF4D81d59f70C3976faCd0A
@@ -28,7 +30,7 @@ contract SSSExploit is Test {
     address private constant POOL = 0x92F32553cC465583d432846955198F0DDcBcafA1;
     IWETH private constant WETH = IWETH(payable(0x4300000000000000000000000000000000000004));
     ISSS private constant SSS = ISSS(0xdfDCdbC789b56F99B0d0692d14DBC61906D9Deed);
-    IUniswapV2Router private constant ROUTER_V2 = IUniswapV2Router(0x98994a9A7a2570367554589189dC9772241650f6);
+    IUniswapV2Router private constant ROUTER_V2 = IUniswapV2Router(payable(0x98994a9A7a2570367554589189dC9772241650f6));
     IUniswapV2Pair private sssPool = IUniswapV2Pair(POOL);
 
     uint256 ethFlashAmt = 1 ether;

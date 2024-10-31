@@ -4,7 +4,9 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
 // @KeyInfo - Total Lost : ~8ETH
 // Attacker : https://etherscan.io/address/0x6ce9fa08f139f5e48bc607845e57efe9aa34c9f6
@@ -41,7 +43,7 @@ contract ContractTest is Test {
     IERC20 HATE = IERC20(0x7b768470590B8A0d28fC714d0A70754d556D14eD);
     IWETH WETH = IWETH(payable(address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2)));
     IUniswapV2Pair HATE_ETH_Pair = IUniswapV2Pair(0x738dab4AF8D21b7aafb73545D79D3B4831eE79dA);
-    IUniswapV2Router uniRouter = IUniswapV2Router(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    IUniswapV2Router uniRouter = IUniswapV2Router(payable(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D));
     Staking HATEStaking = Staking(0x8EBd6c7D2B79CA4Dc5FBdEc239a8Bb0F214212b8);
     IsHATE sHATE = IsHATE(0xf829d7014Db17D6DCe448bE958c7e4983cdb1F77);
     uint256 flashAmount;

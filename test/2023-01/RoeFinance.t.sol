@@ -4,9 +4,10 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
-import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 // @Analysis
 // https://twitter.com/BlockSecTeam/status/1613267000913960976
 // @TX

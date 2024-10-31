@@ -5,9 +5,9 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "src/interfaces/IERC20.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IDVM} from "src/interfaces/IDVM.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 // @Analysis
 // https://twitter.com/AnciliaInc/status/1587848874076430336
 // @Address

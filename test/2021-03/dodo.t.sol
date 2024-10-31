@@ -6,8 +6,8 @@ import "forge-std/Test.sol";
 
 import {IERC20} from "src/interfaces/IERC20.sol";
 
-import {IUSDT} from "src/interfaces/IUSDT.sol";
 import {IDVM} from "src/interfaces/IDVM.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
 
 contract ContractTest is Test {
 

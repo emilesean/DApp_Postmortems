@@ -15,11 +15,13 @@ pragma solidity ^0.8.15;
 // Post-mortem :
 // Twitter Guy :
 // Hacking God :
-import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 import "forge-std/Test.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 contract PredyFinance is Test {
 
+    address fundingToken;
     uint256 blocknumToForkFrom = 211_107_441;
     IERC20 USDC = IERC20(0xaf88d065e77c8cC2239327C5EDb3A432268e5831);
     IERC20 WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);

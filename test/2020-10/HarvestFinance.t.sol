@@ -2,10 +2,12 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
 import {ICurvePool} from "src/interfaces/ICurvePool.sol";
-import {IUSDT} from "src/interfaces/IUSDT.sol";
+
 import {IERC20} from "src/interfaces/IERC20.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
 interface IHarvestUsdcVault {
 
