@@ -13,20 +13,8 @@ DApp_Postmortems is a fork of [DefiHackLabs](https://github.com/SunWeb3Sec/DeFiH
 - Keep all Proof of Concepts (POCs) up to date by aligning them with the latest testing practices in Foundry.
 - Standardize the codebase to improve maintainability and scalability.
 
-The repository includes 
-| Year         | Incidents |
-| ------------ | --------- |
-| 2017         | 1         |
-| 2018         | 1         |
-| 2019         | 0         |
-| 2020         | 8         |
-| 2021         | 33        |
-| 2022         | 127       |
-| 2023         | 189       |
-| 2024         | 115       |
-| Total/Unique | 474       |
 
-[DApp Hacks Dashboard]( https://emilesean.notion.site/Chapter-3-D-Apps-Hacks-Leader-board-26805dab4aae41c18ed88e9933c34b03)
+[DApp Hacks Dashboard](https://emilesean.notion.site/Chapter-4-D-Apps-Hacks-Leader-board-26805dab4aae41c18ed88e9933c34b03)
 
 ## Getting Started
 
@@ -36,7 +24,7 @@ The repository includes
 
    ```bash
    git clone https://github.com/emilesean/DApp_Postmortems.git
-   git submodule update --init --recursive
+   forge soldeer init
    ```
 
 3. Run individual POCs:
