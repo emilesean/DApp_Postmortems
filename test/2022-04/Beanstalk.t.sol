@@ -3,13 +3,14 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "forge-std/Test.sol";
-import {ILendingPool} from "src/interfaces/ILendingPool.sol";
+
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+import {ILendingPool} from "src/interfaces/ILendingPool.sol";
 import {SafeERC20 as TransferHelper} from "src/interfaces/SafeERC20.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 interface IBeanStalk {
 

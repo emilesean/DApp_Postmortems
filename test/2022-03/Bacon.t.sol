@@ -5,8 +5,8 @@ pragma solidity >=0.7.0 <0.9.0;
 import "forge-std/Test.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
-import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 import {IERC1820Registry} from "src/interfaces/IERC1820Registry.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
 interface IBacon {
 

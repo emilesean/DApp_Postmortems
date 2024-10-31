@@ -2,8 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+
 import {IERC20} from "src/interfaces/IERC20.sol";
+import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 
 interface IOneRingVault {
 

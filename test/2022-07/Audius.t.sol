@@ -4,8 +4,8 @@ pragma solidity ^0.8.10;
 import "forge-std/Test.sol";
 import {IERC20} from "src/interfaces/IERC20.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // @KeyInfo - Total Lost : 704 ETH (~ 1,080,000 US$)
 // Attacker : 0xa0c7bd318d69424603cbf91e9969870f21b8ab4c

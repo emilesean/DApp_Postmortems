@@ -3,8 +3,8 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "src/interfaces/IERC20.sol";
 import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 // @Analysis
 // https://twitter.com/peckshield/status/1598704809690877952
 // @Address

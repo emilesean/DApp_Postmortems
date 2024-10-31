@@ -7,8 +7,9 @@ import {IERC20} from "src/interfaces/IERC20.sol";
 import {IERC721} from "src/interfaces/IERC721.sol";
 
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
-import {IWETH} from "src/interfaces/IWETH.sol";
+
 import {ISushiSwap} from "src/interfaces/ISushiSwap.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 // Credit: SupremacyCA, the poc rewritten from SupremacyCA.
 
 interface DataTypes {

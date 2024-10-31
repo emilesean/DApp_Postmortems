@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IDVM} from "src/interfaces/IDVM.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // @Analysis
 // https://twitter.com/HypernativeLabs/status/1633090456157401088

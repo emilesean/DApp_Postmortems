@@ -2,8 +2,9 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
-import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
+
 import {IAaveFlashloan} from "src/interfaces/IAaveFlashloan.sol";
+import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 import {IWETH as WETH9} from "src/interfaces/IWETH.sol";
 
 // @KeyInfo -- Total Lost : ~10M USD

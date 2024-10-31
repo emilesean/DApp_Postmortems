@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
-import {IUSDT} from "src/interfaces/IUSDT.sol";
 import {ICurvePool} from "src/interfaces/ICurvePool.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
 
 import {IUniswapV3Pair} from "src/interfaces/IUniswapV3Pair.sol";
 // @KeyInfo - Total Lost : ~$6,5M

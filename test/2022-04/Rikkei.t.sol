@@ -3,10 +3,12 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "forge-std/Test.sol";
-import {IERC20} from "src/interfaces/IERC20.sol";
+
 import {ICointroller} from "src/interfaces/ICointroller.sol";
-import {ISimplePriceOracle} from "src/interfaces/ISimplePriceOracle.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+
 import {IPriceFeed} from "src/interfaces/IPriceFeed.sol";
+import {ISimplePriceOracle} from "src/interfaces/ISimplePriceOracle.sol";
 
 interface IRToken {
 

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {MathConstants as C} from "./MathConstants.sol";
-import {TickMath} from "./TickMath.sol";
 import {FullMath} from "./FullMath.sol";
+import {MathConstants as C} from "./MathConstants.sol";
 import {SafeCast} from "./SafeCast.sol";
+import {TickMath} from "./TickMath.sol";
 
 /// @title Contains helper functions for calculating
 /// token0 and token1 quantites from differences in prices

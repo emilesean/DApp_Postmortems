@@ -2,9 +2,10 @@
 pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
+
+import {IERC20} from "src/interfaces/IERC20.sol";
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
-import {IERC20} from "src/interfaces/IERC20.sol";
 
 contract ContractTest is Test {
 

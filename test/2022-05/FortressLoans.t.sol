@@ -3,10 +3,10 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IUnitroller} from "src/interfaces/IUnitroller.sol";
-import {IPriceFeed} from "src/interfaces/IPriceFeed.sol";
-import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 import {IERC20} from "src/interfaces/IERC20.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IPriceFeed} from "src/interfaces/IPriceFeed.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
 
 interface ArthUSDWrapper {
 

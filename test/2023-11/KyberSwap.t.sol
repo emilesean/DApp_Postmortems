@@ -3,9 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
+import {IPool as IKyberswapPool} from "./KyberSwap/interfaces/IPool.sol";
 import {IBasePositionManager as IKyberswapPositionManager} from
     "./KyberSwap/interfaces/periphery/IBasePositionManager.sol";
-import {IPool as IKyberswapPool} from "./KyberSwap/interfaces/IPool.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 

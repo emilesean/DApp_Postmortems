@@ -3,9 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 
-import {IWBNB} from "src/interfaces/IWBNB.sol";
 import {IERC20} from "src/interfaces/IERC20.sol";
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
 
 contract ContractTest is Test {
 

@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
+/**
+ * @title: Proof of Concept for Uniswapv4 Security breach
+ * @author: @emilesean_es
+ * @custom: Project Name: Uniswapv4
+ * @custom: Description:
+ * @custom: Date: Oct-29-2024 06:29:11 AM UTC
+ * @custom: Value lost:  ~1M USD$
+ * @custom: Vulenerability category: Arithimetic & Calculation Errors
+ * @custom: Attack Variant: CompoundFork
+ * @custom: [Attack Tx1:](https://basescan.org/tx/0x6ab5b7b51f780e8c6c5ddaf65e9badb868811a95c1fd64e86435283074d3149e
+ * )
+ */
 import "forge-std/Test.sol";
 
-// @KeyInfo - Total Lost : $1M
-// Attacker : https://basescan.org/address/0x81d5187c8346073b648f2d44b9e269509513aae2
-// Attack Contract : https://basescan.org/address/0x7562846468089cf0e8f7b38ac53406b895284901
-// Vulnerable Contract : https://basescan.org/address/0x93D619623abc60A22Ee71a15dB62EedE3EF4dD5a
-// Attack Tx : https://basescan.org/tx/0x6ab5b7b51f780e8c6c5ddaf65e9badb868811a95c1fd64e86435283074d3149e
-
-// @Info
-// Vulnerable Contract Code : https://basescan.org/address/0x93D619623abc60A22Ee71a15dB62EedE3EF4dD5a#code
-
-// @Analysis
-// Post-mortem :
-// Twitter Guy :
-// Hacking God :
-
 WETH constant weth = WETH(payable(address(0x4200000000000000000000000000000000000006)));
+
 address constant cWETH = address(0x5c52649d3c1E1d0ddF6a46e1C25A25D9fb148aF8);
 address constant uSUI = address(0xb0505e5a99abd03d94a1169e638B78EDfEd26ea4);
 address constant cSUI = address(0xA2092F9A2a5dD84D6DF7d175673eC8A7357C551B);

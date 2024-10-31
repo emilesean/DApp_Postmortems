@@ -7,9 +7,9 @@ import {IERC777} from "src/interfaces/IERC777.sol";
 
 import {IERC1820Registry} from "src/interfaces/IERC1820Registry.sol";
 
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IERC20} from "src/interfaces/IERC20.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // Analysis
 // https://twitter.com/BlockSecTeam/status/1584959295829180416

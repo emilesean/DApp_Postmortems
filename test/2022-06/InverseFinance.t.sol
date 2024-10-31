@@ -4,12 +4,14 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "forge-std/Test.sol";
 
-import {IERC20} from "src/interfaces/IERC20.sol";
-import {IUSDT} from "src/interfaces/IUSDT.sol";
-import {ILendingPool} from "src/interfaces/ILendingPool.sol";
 import {CErc20Interface} from "src/interfaces/CErc20Interface.sol";
-import {IUnitroller} from "src/interfaces/IUnitroller.sol";
+
 import {IAggregator} from "src/interfaces/IAggregator.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+import {ILendingPool} from "src/interfaces/ILendingPool.sol";
+import {IUSDT} from "src/interfaces/IUSDT.sol";
+
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
 
 interface VyperContract {
 

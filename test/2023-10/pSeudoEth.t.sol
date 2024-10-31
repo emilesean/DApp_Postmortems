@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
-import {IWETH} from "src/interfaces/IWETH.sol";
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {IWETH} from "src/interfaces/IWETH.sol";
 
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";

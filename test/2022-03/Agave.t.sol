@@ -3,7 +3,7 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 import {IERC20} from "src/interfaces/IERC20.sol";
-import {ILendingPool, DataTypesAave} from "src/interfaces/ILendingPool.sol";
+import {DataTypesAave, ILendingPool} from "src/interfaces/ILendingPool.sol";
 
 interface IGnosisBridgedAsset is IERC20 {
 

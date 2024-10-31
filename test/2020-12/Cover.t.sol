@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.10;
 
-import {IERC20} from "src/interfaces/IERC20.sol";
 import "forge-std/Test.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
 
 interface Blacksmith {
 

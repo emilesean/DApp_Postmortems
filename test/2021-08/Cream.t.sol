@@ -10,8 +10,9 @@ import {IERC1820Registry} from "src/interfaces/IERC1820Registry.sol";
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
 import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 import {IWETH} from "src/interfaces/IWETH.sol";
-import {crETH} from "src/interfaces/crETH.sol";
+
 import {crAMP} from "src/interfaces/crAMP.sol";
+import {crETH} from "src/interfaces/crETH.sol";
 
 contract ContractTest is Test {
 

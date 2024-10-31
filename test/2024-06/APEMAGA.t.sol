@@ -3,8 +3,9 @@ pragma solidity ^0.8.10;
 
 import "forge-std/Test.sol";
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
-import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
+
 import {IUniswapV2Pair} from "src/interfaces/IUniswapV2Pair.sol";
+import {IUniswapV2Router} from "src/interfaces/IUniswapV2Router.sol";
 
 // Profit : ~9 ETH
 // TX : https://app.blocksec.com/explorer/tx/eth/0x6beb21b53f5b205c088570333ec875b720e333b49657f7026b01ed72b026851e?line=19

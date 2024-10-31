@@ -3,11 +3,12 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "forge-std/Test.sol";
-import {IERC20} from "src/interfaces/IERC20.sol";
-import {ICEtherDelegate} from "src/interfaces/ICEtherDelegate.sol";
-import {IUnitroller} from "src/interfaces/IUnitroller.sol";
-import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+
 import {IBalancerVault} from "src/interfaces/IBalancerVault.sol";
+import {ICErc20Delegate} from "src/interfaces/ICErc20Delegate.sol";
+import {ICEtherDelegate} from "src/interfaces/ICEtherDelegate.sol";
+import {IERC20} from "src/interfaces/IERC20.sol";
+import {IUnitroller} from "src/interfaces/IUnitroller.sol";
 
 contract ContractTest is Test {
 

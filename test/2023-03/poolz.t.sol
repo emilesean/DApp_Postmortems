@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
-import {IWBNB} from "src/interfaces/IWBNB.sol";
 import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
+import {IWBNB} from "src/interfaces/IWBNB.sol";
 
 contract ContractTest is Test {
 

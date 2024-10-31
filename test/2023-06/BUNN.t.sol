@@ -5,8 +5,8 @@ import "forge-std/Test.sol";
 
 import {IERC20Metadata as IERC20} from "src/interfaces/IERC20Metadata.sol";
 
-import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 import {IPancakePair} from "src/interfaces/IPancakePair.sol";
+import {IPancakeRouter} from "src/interfaces/IPancakeRouter.sol";
 // @Analysis
 // https://twitter.com/DecurityHQ/status/1671803688996806656
 // @TX
