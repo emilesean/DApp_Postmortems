@@ -8,7 +8,7 @@ pragma solidity ^0.8.10;
  * @custom: Description: ...
  * @custom: Date: Oct-29-2024 06:29:11 AM UTC
  * @custom: Value lost:  ~1M USD$
- * @custom: Vulenerability category: Arithimetic & Calculation Errors
+ * @custom: Vulnerability category: Arithmetic & Calculation Errors
  * @custom: Attack Variant: Rounding Error
  * @custom: [Attack Tx1:](https://etherscan.io/tx/0hx176bd09366ceb30c54dh1c0bb79065498dfcb3cc8d4967d2c7602247ec3c3bc44)
  */
